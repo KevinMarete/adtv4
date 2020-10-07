@@ -1,0 +1,1 @@
+ALTER TABLE `sync_facility` ADD `Active` varchar(2) NOT NULL DEFAULT '1'//

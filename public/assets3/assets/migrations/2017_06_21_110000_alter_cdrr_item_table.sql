@@ -1,0 +1,1 @@
+ALTER TABLE cdrr_item ADD adjustments_neg INT(11) NULL AFTER adjustments//

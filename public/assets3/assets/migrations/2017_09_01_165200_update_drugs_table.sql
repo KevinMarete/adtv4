@@ -1,0 +1,1 @@
+UPDATE sync_drug SET packsize = '30' WHERE name LIKE '%Abacavir/lamiv%' AND packsize = 60//

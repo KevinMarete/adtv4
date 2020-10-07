@@ -1,0 +1,1 @@
+ALTER TABLE drug_stock_movement CHANGE order_number order_number varchar(50) NOT NULL AFTER operator//

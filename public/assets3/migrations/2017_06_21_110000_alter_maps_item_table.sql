@@ -1,0 +1,1 @@
+ALTER TABLE maps_item ADD issynched varchar(5) NOT NULL DEFAULT 'N'//

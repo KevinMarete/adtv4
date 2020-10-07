@@ -1,0 +1,1 @@
+ALTER TABLE clinic_appointment ADD differentiated_care tinyint NOT NULL  default 0 AFTER machine_code//

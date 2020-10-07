@@ -1,0 +1,1 @@
+update patient_visit set adherence = '' WHERE adherence < 0 //

@@ -1,0 +1,1 @@
+ALTER TABLE `patient_prep_test` ADD `prep_reason_id` INT NULL AFTER `patient_id`//

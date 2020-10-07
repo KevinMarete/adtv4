@@ -1,0 +1,1 @@
+ALTER TABLE patient ADD differentiated_care tinyint(1) NOT NULL AFTER clinicalappointment//

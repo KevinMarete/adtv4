@@ -1,0 +1,1 @@
+update patient set clinicalappointment =  nextappointment//

@@ -1,0 +1,1 @@
+ALTER TABLE migration_log CHANGE last_index last_index varchar(50) NOT NULL DEFAULT '0' AFTER source//

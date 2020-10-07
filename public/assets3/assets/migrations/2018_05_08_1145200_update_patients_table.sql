@@ -1,0 +1,1 @@
+UPDATE patient SET isoniazid_end_date = DATE_ADD(isoniazid_start_date, INTERVAL 168 DAY) WHERE isoniazid_start_date != ''//

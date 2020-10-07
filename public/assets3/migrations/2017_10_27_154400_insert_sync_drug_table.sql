@@ -1,0 +1,1 @@
+INSERT INTO sync_drug(name, abbreviation, strength, packsize, formulation, category_id, Active) VALUES ('Tenofovir/Lamivudine/Dolutegravir', 'TDF/3TC/DTG', '300/300/50mg', '30', 'FDC Tabs', '1', '1')//
