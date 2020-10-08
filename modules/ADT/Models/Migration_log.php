@@ -1,6 +1,8 @@
 <?php
 
-class Migration_log extends Doctrine_Record {
+use App\Models\BaseModel;
+
+class Migration_log extends BaseModel {
 
     protected $table = 'migration_log';
     protected $fillable = array('source', 'last_index', 'count');

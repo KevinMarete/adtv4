@@ -1,10 +1,10 @@
 <?php
 namespace Modules\ADT\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Models\BaseModel;
 use Illuminate\Database\Capsule\Manager as DB;
 
-class User_right extends Model {
+class User_right extends BaseModel {
 
 
     public static function getRights($access_level) {

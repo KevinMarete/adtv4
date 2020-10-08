@@ -2,10 +2,10 @@
 
 namespace Modules\ADT\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Models\BaseModel;
 use Illuminate\Database\Capsule\Manager as DB;
 
-class Facilities extends Model {
+class Facilities extends BaseModel {
 
     public function getDistrictFacilities($district) {
         $query = Doctrine_Query::create()->select("facilitycode,name")->from("Facilities")->where("District = '" . $district . "'");

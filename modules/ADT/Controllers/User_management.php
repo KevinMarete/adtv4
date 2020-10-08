@@ -54,6 +54,10 @@ class User_management extends \App\Controllers\BaseController {
         if ($query) {
             $user2 = User::find($query[0]->id);
 
+        //    echo  $query[0]->Password .'=='. md5($password);
+
+        //    die;
+
             if ($query[0]->Password == md5($password)) {
                 return $user2;
             } else {

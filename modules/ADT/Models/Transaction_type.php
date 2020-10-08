@@ -2,10 +2,10 @@
 
 namespace Modules\ADT\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Models\BaseModel;
 use Illuminate\Database\Capsule\Manager as DB;
 
-class Transaction_type extends Modal {
+class Transaction_type extends BaseModel {
 
     protected $table = 'transaction_type';
     protected $fillable = array('name', 'desc', 'effect', 'active');
