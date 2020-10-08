@@ -86,7 +86,8 @@ class User_management extends \App\Controllers\BaseController {
             $encrypt = new \Encrypt();
             $key = $encrypt->get_key();
             $encrypted_password = $key . $password;
-            $logged_in = $this->loginUser($username, $encrypted_password);
+            $logged_in = $this->loginUser($username, $encrypted_password);            
+          //  dd($logged_in);
             $load_access = DB::table('access_level')->where('id', $logged_in->id)->get();
             //This code checks if the credentials are valid
             if ($logged_in == false) {
