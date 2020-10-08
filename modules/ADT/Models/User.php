@@ -2,10 +2,10 @@
 
 namespace Modules\ADT\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Models\BaseModel;
 use Illuminate\Database\Capsule\Manager as DB;
 
-class User extends Model {
+class User extends BaseModel {
 
 //protected $table = 'users';
 

@@ -2,11 +2,11 @@
 
 namespace Modules\ADT\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Models\BaseModel;
 use Illuminate\Database\Capsule\Manager as DB;
 
 
-class CCC_store_service_point extends Model {
+class CCC_store_service_point extends BaseModel {
 
     protected $table = 'ccc_store_service_point';
 

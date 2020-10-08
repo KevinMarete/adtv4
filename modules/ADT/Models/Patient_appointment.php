@@ -2,10 +2,10 @@
 
 namespace Modules\ADT\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Models\BaseModel;
 use Illuminate\Database\Capsule\Manager as DB;
 
-class Patient_appointment extends Model {
+class Patient_appointment extends BaseModel {
 
     protected $table = 'patient_appointment';
 

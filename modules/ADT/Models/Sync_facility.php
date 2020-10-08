@@ -2,10 +2,10 @@
 
 namespace Modules\ADT\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Models\BaseModel;
 use Illuminate\Database\Capsule\Manager as DB;
 
-class Sync_facility extends Model {
+class Sync_facility extends BaseModel {
 
     protected $table = 'sync_facility';
     protected $fillable = array('name', 'code', 'category', 'hcsm_id', 'keph_level', 'location', 'sponsors', 'affiliate_organization_id', 'services', 'manager_id', 'district_id', 'address_id', 'parent_id', 'ordering', 'affiliation', 'service_point', 'county_id');

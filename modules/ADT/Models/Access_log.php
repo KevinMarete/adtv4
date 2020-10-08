@@ -2,10 +2,10 @@
 
 namespace Modules\ADT\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Models\BaseModel;
 use Illuminate\Database\Capsule\Manager as DB;
 
-class Access_log extends Model {
+class Access_log extends BaseModel {
 
     protected $table = 'access_log';
     protected $fillable = array('machine_code', 'user_id', 'access_level', 'start_time', 'end_time', 'facility_code', 'access_type','updated_at');
