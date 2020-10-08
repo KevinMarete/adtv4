@@ -138,20 +138,19 @@ if ($message == 0) {
 }
 if ($user_is_pharmacist || $user_is_facility_administrator) {
     ?>
-                    $('#span1').load('<?php echo base_url() . 'notification_management/error_notification'; ?>');
-                    $('#span2').load('<?php echo base_url() . 'notification_management/reporting_notification'; ?>');
-                    $('#span3').load('<?php echo base_url() . 'notification_management/defaulter_notification'; ?>');
-                    $('#span4').load('<?php echo base_url() . 'notification_management/missed_appointments_notification'; ?>');
-                    $('#span5').load('<?php echo base_url() . 'notification_management/followup_notification'; ?>');
-                    $('#span6').load('<?php echo base_url() . 'notification_management/prescriptions_notification_view'; ?>');
-                    $('#span7').load('<?php echo base_url() . 'notification_management/update_notification'; ?>');
+                    $('#span1').load('<?php echo base_url() . '/public/error_notification'; ?>');
+                    $('#span2').load('<?php echo base_url() . '/public/reporting_notification'; ?>');
+                    $('#span3').load('<?php echo base_url() . '/public/defaulter_notification'; ?>');
+                    $('#span4').load('<?php echo base_url() . '/public/missed_appointments_notification'; ?>');
+                    $('#span5').load('<?php echo base_url() . '/public/followup_notification'; ?>');
+                    $('#span6').load('<?php echo base_url() . '/public/prescriptions_notification_view'; ?>');
+                    $('#span7').load('<?php echo base_url() . '/public/update_notification'; ?>');
 
-                    $('#span3').load('<?php echo base_url() . 'notification_management/ontime_notification'; ?>');
-                    $('#span4').load('<?php echo base_url() . 'notification_management/missed_appointments_notification'; ?>');
-                    $('#span5').load('<?php echo base_url() . 'notification_management/defaulter_notification'; ?>');
-                    $('#span6').load('<?php echo base_url() . 'notification_management/followup_notification'; ?>');
-                    $('#span7').load('<?php echo base_url() . 'notification_management/prescriptions_notification_view'; ?>');
-                    $('#span8').load('<?php echo base_url() . 'notification_management/update_notification'; ?>');
+                    $('#span3').load('<?php echo base_url() . '/public/ontime_notification'; ?>');
+                    $('#span4').load('<?php echo base_url() . '/public/missed_appointments_notification'; ?>');
+                    $('#span6').load('<?php echo base_url() . '/public/followup_notification'; ?>');
+                    $('#span7').load('<?php echo base_url() . '/public/prescriptions_notification_view'; ?>');
+                    $('#span8').load('<?php echo base_url() . '/public/update_notification'; ?>');
 
     <?php
 }
@@ -305,7 +304,7 @@ if ($user_is_administrator) {
                         <?php if ($session->get('update_available')) { ?>
                             <a class="badge blinking pull-left" style="background-color: #ff0905b1 !important;" href="#adt_update_modal" data-toggle="modal">New Update available</a>
                         <?php } ?>
-                        <span><span style="color:#B8B8B8; text-transform: uppercase; font-weight: bold;" >username: </span><b style="font-weight: bold;font-size: 15px;text-transform: uppercase;"><?php echo $session->get('full_name'); ?> | </b><a id="logout_btn" href="<?php echo base_url() . 'user_management/logout/2' ?>"><i class="icon-off"></i> Logout</a></span>
+                        <span><span style="color:#B8B8B8; text-transform: uppercase; font-weight: bold;" >username: </span><b style="font-weight: bold;font-size: 15px;text-transform: uppercase;"><?php echo $session->get('full_name'); ?> | </b><a id="logout_btn" href="<?php echo base_url() . '/public/logout/2' ?>"><i class="icon-off"></i> Logout</a></span>
                         <br>
                             <span class="date"><?php echo date('l, jS F Y') ?></span>
                             <input type="hidden" id="facility_hidden" />
@@ -393,7 +392,7 @@ if ($user_is_administrator) {
             </script>
             <div id="msg_user_update"><?php echo $session->get("message_user_update_success"); ?></div>
             <?php
-            $this->session->unset_userdata('message_user_update_success');
+            session()->desroy('message_user_update_success');
         }
         if (!isset($hide_side_menu)) {
             ?>

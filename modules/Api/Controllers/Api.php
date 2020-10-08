@@ -1,6 +1,4 @@
 <?php
-if (!defined('BASEPATH'))
-	exit('No direct script access allowed');
 
 class Api extends MX_Controller {
 	var $backup_dir = "./backup_db";

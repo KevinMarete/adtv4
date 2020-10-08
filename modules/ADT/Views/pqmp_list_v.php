@@ -28,7 +28,7 @@ function ellipsis($string, $max_length) {
         <a href="#synchdata" class="btn btn-warning pull-right" id="SYNDATA" ><i class="icon icon-refresh"></i> Synch with PPB </a>
         <span id="NOCOM" style="display:none">Synch disabled, connection to the SPQM server could not be established...</span>
         <span id="SYNCHLOADER" style="display:none;">
-            <img src="<?= base_url(); ?>assets/images/loading_spin.gif" width="30px" height="30px"/>
+            <img src="<?= base_url(); ?>/public/assets/images/loading_spin.gif" width="30px" height="30px"/>
             Synchronizing Please wait....
         </span>
 

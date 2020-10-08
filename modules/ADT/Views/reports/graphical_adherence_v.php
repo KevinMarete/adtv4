@@ -56,7 +56,7 @@
 <script type='text/javascript'>
     $(function(){
       //Add Spinner image source
-      $('.spinner').attr('src',"<?php echo asset_url().'images/loading_spin.gif';?>");
+      $('.spinner').attr('src',"<?php echo base_url().'/public/images/loading_spin.gif';?>");
       //Loop through Charts
     	var charts = ["overview","service","gender","age"];
     	$.each(charts,function(i,v){

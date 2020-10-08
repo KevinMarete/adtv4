@@ -24,7 +24,7 @@
 
             <p>A newer version of ADT is available. <br />You are currently using <?= '3.5.0' ?></p>
             <?php if (!empty($download_status) || !$session->get('download_status')) { ?>
-                <div id="downloading" style="display: none;"><img src="<?= base_url() ?>assets/images/loading_spin.gif" style="width: 19px;"> Downloading ADT Release.  This may take up to 3 minutes</div>
+                <div id="downloading" style="display: none;"><img src="<?= base_url() ?>/public/assets/images/loading_spin.gif" style="width: 19px;"> Downloading ADT Release.  This may take up to 3 minutes</div>
 
                 <div id='download_status'><span style="color:red;">ADT Release Not Downloaded</span>. 
                     <a href="javascript:;;" id="download-ADT-release"  onclick="download_ADT()">Download Now</a>
@@ -36,7 +36,7 @@
             <a href="javascript:;;" id="download-ADT-release" class="btn btn-warning"  onclick="update_ADT()">Update</a>
         </div>
 
-        <div id="updating" style="display: none;"><img src="<?= base_url() ?>assets/images/loading_spin.gif" style="width: 19px;"> Updating ADT Release. May take a few minutes.</div>
+        <div id="updating" style="display: none;"><img src="<?= base_url() ?>/public/assets/images/loading_spin.gif" style="width: 19px;"> Updating ADT Release. May take a few minutes.</div>
 
         <table>
             <tr>
@@ -138,7 +138,7 @@
             <input type="hidden" name="base_url" id="base_url" value="<?php echo base_url() ?>" />
             <form id="fmChangePassword" action="<?php echo base_url() . 'user_management/save_new_password/1' ?>" method="post" class="well">
                 <span class="message error" id="error_msg_change_pass"></span>
-                <div id="m_loadingDiv" style="display: none"><img style="width: 30px" src="<?php echo base_url() . 'images/loading_spin.gif' ?>"></div>
+                <div id="m_loadingDiv" style="display: none"><img style="width: 30px" src="<?php echo base_url() . '/public/images/loading_spin.gif' ?>"></div>
                 <br>
                 <table>
                     <tr>

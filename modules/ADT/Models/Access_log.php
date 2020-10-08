@@ -17,7 +17,7 @@ class Access_log extends Model {
 
     public static function getLastUser($user_id) {
         $query = DB::select(" SELECT id FROM access_log WHERE user_id='$user_id' ORDER BY id DESC LIMIT 1");
-        return $query[0]->id;
+        return @$query[0]->id;
     }
 
 }

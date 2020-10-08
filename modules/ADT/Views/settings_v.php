@@ -436,7 +436,7 @@
   		<div class="span12">
   			<div class="settings well"></div>
   				<div id="loadingDiv" style="display:none;margin:10% 40% 20% 40%;" >
-	             <img src="assets/images/loading_spin.gif">	
+	             <img src="<?php echo base_url();?>/public/assets/images/loading_spin.gif">	
 	            </div>
   		</div>
   		</div>

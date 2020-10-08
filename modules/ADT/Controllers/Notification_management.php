@@ -4,6 +4,7 @@ namespace Modules\ADT\Controllers;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Capsule\Manager as DB;
+use \Modules\ADT\Models\Sync_facility;
 
 class Notification_management extends \App\Controllers\BaseController {
 
@@ -45,7 +46,7 @@ class Notification_management extends \App\Controllers\BaseController {
         $start_date = date('Y-m-01', strtotime("-1 month"));
         $facility_code = session()->get("facility");
         $central_site = Sync_Facility::getId($facility_code, 0);
-        $central_site = $central_site['id'];
+        //$central_site = $central_site['id'];
 
         $sql = "SELECT 
 		            sf.name as facility_name,
@@ -79,13 +80,15 @@ class Notification_management extends \App\Controllers\BaseController {
     }
 
     public function error_notification($display_array = false) {
+        $db = \Config\Database::connect();
         $temp = "";
         $overall_total = 0;
         $error_array = array();
-
         $data['facility_code'] = session()->get('facility');
         $query = "SELECT * FROM Facilities where facilitycode=" . $data['facility_code'];
-        $query = DB::select($query)[0]->ccc_separator;
+        $query = $db->query($query);
+
+        $cs = $query->getResultArray()[0]['ccc_separator'];
 
 
         /* Patients without Gender */
@@ -300,19 +303,19 @@ class Notification_management extends \App\Controllers\BaseController {
 
         if ($display_array == true) {
             foreach ($sql as $i => $q) {
-                $q = $this->db->query($q);
-                if ($this->db->affected_rows() > 0) {
-                    $overall_total += $this->db->affected_rows();
-                    $rs = $q->result_array();
-                    $error_array[$i . "(" . $this->db->affected_rows() . ")"] = $rs;
+                $q = $db->query($q);
+                if ($db->affectedRows() > 0) {
+                    $overall_total += $db->affectedRows();
+                    $rs = $q->getResultArray();
+                    $error_array[$i . "(" . $db->affected_rows() . ")"] = $rs;
                 }
             }
             return $error_array;
         } else {
             foreach ($sql as $i => $q) {
-                $q = $this->db->query($q);
-                if ($this->db->affected_rows() > 0) {
-                    $overall_total += $this->db->affected_rows();
+                $q = $db->query($q);
+                if ($db->affectedRows() > 0) {
+                    $overall_total += $db->affectedRows();
                 }
             }
             if ($overall_total > 1) {
@@ -448,7 +451,8 @@ class Notification_management extends \App\Controllers\BaseController {
     }
 
     public function lost_to_followup() {
-        $sql = $this->db->query("SELECT p.patient_number_ccc,
+         $db = \Config\Database::connect();
+        $sql = $db->query("SELECT p.patient_number_ccc,
 			                                p.current_regimen,
 			                                CONCAT_WS(' | ',r.regimen_code,r.regimen_desc) as regimen,
 			                                p.id
@@ -466,25 +470,26 @@ class Notification_management extends \App\Controllers\BaseController {
 									AND ps.Name  LIKE '%follow-up%' 
 									GROUP BY p.patient_number_ccc;");
 
-        if ($sql->num_rows() > 0) {
-            foreach ($sql->result() as $rows) {
+        if ($sql->numRows() > 0) {
+            foreach ($sql->getResult() as $rows) {
                 $patient_CCC = $rows->patient_number_ccc;
                 $sql_get_latest_regimen = "SELECT pv.last_regimen " . " FROM patient_visit pv WHERE pv.patient_id='$patient_CCC' AND pv.last_regimen!='' " . " ORDER BY pv.dispensing_date DESC LIMIT 1";
 
-                $result = $this->db->query($sql_get_latest_regimen);
-                $res = $result->result_array();
+                $result = $db->query($sql_get_latest_regimen);
+                $res = $result->getResultArray();
                 $latest_regimen = $res[0]['last_regimen'];
 
                 $sql = "UPDATE patient p " . "SET p.current_regimen='$latest_regimen'" . " WHERE p.patient_number_ccc='" . $patient_CCC . "'";
-                $result = $this->db->query($sql);
-                $this->session->set_userdata('msg_save_transaction', 'success');
+                $result = $db->query($sql);
+                session()->set('msg_save_transaction', 'success');
 
-                echo $this->db->affected_rows();
+                echo $db->affectedRows();
             }
         }
     }
 
     public function ontime_notification($display_array = false) {
+         $db = \Config\Database::connect();
         $sql = "SELECT 
 					p.id,
 					p.patient_number_ccc as ccc_no,
@@ -501,16 +506,17 @@ class Notification_management extends \App\Controllers\BaseController {
 				AND p.active = '1' 
 				AND p.nextappointment >= DATE_SUB(curdate(), INTERVAL 4 WEEK)
 				AND ps.Name LIKE '%active%'";
-        $results = $this->db->query($sql)->result_array();
+        $results = $db->query($sql)->getResultArray();
         if ($display_array == true) {
             return $results;
         } else {
-            $total = $this->db->affected_rows();
+            $total = $db->affectedRows();
             //echo "<li><a href='".base_url()."notification_management/load_ontime_view'><i class='icon-th'></i>On Time Appointments <div class='badge badge-important'>" . $total . "</div></a></li>";
         }
     }
 
     public function defaulter_notification($display_array = false) {
+        $db = \Config\Database::connect();
         $sql = "SELECT 
 					p.id,
 					p.patient_number_ccc as ccc_no,
@@ -526,16 +532,17 @@ class Notification_management extends \App\Controllers\BaseController {
 				WHERE DATEDIFF(CURDATE(), p.nextappointment) > 14 AND DATEDIFF(CURDATE(), p.nextappointment) < 90 
 				AND p.active = '1' 
 				AND ps.Name LIKE '%active%'";
-        $results = $this->db->query($sql)->result_array();
+        $results = $db->query($sql)->getResultArray();
         if ($display_array == true) {
             return $results;
         } else {
-            $total = $this->db->affected_rows();
+            $total = $db->affectedRows();
             //echo "<li><a href='".base_url()."notification_management/load_defaulter_view'><i class='icon-th'></i>Defaulters <div class='badge badge-important'>" . $total . "</div></a></li>";
         }
     }
 
     public function missed_appointments_notification($display_array = false) {
+         $db = \Config\Database::connect();
         $sql = "SELECT 
 					p.id,
 					p.patient_number_ccc as ccc_no,
@@ -552,16 +559,17 @@ class Notification_management extends \App\Controllers\BaseController {
 				AND p.active = '1' 
 				AND p.nextappointment >= DATE_SUB(curdate(), INTERVAL 2 WEEK)
 				AND ps.Name LIKE '%active%'";
-        $results = $this->db->query($sql)->result_array();
+        $results = $db->query($sql)->getResultArray();
         if ($display_array == true) {
             return $results;
         } else {
-            $total = $this->db->affected_rows();
+            $total = $db->affectedRows();
             //echo "<li><a href='".base_url()."notification_management/load_missed_appointments_view'><i class='icon-th'></i>Missed Appointments <div class='badge badge-important'>" . $total . "</div></a></li>";
         }
     }
 
     public function ontime_appointments_notification($display_array = false) {
+         $db = \Config\Database::connect();
         $sql = "SELECT 
 					p.id,
 					p.patient_number_ccc as ccc_no,
@@ -577,16 +585,17 @@ class Notification_management extends \App\Controllers\BaseController {
 				WHERE DATEDIFF(CURDATE(), p.nextappointment) > 14 AND DATEDIFF(CURDATE(), p.nextappointment) < 90 
 				AND p.active = '1' 
 				AND ps.Name LIKE '%active%'";
-        $results = $this->db->query($sql)->result_array();
+        $results = $db->query($sql)->getResultArray();
         if ($display_array == true) {
             return $results;
         } else {
-            $total = $this->db->affected_rows();
+            $total = $db->affectedRows();
             echo "<li><a href='" . base_url() . "notification_management/load_ontime_appointments_view'><i class='icon-th'></i>On-time Appointments <div class='badge badge-important'>" . $total . "</div></a></li>";
         }
     }
 
     public function followup_notification($display_array = false) {
+         $db = \Config\Database::connect();
         //get lost to followup patients whose appointment is 90 days from today
 
         $appointment_90 = date('Y-m-d', strtotime("-90 days"));
@@ -606,18 +615,19 @@ class Notification_management extends \App\Controllers\BaseController {
 		      LEFT JOIN regimen r ON r.id=p.current_regimen
 		      WHERE  p.active='1'
 		      and p.nextappointment  = '" . $appointment_90 . "'";
-        $query = $this->db->query($sql);
-        $results = $query->result_array();
+        $query = $db->query($sql);
+        $results = $query->getResultArray();
 
         if ($display_array == true) {
             return $results;
         } else {
-            $total = $this->db->affected_rows();
+            $total = $db->affectedRows();
             //echo "<li><a href='".base_url()."notification_management/load_followup_view'><i class='icon-th'></i>Lost to Followup (Last Day Alert)<div class='badge badge-important'>" . $total . "</div></a></li>";
         }
     }
 
     public function prescriptions_notification_view($display_array = false) {
+         $db = \Config\Database::connect();
         //get lost to followup patients whose appointment is 90 days from today
 
 
@@ -638,13 +648,13 @@ group by id) GROUP BY patient, order_number ORDER BY timecreated DESC ) b on a.p
 		group by order_number order by timecreated desc
 		";
 
-        $query = $this->db->query($sql);
-        $results = $query->result_array();
+        $query = $db->query($sql);
+        $results = $query->getResultArray();
 
         if ($display_array == true) {
             return $results;
         } else {
-            $total = $this->db->affected_rows();
+            $total = $db->affectedRows();
             echo "<li><a href='" . base_url() . "notification_management/load_prescriptions_view'><i class='icon-th'></i>Pending Prescriptions<div class='badge badge-important'>" . $total . "</div></a></li>";
         }
     }

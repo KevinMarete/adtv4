@@ -265,7 +265,7 @@ $("#lost_to_follow_up").val("<?php echo $facility['lost_to_follow_up'];?>");
 				</div>
 	    		</form>
 			</div>
-			<div id="loading" style="text-align:center;display:none"><img width="120px" src="<?php echo base_url().'assets/images/loading.gif' ?>"></div> 
+			<div id="loading" style="text-align:center;display:none"><img width="120px" src="<?php echo base_url().'/public/assets/images/loading.gif' ?>"></div> 
 			    
 	    </div><!--/span-->
 	  </div><!--/row-->

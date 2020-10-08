@@ -1,5 +1,5 @@
 <?php
-$ccc_stores = $this -> session -> userdata('ccc_store');
+$ccc_stores = session() -> get('ccc_store');
 $first_load = $ccc_stores[0]['id'];//Which store to load first
 
 ?>

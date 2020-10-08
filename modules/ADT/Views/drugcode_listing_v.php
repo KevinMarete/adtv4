@@ -763,7 +763,7 @@
 			    <h3 id="BulkMapping">Bulk Drugs  Mapping [ Drugs details ]</h3>
 			</div>
 			<div class="modal-body">
-				<div id="loadingD" style="display: none; width: 60%; position:fixed; margin-bottom: 15px; text-align: center;"><img style="width: 30px;" src="<?php echo base_url();?>/assets/images/loading_spin.gif"></div>
+				<div id="loadingD" style="display: none; width: 60%; position:fixed; margin-bottom: 15px; text-align: center;"><img style="width: 30px;" src="<?php echo base_url();?>//public/assets/images/loading_spin.gif"></div>
 				<table class="table table-bordered table-striped" id="tbl_bulk_mapping"> 
 					<thead>
 						<tr><th style="width: 6%">#</th><th style="width:60%">Drugs</th><th>Sync Drugs</th></tr>

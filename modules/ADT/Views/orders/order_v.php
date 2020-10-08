@@ -298,7 +298,7 @@
 		var base_url="<?php echo base_url();?>";
 <?php if($this->session->userdata('facility_dhis')  && (!$dhis_data)){ ?>
 			$.blockUI({ 
-				message: '<h3><img width="30" height="30" src="<?php echo asset_url().'images/loading_spin.gif' ?>" /> Downloading...</h3>' 
+				message: '<h3><img width="30" height="30" src="<?php echo base_url().'/public/images/loading_spin.gif' ?>" /> Downloading...</h3>' 
 			}); 
 
 			var dataURL = 'Order/get_dhis_data/1'
@@ -316,7 +316,7 @@
 		//Get data from dhis
 		$('#get_dhis_data').click(function(){
 			$.blockUI({ 
-				message: '<h3><img width="30" height="30" src="<?php echo asset_url().'images/loading_spin.gif' ?>" /> Downloading...</h3>' 
+				message: '<h3><img width="30" height="30" src="<?php echo base_url().'/public/images/loading_spin.gif' ?>" /> Downloading...</h3>' 
 			}); 
 			var dhis_filter = $("#period_filter").val();
 			var dataURL = 'Order/get_dhis_data/'+dhis_filter

@@ -464,7 +464,7 @@
 		
 		$("#generate").on('click',function() {
 		    //display generating modal
-		    $.blockUI({ message: '<h3><img width="30" height="30" src="<?php echo asset_url().'images/loading_spin.gif' ?>" /> Generating...</h3>' }); 
+		    $.blockUI({ message: '<h3><img width="30" height="30" src="<?php echo base_url().'/public/assets/images/loading_spin.gif' ?>" /> Generating...</h3>' }); 
             //parameters
             var count = 0;
 		    var total =$(".ordered_drugs").length;

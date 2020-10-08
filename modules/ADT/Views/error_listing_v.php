@@ -190,7 +190,7 @@ td {
 				</li>
 				<input type="button" id="error_fix_btn" value="Fix Error"/>
 				
-				<div id="loadingDiv" style="display:none; float: right"><img style="width: 20px" src="<?php echo asset_url().'images/loading_spin.gif' ?>"></div>
+				<div id="loadingDiv" style="display:none; float: right"><img style="width: 20px" src="<?php echo base_url().'/public/images/loading_spin.gif' ?>"></div>
 			</ul>
 			
 		</div>

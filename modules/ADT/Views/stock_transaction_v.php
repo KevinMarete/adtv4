@@ -53,7 +53,7 @@
 		padding-right:10px;	
 	}
 	.icondose {
-        background: #FFFFFF url(../../assets/images/dropdown.png) no-repeat 95% 4px;		
+        background: #FFFFFF url(<?php echo base_url();?>/public/assets/images/dropdown.png) no-repeat 95% 4px;		
     }
 </style>
 

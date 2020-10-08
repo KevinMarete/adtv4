@@ -25,7 +25,7 @@ class Home_controller extends \App\Controllers\BaseController {
         //Check if the user is already logged in and if so, take him to their home page. Else, display the platform home page.
         $user_id = $session->get('user_id');
         if (strlen($user_id) > 0) {
-            redirect()->to(base_url() . 'public/home');
+            return redirect()->to(base_url() . 'public/home');
             //redirect("home_controller/home");
         }
         $data = array();
@@ -37,6 +37,9 @@ class Home_controller extends \App\Controllers\BaseController {
     }
 
     public function home() {
+        if (!session()->get('user_id')) {
+            return redirect()->to(base_url() . 'public/login');
+        }
         $updater = new \Updater();
         $session = session();
         $rights = User_right::getRights($session->get('access_level'));

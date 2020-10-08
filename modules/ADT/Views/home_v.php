@@ -79,13 +79,13 @@ if ($session->get("changed_password")) {
         $("#visit_end").val(endDate);
 
         $(".loadingDiv").show();
-        var expiry_link = "<?php echo base_url() . 'facilitydashboard_management/getExpiringDrugs/'; ?>" + period + '/' + location;
-        var enrollment_link = "<?php echo base_url() . 'facilitydashboard_management/getPatientEnrolled/'; ?>" + fromDate + '/' + endDate;
-        var visits_link = "<?php echo base_url() . 'facilitydashboard_management/getExpectedPatients/'; ?>" + fromDate + '/' + endDate;
+        var expiry_link = "<?php echo base_url() . '/public/getExpiringDrugs/'; ?>" + period + '/' + location;
+        var enrollment_link = "<?php echo base_url() . '/public/getPatientEnrolled/'; ?>" + fromDate + '/' + endDate;
+        var visits_link = "<?php echo base_url() . '/public/getExpectedPatients/'; ?>" + fromDate + '/' + endDate;
         $('#chart_area').load(expiry_link);
         $('#chart_area2').load(enrollment_link);
         $('#chart_area3').load(visits_link);
-        $('#table1').load('<?php echo base_url() . 'facilitydashboard_management/getStockSafetyQty' ?>', function () {
+        $('#table1').load('<?php echo base_url() . '/public/getStockSafetyQty' ?>', function () {
             $('#stock_level').dataTable({
                 "bJQueryUI": true,
                 "sPaginationType": "full_numbers",
@@ -108,7 +108,7 @@ if ($session->get("changed_password")) {
                     $('#drugs-chart').show();
                     chartID = '#drugs-chart';
                     graphID = "#chart_area";
-                    chartLink = "<?php echo base_url() . 'facilitydashboard_management/getExpiringDrugs/'; ?>" + period + '/' + location;
+                    chartLink = "<?php echo base_url() . '/public/getExpiringDrugs/'; ?>" + period + '/' + location;
 
                     break;
                 case'enrollment-more':
@@ -116,7 +116,7 @@ if ($session->get("changed_password")) {
                     $('#enrollment-chart').show();
                     chartID = '#enrollment-chart';
                     graphID = "#chart_area2";
-                    chartLink = "<?php echo base_url() . 'facilitydashboard_management/getPatientEnrolled/'; ?>" + fromDate + '/' + endDate;
+                    chartLink = "<?php echo base_url() . '/public/getPatientEnrolled/'; ?>" + fromDate + '/' + endDate;
 
                     break;
                 case'appointment-more':
@@ -124,7 +124,7 @@ if ($session->get("changed_password")) {
                     $('#appointments-chart').show();
                     chartID = '#appointments-chart';
                     graphID = "#chart_area3";
-                    chartLink = "<?php echo base_url() . 'facilitydashboard_management/getExpectedPatients/'; ?>" + fromDate + '/' + endDate;
+                    chartLink = "<?php echo base_url() . '/public/getExpectedPatients/'; ?>" + fromDate + '/' + endDate;
 
                     break;
                 case'stock-more':
@@ -173,30 +173,30 @@ if ($session->get("changed_password")) {
             if (button_id == "expiry_btn") {
                 period = $('.period').val();
                 location = $('.location').val();
-                var expiry_link = "<?php echo base_url() . 'facilitydashboard_management/getExpiringDrugs/'; ?>" + period + '/' + location;
+                var expiry_link = "<?php echo base_url() . '/public/getExpiringDrugs/'; ?>" + period + '/' + location;
                 $('#chart_area').load(expiry_link);
             } else if (button_id == "enrollment_btn") {
                 var from_date = $("#enrollment_start").val();
                 var to_date = $("#enrollment_end").val();
-                var enrollment_link = "<?php echo base_url() . 'facilitydashboard_management/getPatientEnrolled/'; ?>" + from_date + '/' + to_date;
+                var enrollment_link = "<?php echo base_url() . '/public/getPatientEnrolled/'; ?>" + from_date + '/' + to_date;
                 $('#chart_area2').load(enrollment_link);
             } else if (button_id == "appointment_btn") {
                 var from_date = $("#visit_start").val();
                 var to_date = $("#visit_end").val();
-                var visits_link = "<?php echo base_url() . 'facilitydashboard_management/getExpectedPatients/'; ?>" + from_date + '/' + to_date;
+                var visits_link = "<?php echo base_url() . '/public/getExpectedPatients/'; ?>" + from_date + '/' + to_date;
                 $('#chart_area3').load(visits_link);
             } else if (button_id == "stockout_btn") {
                 period = $("#store_location").val();
-                $('#table1').load('<?php echo base_url() . 'facilitydashboard_management/getStockSafetyQty/' ?>' + period, function () {
+                $('#table1').load('<?php echo base_url() . '/public/getStockSafetyQty/' ?>' + period, function () {
 
                 });
             } else if (button_id == "usage_btn") {
                 period = $("#usage_period").val();
-                $('#chart_area77').load('<?php echo base_url() . 'admin_management/getSystemUsage/' ?>' + period);
+                $('#chart_area77').load('<?php echo base_url() . '/public/admin_management/getSystemUsage/' ?>' + period);
             } else if (button_id == "access_btn") {
                 var from_date = $("#enrollment_start").val();
                 var to_date = $("#enrollment_end").val();
-                $('#chart_area78').load('<?php echo base_url() . 'admin_management/getWeeklySumary/' ?>' + from_date + '/' + to_date);
+                $('#chart_area78').load('<?php echo base_url() . '/public/admin_management/getWeeklySumary/' ?>' + from_date + '/' + to_date);
             }
         });
     });
@@ -273,9 +273,11 @@ if ($session->get("changed_password")) {
                 </div>
             </div>
         </div>
-    <?php }if ($user_is_administrator) {
+    <?php
+    }if ($user_is_administrator) {
         $this->load->view("sysadmin_home_v");
-    } ?>
+    }
+    ?>
 </div>
 
 <script type="text/javascript">

@@ -446,7 +446,7 @@ if ($facility_object -> service_pep == "1") {
 		}
 		
 		$("#generate").click(function() {//Get aggregated data
-			$.blockUI({ message: '<h3><img width="30" height="30" src="<?php echo asset_url().'images/loading_spin.gif' ?>" /> Generating...</h3>' }); 
+			$.blockUI({ message: '<h3><img width="30" height="30" src="<?php echo base_url().'/public/images/loading_spin.gif' ?>" /> Generating...</h3>' }); 
             var period_start = '<?php echo date('Y-m-01',strtotime(date('Y-m-d').'-1 month')) ?>';
             var period_end = '<?php echo date('Y-m-t',strtotime(date('Y-m-d').'-1 month')) ?>';
             
@@ -455,7 +455,7 @@ if ($facility_object -> service_pep == "1") {
 		});
 		
 		$("#generate_central").click(function() {//Generate data for central report
-			$.blockUI({ message: '<h3><img width="30" height="30" src="<?php echo asset_url().'images/loading_spin.gif' ?>" /> Generating...</h3>' }); 
+			$.blockUI({ message: '<h3><img width="30" height="30" src="<?php echo base_url().'/public/images/loading_spin.gif' ?>" /> Generating...</h3>' }); 
             var period_start = '<?php echo date('Y-m-01',strtotime(date('Y-m-d').'-1 month')) ?>';
             var period_end = '<?php echo date('Y-m-t',strtotime(date('Y-m-d').'-1 month')) ?>';
             var data_type = 'new_patient';
