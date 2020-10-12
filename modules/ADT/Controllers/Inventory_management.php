@@ -11,7 +11,12 @@ use App\Libraries\Zip;
 use \Modules\ADT\Models\User;
 use \Modules\ADT\Models\Facilities;
 use \Modules\ADT\Models\Access_log;
+use \Modules\ADT\Models\Transaction_type;
+use \Modules\ADT\Models\Drug_source;
+use \Modules\ADT\Models\Drugcode;
+use \Modules\ADT\Models\Drug_destination;
 use \Modules\ADT\Models\CCC_store_service_point;
+use \Modules\ADT\Models\Drug_Stock_Movement;
 use Illuminate\Database\Capsule\Manager as DB;
 
 class Inventory_management extends \App\Controllers\BaseController {
@@ -59,12 +64,12 @@ class Inventory_management extends \App\Controllers\BaseController {
          * you want to insert a non-database field (for example a counter or static image)
          */
         $aColumns = array('drug', 'generic_name', 'stock_level', 'drug_unit', 'pack_size', 'supported_by', 'dose');
-        $iDisplayStart = $this->input->get_post('iDisplayStart', true);
-        $iDisplayLength = $this->input->get_post('iDisplayLength', true);
-        $iSortCol_0 = $this->input->get_post('iSortCol_0', true);
-        $iSortingCols = $this->input->get_post('iSortingCols', true);
-        $sSearch = $this->input->get_post('sSearch', true);
-        $sEcho = $this->input->get_post('sEcho', true);
+        $iDisplayStart = $_GET['iDisplayStart'];
+        $iDisplayLength = $_GET['iDisplayLength'];
+        $iSortCol_0 = $_GET['iSortCol_0'];
+        $iSortingCols = $_GET['iSortingCols'];
+        $sSearch = $_GET['sSearch'];
+        $sEcho = $_GET['sEcho'];
         /*
          * Paging
          * */
@@ -101,7 +106,7 @@ class Inventory_management extends \App\Controllers\BaseController {
         if (isset($sSearch) && !empty($sSearch)) {
             $sFilter = "AND ( ";
             for ($i = 0; $i < count($aColumns); $i++) {
-                $bSearchable = $this->input->get_post('bSearchable_' . $i, true);
+                $bSearchable = $_GET['bSearchable_' . $i];
 
                 // Individual column filtering
                 if (isset($bSearchable) && $bSearchable == 'true') {
@@ -141,17 +146,17 @@ class Inventory_management extends \App\Controllers\BaseController {
         $rResult = $q;
         //echo $iDisplayLength;die();
         // Data set length after filtering
-        $this->db->select('COUNT(id) AS found_rows from drugcode dc where dc.enabled=1 ' . $sFilter);
-        $iFilteredTotal = $this->db->get()->row()->found_rows;
+        $res = $this->db->query('SELECT COUNT(id) AS found_rows from drugcode dc where dc.enabled=1 ' . $sFilter)->getResult();
+        $iFilteredTotal = count($res);
 
         //Total number of drugs that are displayed
-        $this->db->select('COUNT(id) AS found_rows from drugcode dc where dc.enabled=1');
-        $iTotal = $this->db->get()->row()->found_rows;
+        $res2 = $this->db->query('SELECT COUNT(id) AS found_rows from drugcode dc where dc.enabled=1')->getResult();
+        $iTotal = count($res2);
         //$iFilteredTotal = $iTotal;
         // Output
         $output = array('sEcho' => intval($sEcho), 'iTotalRecords' => $iTotal, 'iTotalDisplayRecords' => $iFilteredTotal, 'aaData' => array());
 
-        foreach ($rResult->result_array() as $aRow) {
+        foreach ($rResult->getResultArray() as $aRow) {
             $row = array();
             $x = 0;
             foreach ($aColumns as $col) {
@@ -164,7 +169,7 @@ class Inventory_management extends \App\Controllers\BaseController {
                 }
             }
             $id = $aRow['id'];
-            $row[] = "<a href='" . base_url() . "inventory_management/getDrugBinCard/" . $id . "/" . $stock_type . "'>View Bin Card</a>";
+            $row[] = "<a href='" . base_url() . "/public/getDrugBinCard/" . $id . "/" . $stock_type . "'>View Bin Card</a>";
 
             $output['aaData'][] = $row;
         }
@@ -173,14 +178,15 @@ class Inventory_management extends \App\Controllers\BaseController {
     }
 
     public function getDrugBinCard($drug_id = '', $ccc_id = '') {
+        $uri = $this->request->uri;
 
         //CCC Store Name
-        $ccc = CCC_store_service_point::getCCC($ccc_id);
-        $ccc_name = $ccc['Name'];
+        $ccc = CCC_store_service_point::getCCC($uri->getSegment(3));
+        $ccc_name = $ccc['name'];
 
         $pack_size = 0;
         //get drug information
-        $drug = Drugcode::getDrug($drug_id, $ccc_id);
+        $drug = Drugcode::getDrug($uri->getSegment(2), $uri->getSegment(3));
         $data['commodity'] = '';
         $data['unit'] = '';
         $drug_map = '';
@@ -195,7 +201,7 @@ class Inventory_management extends \App\Controllers\BaseController {
         $drug_batches = array();
         $today = date('Y-m-d');
         $facility_code = session()->get('facility');
-        $batches = Drugcode::getDrugBatches($drug_id, $ccc_id, $facility_code, $today);
+        $batches = Drugcode::getDrugBatches($uri->getSegment(2), $uri->getSegment(3), $facility_code, $today);
         if ($batches) {//Check if batches exist
             foreach ($batches as $counter => $batch) {
                 $drug_batches[$counter]['drug'] = $batches[$counter]['drugname'];
@@ -218,7 +224,7 @@ class Inventory_management extends \App\Controllers\BaseController {
             $transaction_type = $transaction_type['id'];
         }
 
-        $consumption = Drug_Stock_Movement::getDrugConsumption($drug_id, $facility_code, $ccc_id, $transaction_type);
+        $consumption = Drug_Stock_Movement::getDrugConsumption($uri->getSegment(2), $facility_code, $uri->getSegment(3), $transaction_type);
         foreach ($consumption as $value) {
             $three_months_consumption += $value['total_out'];
         }
@@ -230,28 +236,34 @@ class Inventory_management extends \App\Controllers\BaseController {
         $monthly_consumption = number_format(($three_months_consumption) / 3);
         $min_consumption = $three_months_consumption * (0.5);
         $data['minimum_consumption'] = number_format($min_consumption);
-        $data['stock_val'] = $ccc_id;
+        $data['stock_val'] = $uri->getSegment(3);
         $data['hide_sidemenu'] = '';
         $data['total_stock'] = $total_stock;
         $data['batches'] = $drug_batches;
         $data['hide_side_menu'] = '1';
         $data['store'] = $ccc_name;
-        $data['drug_id'] = $drug_id;
-        $data['content_view'] = 'bin_card_v';
+        $data['drug_id'] = $uri->getSegment(2);
+        $data['content_view'] = '\Modules\ADT\Views\\bin_card_v';
 
         $this->base_params($data);
     }
 
     public function getDrugTransactions($drug_id = '4', $ccc_id = '2') {
+        $db = \Config\Database::connect();
+        $uri = $this->request->uri;
+        $drug_id = $uri->getSegments(2);
+        $ccc_id = $uri->getSegments(3);
         /* Added Limit as there are issues */
         ini_set("memory_limit", -1);
-        $iDisplayStart = $this->input->get_post('iDisplayStart', true);
-        $iDisplayLength = $this->input->get_post('iDisplayLength', true);
-        $iSortCol_0 = $this->input->get_post('iSortCol_0', false);
-        $iSortingCols = $this->input->get_post('iSortingCols', true);
-        $sSearch = $this->input->get_post('sSearch', true);
-        $sEcho = $this->input->get_post('sEcho', true);
+        $iDisplayStart = $_GET['iDisplayStart'];
+        $iDisplayLength = $_GET['iDisplayLength'];
+        $iSortCol_0 = @$_GET['iSortCol_0'];
+        $iSortingCols = $_GET['iSortingCols'];
+        $sSearch = $_GET['sSearch'];
+        $sEcho = $_GET['sEcho'];
+
         $where = "";
+        $builder;
 
         //columns
         $aColumns = array('Order_Number',
@@ -275,18 +287,18 @@ class Inventory_management extends \App\Controllers\BaseController {
 
         // Paging
         if (isset($iDisplayStart) && $iDisplayLength != '-1') {
-            $this->db->limit($this->db->escape_str($iDisplayLength), $this->db->escape_str($iDisplayStart));
+            $builder = $this->db->limit($this->db->escapeString($iDisplayLength), $this->db->escapeString($iDisplayStart));
         }
 
         // Ordering
         if (isset($iSortCol_0)) {
             for ($i = 0; $i < intval($iSortingCols); $i++) {
-                $iSortCol = $this->input->get_post('iSortCol_' . $i, true);
-                $bSortable = $this->input->get_post('bSortable_' . intval($iSortCol), true);
-                $sSortDir = $this->input->get_post('sSortDir_' . $i, true);
+                $iSortCol = $_GET['iSortCol_' . $i];
+                $bSortable = $_GET['bSortable_' . intval($iSortCol)];
+                $sSortDir = $_GET['sSortDir_' . $i];
 
                 if ($bSortable == 'true') {
-                    $this->db->order_by($aColumns[intval($this->db->escape_str($iSortCol))], $this->db->escape_str($sSortDir));
+                    $builder = $this->db->orderBy($aColumns[intval($this->db->escapeString($iSortCol))], $this->db->escapeString($sSortDir));
                 }
             }
         }
@@ -311,7 +323,7 @@ class Inventory_management extends \App\Controllers\BaseController {
                 'Unit_Cost',
                 'Amount');
             for ($i = 0; $i < count($newColumns); $i++) {
-                $bSearchable = $this->input->get_post('bSearchable_' . $i, true);
+                $bSearchable = $_GET['bSearchable_' . $i];
 
                 // Individual column filtering
                 if (isset($bSearchable) && $bSearchable == 'true') {
@@ -320,33 +332,33 @@ class Inventory_management extends \App\Controllers\BaseController {
                     } else {
                         $where .= " OR ";
                     }
-                    $where .= $newColumns[$i] . " LIKE '%" . $this->db->escape_like_str($sSearch) . "%'";
+                    $where .= $newColumns[$i] . " LIKE '%" . $builder->escapeLikeString($sSearch) . "%'";
                     $column_count++;
                 }
             }
         }
 
         //data
-        $this->db->select('SQL_CALC_FOUND_ROWS ' . str_replace(' , ', ' ', implode(', ', $aColumns)), false);
-        $this->db->select('t.effect');
-        $this->db->from("drug_stock_movement ds");
-        $this->db->join("drugcode dc", "dc.id=ds.drug", "left");
-        $this->db->join("transaction_type t", "t.id=ds.transaction_type", "left");
-        $this->db->join("drug_source s", "s.id=ds.source_destination", "left");
-        $this->db->join("drug_destination d", "d.id=ds.source_destination", "left");
-        $this->db->where("ds.drug", $drug_id);
-        $this->db->where("ds.ccc_store_sp", $ccc_id);
+        $builder->select('SQL_CALC_FOUND_ROWS ' . str_replace(' , ', ' ', implode(', ', $aColumns)), false);
+        $builder->select('t.effect');
+        $builder->from("drug_stock_movement ds");
+        $builder->join("drugcode dc", "dc.id=ds.drug", "left");
+        $builder->join("transaction_type t", "t.id=ds.transaction_type", "left");
+        $builder->join("drug_source s", "s.id=ds.source_destination", "left");
+        $builder->join("drug_destination d", "d.id=ds.source_destination", "left");
+        $builder->where("ds.drug", $drug_id);
+        $builder->where("ds.ccc_store_sp", $ccc_id);
         //search sql clause
         if ($where != "") {
             $where .= ")";
-            $this->db->where($where);
+            $builder->where($where);
         }
-        $this->db->order_by('ds.id', 'desc');
-        $rResult = $this->db->get();
+        $builder->orderBy('ds.id', 'desc');
+        $rResult = $builder->get();
 
         // Data set length after filtering
-        $this->db->select('FOUND_ROWS() AS found_rows');
-        $iFilteredTotal = $this->db->get()->row()->found_rows;
+        $res = $this->db->query('SELECT FOUND_ROWS() AS found_rows')->getResult();
+        $iFilteredTotal = count($res);
 
         // Total data set length
         $this->db->select("ds.*");
@@ -357,8 +369,8 @@ class Inventory_management extends \App\Controllers\BaseController {
         $this->db->join("drug_destination d", "d.id=ds.source_destination", "left");
         $this->db->where("ds.drug", $drug_id);
         $this->db->where("ds.ccc_store_sp", $ccc_id);
-        $total = $this->db->get();
-        $iTotal = count($total->result_array());
+        $total = $this->db->getResult();
+        $iTotal = count($total->getResultArray());
         // Output
         $output = array('sEcho' => intval($sEcho),
             'iTotalRecords' => $iTotal,
@@ -366,7 +378,7 @@ class Inventory_management extends \App\Controllers\BaseController {
             'aaData' => array());
 
         //loop through data to change transaction type
-        foreach ($rResult->result() as $drug_transaction) {
+        foreach ($rResult->getResult() as $drug_transaction) {
             $row = array();
             if ($drug_transaction->effect == 1) {
                 //quantity_out & source (means adds stock to system)
@@ -409,6 +421,7 @@ class Inventory_management extends \App\Controllers\BaseController {
     }
 
     public function stock_transaction($stock_type = 1) {
+        error_reporting(1);
         $data['hide_side_menu'] = 1;
         $facility_code = session()->get('facility');
         $user_id = session()->get('user_id');
@@ -418,8 +431,11 @@ class Inventory_management extends \App\Controllers\BaseController {
         } else {
             $transaction_type = Transaction_Type::getAllNonAdjustments();
         }
+
+
         $drug_source = Drug_Source::getAll();
         $facility_detail = facilities::getSupplier($facility_code);
+        // dd($facility_detail);
         $drug_destination = Drug_Destination::getAll();
         //Check facility type(satelitte, standalone or central)
         $facility_type = Facilities::getType($facility_code);
@@ -438,19 +454,25 @@ class Inventory_management extends \App\Controllers\BaseController {
         }
 
         $name = CCC_store_service_point::getCCC($stock_type);
-        $name = $name['Name'];
 
-        $data['supplier_name'] = $facility_detail->supplier->name;
+        $name = $name['name'];
+        // dd($drug_source);
+
+
+
+
+        $data['supplier_name'] = $facility_detail->supplier_name;
         $data['picking_lists'] = "";
-        $data['get_list'] = $get_list;
+        $data['get_list'] = json_decode($get_list, TRUE);
         $data['user_id'] = $user_id;
+        $data['ccc_stores'] = json_decode(session()->get("ccc_store"), TRUE);
         $data['facility'] = $facility_code;
         $data['stock_type'] = $stock_type;
         $data['transaction_types'] = $transaction_type;
         $data['drug_sources'] = $drug_source;
         $data['drug_destinations'] = $drug_destination;
         $data['store'] = strtoupper($name);
-        $data['content_view'] = "stock_transaction_v";
+        $data['content_view'] = "\Modules\ADT\Views\\stock_transaction_v";
         $this->base_params($data);
     }
 
@@ -1085,25 +1107,25 @@ class Inventory_management extends \App\Controllers\BaseController {
     }
 
     public function getStockDrugs() {
-        $stock_type = $this->input->post("stock_type");
+        $stock_type = $_POST['stock_type'];
         $facility_code = session()->get('facility');
 
         $drugs_sql = $this->db->query("SELECT DISTINCT(d.id),d.drug FROM drugcode d LEFT JOIN drug_stock_balance dsb on dsb.drug_id=d.id WHERE dsb.facility_code='$facility_code' AND dsb.stock_type='$stock_type' AND dsb.balance>0 AND dsb.expiry_date>=CURDATE() AND d.enabled='1' ORDER BY d.drug asc");
-        $drugs_array = $drugs_sql->result_array();
+        $drugs_array = $drugs_sql->getResultArray();
         echo json_encode($drugs_array);
     }
 
     public function getAllDrugs() {
         $facility_code = session()->get('facility');
         $drugs_sql = $this->db->query("SELECT DISTINCT(d.id),d.drug FROM drugcode d  WHERE d.enabled='1' ORDER BY d.drug asc");
-        $drugs_array = $drugs_sql->result_array();
+        $drugs_array = $drugs_sql->getResultArray();
         echo json_encode($drugs_array);
     }
 
     public function getBacthes() {
         $facility_code = session()->get('facility');
-        $stock_type = $this->input->post("stock_type");
-        $selected_drug = $this->input->post("selected_drug");
+        $stock_type = $_POST['stock_type'];
+        $selected_drug = $_POST["selected_drug"];
         $sql = "SELECT  
 		DISTINCT d.pack_size,
 		d.comment,
@@ -1126,15 +1148,15 @@ class Inventory_management extends \App\Controllers\BaseController {
 		AND dsb.expiry_date > CURDATE() 
 		ORDER BY dsb.expiry_date ASC";
         $batch_sql = $this->db->query($sql);
-        $batches_array = $batch_sql->result_array();
+        $batches_array = $batch_sql->getResultArray();
         echo json_encode($batches_array);
     }
 
     public function getBacthDetails() {
         $facility_code = session()->get('facility');
-        $stock_type = $this->input->post("stock_type");
-        $selected_drug = $this->input->post("selected_drug");
-        $batch_selected = $this->input->post("batch_selected");
+        $stock_type = $_POST["stock_type"];
+        $selected_drug = $_POST["selected_drug"];
+        $batch_selected = $_POST["batch_selected"];
         $sql = "SELECT 
 		dsb.balance, 
 		dsb.expiry_date 
@@ -1148,7 +1170,7 @@ class Inventory_management extends \App\Controllers\BaseController {
 		ORDER BY dsb.expiry_date ASC
 		LIMIT 1";
         $batch_sql = $this->db->query($sql);
-        $batches_array = $batch_sql->result_array();
+        $batches_array = $batch_sql->getResultArray();
         echo json_encode($batches_array);
     }
 
@@ -1198,7 +1220,7 @@ class Inventory_management extends \App\Controllers\BaseController {
     }
 
     public function getDrugDetails() {
-        $selected_drug = $this->input->post("selected_drug");
+        $selected_drug = $_POST["selected_drug"];
         $sql = "SELECT 
 		d.pack_size,
 		u.Name 
@@ -1207,7 +1229,7 @@ class Inventory_management extends \App\Controllers\BaseController {
 		WHERE d.enabled=1 
 		AND d.id='$selected_drug'";
         $drug_details_sql = $this->db->query($sql);
-        $drug_details_array = $drug_details_sql->result_array();
+        $drug_details_array = $drug_details_sql->getResultArray();
         echo json_encode($drug_details_array);
     }
 
@@ -1220,38 +1242,38 @@ class Inventory_management extends \App\Controllers\BaseController {
         $facility_detail = facilities::getSupplier($facility);
         $supplier_name = $facility_detail->supplier->name;
         $get_user = session()->get("user_id");
-        $cdrr_id = $this->input->post("cdrr_id");
-        $get_qty_choice = $this->input->post("quantity_choice");
-        $get_qty_out_choice = $this->input->post("quantity_out_choice");
-        $get_source = $this->input->post("source");
-        $get_source_name = $this->input->post("source_name");
-        $get_destination_name = $this->input->post("destination_name");
-        $get_destination = $this->input->post("destination");
-        $get_transaction_date = date('Y-m-d', strtotime($this->input->post("transaction_date")));
-        $get_ref_number = $this->input->post("reference_number");
-        $get_transaction_type = $this->input->post("transaction_type");
-        $transaction_type_name = $this->input->post("trans_type");
-        $transaction_effect = $this->input->post("trans_effect");
-        $get_drug_id = $this->input->post("drug_id");
-        $get_batch = $this->input->post("batch");
-        $get_expiry = $this->input->post("expiry");
-        $get_packs = $this->input->post("packs");
-        $get_qty = $this->input->post("quantity");
-        $get_available_qty = $this->input->post("available_qty");
-        $get_unit_cost = $this->input->post("unit_cost");
-        $get_amount = $this->input->post("amount");
-        $get_comment = $this->input->post("comment");
-        $get_stock_type = $this->input->post("stock_type");
-        $stock_type_name = $this->input->post("stock_transaction"); //Name of kind of transaction being carried
-        $all_drugs_supplied = $this->input->post("all_drugs_supplied");
-        $time_stamp = $this->input->post("time_stamp");
-        $email = $this->input->post("emailaddress");
+        $cdrr_id = $_POST['cdrr_id'];
+        $get_qty_choice = $_POST['quantity_choice'];
+        $get_qty_out_choice = $_POST['quantity_out_choice'];
+        $get_source = $_POST['source'];
+        $get_source_name = $_POST['source_name'];
+        $get_destination_name = $_POST['destination_name'];
+        $get_destination = $_POST['destination'];
+        $get_transaction_date = date('Y-m-d', strtotime($_POST['transaction_date']));
+        $get_ref_number = $_POST['reference_number'];
+        $get_transaction_type = $_POST['transaction_type'];
+        $transaction_type_name = $_POST['trans_type'];
+        $transaction_effect = $_POST['trans_effect'];
+        $get_drug_id = $_POST['drug_id'];
+        $get_batch = $_POST['batch'];
+        $get_expiry = $_POST['expiry'];
+        $get_packs = $_POST['packs'];
+        $get_qty = $_POST['quantity'];
+        $get_available_qty = $_POST['available_qty'];
+        $get_unit_cost = $_POST['unit_cost'];
+        $get_amount = $_POST['amount'];
+        $get_comment = $_POST['comment'];
+        $get_stock_type = $_POST['stock_type'];
+        $stock_type_name = $_POST['stock_transaction']; //Name of kind of transaction being carried
+        $all_drugs_supplied = $_POST['all_drugs_supplied'];
+        $time_stamp = $_POST['time_stamp'];
+        $email = $_POST['emailaddress'];
         $balance = 0;
         $pharma_balance = 0;
         $store_balance = 0;
         $sql_queries = "";
-        $source_destination = $this->input->post("source_destination");
-        $check_optgroup = $this->input->post("optgroup"); //Check if store selected as source or destination
+        $source_destination = $_POST['source_destination'];
+        $check_optgroup = $_POST['optgroup']; //Check if store selected as source or destination
         $source_dest_type = '';
         $running_balance = 0;
         $other_running_balance = 0; //For other store
@@ -1265,7 +1287,7 @@ class Inventory_management extends \App\Controllers\BaseController {
         //Get running balance in drug stock movement
         $sql_run_balance = $this->db->query("SELECT machine_code as balance FROM drug_stock_movement WHERE drug ='$get_drug_id' AND ccc_store_sp ='$get_stock_type' AND expiry_date >=CURDATE() ORDER BY id DESC  LIMIT 1");
 
-        $run_balance_array = $sql_run_balance->result_array();
+        $run_balance_array = $sql_run_balance->getResultArray();
         if (count($run_balance_array) > 0) {
             $run_balance = $run_balance_array[0]["balance"];
         } else {
@@ -1277,7 +1299,7 @@ class Inventory_management extends \App\Controllers\BaseController {
             $source_dest_type = $get_source;
             //Get remaining balance for the drug
             $get_balance_sql = $this->db->query("SELECT dsb.balance FROM drug_stock_balance dsb  WHERE dsb.facility_code='$facility' AND dsb.stock_type='$get_stock_type' AND dsb.drug_id='$get_drug_id' AND dsb.batch_number='$get_batch' AND dsb.balance>0 AND dsb.expiry_date>=CURDATE() AND dsb.expiry_date='$get_expiry' LIMIT 1");
-            $balance_array = $get_balance_sql->result_array();
+            $balance_array = $get_balance_sql->getResultArray();
             //Check if drug exists in the drug_stock_balance table
             if (count($balance_array) > 0) {
                 $bal = $balance_array[0]["balance"];
@@ -1298,7 +1320,7 @@ class Inventory_management extends \App\Controllers\BaseController {
                     //Set all balances fro each batch of the drug to be zero in drug_stock_balance for physical count transaction type
                     $sql = "UPDATE drug_stock_balance SET balance =0 WHERE drug_id='$get_drug_id' AND stock_type='$get_stock_type' AND facility_code='$facility'";
                     $set_bal_zero = $this->db->query($sql);
-                    $this->session->set_userdata("updated_dsb", $get_drug_id);
+                    session()->set("updated_dsb", $get_drug_id);
                 }
             }
 
@@ -1314,7 +1336,7 @@ class Inventory_management extends \App\Controllers\BaseController {
                 $get_balance_sql = $this->db->query("SELECT dsb.balance FROM drug_stock_balance dsb  
 					WHERE dsb.facility_code='$facility' AND dsb.stock_type='" . $source_dest_type . "' AND dsb.drug_id='$get_drug_id' AND dsb.batch_number='$get_batch' 
 					AND dsb.balance>0 AND dsb.expiry_date>=CURDATE() AND dsb.expiry_date='$get_expiry' LIMIT 1");
-                $balance_array = $get_balance_sql->result_array();
+                $balance_array = $get_balance_sql->getResultArray();
                 //Check if drug exists in the drug_stock_balance table
                 if (count($balance_array) > 0) {
                     $bal_pharma = $balance_array[0]["balance"];
@@ -1325,7 +1347,7 @@ class Inventory_management extends \App\Controllers\BaseController {
 
                 //Get running balance in drug stock movement
                 $sql_run_balance = $this->db->query("SELECT machine_code as balance FROM drug_stock_movement WHERE drug ='$get_drug_id' AND ccc_store_sp ='$source_dest_type' AND expiry_date >=CURDATE() ORDER BY id DESC  LIMIT 1");
-                $run_balance_array = $sql_run_balance->result_array();
+                $run_balance_array = $sql_run_balance->getResultArray();
                 if (count($run_balance_array) > 0) {
                     $other_run_balance = $run_balance_array[0]["balance"];
                 } else {
@@ -1352,7 +1374,7 @@ class Inventory_management extends \App\Controllers\BaseController {
                 $get_balance_sql = $this->db->query("SELECT dsb.balance FROM drug_stock_balance dsb  
 					WHERE dsb.facility_code='$facility' AND dsb.stock_type='" . $source_dest_type . "' AND dsb.drug_id='$get_drug_id' AND dsb.batch_number='$get_batch' 
 					AND dsb.balance>0 AND dsb.expiry_date>=CURDATE() AND dsb.expiry_date='$get_expiry' LIMIT 1");
-                $balance_array = $get_balance_sql->result_array();
+                $balance_array = $get_balance_sql->getResultArray();
                 //Check if drug exists in the drug_stock_balance table
                 if (count($balance_array) > 0) {
                     $bal_pharma = $balance_array[0]["balance"];
@@ -1363,7 +1385,7 @@ class Inventory_management extends \App\Controllers\BaseController {
 
                 //Get running balance in drug stock movement
                 $sql_run_balance = $this->db->query("SELECT machine_code as balance FROM drug_stock_movement WHERE drug ='$get_drug_id' AND ccc_store_sp ='$source_dest_type' AND expiry_date >=CURDATE() ORDER BY id DESC  LIMIT 1");
-                $run_balance_array = $sql_run_balance->result_array();
+                $run_balance_array = $sql_run_balance->getResultArray();
                 if (count($run_balance_array) > 0) {
                     $other_run_balance = $run_balance_array[0]["balance"];
                 } else {
@@ -1532,12 +1554,12 @@ class Inventory_management extends \App\Controllers\BaseController {
         $this->db->insert('drug_stock_movement', $drug_stock_mvt_transact);
 
         //check if query inserted
-        $inserted = $this->db->affected_rows();
+        $inserted = $this->db->affectedRows();
         if ($inserted < 1) {//If query did not insert
             $time = date("Y-m-d H:is:s");
-            $errNo = $this->db->_error_number();
-            $errMess = $this->db->_error_message();
-            $remaining_drugs = $this->input->post("remaining_drugs");
+            $errNo = $this->db->error();
+            $errMess = $this->db->getErrorMessage();
+            $remaining_drugs = $_POST['remaining_drugs'];
             $error[] = 'An error occured while saving your data(Drug Transaction 1) ! Error  ' . $errNo . ' : ' . $errMess . ' (' . $time . ')';
             echo json_encode($error);
             die();
@@ -1555,12 +1577,12 @@ class Inventory_management extends \App\Controllers\BaseController {
         }
         $sql_dsb_current_store = $this->db->query($balance_sql);
 
-        $inserted = $this->db->affected_rows();
+        $inserted = $this->db->affectedRows();
         if ($inserted < 1) {//If query did not insert
             $time = date("Y-m-d H:is:s");
-            $errNo = $this->db->_error_number();
-            $errMess = $this->db->_error_message();
-            $remaining_drugs = $this->input->post("remaining_drugs");
+            $errNo = $this->db->getErrorCode();
+            $errMess = $this->db->getErrorMessage();
+            $remaining_drugs = $_POST["remaining_drugs"];
             $error[] = 'An error occured while saving your data (Drug Balance)! Error  ' . $errNo . ' : ' . $errMess . ' (' . $time . ')';
             echo json_encode($error);
             die();
@@ -1588,7 +1610,7 @@ class Inventory_management extends \App\Controllers\BaseController {
                 $sql = "SELECT id FROM transaction_type WHERE name LIKE '%returns%' AND effect='1' LIMIT 1";
             }
             $get_trans_id = $this->db->query($sql);
-            $get_trans_id = $get_trans_id->result_array();
+            $get_trans_id = $get_trans_id->getResultArray();
             $transaction_type = $get_trans_id[0]['id'];
 
             //Sanitize by removing (store) or (pharmacy)
@@ -1623,12 +1645,12 @@ class Inventory_management extends \App\Controllers\BaseController {
             $this->db->insert('drug_stock_movement', $drug_stock_mvt_other_trans);
             //echo json_encode($source_destination);die();
             //check if query inserted
-            $inserted = $this->db->affected_rows();
+            $inserted = $this->db->affectedRows();
             if ($inserted < 1) {//If query did not insert
                 $time = date("Y-m-d H:is:s");
-                $errNo = $this->db->_error_number();
-                $errMess = $this->db->_error_message();
-                $remaining_drugs = $this->input->post("remaining_drugs");
+                $errNo = $this->db->getErrorCode();
+                $errMess = $this->db->getErrorMessage();
+                $remaining_drugs = $_POST["remaining_drugs"];
                 $error[] = 'An error occured while saving your data(Drug Transaction 2) ! Error  ' . $errNo . ' : ' . $errMess . ' (' . $time . ')';
                 echo json_encode($error);
                 die();
@@ -1649,12 +1671,12 @@ class Inventory_management extends \App\Controllers\BaseController {
                 }
             }
             $sql_dsb_store = $this->db->query($balance_sql);
-            $inserted = $this->db->affected_rows();
+            $inserted = $this->db->affectedRows();
             if ($inserted < 1) {//If query did not insert
                 $time = date("Y-m-d H:is:s");
-                $errNo = $this->db->_error_number();
-                $errMess = $this->db->_error_message();
-                $remaining_drugs = $this->input->post("remaining_drugs");
+                $errNo = $this->db->getErrorCode();
+                $errMess = $this->db->getErrorMessage();
+                $remaining_drugs = $_POST['remaining_drugs'];
                 $error[] = 'An error occured while saving your data(Drug Balance 2) ! Error  ' . $errNo . ' : ' . $errMess . ' (' . $time . ')';
                 echo json_encode($error);
                 die();
@@ -1671,7 +1693,7 @@ class Inventory_management extends \App\Controllers\BaseController {
 
         //Get drug_name
         $drug_det = Drugcode::getDrugCodeHydrated($get_drug_id);
-        $drug_name = $drug_det[0]['Drug'];
+        $drug_name = $drug_det[0]->drug;
         echo json_encode($drug_name);
         die();
     }

@@ -58,7 +58,7 @@ class Facilities extends BaseModel {
         return $facility[0];
     }
 
-    public function getCurrentFacility($id) {
+    public static function getCurrentFacility($id) {
         $facility = DB::table("facilities")->where("facilitycode", $id)->get();
         return $facility;
     }
@@ -94,9 +94,7 @@ class Facilities extends BaseModel {
     }
 
     public static function getSupplier($id) {
-        $query = Doctrine_Query::create()->select("supplied_by")->from("Facilities")->where("facilitycode = '$id'");
-        $facility = $query->execute();
-        return $facility[0];
+        return DB::select("SELECT f.*,s.name supplier_name FROM facilities f LEFT JOIN suppliers s ON f.supplied_by = s.id WHERE f.facilitycode='$id'")[0];
     }
 
     public static function getParent($id) {
@@ -111,11 +109,12 @@ class Facilities extends BaseModel {
         return $facility[0];
     }
 
-    public function getType($facility_code) {
-        $query = $this->db->query("SELECT count(*) as count FROM sync_facility s1
+    public static function getType($facility_code) {
+        $db = \Config\Database::connect();
+        $query = $db->query("SELECT count(*) as count FROM sync_facility s1
 					right join sync_facility s2 on s1.id = s2.parent_id
 					WHERE s1.code ='$facility_code'");
-        return $query->result_array()[0]['count'] + 0;
+        return $query->getResultArray()[0]['count'] + 0;
     }
 
     public function getId($facility_code) {
@@ -131,15 +130,12 @@ class Facilities extends BaseModel {
     }
 
     public static function getCentralCode($id) {
-        $query = Doctrine_Query::create()->select("facilitycode,parent")->from("Facilities")->where("facilitycode = '$id'");
-        $facility = $query->execute();
-        return $facility[0]['parent'];
+        $query = DB::table('facilities')->select('*')->where('facilitycode', $id)->get();
+        return $query[0]->parent;
     }
 
     public static function getCentralName($id) {
-        $query = Doctrine_Query::create()->select("id,facilitycode,name")->from("Facilities")->where("facilitycode = '$id'");
-        $facility = $query->execute();
-        return $facility;
+        return DB::table('facilities')->select('id', 'facilitycode', 'name')->where('facilitycode', $id)->get();
     }
 
     public static function getParentandSatellites($parent) {

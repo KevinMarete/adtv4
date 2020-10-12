@@ -1,34 +1,29 @@
 <?php
 
 class Curl {
+
     const USER_AGENT = 'PHP-Curl-Class/1.0 (+https://github.com/php-curl-class/php-curl-class)';
 
     private $_cookies = array();
     private $_headers = array();
     private $_options = array();
-
     private $_multi_parent = false;
     private $_multi_child = false;
     private $_before_send = null;
     private $_success = null;
     private $_error = null;
     private $_complete = null;
-
     public $curl;
     public $curls;
-
     public $error = false;
     public $error_code = 0;
     public $error_message = null;
-
     public $curl_error = false;
     public $curl_error_code = 0;
     public $curl_error_message = null;
-
     public $http_error = false;
     public $http_status_code = 0;
     public $http_error_message = null;
-
     public $request_headers = null;
     public $response_headers = null;
     public $response = null;
@@ -45,7 +40,7 @@ class Curl {
         $this->setOpt(CURLOPT_RETURNTRANSFER, true);
     }
 
-    public function get($url_mixed, $data=array()) {
+    public function get($url_mixed, $data = array()) {
         if (is_array($url_mixed)) {
             $curl_multi = curl_multi_init();
             $this->_multi_parent = true;
@@ -63,7 +58,7 @@ class Curl {
                 $curlm_error_code = curl_multi_add_handle($curl_multi, $curl->curl);
                 if (!($curlm_error_code === CURLM_OK)) {
                     throw new \ErrorException('cURL multi add handle error: ' .
-                        curl_multi_strerror($curlm_error_code));
+                            curl_multi_strerror($curlm_error_code));
                 }
             }
 
@@ -80,36 +75,35 @@ class Curl {
             foreach ($this->curls as $ch) {
                 $this->exec($ch);
             }
-        }
-        else {
+        } else {
             $this->setopt(CURLOPT_URL, $this->_buildURL($url_mixed, $data));
             $this->setopt(CURLOPT_HTTPGET, true);
             return $this->exec();
         }
     }
 
-    public function post($url, $data=array()) {
+    public function post($url, $data = array()) {
         $this->setOpt(CURLOPT_URL, $this->_buildURL($url));
         $this->setOpt(CURLOPT_POST, true);
         $this->setOpt(CURLOPT_POSTFIELDS, $this->_postfields($data));
         return $this->exec();
     }
 
-    public function put($url, $data=array()) {
+    public function put($url, $data = array()) {
         $this->setOpt(CURLOPT_URL, $url);
         $this->setOpt(CURLOPT_CUSTOMREQUEST, 'PUT');
         $this->setOpt(CURLOPT_POSTFIELDS, http_build_query($data));
         return $this->exec();
     }
 
-    public function patch($url, $data=array()) {
+    public function patch($url, $data = array()) {
         $this->setOpt(CURLOPT_URL, $this->_buildURL($url));
         $this->setOpt(CURLOPT_CUSTOMREQUEST, 'PATCH');
         $this->setOpt(CURLOPT_POSTFIELDS, $data);
         return $this->exec();
     }
 
-    public function delete($url, $data=array()) {
+    public function delete($url, $data = array()) {
         $this->setOpt(CURLOPT_URL, $this->_buildURL($url, $data));
         $this->setOpt(CURLOPT_CUSTOMREQUEST, 'DELETE');
         return $this->exec();
@@ -138,13 +132,13 @@ class Curl {
         $this->setOpt(CURLOPT_COOKIE, http_build_query($this->_cookies, '', '; '));
     }
 
-    public function setOpt($option, $value, $_ch=null) {
+    public function setOpt($option, $value, $_ch = null) {
         $ch = is_null($_ch) ? $this->curl : $_ch;
         $this->_options[$option] = $value;
         return curl_setopt($ch, $option, $value);
     }
 
-    public function verbose($on=true) {
+    public function verbose($on = true) {
         $this->setOpt(CURLOPT_VERBOSE, $on);
     }
 
@@ -174,7 +168,7 @@ class Curl {
         $this->_complete = $callback;
     }
 
-    private function _buildURL($url, $data=array()) {
+    private function _buildURL($url, $data = array()) {
         return $url . (empty($data) ? '' : '?' . http_build_query($data));
     }
 
@@ -182,8 +176,7 @@ class Curl {
         if (is_array($data)) {
             if (is_array_multidim($data)) {
                 $data = http_build_multi_query($data);
-            }
-            else {
+            } else {
                 // Fix "Notice: Array to string conversion" when $value in
                 // curl_setopt($ch, CURLOPT_POSTFIELDS, $value) is an array
                 // that contains an empty array.
@@ -198,13 +191,12 @@ class Curl {
         return $data;
     }
 
-    protected function exec($_ch=null) {
+    protected function exec($_ch = null) {
         $ch = is_null($_ch) ? $this : $_ch;
 
         if ($ch->_multi_child) {
             $ch->response = curl_multi_getcontent($ch->curl);
-        }
-        else {
+        } else {
             $ch->response = curl_exec($ch->curl);
         }
 
@@ -231,8 +223,7 @@ class Curl {
 
         if (!$ch->error) {
             $ch->_call($this->_success, $ch);
-        }
-        else {
+        } else {
             $ch->_call($this->_error, $ch);
         }
 
@@ -252,10 +243,11 @@ class Curl {
     public function __destruct() {
         $this->close();
     }
+
 }
 
 function is_array_assoc($array) {
-    return (bool)count(array_filter(array_keys($array), 'is_string'));
+    return (bool) count(array_filter(array_keys($array), 'is_string'));
 }
 
 function is_array_multidim($array) {
@@ -266,7 +258,7 @@ function is_array_multidim($array) {
     return !(count($array) === count($array, COUNT_RECURSIVE));
 }
 
-function http_build_multi_query($data, $key=null) {
+function http_build_multi_query($data, $key = null) {
     $query = array();
 
     if (empty($data)) {
@@ -279,8 +271,7 @@ function http_build_multi_query($data, $key=null) {
         if (is_string($value) || is_numeric($value)) {
             $brackets = $is_array_assoc ? '[' . $k . ']' : '[]';
             $query[] = urlencode(is_null($key) ? $k : $key . $brackets) . '=' . rawurlencode($value);
-        }
-        else if (is_array($value)) {
+        } else if (is_array($value)) {
             $nested = is_null($key) ? $k : $key . '[' . $k . ']';
             $query[] = http_build_multi_query($value, $nested);
         }

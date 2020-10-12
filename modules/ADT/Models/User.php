@@ -1,4 +1,4 @@
-<?php
+ sc<?php
 
 namespace Modules\ADT\Models;
 

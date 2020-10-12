@@ -5,7 +5,6 @@ namespace Modules\ADT\Models;
 use App\Models\BaseModel;
 use Illuminate\Database\Capsule\Manager as DB;
 
-
 class CCC_store_service_point extends BaseModel {
 
     protected $table = 'ccc_store_service_point';
@@ -16,7 +15,7 @@ class CCC_store_service_point extends BaseModel {
         return $stores;
     }
 
-    public  static function getAllActive() {
+    public static function getAllActive() {
         $query = DB::table('ccc_store_service_point')->where('active', '1')->get();
         return $query;
     }
@@ -34,9 +33,8 @@ class CCC_store_service_point extends BaseModel {
     }
 
     public static function getCCC($id) {
-        $query = Doctrine_Query::create()->select("*")->from("ccc_store_service_point")->where("id = '$id' and Active='1' ");
-        $ois = $query->execute();
-        return $ois[0];
+        $query = DB::table('ccc_store_service_point')->where('id', $id)->where('active', '1')->get();
+        return json_decode(json_encode($query), true)[0];
     }
 
     public function getStoreGroups() {

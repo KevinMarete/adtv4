@@ -263,8 +263,8 @@ if ($user_is_administrator) {
                     <div class="nav-collapse collapse" style="float: right">
                         <?php if ($menus) { ?>
                             <ul class="nav nav_header" style="margin: 0 !important;">
-                                <li><a href="<?php echo site_url('home_controller'); ?>" class="top_menu_link  first_link <?php
-                                    if ($current == "home_controller") {
+                                <li><a href="<?php echo base_url('/public/home'); ?>" class="top_menu_link  first_link <?php
+                                    if ($current == "public/home") {
                                         echo " top_menu_active ";
                                     }
                                     ?>"><i class="icon-home"></i> HOME </a></li>
@@ -279,7 +279,7 @@ if ($user_is_administrator) {
                                         <?php
                                     } else {
                                         ?>
-                                        <li> <a href = "<?php echo site_url($menu['url']); ?>" class="top_menu_link <?php
+                                        <li> <a href = "<?php echo base_url('/public/'.$menu['url']); ?>" class="top_menu_link <?php
                                             if ($current == $menu['url'] || $menu['url'] == $link) {
                                                 echo " top_menu_active ";
                                             }
@@ -406,7 +406,7 @@ if ($user_is_administrator) {
                                 <?php
                                 if ($user_is_pharmacist || $user_is_facility_administrator) {
                                     ?>
-                                    <li><a href="<?php echo base_url() . 'patient_management/addpatient_show' ?>"><i class="icon-user"></i>Add Patients</a></li>
+                                    <li><a href="<?php echo base_url() . '/public/addpatient_show' ?>"><i class="icon-user"></i>Add Patients</a></li>
 
                                     <?php
                                     $count_ccc = count($ccc_stores);
@@ -418,13 +418,13 @@ if ($user_is_administrator) {
                                                 <?php
                                                 foreach ($ccc_stores as $ccc_store) {
                                                     ?>
-                                                    <li><a href="<?php echo base_url() . 'inventory_management/stock_transaction/' . $ccc_store->id; ?>"><i class="icon-inbox"></i>Receive/Issue - <?php echo $ccc_store->name; ?></a></li>
+                                                    <li><a href="<?php echo base_url() . '/public/stock_transaction/' . $ccc_store->id; ?>"><i class="icon-inbox"></i>Receive/Issue - <?php echo $ccc_store->name; ?></a></li>
                                                     <?php
                                                 }
                                                 ?>
                                             </ul>
                                         </li>
-                                        <li><a href="<?php echo base_url() . 'inventory_management/pqmp/' ?>"><i class="icon-flag"></i>Pharmacovigilance</a></li>
+                                        <li><a href="<?php echo base_url() . '/public/pqmp/' ?>"><i class="icon-flag"></i>Pharmacovigilance</a></li>
 
                                         <li>
                                             <a href="<?php echo base_url() . 'home_controller/get_faq'; ?>" target="_blank"><i class="icon-question-sign"></i>FAQ</a>
@@ -432,8 +432,8 @@ if ($user_is_administrator) {
                                         <?php
                                     } else {//If no Extra pharmacies, load main store and Main Pharmacy Only
                                         ?>
-                                        <li><a href="<?php echo base_url() . 'inventory_management/stock_transaction/1' ?>"><i class="icon-inbox"></i>Receive/Issue - Main Store</a></li>
-                                        <li><a href="<?php echo base_url() . 'inventory_management/stock_transaction/2' ?>"><i class="icon-inbox"></i>Receive/Issue - Pharmacy</a></li>
+                                        <li><a href="<?php echo base_url() . '/public/stock_transaction/1' ?>"><i class="icon-inbox"></i>Receive/Issue - Main Store</a></li>
+                                        <li><a href="<?php echo base_url() . '/public/stock_transaction/2' ?>"><i class="icon-inbox"></i>Receive/Issue - Pharmacy</a></li>
                                         <?php
                                     }
                                     ?>
@@ -546,9 +546,9 @@ if ($user_is_administrator) {
                         <div id="footer_text2" class="span12" style="text-align:center">
                             Government of Kenya &copy; <?php echo date('Y'); ?>.
                             All Rights Reserved . <strong>Web-ADT version 3.5.0</strong>
-                            <?php if (str_replace('.', '', $update_available->release) + 0 > '3.4.2') { ?>
+                            <?php //if (str_replace('.', '', $update_available->release) + 0 > '3.4.2') { ?>
                                 <a class="badge badge-warning blinking" href="#adt_update_modal" data-toggle="modal">New Update available</div>
-                        <?php } ?>
+                        <?php // } ?>
                     </div>  
                 </div>
         </div>

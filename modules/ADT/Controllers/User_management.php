@@ -16,6 +16,73 @@ use Illuminate\Database\Capsule\Manager as DB;
 
 class User_management extends \App\Controllers\BaseController {
 
+    var $endpoint;
+    var $table_generator;
+
+    function __construct() {
+
+        session()->set("link_id", "index");
+        session()->set("linkSub", "user_management");
+        session()->set("linkTitle", "Users Management");
+        //$this -> load -> helper('geoiploc');
+        $this->endpoint = "https://hiskenya.org/api/";
+    }
+
+    public function index() {
+        $table = new \CodeIgniter\View\Table();
+        $access_level = session()->get('user_indicator');
+        $user_type = "1";
+        $facilities = "";
+        //If user is a super admin, allow him to add only facilty admin and nascop pharmacist
+        if ($access_level == "system_administrator") {
+            $user_type = "indicator not in ('system_administrator')";
+            $facilities = Facilities::getAll();
+            $users = Users::getAll();
+        }
+        //If user is a facility admin, allow him to add only facilty users
+        else {
+            $facility_code = session()->get('facility');
+            $user_type = "indicator not in ('system_administrator', 'facility_administrator') and indicator != '" . $access_level . "'";
+            $facilities = Facilities::getCurrentFacility($facility_code);
+            $q = "u.Facility_Code='" . $facility_code . "' and Access_Level > '1'";
+            $users = Users::getUsersFacility($q);
+        }
+        $user_types = Access_Level::getAll($user_type);
+
+        $tmpl = array('table_open' => '<table class=" table table-bordered table-striped setting_table ">');
+        $table->setTemplate($tmpl);
+        $table->setHeading('id', 'Name', 'Email Address', 'Phone Number', 'Access Level', 'Registered By', 'Options');
+        foreach ($users as $user) {
+            $links = "";
+            $array_param = array('id' => $user['id'], 'role' => 'button', 'class' => 'edit_user', 'data-toggle' => 'modal');
+            if ($user['Active'] == 1) {
+                if ($access_level == "system_administrator" || ($access_level == "facility_administrator" and $user['Indicator'] != "facility_administrator")) {
+                    $links .= anchor('user_management/disable/' . $user['id'], 'Disable', array('class' => 'disable_user'));
+                }
+            } else {
+                $links .= anchor('user_management/enable/' . $user['id'], 'Enable', array('class' => 'enable_user'));
+            }
+            if ($user['Access'] == "Pharmacist") {
+                $level_access = "User";
+            } else {
+                $level_access = $user['Access'];
+            }
+            $table->addRow($user['id'], $user['Name'], $user['Email_Address'], $user['Phone_Number'], $level_access, $user['Creator'], $links);
+        }
+
+        $data['users'] = $table->generate();
+        ;
+        $data['user_types'] = $user_types;
+        $data['facilities'] = $facilities;
+        $data['order_sites'] = Sync_Facility::get_active();
+        $data['title'] = "System Users";
+        $data['banner_text'] = "System Users";
+        $data['link'] = "users";
+        $actions = array(0 => array('Edit', 'edit'), 1 => array('Disable', 'disable'));
+        $data['actions'] = $actions;
+        echo view("\Modles\ADT\Views\users_v", $data);
+    }
+
     function login() {
 
         $session = session();
@@ -54,9 +121,8 @@ class User_management extends \App\Controllers\BaseController {
         if ($query) {
             $user2 = User::find($query[0]->id);
 
-        //    echo  $query[0]->Password .'=='. md5($password);
-
-        //    die;
+            //    echo  $query[0]->Password .'=='. md5($password);
+            //    die;
 
             if ($query[0]->Password == md5($password)) {
                 return $user2;
@@ -67,7 +133,7 @@ class User_management extends \App\Controllers\BaseController {
             }
         } else {
             return false;
-        } 
+        }
     }
 
     public function authenticate() {
@@ -90,8 +156,8 @@ class User_management extends \App\Controllers\BaseController {
             $encrypt = new \Encrypt();
             $key = $encrypt->get_key();
             $encrypted_password = $key . $password;
-            $logged_in = $this->loginUser($username, $encrypted_password);            
-          //  dd($logged_in);
+            $logged_in = $this->loginUser($username, $encrypted_password);
+            //  dd($logged_in);
             $load_access = DB::table('access_level')->where('id', $logged_in->id)->get();
             //This code checks if the credentials are valid
             if ($logged_in == false) {
@@ -272,7 +338,7 @@ class User_management extends \App\Controllers\BaseController {
         if ($param == "2") {
             delete_cookie("actual_page");
         }
-        return redirect()->to('login');
+        return redirect()->to(base_url() . '/public/login');
     }
 
     public function template($data) {

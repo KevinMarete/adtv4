@@ -42,6 +42,10 @@ class BaseController extends Controller {
 
         ini_set("max_execution_time", "100000");
         ini_set("memory_limit", '2048M');
+        ini_set("SMTP", 'ssl://smtp.googlemail.com');
+        ini_set("smtp_port", '465');
+        ini_set("sendmail_from", 'webadt.chai@gmail.com');
+        date_default_timezone_set('Africa/Nairobi');
         $this->db = \Config\Database::connect();
         service('eloquent');
     }
