@@ -1,5 +1,6 @@
 <!--Custom CSS files-->
-<link href="<?php echo base_url().'assets/modules/patients/details.css'; ?>" type="text/css" rel="stylesheet"/>
+<link href="<?php echo base_url().'/public/assets/modules/patients/details.css'; ?>" type="text/css" rel="stylesheet"/>
+<?php $session = session(); ?>
 
 <!--art card form-->
 <div class="container full-content" style="background:#9CF">
@@ -8,7 +9,7 @@
 	<div class="row-fluid">
 		<div class="span12">
 			<ul class="breadcrumb">
-				<li><a href="<?php echo base_url().'patient_management'; ?>">Patients</a> <span class="divider">/</span></li>
+				<li><a href="<?php echo base_url().'/public/patients'; ?>">Patients</a> <span class="divider">/</span></li>
 				<li class="active">ART Card</li>
 			</ul>
 			<div class="alert alert-info">
@@ -22,25 +23,25 @@
 	<div class="row-fluid">
 		<div class="span12">
 			<?php 
-			if($this->session->userdata("msg_save_transaction")){
-				if($this->session->userdata("msg_save_transaction")=="success"){
-					if($this->session->userdata("user_updated")){
+			if($session->get("msg_save_transaction")){
+				if($session->get("msg_save_transaction")=="success"){
+					if($session->get("user_updated")){
 						?>
-						<p class=""><span class="message success"><?php echo $this->session->userdata("user_updated") ?>'s details were successfully updated !</span></p>
+						<p class=""><span class="message success"><?php echo $session->get("user_updated") ?>'s details were successfully updated !</span></p>
 						<?php
-						$this->session->unset_userdata('user_updated');
+						$session->remove('user_updated');
 					}
-					else if($this->session->userdata("dispense_updated")){
+					else if($session->get("dispense_updated")){
 						?>
 						<p class=""><span class="message  success">The dispensing details were successfully updated !</span></p>
 						<?php
-						$this->session->unset_userdata('dispense_updated');
+						$session->remove('dispense_updated');
 					}
-					else if($this->session->userdata("dispense_deleted")){
+					else if($session->get("dispense_deleted")){
 						?>
 						<p class=""><span class="message  error">The dispensing details were successfully deleted !</span></p>
 						<?php
-						$this->session->unset_userdata('dispense_deleted');
+						$session->remove('dispense_deleted');
 					} 
 				}
 				else{
@@ -48,7 +49,7 @@
 					<p class=""><span class="message  error">Your data were not saved ! Try again or contact your system administrator.</span></p>
 					<?php
 				}
-				$this->session->unset_userdata('msg_save_transaction');
+				$session->remove('msg_save_transaction');
 			}
 			?>
 		</div>
@@ -216,11 +217,11 @@
 					<h3>Patient History</h3>
 				</legend>
 				<div class="row-fluid partner_status">
-					<label>Partner Status</label>
+					<label>Partner HIV Status</label>
 					<select name="partner_status" id="partner_status" class="span8">
 						<option value="0" selected="selected">No Partner</option>
-						<option value="1">Concordant</option>
-						<option value="2">Discordant</option>
+						<option value="1">HIV Positive</option>
+						<option value="2">HIV Negative</option>
 					</select>
 				</div>
 				<div class="row-fluid disclosure">
@@ -396,7 +397,7 @@
 						<option value="">--Select--</option>
 						<?php
 						foreach ($facilities as $facility) {
-							echo "<option value='" . $facility['id'] . "'>" . $facility['Name'] . "</option>";
+							echo "<option value='" . $facility['id'] . "'>" . $facility['name'] . "</option>";
 						}
 						?>
 					</select>
@@ -484,8 +485,8 @@
 				<?php if ($api && $patient_module){?>
 				<button class="btn btn-inverse" id="view_prescription"><strong>View Prescription</strong></button>
 				<?php } ?>
-				<a class="btn btn-inverse" href="<?php echo base_url().'patient_management/edit/'.$patient_id; ?>"><strong>Edit Patient Record</strong></a>
-				<a id="dispense_btn" class="btn btn-inverse" href="<?php echo base_url().'dispensement_management/dispense/'.$patient_id; ?>"><strong>Dispense to Patient</strong></a>
+				<a class="btn btn-inverse" href="<?php echo base_url().'/public/patient/edit/'.$patient_id; ?>"><strong>Edit Patient Record</strong></a>
+				<a id="dispense_btn" class="btn btn-inverse" href="<?php echo base_url().'/public/dispensement_management/dispense/'.$patient_id; ?>"><strong>Dispense to Patient</strong></a>
 			</div>
 		</div>
 	</div>
@@ -690,5 +691,5 @@
 </div>
 
 <!-- custom scripts-->
-<script src="<?php echo base_url().'assets/modules/forms/forms.js'; ?>"></script>
-<script src="<?php echo base_url().'assets/modules/patients/details.js'; ?>"></script>
+<script src="<?php echo base_url().'/public/assets/modules/forms/forms.js'; ?>"></script>
+<script src="<?php echo base_url().'/public/assets/modules/patients/details.js'; ?>"></script>

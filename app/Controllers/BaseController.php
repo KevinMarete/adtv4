@@ -50,6 +50,7 @@ class BaseController extends Controller {
         date_default_timezone_set('Africa/Nairobi');
         $this->db = \Config\Database::connect();
         service('eloquent');
+        $this->uri = service('uri');
         if (session()->get('user_id')=='') {
           // echo 'This session'.session()->get('user_id');
            //header('Location :'.base_url().'/public/login');
@@ -58,6 +59,13 @@ class BaseController extends Controller {
           //  echo 'No sessin';
             
         }
+    }
+
+    //shorten field input
+    function post($field) {
+        if(!empty($_POST[$field]))
+            return $_POST[$field];
+        else return "";
     }
 
 }

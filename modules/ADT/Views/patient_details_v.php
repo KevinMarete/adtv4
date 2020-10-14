@@ -96,7 +96,7 @@ if(isset($results)){
 
 		    $("#patient_number").change(function(){
 				var patient_no=$("#patient_number").val();
-				var link=base_url+"patient_management/checkpatient_no/"+patient_no;
+				var link=base_url+"/public/patient/checkpatient_no/"+patient_no;
 				$.ajax({
 				    url: link,
 				    type: 'POST',
@@ -549,7 +549,7 @@ if(isset($results)){
 				    success: function(data) {	
 				    	$("#regimen").append($("<option></option>").attr("value",'').text('--Select One--'));
 				    	$.each(data, function(i, jsondata){
-				    		$("#regimen").append($("<option></option>").attr("value",jsondata.id).text(jsondata.Regimen_Code+" | "+jsondata.Regimen_Desc));
+				    		$("#regimen").append($("<option></option>").attr("value",jsondata.id).text(jsondata.regimen_code+" | "+jsondata.regimen_desc));
 				    	});
 				    }
 				});
@@ -633,7 +633,7 @@ if(isset($results)){
 				window.location.href = url;
 			});
 			$("#edit_patient").click(function() {
-				var url = base_url+"patient_management/edit/" + record_id;
+				var url = base_url+"/public/patient/edit/" + record_id;
 				window.location.href = url;
 			});
 			$("#dispense").click(function() {
@@ -692,7 +692,7 @@ if(isset($results)){
              
             function getDispensing(){
              	 var patient_no=$("#patient_number").val();
-             	 var link=base_url+"patient_management/getSixMonthsDispensing/"+patient_no;
+             	 var link=base_url+"/public/patient/getSixMonthsDispensing/"+patient_no;
 					$.ajax({
 					    url: link,
 					    type: 'POST',
@@ -706,7 +706,7 @@ if(isset($results)){
              
               function getRegimenChange(){
              	 var patient_no=$("#patient_number").val();
-             	 var link=base_url+"patient_management/getRegimenChange/"+patient_no;
+             	 var link=base_url+"/public/patient/getRegimenChange/"+patient_no;
 					$.ajax({
 					    url: link,
 					    type: 'POST',
@@ -720,7 +720,7 @@ if(isset($results)){
              
              function getAppointmentHistory(){
              	 var patient_no=$("#patient_number").val();
-             	 var link=base_url+"patient_management/getAppointmentHistory/"+patient_no;
+             	 var link=base_url+"/public/patient/getAppointmentHistory/"+patient_no;
 					$.ajax({
 					    url: link,
 					    type: 'POST',
@@ -882,7 +882,7 @@ if(isset($results)){
 		?>
 	</div>
 	<div id="sub_title" >
-		<a href="<?php  echo base_url().'patient_management ' ?>">Patient Listing </a> <i class=" icon-chevron-right"></i> <strong>ART Card</strong>
+		<a href="<?php  echo base_url().'/public/patients ' ?>">Patient Listing </a> <i class=" icon-chevron-right"></i> <strong>ART Card</strong>
 		<hr size="1">
 	</div>
 	<h3>Patient ART Card
@@ -890,7 +890,7 @@ if(isset($results)){
 		(Fields Marked with <b><span class='astericks'>*</span></b> Asterisks are required)
 	</div></h3>
 
-	<form id="edit_patient_form" method="post"  action="<?php echo base_url() . 'patient_management/save'; ?>" onsubmit="return processData('add_patient_form')" >
+	<form id="edit_patient_form" method="post"  action="<?php echo base_url() . '/public/patient/save'; ?>" onsubmit="return processData('add_patient_form')" >
 		<div class="column" id="columnOne">
 			<fieldset>
 				<legend>
@@ -1309,7 +1309,7 @@ if(isset($results)){
 						<option value=" ">--Select One--</option>
                         <?php
 					    foreach ($regimens as $regimen) {
-						 echo "<option value='" . $regimen['id'] . "'>".$regimen['Regimen_Code'] ." | " . $regimen['Regimen_Desc'] . "</option>";
+						 echo "<option value='" . $regimen['id'] . "'>".$regimen['regimen_code'] ." | " . $regimen['regimen_desc'] . "</option>";
 					    }
 					    ?>
 					</select>
@@ -1325,7 +1325,7 @@ if(isset($results)){
 						<option>--Select One--</option>
 						<?php
 					    foreach ($regimens as $regimen) {
-						 echo "<option value='" . $regimen['id'] . "'>".$regimen['Regimen_Code'] ." | " . $regimen['Regimen_Desc'] . "</option>";
+						 echo "<option value='" . $regimen['id'] . "'>".$regimen['regimen_code'] ." | " . $regimen['regimen_desc'] . "</option>";
 					    }
 					    ?>
 					</select>

@@ -18,6 +18,7 @@ use \Modules\ADT\Models\Drug_destination;
 use \Modules\ADT\Models\CCC_store_service_point;
 use \Modules\ADT\Models\Drug_Stock_Movement;
 use Illuminate\Database\Capsule\Manager as DB;
+use Modules\ADT\Models\PatientVisit;
 
 class Inventory_management extends \App\Controllers\BaseController {
 
@@ -45,16 +46,15 @@ class Inventory_management extends \App\Controllers\BaseController {
         $this->base_params($data);
     }
 
-    function getIsoniazid($patientid) {
-        $ids = "";
-        $query = "SELECT id FROM `drugcode` WHERE `drug` LIKE '%ISONIAZID%'";
-        $res = $this->db->query($query)->result();
-        foreach ($res as $i):
-            $ids .= $i->id . ",";
-        endforeach;
-        $isoids = rtrim($ids, ",");
-        $isocount = $this->db->query("SELECT SUM(quantity) isototal FROM patient_visit WHERE patient_id='$patientid' AND drug_id IN ($isoids)")->result();
-        echo json_encode(['iso_count' => $isocount[0]->isototal]);
+    function getIsoniazid($patientid = null) {
+        $patientid = $this->uri->getSegment(3);
+        $ids = [];
+        $res = Drugcode::where('drug', 'like', '%ISONIAZID%')->get();
+        foreach ($res as $i){
+            $ids[] = $i->id;
+        }
+        $isocount = PatientVisit::where('patient_id', $patientid)->whereIn('drug_id', $ids)->sum('quantity');
+        echo json_encode(['iso_count' => $isocount]);
     }
 
     public function stock_listing($stock_type = 1) {
@@ -1147,8 +1147,7 @@ class Inventory_management extends \App\Controllers\BaseController {
 		AND dsb.balance > 0 
 		AND dsb.expiry_date > CURDATE() 
 		ORDER BY dsb.expiry_date ASC";
-        $batch_sql = $this->db->query($sql);
-        $batches_array = $batch_sql->getResultArray();
+        $batches_array = DB::select($sql);
         echo json_encode($batches_array);
     }
 

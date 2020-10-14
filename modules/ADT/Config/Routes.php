@@ -43,8 +43,7 @@ $routes->get('inventory_management', '\Modules\ADT\Controllers\Inventory_managem
 $routes->get('stock_listing/(:any)', '\Modules\ADT\Controllers\Inventory_management::stock_listing/$1');
 $routes->get('getDrugBinCard/(:any)/(:any)', '\Modules\ADT\Controllers\Inventory_management::getDrugBinCard/$1/$2');
 $routes->get('getDrugTransactions/(:any)/(:any)', '\Modules\ADT\Controllers\Inventory_management::getDrugTransactions/$1/$2');
-/* Settings Management */
-$routes->get('settings_management', '\Modules\ADT\Controllers\Settings_management::index');
+$routes->get('inventory_management/getIsoniazid/(:any)', '\Modules\ADT\Controllers\Inventory_management::getIsoniazid');
 
 /* Regimens */
 $routes->get('regimen_management', '\Modules\ADT\Controllers\Regimen_management::index');
@@ -67,6 +66,9 @@ $routes->get('dossing_chart_drugs', '\Modules\ADT\Controllers\Dossing_chart::ind
 $routes->get('dossing_chart_dose', '\Modules\ADT\Controllers\Dossing_chart::index');
 $routes->get('update_balances', '\Modules\ADT\Controllers\Drug_stock_balance_sync::update_balances');
 
+/* Settings Management */
+$routes->get('settings_management', '\Modules\ADT\Controllers\Settings_management::index');
+$routes->get('auto_management/get_viral_load/(:any)', '\Modules\ADT\Controllers\Auto_management::get_viral_load');
 /* Facilities */
 $routes->get('facility_management', '\Modules\ADT\Controllers\Facility_Management::index');
 $routes->get('client_management', '\Modules\ADT\Controllers\Client_management::index');
@@ -162,3 +164,54 @@ $routes->group('report_management', ['namespace' => '\Modules\ADT\Controllers'],
 
 /*Manual/AutoScript*/
 $routes->get('auto_management/index/(:any)', '\Modules\ADT\Controllers\Auto_management::index/$1');
+
+/*Patients*/
+$routes->addRedirect('patient_management', 'public/patients');
+$routes->addRedirect('addpatient_show', 'public/patients/add');
+$routes->get('patients', '\Modules\ADT\Controllers\Patient_management::index');
+$routes->get('patients/listing', '\Modules\ADT\Controllers\Patient_management::listing');
+$routes->get('patients/add', '\Modules\ADT\Controllers\Patient_management::addpatient_show');
+$routes->match(['get', 'post'], 'patient/save', '\Modules\ADT\Controllers\Patient_management::save');
+$routes->get('patient/disable', '\Modules\ADT\Controllers\Patient_management::disable');
+$routes->get('patient/edit/(:any)', '\Modules\ADT\Controllers\Patient_management::edit');
+$routes->post('patient/update/(:any)', '\Modules\ADT\Controllers\Patient_management::update');
+$routes->get('get-patients', '\Modules\ADT\Controllers\Patient_management::get_patients');
+$routes->get('get-patients/(:any)', '\Modules\ADT\Controllers\Patient_management::get_patients');
+$routes->get('patient/load_view/(:any)/(:any)', '\Modules\ADT\Controllers\Patient_management::load_view');
+$routes->get('patient/load_patient/(:any)', '\Modules\ADT\Controllers\Patient_management::load_patient');
+$routes->get('patient/get_visits/(:any)', '\Modules\ADT\Controllers\Patient_management::get_visits');
+$routes->get('patient/load_form/(:any)', '\Modules\ADT\Controllers\Patient_management::load_form');
+$routes->get('patient/load_summary/(:any)', '\Modules\ADT\Controllers\Patient_management::load_summary');
+$routes->get('patient/checkpatient_no/(:any)', '\Modules\ADT\Controllers\Patient_management::checkpatient_no');
+$routes->match(['get', 'post'], 'patient/getSixMonthsDispensing/(:any)', '\Modules\ADT\Controllers\Patient_management::getSixMonthsDispensing');
+$routes->match(['get', 'post'], 'patient/getRegimenChange/(:any)', '\Modules\ADT\Controllers\Patient_management::getRegimenChange');
+$routes->match(['get', 'post'], 'patient/getAppointmentHistory/(:any)', '\Modules\ADT\Controllers\Patient_management::getAppointmentHistory');
+$routes->get('patient/get_Last_vl_result/(:any)', '\Modules\ADT\Controllers\Patient_management::get_Last_vl_result');
+$routes->match(['get', 'post'], 'patient/get_viral_load_info/(:any)', '\Modules\ADT\Controllers\Patient_management::get_viral_load_info');
+$routes->get('patient/viewDetails/(:any)', '\Modules\ADT\Controllers\Patient_management::viewDetails');
+$routes->get('patient/requiredFields/(:any)', '\Modules\ADT\Controllers\Patient_management::requiredFields');
+$routes->match(['get', 'post'], 'patient/get_patient_details', '\Modules\ADT\Controllers\Patient_management::get_patient_details');
+$routes->match(['get', 'post'], 'patient/getAppointments/(:any)', '\Modules\ADT\Controllers\Patient_management::getAppointments');
+
+/* Dispensement */
+$routes->get('dispensement_management/dispense/(:any)', '\Modules\ADT\Controllers\Dispensement_management::dispense');
+$routes->match(['get', 'post'], 'dispensement_management/save', '\Modules\ADT\Controllers\Dispensement_management::save');
+$routes->get('dispensement_management/edit/(:any)', '\Modules\ADT\Controllers\Dispensement_management::edit');
+$routes->get('dispensement_management/getPrescriptions/(:any)', '\Modules\ADT\Controllers\Dispensement_management::getPrescriptions');
+$routes->get('dispensement_management/get_patient_data/(:any)', '\Modules\ADT\Controllers\Dispensement_management::get_patient_data');
+$routes->match(['get', 'post'], 'dispensement_management/get_other_dispensing_details', '\Modules\ADT\Controllers\Dispensement_management::get_other_dispensing_details');
+$routes->match(['get', 'post'], 'dispensement_management/getDrugsRegimens', '\Modules\ADT\Controllers\Dispensement_management::getDrugsRegimens');
+$routes->match(['get', 'post'], 'dispensement_management/getDrugDose/(:any)', '\Modules\ADT\Controllers\Dispensement_management::getDrugDose');
+$routes->match(['get', 'post'], 'dispensement_management/drugAllergies', '\Modules\ADT\Controllers\Dispensement_management::drugAllergies');
+$routes->post('dispensement_management/getBrands', '\Modules\ADT\Controllers\Dispensement_management::getBrands');
+$routes->post('dispensement_management/getIndications', '\Modules\ADT\Controllers\Dispensement_management::getIndications');
+$routes->post('dispensement_management/getFacililtyAge', '\Modules\ADT\Controllers\Dispensement_management::getFacililtyAge');
+$routes->post('dispensement_management/getInstructions/(:any)', '\Modules\ADT\Controllers\Dispensement_management::getInstructions');
+$routes->post('dispensement_management/print_test', '\Modules\ADT\Controllers\Dispensement_management::print_test');
+$routes->post('dispensement_management/getPreviouslyDispensedDrugs', '\Modules\ADT\Controllers\Dispensement_management::getPreviouslyDispensedDrugs');
+
+/* Regimens */
+$routes->match(['get', 'post'], 'regimen_management/getRegimenLine/(:any)', '\Modules\ADT\Controllers\Regimen_management::getRegimenLine');
+$routes->post('regimen_management/getRegimenLine/(:any)/(:any)', '\Modules\ADT\Controllers\Regimen_management::getRegimenLine');
+$routes->match(['get', 'post'], 'regimen_management/getFilteredRegiments', '\Modules\ADT\Controllers\Regimen_management::getFilteredRegiments');
+

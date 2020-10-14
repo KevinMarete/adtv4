@@ -6,9 +6,9 @@
 	    <div class="row-fluid">
 		    <div class="span12">
 			    <ul class="breadcrumb">
-					<li><a href="<?php echo base_url().'patient_management'; ?>">Patients</a> <span class="divider">/</span></li>
+					<li><a href="<?php echo base_url().'/public/patients'; ?>">Patients</a> <span class="divider">/</span></li>
 				  	<li>
-				  		<a href="<?php echo base_url().'patient_management/load_view/details/'.$patient_id; ?>">
+				  		<a href="<?php echo base_url().'/public/patient/load_view/details/'.$patient_id; ?>">
 				  		<span class="patient_name_link"></span>
 				  		</a><span class="divider">/</span> 
 				  	</li>
