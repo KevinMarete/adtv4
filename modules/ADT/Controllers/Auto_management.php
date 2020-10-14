@@ -13,6 +13,7 @@ use \Modules\ADT\Models\User;
 use \Modules\ADT\Models\User_right;
 use \Modules\ADT\Models\Patient_appointment;
 use \Modules\ADT\Models\CCC_store_service_point;
+use Modules\ADT\Models\PatientViralLoad;
 
 class Auto_management extends \App\Controllers\BaseController {
 
@@ -758,19 +759,14 @@ class Auto_management extends \App\Controllers\BaseController {
         return $alert;
     }
 
-    public function get_viral_load($patient_no) {
+    public function get_viral_load($patient_no = null) {
         //Validate patient_no when use of / to separate mflcode and ccc_no
-        $mflcode = $this->uri->segment(3);
-        $ccc_no = $this->uri->segment(4);
+        $mflcode = $this->uri->getSegment(3);
+        $ccc_no = $this->uri->getSegment(4);
         if ($ccc_no) {
             $patient_no = $mflcode . '/' . $ccc_no;
         }
-        $this->db->select('*');
-        $this->db->where('patient_ccc_number', $patient_no);
-        $this->db->from('patient_viral_load');
-        $this->db->order_by('test_date', 'desc');
-        $query = $this->db->get();
-        $result = $query->result_array();
+        $result = PatientViralLoad::where('patient_ccc_number', $patient_no)->orderBy('test_date', 'desc')->get()->toArray();
         echo json_encode($result);
     }
 

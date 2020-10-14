@@ -29,7 +29,7 @@
 											"bAutoWidth" : false,
 											"bDeferRender" : true,
 											"bInfo" : true,
-											"sAjaxSource": base_url+"patient_management/getPatientMergeList",
+											"sAjaxSource": base_url+"/public/patients/getPatientMergeList",
             });
         //merging patient
 		$(".merge_patient").live('click',function(){
@@ -47,7 +47,7 @@
 		            if(counter>0){
                         //ajax call to patient merge function
                         $.ajax({
-			                url: base_url+'patient_management/merge',
+			                url: base_url+'/public/patient/merge',
 			                type: 'POST', 
 			                data: { 
 			                	'patients': patients ,
@@ -78,7 +78,7 @@
                     if(res===true){
                         //ajax call to patient unmerge function
                         $.ajax({
-			                url: base_url+'patient_management/unmerge',
+			                url: base_url+'/public/patient/unmerge',
 			                type: 'POST', 
 			                data: { 
 			                	'target_ccc':target_patient_id

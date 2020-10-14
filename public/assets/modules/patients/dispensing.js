@@ -10,11 +10,11 @@ $(function(){
 	$("#reset_btn").attr("disabled", "disabled");
         
     //Define resources for requests
-	var page_url = base_url + "patient_management/load_form/dispensing_frm";
-	var patient_url = base_url + "dispensement_management/get_patient_data/" + patient_id ;
-	var visits_url = base_url + "patient_management/get_visits/" + patient_id;
-	var summary_url = base_url + "patient_management/load_summary/" + patient_id;
-	var spinner_url = base_url + "assets/images/loading_spin.gif";
+	var page_url = base_url + "/public/patient/load_form/dispensing_frm";
+	var patient_url = base_url + "/public/dispensement/get_patient_data/" + patient_id ;
+	var visits_url = base_url + "/public/patient/get_visits/" + patient_id;
+	var summary_url = base_url + "/public/patient/load_summary/" + patient_id;
+	var spinner_url = base_url + "/public/assets/images/loading_spin.gif";
 
 	//Load Page Data(form.js) then load Patient Data(details.js) after that sanitize form (details.js)
     getPageData(page_url).always( function(){

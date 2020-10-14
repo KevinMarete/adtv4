@@ -12,17 +12,17 @@
     #submit_section{text-align:right;}
     #prescription_div {overflow-y: scroll;width: 100%;max-height: 300px;margin-top: 77px;}
 </style>
-<?php // require 'dispense_adr_v.php' ?>
+<?php $session = session(); ?>
 <div class="container-fluid content">
     <div class="row-fluid">
-        <a href="<?php echo base_url() . 'patient_management ' ?>">Patient Listing </a> <i class=" icon-chevron-right"></i><a id="patient_names" href="<?php echo base_url() . 'patient_management/load_view/details/' . @$patient_id ?>"><?php echo strtoupper(@$result['name']); ?></a> <i class=" icon-chevron-right"></i><strong>Dispensing details</strong>
+        <a href="<?php echo base_url() . '/public/patients ' ?>">Patient Listing </a> <i class=" icon-chevron-right"></i><a id="patient_names" href="<?php echo base_url() . '/public/patient/load_view/details/' . @$patient_id ?>"><?php echo strtoupper(@$result['name']); ?></a> <i class=" icon-chevron-right"></i><strong>Dispensing details</strong>
         <hr size="1">
     </div>
-    <form id="dispense_form"  name="dispense_form" class="dispense_form" method="post"  action="<?php echo base_url() . 'dispensement_management/save'; ?>" >
+    <form id="dispense_form"  name="dispense_form" class="dispense_form" method="post"  action="<?php echo base_url() . '/public/dispensement_management/save'; ?>" >
         <textarea name="sql" id="sql" style="display:none;"></textarea>
         <input type="hidden" id="hidden_stock" name="hidden_stock"/>
         <input type="hidden" id="days_count" name="days_count"/>
-        <input type="hidden" id="age" name="age" value="<?php echo @$results[0]['age']; ?>"/>
+        <input type="hidden" id="age" name="age" value="<?php echo @$results[0]->age; ?>"/>
         <input type="hidden" id="stock_type_text" name="stock_type_text" value="main pharmacy" />
         <input type="hidden" id="purpose_refill_text" name="purpose_refill_text" value="" />
         <input type="hidden" id="patient_source" name="patient_source" value="<?php echo @$result['patient_source']; ?>" />
@@ -36,7 +36,7 @@
                     <div class="span6 dispensing-field">
                         <div class="control-group">
                             <?php
-                            $ccc_stores = $this->session->userdata('ccc_store');
+                            $ccc_stores = $session->get('ccc_store');
                             $count_ccc = count($ccc_stores);
                             $selected = '';
                             if ($count_ccc > 0) {//In case on has more than one dispensing point
@@ -44,19 +44,18 @@
                                 <select name='ccc_store_id' id='ccc_store_id' class='validate[required]'>";
                                 //Check if facility has more than one dispensing point
                                 foreach ($ccc_stores as $value) {
-                                    $name = $value['Name'];
-                                    if ($this->session->userdata('ccc_store_id')) {
-                                        $ccc_storeid = $this->session->userdata('ccc_store_id');
-                                        if ($value['id'] === $ccc_storeid) {
+                                    if ($session->get('ccc_store_id')) {
+                                        $ccc_storeid = $session->get('ccc_store_id');
+                                        if ($value->id === $ccc_storeid) {
                                             $selected = "selected";
-                                            echo "<option value='" . $value['id'] . "' " . $selected . ">" . $name . "</option>";
+                                            echo "<option value='" . $value->id . "' " . $selected . ">" . $value->name . "</option>";
                                         }
                                     }
                                 }
                                 echo "</select>";
                             }
 
-                            //$this->session->set_userdata('ccc_store',$name);
+                            //$session->set_userdata('ccc_store',$name);
                             ?>
                         </div>
                     </div>
@@ -92,7 +91,7 @@
                                 <option value="">--Select One--</option>
                                 <?php
                                 foreach ($purposes as $purpose) {
-                                    echo "<option value='" . $purpose['id'] . "'>" . $purpose['Name'] . "</option>";
+                                    echo "<option value='" . $purpose['id'] . "'>" . $purpose['name'] . "</option>";
                                 }
                                 ?>
                             </select>   
@@ -176,8 +175,8 @@
                             $last_regimen_disp = 'N/A';
                             $last_regimen = 0;
                             foreach ($patient_appointment as $appointment):
-                                $last_regimen_disp = $appointment['regimen_code'] . ' | ' . $appointment['regimen_desc'];
-                                $last_regimen = $appointment['regimen_id'];
+                                $last_regimen_disp = $appointment->regimen_code . ' | ' . $appointment->regimen_desc;
+                                $last_regimen = $appointment->regimen_id;
                             endforeach;
                             echo $last_regimen_disp;
                             ?>" id="last_regimen_disp" readonly="">
@@ -360,7 +359,7 @@
                         <!--                        <td><select name="brand[]" class="brand input-small"></select></td>-->
 
                         <td>
-                            <select name="indication[]" class="indication input-small " style="">
+                            <select name="indication[]" class="indication input-small">
                                 <option value="0">None</option>
                             </select></td>
                         <td>
@@ -388,7 +387,7 @@
     <div id="open_print_label" name="open_print_label" title="Label Printer" class="container-fluid">
         <!--select all row-->
         <div class="drugrow"> 
-            <form id="print_frm" method="post" action="<?php echo base_url(); ?>dispensement_management/print_test">
+            <form id="print_frm" method="post" action="<?php echo base_url(); ?>/public/dispensement_management/print_test">
                 <div class="row label_selectall">
                     <div class="span1" style="padding: 4px 5px;">
                         <label class="checkbox inline">
@@ -401,14 +400,14 @@
     </div>
     <!--end modal-->
 </div>
-<script src="<?php echo base_url() . 'assets/scripts/bootbox/v4/bootbox.min.js'; ?>"></script>
+<script src="<?php echo base_url() . '/public/assets/scripts/bootbox/v4/bootbox.min.js'; ?>"></script>
 
 <script type="text/javascript">
     $(document).ready(function () {
         val = '';
         thedays = 0;
         amountispensed = 0;
-        $.getJSON("<?php echo base_url() . 'patient_management/requiredFields/' . $patient_id; ?>", function (resp) {
+        $.getJSON("<?php echo base_url() . '/public/patient/requiredFields/' . $patient_id; ?>", function (resp) {
             if (resp.status === 1) {
                 bootbox.confirm({
                     title: "Missing Patient Data!",
@@ -423,9 +422,9 @@
                     },
                     callback: function (result) {
                         if (result === true) {
-                            window.location.href = "<?php echo base_url() . 'patient_management/edit/' . $patient_id ?>";
+                            window.location.href = "<?php echo base_url() . '/public/patient/edit/' . $patient_id ?>";
                         } else {
-                            window.location.href = "<?php echo base_url() . 'patient_management' ?>";
+                            window.location.href = "<?php echo base_url() . '/public/patients' ?>";
                         }
                     }
                 });
@@ -435,13 +434,13 @@
 <?php if (count($prescription) > 0 && $api) { ?>
             $('#current_regimen').val($("#current_regimen option:contains(<?= $prescription[0]['drug_name']; ?>)").val());
 <?php } ?>
-        $('#ccc_store_id').val(<?= $this->session->userdata('ccc_store_id'); ?>);
+        $('#ccc_store_id').val(<?= $session->get('ccc_store_id'); ?>);
         $('#ccc_store_id').attr('readonly', 'true');
         var loopcounter = 0;
         var patient_id = "<?php echo $patient_id; ?>";
         var service = "<?php echo $service_name; ?>"
         var base_url = "<?php echo base_url(); ?>";
-        var link = base_url + "patient_management/get_viral_load_info/" + patient_id;
+        var link = base_url + "/public/patient/get_viral_load_info/" + patient_id;
         var request_viral_load = $.ajax({
             url: link,
             type: 'POST',
@@ -704,7 +703,7 @@
                     var patient_name = $('#patient_details').val();
                     //get instructions
                     var base_url = "<?php echo base_url(); ?>";
-                    var link = base_url + "dispensement_management/getInstructions/" + drug_id;
+                    var link = base_url + "/public/dispensement_management/getInstructions/" + drug_id;
                     $.ajax({
                         url: link,
                         async: false,
@@ -781,12 +780,12 @@
                         <div class="row-fluid">\
                         <div class="span6">\
                         <label class="inline">\
-                        Facility Name:<input type="text" name="print_facility_name" class="span8 label_facility" value="<?php echo $this->session->userdata("facility_name"); ?>" readonly/>\
+                        Facility Name:<input type="text" name="print_facility_name" class="span8 label_facility" value="<?php echo $session->get("facility_name"); ?>" readonly/>\
                         </label>\
                         </div>\
                         <div class="span6">\
                         <label class="inline">\
-                        Facility Phone:<input type="text" name="print_facility_phone" class="span4 label_contact" value="<?php echo $this->session->userdata("facility_phone"); ?>" readonly/>\
+                        Facility Phone:<input type="text" name="print_facility_phone" class="span4 label_contact" value="<?php echo $session->get("facility_phone"); ?>" readonly/>\
                         </label>\
                         </div>\
                         </div>\
@@ -836,7 +835,7 @@
         //------------------------------ Validation end---------------------------------------------
 
 
-        var link = "<?php echo base_url(); ?>patient_management/get_patient_details";
+        var link = "<?php echo base_url(); ?>/public/patient/get_patient_details";
         var patient_id = "<?php echo $patient_id; ?>";
         var request = $.ajax({
             url: link,
@@ -845,15 +844,15 @@
             dataType: "json"
         });
         request.done(function (data) {
-            $("#patient").val(data.Patient_Number_CCC);
+            $("#patient").val(data.patient_number_ccc);
             $("#patient_details").val(data.names);
-            $("#height").val(data.Height);
+            $("#height").val(data.height);
             // $("#weight").val(data.Weight);
             $("#patient_names").text(data.names);
             $("#next_clinical_appointment_date").val(data.clinicalappointment);
             $("#next_clinical_appointment").val(data.clinicalappointment);
 
-            $.getJSON("<?= base_url() . 'inventory_management/getIsoniazid/'; ?>" + data.Patient_Number_CCC, function (resp) {
+            $.getJSON("<?= base_url() . '/public/inventory_management/getIsoniazid/'; ?>" + data.patient_number_ccc, function (resp) {
                 amountispensed = parseInt(resp.iso_count);
                 // alert(amountispensed);
                 if (amountispensed >= 180) {
@@ -879,10 +878,10 @@
             }
 
 
-            is_pregnant = data.Pregnant;
+            is_pregnant = data.pregnant;
             has_tb = data.Tb;
             var age = data.age;
-            patient_ccc = data.Patient_Number_CCC;
+            patient_ccc = data.patient_number_ccc;
             //CHeck if patient is pregnant
             checkIfPregnant(is_pregnant, patient_ccc);
             //Check if still has tb
@@ -938,7 +937,7 @@
             if (purpose_visit === 'start art') {
                 $("#current_regimen").val("0");
                 $("#purpose_refill_text").val(purpose_visit);
-                var _url = "<?php echo base_url() . 'patient_management/getWhoStage'; ?>";
+                var _url = "<?php echo base_url() . '/public/patient/getWhoStage'; ?>";
                 //Get drugs
                 var request = $.ajax({
                     url: _url,
@@ -970,7 +969,7 @@
                                         if (res === true) {//If answer is no, update pregnancy status
                                             var who_selected = $('#who_stage').val();
                                             //Check if the current regimen is OI Medicine and if not, hide the indication field
-                                            var _url = "<?php echo base_url() . 'patient_management/updateWhoStage'; ?>";
+                                            var _url = "<?php echo base_url() . '/public/patient/updateWhoStage'; ?>";
                                             //Get drugs
                                             var request = $.ajax({
                                                 url: _url,
@@ -998,7 +997,7 @@
 
         var selected_regimen = $(this).val();
         //Check if the current regimen is OI Medicine and if not, hide the indication field
-        var _url = "<?php echo base_url() . 'dispensement_management/getDrugsRegimens'; ?>";
+        var _url = "<?php echo base_url() . '/public/dispensement_management/getDrugsRegimens'; ?>";
         //Get drugs
         var request = $.ajax({
             url: _url,
@@ -1076,7 +1075,7 @@
         $(".drug").each(function (index) {
             $(this).closest('');
             var row = $(this);
-            var url_drug_dose = "<?php echo base_url() . 'dispensement_management/getDrugDose/'; ?>";
+            var url_drug_dose = "<?php echo base_url() . '/public/dispensement_management/getDrugDose/'; ?>";
             var new_url_dose = url_drug_dose + $(this).val();
             var request_one_dose = $.ajax({
                 url: new_url_dose,
@@ -1092,7 +1091,7 @@
     });
     $('#adr_popupcheckbox').change(function () {
         if (this.checked) {
-            window.open("<?= base_url() . "dispensement_management/adr/" . $patient_id ?>");
+            window.open("<?= base_url() . "/public/dispensement_management/adr/" . $patient_id ?>");
         }
     });
     //drug change event
@@ -1106,7 +1105,7 @@
         var selected_drug = $(this).val();
         var patient_no = $("#patient").val();
         //Check if patient allergic to selected drug
-        var _url = "<?php echo base_url() . 'dispensement_management/drugAllergies'; ?>";
+        var _url = "<?php echo base_url() . '/public/dispensement_management/drugAllergies'; ?>";
         var request = $.ajax({
             url: _url,
             type: 'post',
@@ -1174,7 +1173,7 @@
                 }
                 var dose = "";
                 //Get batches that have not yet expired and have stock balance
-                var _url = "<?php echo base_url() . 'inventory_management/getBacthes'; ?>";
+                var _url = "<?php echo base_url() . '/public/getBacthes'; ?>";
                 var request = $.ajax({
                     url: _url,
                     type: 'post',
@@ -1184,7 +1183,7 @@
                 });
                 request.done(function (data) {
                     //get and check age
-                    var link = "<?php echo base_url(); ?>patient_management/get_patient_details";
+                    var link = "<?php echo base_url(); ?>/public/patient/get_patient_details";
                     var patient_id = "<?php echo $patient_id; ?>";
                     var request = $.ajax({
                         url: link,
@@ -1202,7 +1201,7 @@
                             bootbox.alert("<h4>IPT Alert!</h4> The patient has already been dispensed to the maximum number of IPT pills, treatement should have ended on: " + ipt_end_date);
                         }
                         //get facility adult age
-                        var link = "<?php echo base_url(); ?>dispensement_management/getFacililtyAge";
+                        var link = "<?php echo base_url(); ?>/public/dispensement_management/getFacililtyAge";
                         var request = $.ajax({
                             url: link,
                             type: 'post',
@@ -1210,7 +1209,7 @@
                         });
                         request.done(function (datas) {
                             var adult_age = datas[0].adult_age;
-                            var url_dose = "<?php echo base_url() . 'dispensement_management/getDoses'; ?>";
+                            var url_dose = "<?php echo base_url() . '/public/dispensement_management/getDoses'; ?>";
                             //Get doses
                             var request_dose = $.ajax({
                                 url: url_dose,
@@ -1218,7 +1217,7 @@
                                 dataType: "json"
                             });
                             request_dose.done(function (data) {
-                                var url_drug_dose = "<?php echo base_url() . 'dispensement_management/getDrugDose/'; ?>";
+                                var url_drug_dose = "<?php echo base_url() . '/public/dispensement_management/getDrugDose/'; ?>";
                                 var new_url_dose = url_drug_dose + selected_drug;
                                 var request_one_dose = $.ajax({
                                     url: new_url_dose,
@@ -1260,7 +1259,7 @@
                         dose = value.dose;
                     });
                     //Get brands
-                    var new_url = "<?php echo base_url() . 'dispensement_management/getBrands'; ?>";
+                    var new_url = "<?php echo base_url() . '/public/dispensement_management/getBrands'; ?>";
                     var request_brand = $.ajax({
                         url: new_url,
                         type: 'post',
@@ -1278,7 +1277,7 @@
                         boottbox.alert("<h4>Brands Notice</h4>\n\<hr/><center>Could not retrieve the list of brands :</center> " + textStatus);
                     });
                     //Get indications(opportunistic infections)
-                    var url_indication = "<?php echo base_url() . 'dispensement_management/getIndications'; ?>";
+                    var url_indication = "<?php echo base_url() . '/public/dispensement_management/getIndications'; ?>";
                     var request_dose = $.ajax({
                         url: url_indication,
                         type: 'post',
@@ -1292,7 +1291,7 @@
                         row.closest("tr").find(".indication").append("<option value='0'>None</option> ");
                         // Check if regimen selected is OI so as to display indication
                         $.each(data, function (key, value) {
-                            row.closest("tr").find(".indication").append("<option value='" + value.Indication + "'>" + value.Indication + " | " + value.Name + "</option> ");
+                            row.closest("tr").find(".indication").append("<option value='" + value.indication + "'>" + value.indication + " | " + value.name + "</option> ");
                         });
                     });
                 });
@@ -1316,7 +1315,7 @@
         if ($(this).val() != 0) {
             var batch_selected = $(this).val();
             var selected_drug = row.closest("tr").find(".drug").val();
-            var _url = "<?php echo base_url() . 'inventory_management/getBacthDetails'; ?>";
+            var _url = "<?php echo base_url() . '/public/getBacthDetails'; ?>";
             var request = $.ajax({
                 url: _url,
                 type: 'post',
@@ -1643,7 +1642,7 @@
 
 
     function loadRegimens(age) {
-        var link = "<?php echo base_url(); ?>regimen_management/getFilteredRegiments";
+        var link = "<?php echo base_url(); ?>/public/regimen_management/getFilteredRegiments";
         var service = "<?php echo $service_name; ?>"
         var request = $.ajax({
             url: link,
@@ -1658,7 +1657,7 @@
                         return this.value || $.trim(this.value).length != 0;
                     }).remove();
             $(data).each(function (i, v) {
-                $("#current_regimen").append("<option value='" + v.id + "'>" + v.Regimen_Code + " | " + v.Regimen_Desc + "</option>");
+                $("#current_regimen").append("<option value='" + v.id + "'>" + v.regimen_code + " | " + v.regimen_desc + "</option>");
             });
         });
         request.fail(function (jqXHR, textStatus) {
@@ -1668,7 +1667,7 @@
 
     function loadOtherDetails(patient_ccc) {
         //Load Non adherence reasons, regimen change reasons previously dispensed drugs
-        var link = "<?php echo base_url(); ?>dispensement_management/get_other_dispensing_details";
+        var link = "<?php echo base_url(); ?>/public/dispensement_management/get_other_dispensing_details";
         var request = $.ajax({
             url: link,
             type: 'post',
@@ -1687,7 +1686,7 @@
                         return this.value || $.trim(this.value).length != 0;
                     }).remove();
             $(non_adherence_reasons).each(function (i, v) {
-                $("#non_adherence_reasons").append("<option value='" + v.id + "'>" + v.Name + "</option>");
+                $("#non_adherence_reasons").append("<option value='" + v.id + "'>" + v.name + "</option>");
             });
             //Load regimen change reasons
             $('#regimen_change_reason option')
@@ -1695,7 +1694,7 @@
                         return this.value || $.trim(this.value).length != 0;
                     }).remove();
             $(regimen_change_reason).each(function (i, v) {
-                $("#regimen_change_reason").append("<option value='" + v.id + "'>" + v.Name + "</option>");
+                $("#regimen_change_reason").append("<option value='" + v.id + "'>" + v.name + "</option>");
             });
 
              //Load dcm exit reasons
@@ -1704,15 +1703,15 @@
                         return this.value || $.trim(this.value).length != 0;
                     }).remove();
             $(dcm_exit_reasons).each(function (i, v) {
-                $("#dcm_exit_reason").append("<option value='" + v.id + "'>" + v.Name + "</option>");
+                $("#dcm_exit_reason").append("<option value='" + v.id + "'>" + v.name + "</option>");
             });
             //Appointment date, If patient presiously visited,load previous appointment date
             if (patient_appointment.length > 0) {
-                appointment_date = patient_appointment[0].Appointment;
+                appointment_date = patient_appointment[0].appointment;
                 $("#last_appointment_date").val(appointment_date); //Latest appointment date
                 //loadMyPreviousDispensedDrugs();
                 //------------------------------- PREVIOUS VISIT DATA
-                var link = "<?php echo base_url(); ?>dispensement_management/getPreviouslyDispensedDrugs";
+                var link = "<?php echo base_url(); ?>/public/dispensement_management/getPreviouslyDispensedDrugs";
                 var request = $.ajax({
                     url: link,
                     type: 'post',
@@ -1752,7 +1751,7 @@
 
     function checkIfTested(service, patient_id) {
         if (service == 'prep') {
-            $.getJSON('<?php echo base_url(); ?>dispensement_management/get_prep_reasons', function (reasons) {
+            $.getJSON('<?php echo base_url(); ?>/public/dispensement_management/get_prep_reasons', function (reasons) {
                 bootbox.prompt({
                     title: "HIV TEST (PREP) | What is the Patient's PREP Reason?",
                     inputType: 'select',
@@ -1791,7 +1790,7 @@
                                                     }
                                                 ],
                                                 callback: function (test_result) {
-                                                    var test_result_url = "<?php echo base_url(); ?>" + 'dispensement_management/update_prep_test/' + patient_id + '/' + prep_reason + '/' + is_tested + '/' + test_date + '/' + test_result
+                                                    var test_result_url = "<?php echo base_url(); ?>" + '/public/dispensement_management/update_prep_test/' + patient_id + '/' + prep_reason + '/' + is_tested + '/' + test_date + '/' + test_result
                                                     $.get(test_result_url, function (msg) {
                                                         bootbox.alert("<h4>HIV TEST (PREP)</h4>\n\<hr/><center>" + msg + "</center>")
                                                     });
@@ -1828,7 +1827,7 @@
                 callback: function (res) {
                     if (res === false) {//If answer is no, update pregnancy status
                         //Check if the current regimen is OI Medicine and if not, hide the indication field
-                        var _url = "<?php echo base_url() . 'patient_management/updatePregnancyStatus'; ?>";
+                        var _url = "<?php echo base_url() . '/public/patient/updatePregnancyStatus'; ?>";
                         //Get drugs
                         var request = $.ajax({
                             url: _url,
@@ -1859,7 +1858,7 @@
                 },
                 callback: function (res) {
                     if (res === false) {//If answer is no, update tbstatus
-                        var _url = "<?php echo base_url() . 'patient_management/update_tb_status'; ?>";
+                        var _url = "<?php echo base_url() . '/public/patient/update_tb_status'; ?>";
                         //Get drugs
                         var request = $.ajax({
                             url: _url,
@@ -1874,7 +1873,7 @@
     }
     /*********TESTING FUNCTION*********/
     function loadMyPreviousDispensedDrugs() {
-        var link = "<?php echo base_url(); ?>dispensement_management/getPreviouslyDispensedDrugs";
+        var link = "<?php echo base_url(); ?>/public/dispensement_management/getPreviouslyDispensedDrugs";
         var request = $.ajax({
             url: link,
             type: 'post',
@@ -2035,7 +2034,7 @@
         //Function to Check Patient Number exists
         var base_url = "<?php echo base_url(); ?>";
         var appointment = $("#next_appointment_date").val();
-        var link = base_url + "patient_management/getAppointments/" + appointment;
+        var link = base_url + "/public/patient/getAppointments/" + appointment;
         $.ajax({
             url: link,
             type: 'POST',
@@ -2129,7 +2128,7 @@
     }
 
     function storeSession(ccc_id) {
-        var url = "<?php echo base_url() . 'dispensement_management/save_session'; ?>"
+        var url = "<?php echo base_url() . '/public/dispensement_management/save_session'; ?>"
         $.post(url, {'session_name': 'ccc_store_id', 'session_value': ccc_id});
     }
 </script>

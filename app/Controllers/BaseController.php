@@ -48,6 +48,14 @@ class BaseController extends Controller {
         date_default_timezone_set('Africa/Nairobi');
         $this->db = \Config\Database::connect();
         service('eloquent');
+        $this->uri = service('uri');
+    }
+
+    //shorten field input
+    function post($field) {
+        if(!empty($_POST[$field]))
+            return $_POST[$field];
+        else return "";
     }
 
 }

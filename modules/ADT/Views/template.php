@@ -546,9 +546,9 @@ if ($user_is_administrator) {
                         <div id="footer_text2" class="span12" style="text-align:center">
                             Government of Kenya &copy; <?php echo date('Y'); ?>.
                             All Rights Reserved . <strong>Web-ADT version 3.5.0</strong>
-                            <?php //if (str_replace('.', '', $update_available->release) + 0 > '3.4.2') { ?>
+                            <?php if ($session->get('update_available')) { ?>
                                 <a class="badge badge-warning blinking" href="#adt_update_modal" data-toggle="modal">New Update available</div>
-                        <?php // } ?>
+                        <?php } ?>
                     </div>  
                 </div>
         </div>
@@ -566,7 +566,7 @@ if ($user_is_administrator) {
                     <div class="control-group">
                         <div class="controls">
                             <select id="search_criteria" name="search_criteria" required  class="span3">
-                                <option data-cat='patient' value="0" data-dest="patient_management/load_view/details/">Search Patients</option>
+                                <option data-cat='patient' value="0" data-dest="/public/patient/load_view/details/">Search Patients</option>
                                 <?php
                                 foreach ($ccc_stores as $ccc_store) {
                                     echo "<option data-cat='drugcode' value='" . $ccc_store->id . "' data-id ='" . $ccc_store->id . "' data-dest='inventory_management/getDrugBinCard/'>Search drugs (" . $ccc_store->name . ")</option>";
