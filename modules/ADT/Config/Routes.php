@@ -1,4 +1,7 @@
 <?php
+/*Default route*/
+$routes->get('/', '\Modules\ADT\Controllers\User_management::login');
+
 /*Authentication Routes*/
 $routes->get('login', '\Modules\ADT\Controllers\User_management::login');
 $routes->post('user_management/authenticate', '\Modules\ADT\Controllers\User_management::authenticate');
@@ -41,14 +44,15 @@ $routes->get('stock_listing/(:any)', '\Modules\ADT\Controllers\Inventory_managem
 $routes->get('getDrugBinCard/(:any)/(:any)', '\Modules\ADT\Controllers\Inventory_management::getDrugBinCard');
 $routes->get('getDrugTransactions/(:any)/(:any)', '\Modules\ADT\Controllers\Inventory_management::getDrugTransactions');
 
-
-
 /* Settings Management */
 $routes->get('settings_management', '\Modules\ADT\Controllers\Settings_management::index');
 $routes->get('regimen_management/', '\Modules\ADT\Controllers\Settings_management::index');
 
-
-
 /*User Management*/
 $routes->get('user_management', '\Modules\ADT\Controllers\User_management::index');
 
+/* Report Management*/
+$routes->group('report_management', ['namespace' => '\Modules\ADT\Controllers'], function ($routes) {
+  $routes->get('/', 'Report_management::index');
+  $routes->get('cumulative_patients/(:any)/(:any)', 'Report_management::cumulative_patients');
+});

@@ -1,6 +1,7 @@
 <?php
 
-class Report_management extends MY_Controller {
+class Report_management extends MY_Controller
+{
 
     var $counter = 0;
     var $drug_array = array();
@@ -9,7 +10,8 @@ class Report_management extends MY_Controller {
     var $com_summary = array();
     var $count_rows = 0;
 
-    function __construct() {
+    function __construct()
+    {
         parent::__construct();
         ini_set("max_execution_time", "1000000");
         ini_set("memory_limit", '2048M');
@@ -18,13 +20,15 @@ class Report_management extends MY_Controller {
         $this->load->helper(array("file", "download"));
     }
 
-    public function index() {
+    public function index()
+    {
         $ccc_stores = CCC_store_service_point::getAllActive();
         $this->session->set_userdata('ccc_store', $ccc_stores);
         $this->listing();
     }
 
-    public function getMOHForm($type = "", $period_start = "", $period_end) {
+    public function getMOHForm($type = "", $period_start = "", $period_end)
+    {
         $this->load->library('PHPExcel');
         $dir = "assets/download";
         if ($type == "711") {
@@ -97,7 +101,8 @@ class Report_management extends MY_Controller {
         }
     }
 
-    public function get_711($period = "") {
+    public function get_711($period = "")
+    {
         $moh_711 = array();
         $moh_711[] = $this->on_family_planning($period);
         $moh_711[] = $this->art_enrolled($period);
@@ -114,7 +119,8 @@ class Report_management extends MY_Controller {
         return $moh_711;
     }
 
-    public function on_family_planning($period = "March-2014") {
+    public function on_family_planning($period = "March-2014")
+    {
         $period_start = date('Y-m-01', strtotime($period));
         $period_end = date('Y-m-t', strtotime($period));
 
@@ -312,7 +318,8 @@ class Report_management extends MY_Controller {
         return $data;
     }
 
-    public function art_enrolled($period = "") {
+    public function art_enrolled($period = "")
+    {
         $period_start = date('Y-m-01', strtotime($period));
         $period_end = date('Y-m-t', strtotime($period));
         $counter = 0;
@@ -391,7 +398,8 @@ class Report_management extends MY_Controller {
         return $data;
     }
 
-    public function cumulative_enrolled_at_facility($period = "") {
+    public function cumulative_enrolled_at_facility($period = "")
+    {
         $to = date('Y-m-t', strtotime($period));
 
         $male_below_fifteen_years = 0;
@@ -431,7 +439,8 @@ class Report_management extends MY_Controller {
         return $data;
     }
 
-    public function receiving_tb_treatment($period = "") {
+    public function receiving_tb_treatment($period = "")
+    {
         $to = date('Y-m-t', strtotime($period));
 
         $male_below_fifteen_years = 0;
@@ -471,7 +480,8 @@ class Report_management extends MY_Controller {
         return $data;
     }
 
-    public function who_stages($period = "") {
+    public function who_stages($period = "")
+    {
         $period_start = date('Y-m-01', strtotime($period));
         $period_end = date('Y-m-t', strtotime($period));
         $counter = 0;
@@ -536,7 +546,8 @@ class Report_management extends MY_Controller {
         return $data;
     }
 
-    public function cumulative_art_at_facility($period = "") {
+    public function cumulative_art_at_facility($period = "")
+    {
         $period_end = date('Y-m-t', strtotime($period));
 
         $female_adult = 0;
@@ -575,7 +586,8 @@ class Report_management extends MY_Controller {
         return $data;
     }
 
-    public function pregnant_on_arv($period_end = "") {
+    public function pregnant_on_arv($period_end = "")
+    {
         $period_end = date('Y-m-t', strtotime($period_end));
         $value = 0;
         $total = 0;
@@ -594,7 +606,8 @@ class Report_management extends MY_Controller {
         return $family;
     }
 
-    public function total_on_arv($period_end = "") {
+    public function total_on_arv($period_end = "")
+    {
         $period_end = date('Y-m-t', strtotime($period_end));
         $value = 0;
         $total = 0;
@@ -615,7 +628,8 @@ class Report_management extends MY_Controller {
         return $family;
     }
 
-    public function eligible_but_not_on_arv($period = "") {
+    public function eligible_but_not_on_arv($period = "")
+    {
         $period_start = date('Y-m-01', strtotime($period));
         $period_end = date('Y-m-t', strtotime($period));
 
@@ -660,7 +674,8 @@ class Report_management extends MY_Controller {
         return $data;
     }
 
-    public function post_exposure_prophylaxis($period = "") {
+    public function post_exposure_prophylaxis($period = "")
+    {
         $period_start = date('Y-m-01', strtotime($period));
         $period_end = date('Y-m-t', strtotime($period));
 
@@ -741,7 +756,8 @@ class Report_management extends MY_Controller {
         return $data;
     }
 
-    public function on_prophylaxis($period = "") {
+    public function on_prophylaxis($period = "")
+    {
         $period_start = date('Y-m-01', strtotime($period));
         $period_end = date('Y-m-t', strtotime($period));
 
@@ -822,7 +838,8 @@ class Report_management extends MY_Controller {
         return $data;
     }
 
-    public function get_731($period = "") {
+    public function get_731($period = "")
+    {
         $moh_731 = array();
         $moh_731[] = $this->enrolement_in_care($period);
         $moh_731[] = $this->pre_art($period);
@@ -839,7 +856,8 @@ class Report_management extends MY_Controller {
         return $moh_731;
     }
 
-    public function enrolement_in_care($period) {
+    public function enrolement_in_care($period)
+    {
         $period_start = date('Y-m-01', strtotime($period));
         $period_end = date('Y-m-t', strtotime($period));
         $data = array();
@@ -902,7 +920,8 @@ class Report_management extends MY_Controller {
         return $data;
     }
 
-    public function pre_art($period) {
+    public function pre_art($period)
+    {
         $period_start = date('Y-m-01', strtotime($period));
         $period_end = date('Y-m-t', strtotime($period));
         $data = array();
@@ -931,7 +950,8 @@ class Report_management extends MY_Controller {
         return $data;
     }
 
-    public function starting_art($period) {
+    public function starting_art($period)
+    {
         $period_start = date('Y-m-01', strtotime($period));
         $period_end = date('Y-m-t', strtotime($period));
         $data = array();
@@ -996,7 +1016,8 @@ class Report_management extends MY_Controller {
         return $data;
     }
 
-    public function all_on_art($period) {
+    public function all_on_art($period)
+    {
         $period_start = date('Y-m-01', strtotime($period));
         $period_end = date('Y-m-t', strtotime($period));
         $data = array();
@@ -1061,7 +1082,8 @@ class Report_management extends MY_Controller {
         return $data;
     }
 
-    public function art_retention($period) {
+    public function art_retention($period)
+    {
         $period_start = date("Y-m-01", strtotime("-12 months", strtotime($period)));
         $period_end = date("Y-m-01", strtotime("-11 months", strtotime($period)));
         $period_end = date("Y-m-d", strtotime("-1 day", strtotime($period_end)));
@@ -1130,7 +1152,8 @@ class Report_management extends MY_Controller {
         return $data;
     }
 
-    public function on_ctx($period) {
+    public function on_ctx($period)
+    {
         $period_end = date('Y-m-t', strtotime($period));
 
         $period_start = date('Y-m-01', strtotime($period));
@@ -1179,7 +1202,8 @@ class Report_management extends MY_Controller {
         return $data;
     }
 
-    public function started_ipt($period) {
+    public function started_ipt($period)
+    {
         $period_end = date('Y-m-t', strtotime($period));
 
         $period_start = date('Y-m-01', strtotime($period));
@@ -1228,7 +1252,8 @@ class Report_management extends MY_Controller {
         return $data;
     }
 
-    public function hiv_prep($period) {
+    public function hiv_prep($period)
+    {
         $period_start = date("Y-m-01", strtotime("-12 months", strtotime($period)));
 
         $period_end = date('Y-m-t', strtotime($period));
@@ -1279,7 +1304,8 @@ class Report_management extends MY_Controller {
         return $data;
     }
 
-    public function hiv_pep($period) {
+    public function hiv_pep($period)
+    {
         $period_start = date("Y-m-01", strtotime("-12 months", strtotime($period)));
 
         $period_end = date('Y-m-t', strtotime($period));
@@ -1318,7 +1344,8 @@ class Report_management extends MY_Controller {
         return $data;
     }
 
-    public function form_user_details() {
+    public function form_user_details()
+    {
         $data = array();
         $data['B93'] = $this->session->userdata("full_name");
         $data['D93'] = $this->session->userdata("user_indicator");
@@ -1327,7 +1354,8 @@ class Report_management extends MY_Controller {
         return $data;
     }
 
-    public function enrolled_in_care($selected_period = "") {
+    public function enrolled_in_care($selected_period = "")
+    {
         //Variables
         $period = explode('-', $selected_period);
         $year = date('Y', strtotime($selected_period));
@@ -1415,7 +1443,8 @@ class Report_management extends MY_Controller {
         return $data;
     }
 
-    public function currently_in_care($selected_period = "March-2014") {
+    public function currently_in_care($selected_period = "March-2014")
+    {
         //Variables
         $period = explode('-', $selected_period);
         $year = $period[1];
@@ -1477,7 +1506,8 @@ class Report_management extends MY_Controller {
         return $data;
     }
 
-    public function all_art($selected_period = "") {
+    public function all_art($selected_period = "")
+    {
         //1.starting art
         //Variables
         $from = date('Y-m-01', strtotime($selected_period));
@@ -1664,7 +1694,8 @@ class Report_management extends MY_Controller {
         return $data;
     }
 
-    public function cumulative_ever_on_art($selected_period = "") {
+    public function cumulative_ever_on_art($selected_period = "")
+    {
         //Variables
         $from = date('Y-m-01', strtotime($selected_period));
         $to = date('Y-m-t', strtotime($selected_period));
@@ -1706,7 +1737,8 @@ class Report_management extends MY_Controller {
         return $data;
     }
 
-    public function survival_and_retention($selected_period = "March-2014") {
+    public function survival_and_retention($selected_period = "March-2014")
+    {
         //Variables
         $from = date('Y-m-01', strtotime($selected_period . "-12 months"));
         $to = date('Y-m-t', strtotime($selected_period . "-12 months"));
@@ -1819,7 +1851,8 @@ class Report_management extends MY_Controller {
         return $data;
     }
 
-    public function screening($period) {
+    public function screening($period)
+    {
         $period_end = date('Y-m-t', strtotime($period));
 
         $period_start = date('Y-m-01', strtotime($period));
@@ -1866,7 +1899,8 @@ class Report_management extends MY_Controller {
         return $data;
     }
 
-    public function prevention_with_positives($selected_period = "") {
+    public function prevention_with_positives($selected_period = "")
+    {
         //Variables
         $to = date('Y-m-t', strtotime($selected_period));
         $condoms = 0;
@@ -1909,7 +1943,8 @@ class Report_management extends MY_Controller {
         return $data;
     }
 
-    public function hiv_care_visits($selected_period = "") {
+    public function hiv_care_visits($selected_period = "")
+    {
         //Variables
         $from = date('Y-m-01', strtotime($selected_period));
         $to = date('Y-m-t', strtotime($selected_period));
@@ -1948,7 +1983,8 @@ class Report_management extends MY_Controller {
         return $data;
     }
 
-    public function type_of_exposure($period = "") {
+    public function type_of_exposure($period = "")
+    {
         //Variables
         $from = date('Y-m-01', strtotime($period));
         $to = date('Y-m-t', strtotime($period));
@@ -1999,7 +2035,8 @@ class Report_management extends MY_Controller {
         return $data;
     }
 
-    public function provided_with_prophylaxis($period = "") {
+    public function provided_with_prophylaxis($period = "")
+    {
         //Variables
         $from = date('Y-m-01', strtotime($period));
         $to = date('Y-m-t', strtotime($period));
@@ -2055,7 +2092,8 @@ class Report_management extends MY_Controller {
 
     # -----------------/ MOH 731 -----------------
 
-    public function getMoreHelp($stock_type = '2', $start_date = '', $end_date = '') {
+    public function getMoreHelp($stock_type = '2', $start_date = '', $end_date = '')
+    {
         //Check if user is logged in
         if ($this->session->userdata("user_id")) {
 
@@ -2218,10 +2256,11 @@ class Report_management extends MY_Controller {
                 $output['aaData'][] = $row;
             }
             echo json_encode($output);
-        }//Check if user is logged in end
+        } //Check if user is logged in end
     }
 
-    public function getHelp($stock_type = '2', $start_date = '2013-08-01', $end_date = '2013-08-31') {
+    public function getHelp($stock_type = '2', $start_date = '2013-08-01', $end_date = '2013-08-31')
+    {
         /*
          * Loop through all respective transaction types and add beginning balance at the beginning
          * Outer Loop through all active drugs
@@ -2281,16 +2320,19 @@ class Report_management extends MY_Controller {
         }
     }
 
-    function getDrugs() {
+    function getDrugs()
+    {
         echo json_encode($this->db->select('id, drug')->where('enabled = 1')->get('drugcode')->result());
     }
-    
-    public function listing($data = "") {
+
+    public function listing($data = "")
+    {
         $data['content_view'] = "report_v";
         $this->base_params($data);
     }
 
-    public function get_prep_patients($period_start = "", $period_end = "") {
+    public function get_prep_patients($period_start = "", $period_end = "")
+    {
         $report_items = array(
             "enrollment_in_prep" => "SELECT 
 			COUNT(IF(LOWER(g.name) = 'male' AND (YEAR(CURDATE())-YEAR(dob)) >= 15 AND (YEAR(CURDATE())-YEAR(dob)) < 20 , 1, NULL)) as male_15,
@@ -2389,16 +2431,16 @@ class Report_management extends MY_Controller {
             $total = ($result['male_15'] + $result['male_20'] + $result['male_25'] + $result['male_30'] + $result['female_15'] + $result['female_20'] + $result['female_25'] + $result['female_30']);
 
             $dyn_table .= "<tr><td>"
-                    . $report . "</td><td>"
-                    . $total . "</td><td>"
-                    . $result['male_15'] . "</td><td>"
-                    . $result['male_20'] . "</td><td>"
-                    . $result['male_25'] . "</td><td>"
-                    . $result['male_30'] . "</td><td>"
-                    . $result['female_15'] . "</td><td>"
-                    . $result['female_20'] . "</td><td>"
-                    . $result['female_25'] . "</td><td>"
-                    . $result['female_30'] . "</td></tr>";
+                . $report . "</td><td>"
+                . $total . "</td><td>"
+                . $result['male_15'] . "</td><td>"
+                . $result['male_20'] . "</td><td>"
+                . $result['male_25'] . "</td><td>"
+                . $result['male_30'] . "</td><td>"
+                . $result['female_15'] . "</td><td>"
+                . $result['female_20'] . "</td><td>"
+                . $result['female_25'] . "</td><td>"
+                . $result['female_30'] . "</td></tr>";
         }
         $dyn_table .= "</tbody><tfoot></tfoot></table>";
 
@@ -2416,7 +2458,8 @@ class Report_management extends MY_Controller {
         $this->load->view('template', $data);
     }
 
-    public function get_pep_reasons($period_start = "", $period_end = "") {
+    public function get_pep_reasons($period_start = "", $period_end = "")
+    {
 
         $period_start = date('Y-m-d', strtotime($period_start));
         $period_end = date('Y-m-d', strtotime($period_end));
@@ -2489,24 +2532,24 @@ class Report_management extends MY_Controller {
 	<tbody>";
 
 
-//$sql = "SELECT count( * ) AS total FROM patient p LEFT JOIN patient_source ps ON ps.id = p.source WHERE date_enrolled BETWEEN '$from' AND '$to' $supported_query AND facility_code = '$facility_code' AND source !='' AND p.active='1'";
+        //$sql = "SELECT count( * ) AS total FROM patient p LEFT JOIN patient_source ps ON ps.id = p.source WHERE date_enrolled BETWEEN '$from' AND '$to' $supported_query AND facility_code = '$facility_code' AND source !='' AND p.active='1'";
         $query = $this->db->query($sql);
         $results = $query->result_array();
-// echo "<pre>";
+        // echo "<pre>";
         foreach ($results as $res) {
             $total = ($res['male_15'] + $res['male_20'] + $res['male_25'] + $res['male_30'] + $res['female_15'] + $res['female_20'] + $res['female_25'] + $res['female_30']);
 
             $dyn_table .= "<tr><td>"
-                    . $res['name'] . "</td><td>"
-                    . $total . "</td><td>"
-                    . $res['male_15'] . "</td><td>"
-                    . $res['male_20'] . "</td><td>"
-                    . $res['male_25'] . "</td><td>"
-                    . $res['male_30'] . "</td><td>"
-                    . $res['female_15'] . "</td><td>"
-                    . $res['female_20'] . "</td><td>"
-                    . $res['female_25'] . "</td><td>"
-                    . $res['female_30'] . "</td></tr>";
+                . $res['name'] . "</td><td>"
+                . $total . "</td><td>"
+                . $res['male_15'] . "</td><td>"
+                . $res['male_20'] . "</td><td>"
+                . $res['male_25'] . "</td><td>"
+                . $res['male_30'] . "</td><td>"
+                . $res['female_15'] . "</td><td>"
+                . $res['female_20'] . "</td><td>"
+                . $res['female_25'] . "</td><td>"
+                . $res['female_30'] . "</td></tr>";
         }
 
         $dyn_table .= "</tbody><tfoot></tfoot></table>";
@@ -2525,7 +2568,8 @@ class Report_management extends MY_Controller {
         $this->load->view('template', $data);
     }
 
-    public function get_prep_reasons($period_start = "", $period_end = "") {
+    public function get_prep_reasons($period_start = "", $period_end = "")
+    {
         $sql = "SELECT  pr.name,pr.id,
 	COUNT(IF(LOWER(g.name) = 'male' AND (YEAR(CURDATE())-YEAR(dob)) >= 15 AND (YEAR(CURDATE())-YEAR(dob)) < 20 , 1, NULL)) as male_15,
 	COUNT(IF(LOWER(g.name) = 'male' AND (YEAR(CURDATE())-YEAR(dob)) >= 20 AND (YEAR(CURDATE())-YEAR(dob)) < 25 , 1, NULL)) as male_20,
@@ -2593,24 +2637,24 @@ class Report_management extends MY_Controller {
 	<tbody>";
 
 
-//$sql = "SELECT count( * ) AS total FROM patient p LEFT JOIN patient_source ps ON ps.id = p.source WHERE date_enrolled BETWEEN '$from' AND '$to' $supported_query AND facility_code = '$facility_code' AND source !='' AND p.active='1'";
+        //$sql = "SELECT count( * ) AS total FROM patient p LEFT JOIN patient_source ps ON ps.id = p.source WHERE date_enrolled BETWEEN '$from' AND '$to' $supported_query AND facility_code = '$facility_code' AND source !='' AND p.active='1'";
         $query = $this->db->query($sql);
         $results = $query->result_array();
-// echo "<pre>";
+        // echo "<pre>";
         foreach ($results as $res) {
             $total = ($res['male_15'] + $res['male_20'] + $res['male_25'] + $res['male_30'] + $res['female_15'] + $res['female_20'] + $res['female_25'] + $res['female_30']);
 
             $dyn_table .= "<tr><td>"
-                    . $res['name'] . "</td><td>"
-                    . $total . "</td><td>"
-                    . $res['male_15'] . "</td><td>"
-                    . $res['male_20'] . "</td><td>"
-                    . $res['male_25'] . "</td><td>"
-                    . $res['male_30'] . "</td><td>"
-                    . $res['female_15'] . "</td><td>"
-                    . $res['female_20'] . "</td><td>"
-                    . $res['female_25'] . "</td><td>"
-                    . $res['female_30'] . "</td></tr>";
+                . $res['name'] . "</td><td>"
+                . $total . "</td><td>"
+                . $res['male_15'] . "</td><td>"
+                . $res['male_20'] . "</td><td>"
+                . $res['male_25'] . "</td><td>"
+                . $res['male_30'] . "</td><td>"
+                . $res['female_15'] . "</td><td>"
+                . $res['female_20'] . "</td><td>"
+                . $res['female_25'] . "</td><td>"
+                . $res['female_30'] . "</td></tr>";
         }
 
         $dyn_table .= "</tbody><tfoot></tfoot></table>";
@@ -2629,7 +2673,8 @@ class Report_management extends MY_Controller {
         $this->load->view('template', $data);
     }
 
-    public function get_prep_reasons_patients($period_start = "", $period_end = "") {
+    public function get_prep_reasons_patients($period_start = "", $period_end = "")
+    {
         $sql = "SELECT p.patient_number_ccc,p.first_name,p.last_name,g.name as gender, FLOOR(DATEDIFF(now(),dob)/365) as age, pr.name as prep_reason
 	FROM patient p
 	INNER JOIN gender g ON g.id = p.gender
@@ -2656,12 +2701,12 @@ class Report_management extends MY_Controller {
         foreach ($results as $res) {
 
             $dyn_table .= "<tr><td>"
-                    . $res['patient_number_ccc'] . "</td><td>"
-                    . $res['first_name'] . "</td><td>"
-                    . $res['last_name'] . "</td><td>"
-                    . $res['gender'] . "</td><td>"
-                    . $res['age'] . "</td><td>"
-                    . $res['prep_reason'] . "</td></tr>";
+                . $res['patient_number_ccc'] . "</td><td>"
+                . $res['first_name'] . "</td><td>"
+                . $res['last_name'] . "</td><td>"
+                . $res['gender'] . "</td><td>"
+                . $res['age'] . "</td><td>"
+                . $res['prep_reason'] . "</td></tr>";
         }
 
         $dyn_table .= "</tbody><tfoot></tfoot></table>";
@@ -2680,7 +2725,8 @@ class Report_management extends MY_Controller {
         $this->load->view('template', $data);
     }
 
-    public function get_pep_reasons_patients($period_start = "", $period_end = "") {
+    public function get_pep_reasons_patients($period_start = "", $period_end = "")
+    {
         $sql = "SELECT p.patient_number_ccc,p.first_name,p.last_name,g.name as gender, FLOOR(DATEDIFF(now(),dob)/365) as age, pr.name as pep_reason
 	FROM patient p
 	INNER JOIN gender g ON g.id = p.gender
@@ -2707,12 +2753,12 @@ class Report_management extends MY_Controller {
         foreach ($results as $res) {
 
             $dyn_table .= "<tr><td>"
-                    . $res['patient_number_ccc'] . "</td><td>"
-                    . $res['first_name'] . "</td><td>"
-                    . $res['last_name'] . "</td><td>"
-                    . $res['gender'] . "</td><td>"
-                    . $res['age'] . "</td><td>"
-                    . $res['pep_reason'] . "</td></tr>";
+                . $res['patient_number_ccc'] . "</td><td>"
+                . $res['first_name'] . "</td><td>"
+                . $res['last_name'] . "</td><td>"
+                . $res['gender'] . "</td><td>"
+                . $res['age'] . "</td><td>"
+                . $res['pep_reason'] . "</td></tr>";
         }
 
         $dyn_table .= "</tbody><tfoot></tfoot></table>";
@@ -2731,7 +2777,8 @@ class Report_management extends MY_Controller {
         $this->load->view('template', $data);
     }
 
-    public function patient_enrolled($from = "", $to = "", $supported_by = 0) {
+    public function patient_enrolled($from = "", $to = "", $supported_by = 0)
+    {
         //Variables
         $facility_code = $this->session->userdata("facility");
         $from = date('Y-m-d', strtotime($from));
@@ -3187,7 +3234,8 @@ class Report_management extends MY_Controller {
         $this->load->view('template', $data);
     }
 
-    public function get_differentiated_care_appointments($from = "", $to = "") {
+    public function get_differentiated_care_appointments($from = "", $to = "")
+    {
         $start_date = date('Y-m-d', strtotime($from));
         $end_date = date('Y-m-d', strtotime($to));
         $overall_total = 0;
@@ -3270,17 +3318,19 @@ class Report_management extends MY_Controller {
         $data['content_view'] = 'reports/differentiated_care_appointments_v';
         $this->load->view('template', $data);
     }
-    public function getMMDMMS($to = false){
+    public function getMMDMMS($to = false)
+    {
         $facility_code = $this->session->userdata("facility");
-         $data['first_day'] = date("Y-m-", strtotime($to)).'01';
-         $data['last_day'] =  date("Y-m-t", strtotime($to));
-         $data['to'] =  date("Y-m-t", strtotime($to));
+        $data['first_day'] = date("Y-m-", strtotime($to)) . '01';
+        $data['last_day'] =  date("Y-m-t", strtotime($to));
+        $data['to'] =  date("Y-m-t", strtotime($to));
 
-        $data['facility']= array(
+        $data['facility'] = array(
             'facility_code' => $this->session->userdata('facility'),
             'facility_name' => $this->session->userdata('facility_name'),
             'facility_subcounty' => $this->session->userdata('facility_subcounty'),
-            'facility_county' => $this->session->userdata('facility_county'));
+            'facility_county' => $this->session->userdata('facility_county')
+        );
         $data['title'] = "webADT | Reports";
         $data['hide_side_menu'] = 1;
         $data['banner_text'] = "Facility Reports";
@@ -3289,7 +3339,7 @@ class Report_management extends MY_Controller {
         $data['selected_report_type'] = "Visiting Patients";
         $data['report_title'] = "Multi Month ARVs Dispensing (MMD)";
 
-        $data['facility_name'] = $this->session->userdata('facility_name');     
+        $data['facility_name'] = $this->session->userdata('facility_name');
         $data['content_view'] = 'reports/MMD_ARV_v';
         $Month_Year = date('Y-m-d', strtotime($to));
 
@@ -3486,18 +3536,19 @@ AND REGIMEN_CATEGORY NOT LIKE '%PMTCT Child%'
  ";
 
         $query = $this->db->query($query_str);
-        $data['results']= $query->result_array()[0];
+        $data['results'] = $query->result_array()[0];
         // echo "<pre>";        var_dump($data);die;
-//         $c = array();
-//         foreach ($results as $r) {
-//             $c[$r['STATUS']] = $r['total'] ;
-//         }
-// // var_dump($c);die;
-//         $data['results'] = $c;
+        //         $c = array();
+        //         foreach ($results as $r) {
+        //             $c[$r['STATUS']] = $r['total'] ;
+        //         }
+        // // var_dump($c);die;
+        //         $data['results'] = $c;
 
         $this->load->view('template', $data);
     }
-      public function distribution_refill($to = "") {
+    public function distribution_refill($to = "")
+    {
         // $start_date = date('Y-m-d', strtotime($from));
         $end_date = date('Y-m-d', strtotime($to));
         $overall_total = 0;
@@ -3558,11 +3609,12 @@ AND REGIMEN_CATEGORY NOT LIKE '%PMTCT Child%'
         $data['selected_report_type'] = "Visiting Patients";
         $data['report_title'] = "Listing of MMD Patients";
         $data['facility_name'] = $this->session->userdata('facility_name');
-        $data['content_view'] = 'reports/distribution_refill_v'; 
-        $this->load->view('template', $data); 
+        $data['content_view'] = 'reports/distribution_refill_v';
+        $this->load->view('template', $data);
     }
 
-          public function multi_month_arv_dispensing($to = "") {
+    public function multi_month_arv_dispensing($to = "")
+    {
         // $start_date = date('Y-m-d', strtotime($from));
         $end_date = date('Y-m-d', strtotime($to));
         $overall_total = 0;
@@ -3621,24 +3673,26 @@ GROUP BY  patient_id
         $data['content_view'] = 'reports/multi_month_arv_v';
         $this->load->view('template', $data);
     }
-    public function getMMD($to = false){
+    public function getMMD($to = false)
+    {
         $facility_code = $this->session->userdata("facility");
-         $data['first_day'] = date("Y-m-", strtotime($to)).'01';
-         $data['last_day'] =  date("Y-m-t", strtotime($to));
-         $data['to'] =  date("Y-m-t", strtotime($to));
+        $data['first_day'] = date("Y-m-", strtotime($to)) . '01';
+        $data['last_day'] =  date("Y-m-t", strtotime($to));
+        $data['to'] =  date("Y-m-t", strtotime($to));
 
-        $data['facility']= array(
+        $data['facility'] = array(
             'facility_code' => $this->session->userdata('facility'),
             'facility_name' => $this->session->userdata('facility_name'),
             'facility_subcounty' => $this->session->userdata('facility_subcounty'),
-            'facility_county' => $this->session->userdata('facility_county'));
+            'facility_county' => $this->session->userdata('facility_county')
+        );
         $data['title'] = "webADT | Reports";
         $data['hide_side_menu'] = 1;
         $data['banner_text'] = "Facility Reports";
         $data['selected_report_type_link'] = "visiting_patient_report_row";
         $data['selected_report_type'] = "Visiting Patients";
         $data['report_title'] = "Multi Month ARVs Dispensing (MMD)";
-        $data['facility_name'] = $this->session->userdata('facility_name');     
+        $data['facility_name'] = $this->session->userdata('facility_name');
         $data['content_view'] = 'reports/MMD_MMS_v';
         $Month_Year = date('Y-m-d', strtotime($to));
 
@@ -3649,18 +3703,19 @@ GROUP BY  patient_id
         AND r.enabled= 1 order by r.category asc,r.regimen_code ASC';
         $regimen_category = $this->db->query($query_str);
         $category = array();
-        
-        if($regimen_category->result_array()){
+
+        if ($regimen_category->result_array()) {
             foreach ($regimen_category->result_array() as $rs) {
-                $ko = array('regimens'=>$this->getMMDbyRegimen($Month_Year,$rs['id']),'rs' => $rs);
-                $category[$rs['category']][$rs['id']]=$ko;
+                $ko = array('regimens' => $this->getMMDbyRegimen($Month_Year, $rs['id']), 'rs' => $rs);
+                $category[$rs['category']][$rs['id']] = $ko;
             }
         }
         $data['regimens'] = $category;
 
         $this->load->view('template', $data);
     }
-    function getMMDbyRegimen($to, $current_regimen){
+    function getMMDbyRegimen($to, $current_regimen)
+    {
         $end_date = date('Y-m-d', strtotime($to));
         $sql = "SELECT appointment_description, count( tmp.patient_id) as total from(
                 SELECT patient_id, p.nextappointment, max(dispensing_date),  Datediff(p.nextappointment, max(dispensing_date)) appointment_days,rst.name as service,
@@ -3683,7 +3738,7 @@ GROUP BY  patient_id
                 GROUP BY  patient_id
                  ) tmp group by appointment_description";
 
-        $query = $this->db->query($sql, array($end_date,$current_regimen));
+        $query = $this->db->query($sql, array($end_date, $current_regimen));
         $results = $query->result_array();
 
         $res['1MONTH'] = 0;
@@ -3699,27 +3754,28 @@ GROUP BY  patient_id
             $res[$ob['appointment_description']] += $ob['total'];
         }
         return $res;
-
     }
-            public function getMMDAgeGender($to = false){
+    public function getMMDAgeGender($to = false)
+    {
         $facility_code = $this->session->userdata("facility");
         // echo "<pre>";        var_dump($this->session->all_userdata());die;
-         $data['first_day'] = date("Y-m-", strtotime($to)).'01';
-         $data['last_day'] =  date("Y-m-t", strtotime($to));
-         $data['to'] =  date("Y-m-t", strtotime($to));
+        $data['first_day'] = date("Y-m-", strtotime($to)) . '01';
+        $data['last_day'] =  date("Y-m-t", strtotime($to));
+        $data['to'] =  date("Y-m-t", strtotime($to));
 
-        $data['facility']= array(
+        $data['facility'] = array(
             'facility_code' => $this->session->userdata('facility'),
             'facility_name' => $this->session->userdata('facility_name'),
             'facility_subcounty' => $this->session->userdata('facility_subcounty'),
-            'facility_county' => $this->session->userdata('facility_county'));
+            'facility_county' => $this->session->userdata('facility_county')
+        );
         $data['title'] = "webADT | Reports";
         $data['hide_side_menu'] = 1;
         $data['banner_text'] = "Facility Reports";
         $data['selected_report_type_link'] = "visiting_patient_report_row";
         $data['selected_report_type'] = "Visiting Patients";
         $data['report_title'] = "FMAP by Age and Gender";
-        $data['facility_name'] = $this->session->userdata('facility_name');     
+        $data['facility_name'] = $this->session->userdata('facility_name');
         $data['content_view'] = 'reports/MMD_gender_v';
         $Month_Year = date('Y-m-d', strtotime($to));
 
@@ -3730,18 +3786,19 @@ GROUP BY  patient_id
         AND r.enabled= 1 order by r.category asc,r.regimen_code ASC';
         $regimen_category = $this->db->query($query_str);
         $category = array();
-        
-        if($regimen_category->result_array()){
+
+        if ($regimen_category->result_array()) {
             foreach ($regimen_category->result_array() as $rs) {
-                $ko = array('regimens'=>$this->getMMDAgeGenderRegimen($Month_Year,$rs['id']),'rs' => $rs);
-                $category[$rs['category']][$rs['id']]=$ko;
+                $ko = array('regimens' => $this->getMMDAgeGenderRegimen($Month_Year, $rs['id']), 'rs' => $rs);
+                $category[$rs['category']][$rs['id']] = $ko;
             }
         }
         $data['regimens'] = $category;
 
         $this->load->view('template', $data);
     }
-    function getMMDAgeGenderRegimen($to, $current_regimen){
+    function getMMDAgeGenderRegimen($to, $current_regimen)
+    {
         $end_date = date('Y-m-d', strtotime($to));
         $sql = "SELECT appointment_description, count( tmp.patient_number_ccc) as total from(
                     SELECT patient_number_ccc,gender, dob, pv.dispensing_date,rst.name as service,(DATEDIFF(CURDATE(),dob)/365) as age,                
@@ -3781,7 +3838,7 @@ GROUP BY  patient_id
                 GROUP BY  patient_number_ccc
                  ) tmp group by appointment_description";
 
-        $query = $this->db->query($sql, array($end_date,$current_regimen));
+        $query = $this->db->query($sql, array($end_date, $current_regimen));
         $results = $query->result_array();
 
         $res['1_female'] = 0;
@@ -3807,17 +3864,17 @@ GROUP BY  patient_id
         $res['45_49_female'] = 0;
         $res['45_49_male'] = 0;
         $res['50_female'] = 0;
-        $res['50_male'] = 0; 
+        $res['50_male'] = 0;
 
         foreach ($results as $ob) {
             $res[$ob['appointment_description']] += $ob['total'];
         }
         return $res;
-
     }
 
-    public function getScheduledPatients($from = "", $to = "", $filter_from = NULL, $filter_to = NULL, $appointment_description = NULL) {
-       
+    public function getScheduledPatients($from = "", $to = "", $filter_from = NULL, $filter_to = NULL, $appointment_description = NULL)
+    {
+
         //Variables
         $visited = 0;
         $not_visited = 0;
@@ -4003,7 +4060,8 @@ GROUP BY  patient_id
         $data['content_view'] = 'reports/patients_scheduled_v';
         $this->load->view('template', $data);
     }
-    public function getMMDScheduledPatients($filter_to = NULL, $appointment_description = NULL) {
+    public function getMMDScheduledPatients($filter_to = NULL, $appointment_description = NULL)
+    {
         //Variables
         $visited = 0;
         $not_visited = 0;
@@ -4021,9 +4079,8 @@ GROUP BY  patient_id
             $filter_from = date('Y-m-d', strtotime($filter_from));
             $filter_to = date('Y-m-d', strtotime($filter_to));
             $app_desc = str_ireplace('_', ' ', $appointment_description) . '(s)';
-           
-         } 
-         $sql = "SELECT patient_id as patient ,clinicalappointment as appointment  from ( SELECT patient_id, p.clinicalappointment, max(dispensing_date),  Datediff(p.clinicalappointment, max(dispensing_date)) appointment_days,
+        }
+        $sql = "SELECT patient_id as patient ,clinicalappointment as appointment  from ( SELECT patient_id, p.clinicalappointment, max(dispensing_date),  Datediff(p.clinicalappointment, max(dispensing_date)) appointment_days,
             CASE 
             WHEN  Datediff(p.clinicalappointment, max(dispensing_date) ) > 0 AND  Datediff(p.clinicalappointment, max(dispensing_date) ) < 31 THEN '1 MONTH(S)'
             WHEN  Datediff(p.clinicalappointment, max(dispensing_date) ) > 30 AND  Datediff(p.clinicalappointment, max(dispensing_date) ) < 61 THEN '2 MONTH(S)'
@@ -4151,12 +4208,13 @@ GROUP BY  patient_id
         $data['banner_text'] = "Facility Reports";
         $data['selected_report_type_link'] = "visiting_patient_report_row";
         $data['selected_report_type'] = "Visiting Patients";
-        $data['report_title'] = "List of Patients Scheduled to Visit within ".$app_desc;
+        $data['report_title'] = "List of Patients Scheduled to Visit within " . $app_desc;
         $data['facility_name'] = $this->session->userdata('facility_name');
         $data['content_view'] = 'reports/patients_mmd_scheduled_v';
         $this->load->view('template', $data);
     }
-        public function getRefillDistributionPatients($filter_to = NULL, $appointment_description = NULL) {
+    public function getRefillDistributionPatients($filter_to = NULL, $appointment_description = NULL)
+    {
         //Variables
         $visited = 0;
         $not_visited = 0;
@@ -4174,9 +4232,8 @@ GROUP BY  patient_id
             $filter_from = date('Y-m-d', strtotime($filter_from));
             $filter_to = date('Y-m-d', strtotime($filter_to));
             $app_desc = str_ireplace('_', ' ', $appointment_description) . '(s)';
-           
-         } 
-         $sql = "SELECT patient_id as patient ,nextappointment as appointment  from ( SELECT patient_id, p.nextappointment, max(dispensing_date),  Datediff(p.nextappointment, max(dispensing_date)) appointment_days, rst.name as service,
+        }
+        $sql = "SELECT patient_id as patient ,nextappointment as appointment  from ( SELECT patient_id, p.nextappointment, max(dispensing_date),  Datediff(p.nextappointment, max(dispensing_date)) appointment_days, rst.name as service,
             CASE 
             WHEN  Datediff(p.nextappointment, max(dispensing_date) ) > 0 AND  Datediff(p.nextappointment, max(dispensing_date) ) < 36 THEN '1 MONTH(S)'
             WHEN  Datediff(p.nextappointment, max(dispensing_date) ) > 35 AND  Datediff(p.nextappointment, max(dispensing_date) ) < 66 THEN '2 MONTH(S)'
@@ -4311,13 +4368,14 @@ GROUP BY  patient_id
         $data['banner_text'] = "Facility Reports";
         $data['selected_report_type_link'] = "visiting_patient_report_row";
         $data['selected_report_type'] = "Visiting Patients";
-        $data['report_title'] = "List of Patients Scheduled to Visit within ".$app_desc;
+        $data['report_title'] = "List of Patients Scheduled to Visit within " . $app_desc;
         $data['facility_name'] = $this->session->userdata('facility_name');
         $data['content_view'] = 'reports/patients_mmd_scheduled_v';
         $this->load->view('template', $data);
     }
 
-    public function getMissedAppointments0to3($from = "", $to = "", $filter_from = NULL, $filter_to = NULL, $appointment_description = NULL) {
+    public function getMissedAppointments0to3($from = "", $to = "", $filter_from = NULL, $filter_to = NULL, $appointment_description = NULL)
+    {
         //Variables
         $visited = 0;
         $not_visited = 0;
@@ -4493,7 +4551,8 @@ GROUP BY  patient_id
         $this->load->view('template', $data);
     }
 
-    public function getPatientsOnDiffCare($from = "", $to = "") {
+    public function getPatientsOnDiffCare($from = "", $to = "")
+    {
         $start_date = date('Y-m-d', strtotime($from));
         $end_date = date('Y-m-d', strtotime($to));
 
@@ -4528,7 +4587,7 @@ GROUP BY  patient_id
     WHERE dcl.start_date BETWEEN '$start_date' AND '$end_date' 
     group by ccc_number
 	";
-    // echo $sql;die;
+        // echo $sql;die;
         $query = $this->db->query($sql);
         $results = $query->result_array();
         $row_string = "
@@ -4592,7 +4651,8 @@ GROUP BY  patient_id
         $this->load->view('template', $data);
     }
 
-    public function getScheduledPatientsDiffCare($from = "", $to = "", $filter_from = NULL, $filter_to = NULL, $appointment_description = NULL) {
+    public function getScheduledPatientsDiffCare($from = "", $to = "", $filter_from = NULL, $filter_to = NULL, $appointment_description = NULL)
+    {
         //Variables
         $visited = 0;
         $not_visited = 0;
@@ -4781,7 +4841,8 @@ GROUP BY  patient_id
         $this->load->view('template', $data);
     }
 
-    public function getPatientMissingAppointments($from = "", $to = "") {
+    public function getPatientMissingAppointments($from = "", $to = "")
+    {
         //Variables
         $today = date('Y-m-d');
         $row_string = "";
@@ -4892,7 +4953,8 @@ GROUP BY  patient_id
         $this->load->view('template', $data);
     }
 
-    public function getPatientsStartedonDate($from = "", $to = "") {
+    public function getPatientsStartedonDate($from = "", $to = "")
+    {
         //Variables
         $today = date('Y-m-d');
         $overall_total = 0;
@@ -4961,14 +5023,15 @@ GROUP BY  patient_id
         $this->load->view('template', $data);
     }
 
-    public function getPatientList($drug, $from = "", $to = "") {
+    public function getPatientList($drug, $from = "", $to = "")
+    {
         //Variables
-       
+
         $today = date('Y-m-d');
         $overall_total = 0;
         $facility_code = $this->session->userdata("facility");
-         $from = date('Y-m-d', strtotime($from));
-         $to = date('Y-m-d', strtotime($to));
+        $from = date('Y-m-d', strtotime($from));
+        $to = date('Y-m-d', strtotime($to));
 
         $sql = " SELECT p.patient_number_ccc as art_no, UPPER(p.first_name) as first_name, pss.name as source, UPPER(p.last_name) as last_name, UPPER(p.other_name)as other_name, FLOOR(DATEDIFF(CURDATE(),p.dob)/365) as age, p.dob, p.weight, r.regimen_desc, r.regimen_code, t.name AS service_type, s.name AS supported_by, dr.drug, IF(p.gender=1,'Male','Female') as gender ,ps.name as current_status
                         FROM patient_visit pv
@@ -5044,13 +5107,14 @@ GROUP BY  patient_id
         $data['banner_text'] = "Facility Reports";
         $data['selected_report_type_link'] = "visiting_patient_report_row";
         $data['selected_report_type'] = "Patient Drug Report";
-        $data['report_title'] = "Listing of Patients on ". $drug;
+        $data['report_title'] = "Listing of Patients on " . $drug;
         $data['facility_name'] = $this->session->userdata('facility_name');
         $data['content_view'] = 'reports/patients_started_on_date_v';
         $this->load->view('template', $data);
     }
 
-    public function getPatientsStartedonDateDiffCare($from = "", $to = "") {
+    public function getPatientsStartedonDateDiffCare($from = "", $to = "")
+    {
         //Variables
         $today = date('Y-m-d');
         $overall_total = 0;
@@ -5120,254 +5184,255 @@ GROUP BY  patient_id
         $this->load->view('template', $data);
     }
 
-//************************************************************added patients on isoniazid*****************************************************************8
-public function getisoniazidPatients($from = "", $to = "") {
-    //Variables
+    //************************************************************added patients on isoniazid*****************************************************************8
+    public function getisoniazidPatients($from = "", $to = "")
+    {
+        //Variables
 
-    $row_string = "";
-    $status = "";
-    $overall_total = 0;
-    $today = date('Y-m-d');
-    $late_by = "";
-    $facility_code = $this->session->userdata("facility");
-    $from = date('Y-m-d', strtotime($from));
-    $to = date('Y-m-d', strtotime($to));
+        $row_string = "";
+        $status = "";
+        $overall_total = 0;
+        $today = date('Y-m-d');
+        $late_by = "";
+        $facility_code = $this->session->userdata("facility");
+        $from = date('Y-m-d', strtotime($from));
+        $to = date('Y-m-d', strtotime($to));
 
-//Get all patients who have apppointments on the selected date range
-//Routine Isoniazid
-    //male adult
-    $sql1 = "SELECT * FROM patient WHERE (isoniazid_end_date >= '$to') AND gender=1 AND FLOOR(DATEDIFF('$from',dob)/365)>=15 AND current_status=1";
-    $query1 = $this->db->query($sql1);
-    $result = $query1->num_rows();
+        //Get all patients who have apppointments on the selected date range
+        //Routine Isoniazid
+        //male adult
+        $sql1 = "SELECT * FROM patient WHERE (isoniazid_end_date >= '$to') AND gender=1 AND FLOOR(DATEDIFF('$from',dob)/365)>=15 AND current_status=1";
+        $query1 = $this->db->query($sql1);
+        $result = $query1->num_rows();
 
-    //female adult
-    $sql2 = "SELECT * FROM patient WHERE (isoniazid_end_date >= '$to') AND gender=2 AND FLOOR(DATEDIFF('$from',dob)/365)>=15 AND current_status=1";
-    $query2 = $this->db->query($sql2);
-    $result1 = $query2->num_rows();
+        //female adult
+        $sql2 = "SELECT * FROM patient WHERE (isoniazid_end_date >= '$to') AND gender=2 AND FLOOR(DATEDIFF('$from',dob)/365)>=15 AND current_status=1";
+        $query2 = $this->db->query($sql2);
+        $result1 = $query2->num_rows();
 
-    //male child
-    $sql3 = "SELECT * FROM patient WHERE (isoniazid_end_date >= '$to') AND gender=1 AND FLOOR(DATEDIFF('$from',dob)/365)<15 AND current_status=1";
-    $query3 = $this->db->query($sql3);
-    $result2 = $query3->num_rows();
+        //male child
+        $sql3 = "SELECT * FROM patient WHERE (isoniazid_end_date >= '$to') AND gender=1 AND FLOOR(DATEDIFF('$from',dob)/365)<15 AND current_status=1";
+        $query3 = $this->db->query($sql3);
+        $result2 = $query3->num_rows();
 
-    //female child
-    $sql4 = "SELECT * FROM patient WHERE (isoniazid_end_date >= '$to') AND gender=2 AND FLOOR(DATEDIFF('$from',dob)/365)<15 AND current_status=1";
-    $query4 = $this->db->query($sql4);
-    $result3 = $query4->num_rows();
+        //female child
+        $sql4 = "SELECT * FROM patient WHERE (isoniazid_end_date >= '$to') AND gender=2 AND FLOOR(DATEDIFF('$from',dob)/365)<15 AND current_status=1";
+        $query4 = $this->db->query($sql4);
+        $result3 = $query4->num_rows();
 
-//Started on isoniazid
-    //male adult
-    $sql5 = "SELECT * FROM patient WHERE (isoniazid_start_date >= '$from') AND gender=1 AND FLOOR(DATEDIFF('$from',dob)/365)>=15 AND current_status=1";
-    $query5 = $this->db->query($sql5);
-    $result4 = $query5->num_rows();
+        //Started on isoniazid
+        //male adult
+        $sql5 = "SELECT * FROM patient WHERE (isoniazid_start_date >= '$from') AND gender=1 AND FLOOR(DATEDIFF('$from',dob)/365)>=15 AND current_status=1";
+        $query5 = $this->db->query($sql5);
+        $result4 = $query5->num_rows();
 
-    //female adult
-    $sql6 = "SELECT * FROM patient WHERE (isoniazid_start_date >= '$from') AND gender=2 AND FLOOR(DATEDIFF('$from',dob)/365)>=15 AND current_status=1";
-    $query6 = $this->db->query($sql6);
-    $result5 = $query6->num_rows();
+        //female adult
+        $sql6 = "SELECT * FROM patient WHERE (isoniazid_start_date >= '$from') AND gender=2 AND FLOOR(DATEDIFF('$from',dob)/365)>=15 AND current_status=1";
+        $query6 = $this->db->query($sql6);
+        $result5 = $query6->num_rows();
 
-    //male child
-    $sql7 = "SELECT * FROM patient WHERE (isoniazid_start_date >= '$from') AND gender=1 AND FLOOR(DATEDIFF('$from',dob)/365)<15 AND current_status=1";
-    $query7 = $this->db->query($sql7);
-    $result6 = $query7->num_rows();
+        //male child
+        $sql7 = "SELECT * FROM patient WHERE (isoniazid_start_date >= '$from') AND gender=1 AND FLOOR(DATEDIFF('$from',dob)/365)<15 AND current_status=1";
+        $query7 = $this->db->query($sql7);
+        $result6 = $query7->num_rows();
 
-    //female child
-    $sql8 = "SELECT * FROM patient WHERE (isoniazid_start_date >= '$from') AND gender=2 AND FLOOR(DATEDIFF('$from',dob)/365)<15 AND current_status=1";
-    $query8 = $this->db->query($sql8);
-    $result7 = $query8->num_rows();
+        //female child
+        $sql8 = "SELECT * FROM patient WHERE (isoniazid_start_date >= '$from') AND gender=2 AND FLOOR(DATEDIFF('$from',dob)/365)<15 AND current_status=1";
+        $query8 = $this->db->query($sql8);
+        $result7 = $query8->num_rows();
 
-//Completed on isoniazid
-    //male adult
-    $sql9 = "SELECT * FROM patient WHERE (isoniazid_end_date >= '$from') AND (isoniazid_end_date < '$to') AND gender=1 AND FLOOR(DATEDIFF('$from',dob)/365)>=15 AND current_status=1";
-    $query9 = $this->db->query($sql9);
-    $result8 = $query9->num_rows();
+        //Completed on isoniazid
+        //male adult
+        $sql9 = "SELECT * FROM patient WHERE (isoniazid_end_date >= '$from') AND (isoniazid_end_date < '$to') AND gender=1 AND FLOOR(DATEDIFF('$from',dob)/365)>=15 AND current_status=1";
+        $query9 = $this->db->query($sql9);
+        $result8 = $query9->num_rows();
 
-    //female adult
-    $sql10 = "SELECT * FROM patient WHERE (isoniazid_end_date >= '$from') AND (isoniazid_end_date < '$to') AND gender=2 AND FLOOR(DATEDIFF('$from',dob)/365)>=15 AND current_status=1";
-    $query10 = $this->db->query($sql10);
-    $result9 = $query10->num_rows();
+        //female adult
+        $sql10 = "SELECT * FROM patient WHERE (isoniazid_end_date >= '$from') AND (isoniazid_end_date < '$to') AND gender=2 AND FLOOR(DATEDIFF('$from',dob)/365)>=15 AND current_status=1";
+        $query10 = $this->db->query($sql10);
+        $result9 = $query10->num_rows();
 
-    //male child
-    $sql11 = "SELECT * FROM patient WHERE (isoniazid_end_date >= '$from') AND (isoniazid_end_date < '$to') AND gender=1 AND FLOOR(DATEDIFF('$from',dob)/365)<15 AND current_status=1";
-    $query11 = $this->db->query($sql11);
-    $result10 = $query11->num_rows();
+        //male child
+        $sql11 = "SELECT * FROM patient WHERE (isoniazid_end_date >= '$from') AND (isoniazid_end_date < '$to') AND gender=1 AND FLOOR(DATEDIFF('$from',dob)/365)<15 AND current_status=1";
+        $query11 = $this->db->query($sql11);
+        $result10 = $query11->num_rows();
 
-    //female child
-    $sql12 = "SELECT * FROM patient WHERE (isoniazid_end_date >= '$from') AND (isoniazid_end_date < '$to') AND gender=2 AND FLOOR(DATEDIFF('$from',dob)/365)<15 AND current_status=1";
-    $query12 = $this->db->query($sql12);
-    $result11 = $query12->num_rows();
+        //female child
+        $sql12 = "SELECT * FROM patient WHERE (isoniazid_end_date >= '$from') AND (isoniazid_end_date < '$to') AND gender=2 AND FLOOR(DATEDIFF('$from',dob)/365)<15 AND current_status=1";
+        $query12 = $this->db->query($sql12);
+        $result11 = $query12->num_rows();
 
-    //Cotrimoxazole
-    //male adult
-    $sql13 = "SELECT * FROM patient WHERE drug_prophylaxis like '%1%' AND gender=1 AND FLOOR(DATEDIFF('$from',dob)/365)>=15 AND current_status=1";
-    $query13 = $this->db->query($sql13);
-    $result12 = $query13->num_rows();
+        //Cotrimoxazole
+        //male adult
+        $sql13 = "SELECT * FROM patient WHERE drug_prophylaxis like '%1%' AND gender=1 AND FLOOR(DATEDIFF('$from',dob)/365)>=15 AND current_status=1";
+        $query13 = $this->db->query($sql13);
+        $result12 = $query13->num_rows();
 
-    //female adult
-    $sql14 = "SELECT * FROM patient WHERE drug_prophylaxis like '%1%' AND gender=2 AND FLOOR(DATEDIFF('$from',dob)/365)>=15 AND current_status=1";
-    $query14 = $this->db->query($sql14);
-    $result13 = $query14->num_rows();
+        //female adult
+        $sql14 = "SELECT * FROM patient WHERE drug_prophylaxis like '%1%' AND gender=2 AND FLOOR(DATEDIFF('$from',dob)/365)>=15 AND current_status=1";
+        $query14 = $this->db->query($sql14);
+        $result13 = $query14->num_rows();
 
-    //male child
-    $sql15 = "SELECT * FROM patient WHERE drug_prophylaxis like '%1%' AND gender=1 AND FLOOR(DATEDIFF('$from',dob)/365)<15 AND current_status=1";
-    $query15 = $this->db->query($sql15);
-    $result14 = $query15->num_rows();
+        //male child
+        $sql15 = "SELECT * FROM patient WHERE drug_prophylaxis like '%1%' AND gender=1 AND FLOOR(DATEDIFF('$from',dob)/365)<15 AND current_status=1";
+        $query15 = $this->db->query($sql15);
+        $result14 = $query15->num_rows();
 
-    //female child
-    $sql16 = "SELECT * FROM patient WHERE drug_prophylaxis like '%1%' AND gender=2 AND FLOOR(DATEDIFF('$from',dob)/365)<15 AND current_status=1";
-    $query16 = $this->db->query($sql16);
-    $result15 = $query16->num_rows();
+        //female child
+        $sql16 = "SELECT * FROM patient WHERE drug_prophylaxis like '%1%' AND gender=2 AND FLOOR(DATEDIFF('$from',dob)/365)<15 AND current_status=1";
+        $query16 = $this->db->query($sql16);
+        $result15 = $query16->num_rows();
 
-    //Dapsone
-    //male adult
-    $sql17 = "SELECT * FROM patient WHERE drug_prophylaxis like '%2%' AND gender=1 AND FLOOR(DATEDIFF('$from',dob)/365)>=15 AND current_status=1";
-    $query17 = $this->db->query($sql17);
-    $result16 = $query17->num_rows();
+        //Dapsone
+        //male adult
+        $sql17 = "SELECT * FROM patient WHERE drug_prophylaxis like '%2%' AND gender=1 AND FLOOR(DATEDIFF('$from',dob)/365)>=15 AND current_status=1";
+        $query17 = $this->db->query($sql17);
+        $result16 = $query17->num_rows();
 
-    //female adult
-    $sql18 = "SELECT * FROM patient WHERE drug_prophylaxis like '%2%' AND gender=2 AND FLOOR(DATEDIFF('$from',dob)/365)>=15 AND current_status=1";
-    $query18 = $this->db->query($sql18);
-    $result17 = $query18->num_rows();
+        //female adult
+        $sql18 = "SELECT * FROM patient WHERE drug_prophylaxis like '%2%' AND gender=2 AND FLOOR(DATEDIFF('$from',dob)/365)>=15 AND current_status=1";
+        $query18 = $this->db->query($sql18);
+        $result17 = $query18->num_rows();
 
-    //male child
-    $sql19 = "SELECT * FROM patient WHERE drug_prophylaxis like '%2%' AND gender=1 AND FLOOR(DATEDIFF('$from',dob)/365)<15 AND current_status=1";
-    $query19 = $this->db->query($sql19);
-    $result18 = $query19->num_rows();
+        //male child
+        $sql19 = "SELECT * FROM patient WHERE drug_prophylaxis like '%2%' AND gender=1 AND FLOOR(DATEDIFF('$from',dob)/365)<15 AND current_status=1";
+        $query19 = $this->db->query($sql19);
+        $result18 = $query19->num_rows();
 
-    //female child
-    $sql20 = "SELECT * FROM patient WHERE drug_prophylaxis like '%2%' AND gender=2 AND FLOOR(DATEDIFF('$from',dob)/365)<15 AND current_status=1";
-    $query20 = $this->db->query($sql20);
-    $result19 = $query20->num_rows();
+        //female child
+        $sql20 = "SELECT * FROM patient WHERE drug_prophylaxis like '%2%' AND gender=2 AND FLOOR(DATEDIFF('$from',dob)/365)<15 AND current_status=1";
+        $query20 = $this->db->query($sql20);
+        $result19 = $query20->num_rows();
 
-    //Fluconazole
-    //male adult
-    $sql21 = "SELECT * FROM patient WHERE drug_prophylaxis like '%4%' AND gender=1 AND FLOOR(DATEDIFF('$from',dob)/365)>=15 AND current_status=1";
-    $query21 = $this->db->query($sql21);
-    $result20 = $query21->num_rows();
+        //Fluconazole
+        //male adult
+        $sql21 = "SELECT * FROM patient WHERE drug_prophylaxis like '%4%' AND gender=1 AND FLOOR(DATEDIFF('$from',dob)/365)>=15 AND current_status=1";
+        $query21 = $this->db->query($sql21);
+        $result20 = $query21->num_rows();
 
-    //female adult
-    $sql22 = "SELECT * FROM patient WHERE drug_prophylaxis like '%4%' AND gender=2 AND FLOOR(DATEDIFF('$from',dob)/365)>=15 AND current_status=1";
-    $query22 = $this->db->query($sql22);
-    $result21 = $query22->num_rows();
+        //female adult
+        $sql22 = "SELECT * FROM patient WHERE drug_prophylaxis like '%4%' AND gender=2 AND FLOOR(DATEDIFF('$from',dob)/365)>=15 AND current_status=1";
+        $query22 = $this->db->query($sql22);
+        $result21 = $query22->num_rows();
 
-    //male child
-    $sql23 = "SELECT * FROM patient WHERE drug_prophylaxis like '%4%' AND gender=1 AND FLOOR(DATEDIFF('$from',dob)/365)<15 AND current_status=1";
-    $query23 = $this->db->query($sql23);
-    $result22 = $query23->num_rows();
+        //male child
+        $sql23 = "SELECT * FROM patient WHERE drug_prophylaxis like '%4%' AND gender=1 AND FLOOR(DATEDIFF('$from',dob)/365)<15 AND current_status=1";
+        $query23 = $this->db->query($sql23);
+        $result22 = $query23->num_rows();
 
-    //female child
-    $sql24 = "SELECT * FROM patient WHERE drug_prophylaxis like '%4%' AND gender=2 AND FLOOR(DATEDIFF('$from',dob)/365)<15 AND current_status=1";
-    $query24 = $this->db->query($sql24);
-    $result23 = $query24->num_rows();
+        //female child
+        $sql24 = "SELECT * FROM patient WHERE drug_prophylaxis like '%4%' AND gender=2 AND FLOOR(DATEDIFF('$from',dob)/365)<15 AND current_status=1";
+        $query24 = $this->db->query($sql24);
+        $result23 = $query24->num_rows();
 
-    //Completed on Rifapentine/Isoniazid
-    //male adult
-    $sql25 = "SELECT * FROM patient WHERE drug_prophylaxis like '%5%' AND gender=1 AND FLOOR(DATEDIFF('$from',dob)/365)>=15 AND current_status=1";
-    $query25 = $this->db->query($sql25);
-    $result24 = $query25->num_rows();
+        //Completed on Rifapentine/Isoniazid
+        //male adult
+        $sql25 = "SELECT * FROM patient WHERE drug_prophylaxis like '%5%' AND gender=1 AND FLOOR(DATEDIFF('$from',dob)/365)>=15 AND current_status=1";
+        $query25 = $this->db->query($sql25);
+        $result24 = $query25->num_rows();
 
-    //female adult
-    $sql26 = "SELECT * FROM patient WHERE drug_prophylaxis like '%5%' AND gender=2 AND FLOOR(DATEDIFF('$from',dob)/365)>=15 AND current_status=1";
-    $query26 = $this->db->query($sql26);
-    $result25 = $query26->num_rows();
+        //female adult
+        $sql26 = "SELECT * FROM patient WHERE drug_prophylaxis like '%5%' AND gender=2 AND FLOOR(DATEDIFF('$from',dob)/365)>=15 AND current_status=1";
+        $query26 = $this->db->query($sql26);
+        $result25 = $query26->num_rows();
 
-    //male child
-    $sql27 = "SELECT * FROM patient WHERE drug_prophylaxis like '%5%' AND gender=1 AND FLOOR(DATEDIFF('$from',dob)/365)<15 AND current_status=1";
-    $query27 = $this->db->query($sql27);
-    $result26 = $query27->num_rows();
+        //male child
+        $sql27 = "SELECT * FROM patient WHERE drug_prophylaxis like '%5%' AND gender=1 AND FLOOR(DATEDIFF('$from',dob)/365)<15 AND current_status=1";
+        $query27 = $this->db->query($sql27);
+        $result26 = $query27->num_rows();
 
-    //female child
-    $sql28 = "SELECT * FROM patient WHERE drug_prophylaxis like '%5%' AND gender=2 AND FLOOR(DATEDIFF('$from',dob)/365)<15 AND current_status=1";
-    $query28 = $this->db->query($sql28);
-    $result27 = $query28->num_rows();
+        //female child
+        $sql28 = "SELECT * FROM patient WHERE drug_prophylaxis like '%5%' AND gender=2 AND FLOOR(DATEDIFF('$from',dob)/365)<15 AND current_status=1";
+        $query28 = $this->db->query($sql28);
+        $result27 = $query28->num_rows();
 
-    //Started on rifapentine/isoniazid
-    //male adult
-    $sql29 = "SELECT * FROM patient WHERE (rifap_isoniazid_start_date >= '$from') AND gender=1 AND FLOOR(DATEDIFF('$from',dob)/365)>=15 AND current_status=1";
-    $query29 = $this->db->query($sql29);
-    $result28 = $query29->num_rows();
+        //Started on rifapentine/isoniazid
+        //male adult
+        $sql29 = "SELECT * FROM patient WHERE (rifap_isoniazid_start_date >= '$from') AND gender=1 AND FLOOR(DATEDIFF('$from',dob)/365)>=15 AND current_status=1";
+        $query29 = $this->db->query($sql29);
+        $result28 = $query29->num_rows();
 
-    //female adult
-    $sql30 = "SELECT * FROM patient WHERE (rifap_isoniazid_start_date >= '$from') AND gender=2 AND FLOOR(DATEDIFF('$from',dob)/365)>=15 AND current_status=1";
-    $query30 = $this->db->query($sql30);
-    $result29 = $query30->num_rows();
+        //female adult
+        $sql30 = "SELECT * FROM patient WHERE (rifap_isoniazid_start_date >= '$from') AND gender=2 AND FLOOR(DATEDIFF('$from',dob)/365)>=15 AND current_status=1";
+        $query30 = $this->db->query($sql30);
+        $result29 = $query30->num_rows();
 
-    //male child
-    $sql31 = "SELECT * FROM patient WHERE (rifap_isoniazid_start_date >= '$from') AND gender=1 AND FLOOR(DATEDIFF('$from',dob)/365)<15 AND current_status=1";
-    $query31 = $this->db->query($sql31);
-    $result30 = $query31->num_rows();
+        //male child
+        $sql31 = "SELECT * FROM patient WHERE (rifap_isoniazid_start_date >= '$from') AND gender=1 AND FLOOR(DATEDIFF('$from',dob)/365)<15 AND current_status=1";
+        $query31 = $this->db->query($sql31);
+        $result30 = $query31->num_rows();
 
-    //female child
-    $sql32 = "SELECT * FROM patient WHERE (rifap_isoniazid_start_date >= '$from') AND gender=2 AND FLOOR(DATEDIFF('$from',dob)/365)<15 AND current_status=1";
-    $query32 = $this->db->query($sql32);
-    $result31 = $query32->num_rows();
-
-
-    //Routine rifapentine/isoniazid
-    //male adult
-    $sql33 = "SELECT * FROM patient WHERE (rifap_isoniazid_end_date >= '$to') AND gender=1 AND FLOOR(DATEDIFF('$from',dob)/365)>=15 AND current_status=1";
-    $query33 = $this->db->query($sql33);
-    $result32 = $query33->num_rows();
-
-    //female adult
-    $sql34 = "SELECT * FROM patient WHERE (rifap_isoniazid_end_date >= '$to') AND gender=2 AND FLOOR(DATEDIFF('$from',dob)/365)>=15 AND current_status=1";
-    $query34 = $this->db->query($sql34);
-    $result33 = $query34->num_rows();
-
-    //male child
-    $sql35 = "SELECT * FROM patient WHERE (rifap_isoniazid_end_date >= '$to') AND gender=1 AND FLOOR(DATEDIFF('$from',dob)/365)<15 AND current_status=1";
-    $query35 = $this->db->query($sql35);
-    $result34 = $query35->num_rows();
-
-    //female child
-    $sql36 = "SELECT * FROM patient WHERE (rifap_isoniazid_end_date >= '$to') AND gender=2 AND FLOOR(DATEDIFF('$from',dob)/365)<15 AND current_status=1";
-    $query36 = $this->db->query($sql36);
-    $result35 = $query36->num_rows();
-
-    $adults_isoniazid_total = $result8 + $result9;
-    $adults_cotrimoxazole_total = $result12 + $result13;
-    $adults_dapsone_total = $result16 + $result17;
-    $adults_fluconazole_total = $result20 + $result21;
-    $adults_rifap_isoniazid_total  = $result24 + $result25;
-    $adults_routine_isoniazid_total = $result + $result1;
-    $adults_routine_rifapentine_isoniazid_total = $result32 + $result33;
-    $adults_patients_started_on_isoniazid_total = $result4 + $result5;
-    $adults_patients_started_on_rifapentine_isoniazid_total = $result28 + $result29;
-
-    $children_isoniazid_total = $result10 + $result11;
-    $children_cotrimoxazole_total = $result14 + $result15;
-    $children_dapsone_total = $result18 + $result19;
-    $children_fluconazole_total = $result22 + $result23;
-    $children_rifap_isoniazid_total = $result26 + $result27;
-    $children_routine_isoniazid_total = $result2 + $result3;
-    $children_routine_rifapentine_isoniazid_total = $result34 + $result35;
-    $children_patients_started_on_isoniazid_total = $result6 + $result7;
-    $children_patients_started_on_rifapentine_isoniazid_total = $result30 + $result31;
+        //female child
+        $sql32 = "SELECT * FROM patient WHERE (rifap_isoniazid_start_date >= '$from') AND gender=2 AND FLOOR(DATEDIFF('$from',dob)/365)<15 AND current_status=1";
+        $query32 = $this->db->query($sql32);
+        $result31 = $query32->num_rows();
 
 
-    $isoniazid_total = $result8 + $result9 + $result10 + $result11;
-    $cotrimoxazole_total = $result12 + $result13 + $result14 + $result15;
-    $dapsone_total = $result16 + $result17 + $result18 + $result19;
-    $fluconazole_total = $result20 + $result21 + $result22 + $result23;
-    $rifap_isoniazid_total  = $result24 + $result25 + $result26 + $result27;
-    $routine_isoniazid_total = $result + $result1 + $result2 + $result3;
-    $routine_rifapentine_isoniazid_total = $result32 + $result33 + $result34 + $result35;
-    $patients_started_on_isoniazid_total = $result4 + $result5 + $result6 + $result7;
-    $patients_started_on_rifapentine_isoniazid_total = $result28 + $result29 + $result30 + $result31;
+        //Routine rifapentine/isoniazid
+        //male adult
+        $sql33 = "SELECT * FROM patient WHERE (rifap_isoniazid_end_date >= '$to') AND gender=1 AND FLOOR(DATEDIFF('$from',dob)/365)>=15 AND current_status=1";
+        $query33 = $this->db->query($sql33);
+        $result32 = $query33->num_rows();
 
-    $male_adults_total = $result + $result12 + $result16 + $result20 + $result24;
-    $female_adults_total = $result1 + $result13 + $result17 + $result21 + $result25;
-    $adults_total = $male_adults_total + $female_adults_total;
+        //female adult
+        $sql34 = "SELECT * FROM patient WHERE (rifap_isoniazid_end_date >= '$to') AND gender=2 AND FLOOR(DATEDIFF('$from',dob)/365)>=15 AND current_status=1";
+        $query34 = $this->db->query($sql34);
+        $result33 = $query34->num_rows();
 
-    $male_children_total = $result2 + $result14 + $result18 + $result22 + $result26;
-    $female_children_total = $result3 + $result15 + $result19 + $result23 + $result27;
-    $children_total = $male_children_total + $female_children_total;
+        //male child
+        $sql35 = "SELECT * FROM patient WHERE (rifap_isoniazid_end_date >= '$to') AND gender=1 AND FLOOR(DATEDIFF('$from',dob)/365)<15 AND current_status=1";
+        $query35 = $this->db->query($sql35);
+        $result34 = $query35->num_rows();
+
+        //female child
+        $sql36 = "SELECT * FROM patient WHERE (rifap_isoniazid_end_date >= '$to') AND gender=2 AND FLOOR(DATEDIFF('$from',dob)/365)<15 AND current_status=1";
+        $query36 = $this->db->query($sql36);
+        $result35 = $query36->num_rows();
+
+        $adults_isoniazid_total = $result8 + $result9;
+        $adults_cotrimoxazole_total = $result12 + $result13;
+        $adults_dapsone_total = $result16 + $result17;
+        $adults_fluconazole_total = $result20 + $result21;
+        $adults_rifap_isoniazid_total  = $result24 + $result25;
+        $adults_routine_isoniazid_total = $result + $result1;
+        $adults_routine_rifapentine_isoniazid_total = $result32 + $result33;
+        $adults_patients_started_on_isoniazid_total = $result4 + $result5;
+        $adults_patients_started_on_rifapentine_isoniazid_total = $result28 + $result29;
+
+        $children_isoniazid_total = $result10 + $result11;
+        $children_cotrimoxazole_total = $result14 + $result15;
+        $children_dapsone_total = $result18 + $result19;
+        $children_fluconazole_total = $result22 + $result23;
+        $children_rifap_isoniazid_total = $result26 + $result27;
+        $children_routine_isoniazid_total = $result2 + $result3;
+        $children_routine_rifapentine_isoniazid_total = $result34 + $result35;
+        $children_patients_started_on_isoniazid_total = $result6 + $result7;
+        $children_patients_started_on_rifapentine_isoniazid_total = $result30 + $result31;
 
 
-    $total_patients = $adults_total + $children_total;
+        $isoniazid_total = $result8 + $result9 + $result10 + $result11;
+        $cotrimoxazole_total = $result12 + $result13 + $result14 + $result15;
+        $dapsone_total = $result16 + $result17 + $result18 + $result19;
+        $fluconazole_total = $result20 + $result21 + $result22 + $result23;
+        $rifap_isoniazid_total  = $result24 + $result25 + $result26 + $result27;
+        $routine_isoniazid_total = $result + $result1 + $result2 + $result3;
+        $routine_rifapentine_isoniazid_total = $result32 + $result33 + $result34 + $result35;
+        $patients_started_on_isoniazid_total = $result4 + $result5 + $result6 + $result7;
+        $patients_started_on_rifapentine_isoniazid_total = $result28 + $result29 + $result30 + $result31;
+
+        $male_adults_total = $result + $result12 + $result16 + $result20 + $result24;
+        $female_adults_total = $result1 + $result13 + $result17 + $result21 + $result25;
+        $adults_total = $male_adults_total + $female_adults_total;
+
+        $male_children_total = $result2 + $result14 + $result18 + $result22 + $result26;
+        $female_children_total = $result3 + $result15 + $result19 + $result23 + $result27;
+        $children_total = $male_children_total + $female_children_total;
 
 
-    $row_string = "
+        $total_patients = $adults_total + $children_total;
+
+
+        $row_string = "
     <table border='1' class='dataTables'>
     <thead >
     <tr>
@@ -5511,25 +5576,26 @@ public function getisoniazidPatients($from = "", $to = "") {
     ";
 
 
-    $row_string .= "</table>";
-    $data['from'] = date('d-M-Y', strtotime($from));
-    $data['to'] = date('d-M-Y', strtotime($to));
-    $data['dyn_table'] = $row_string;
-    $data['visited_later'] = $visited_later;
+        $row_string .= "</table>";
+        $data['from'] = date('d-M-Y', strtotime($from));
+        $data['to'] = date('d-M-Y', strtotime($to));
+        $data['dyn_table'] = $row_string;
+        $data['visited_later'] = $visited_later;
 
-    $data['title'] = "webADT | Reports";
-    $data['hide_side_menu'] = 1;
-    $data['banner_text'] = "Facility Reports";
-    //$data['selected_report_type_link'] = "visiting_patient_report_row";
-    //$data['selected_report_type'] = "Visiting Patients";
-    $data['report_title'] = "List of Patients not  on isoniazid";
-    $data['facility_name'] = $this->session->userdata('facility_name');
-    $data['content_view'] = 'reports/patients_on_isoniazid_v';
-    $this->load->view('template', $data);
-}
+        $data['title'] = "webADT | Reports";
+        $data['hide_side_menu'] = 1;
+        $data['banner_text'] = "Facility Reports";
+        //$data['selected_report_type_link'] = "visiting_patient_report_row";
+        //$data['selected_report_type'] = "Visiting Patients";
+        $data['report_title'] = "List of Patients not  on isoniazid";
+        $data['facility_name'] = $this->session->userdata('facility_name');
+        $data['content_view'] = 'reports/patients_on_isoniazid_v';
+        $this->load->view('template', $data);
+    }
 
     // patients who have not been on isoniazid 
-    public function getnonisoniazidPatients($from = "", $list = null) {
+    public function getnonisoniazidPatients($from = "", $list = null)
+    {
         //Variables
 
         $row_string = "";
@@ -5640,7 +5706,8 @@ public function getisoniazidPatients($from = "", $to = "") {
         $this->load->view('template', $data);
     }
 
-    public function getnonisoniazidPatientslist($to = null) {
+    public function getnonisoniazidPatientslist($to = null)
+    {
 
         $row_string = "";
         $status = "";
@@ -5723,7 +5790,8 @@ public function getisoniazidPatients($from = "", $to = "") {
         $this->load->view('template', $data);
     }
 
- public function getPatientsforRefill($from = "", $to = "") {
+    public function getPatientsforRefill($from = "", $to = "")
+    {
         //Variables
         $overall_total = 0;
         $today = date('Y-m-d');
@@ -5814,7 +5882,8 @@ public function getisoniazidPatients($from = "", $to = "") {
         $this->load->view('template', $data);
     }
 
-    public function getPatientsforRefillDiffCare($from = "", $to = "") {
+    public function getPatientsforRefillDiffCare($from = "", $to = "")
+    {
         //Variables
         $overall_total = 0;
         $today = date('Y-m-d');
@@ -5901,7 +5970,8 @@ public function getisoniazidPatients($from = "", $to = "") {
         $this->load->view('template', $data);
     }
 
-    public function getPatientsforRefill1($from = "", $to = "") {
+    public function getPatientsforRefill1($from = "", $to = "")
+    {
         //Variables
         $overall_total = 0;
         $today = date('Y-m-d');
@@ -6019,7 +6089,8 @@ public function getisoniazidPatients($from = "", $to = "") {
         $this->load->view('template', $data);
     }
 
-    public function getStartedonART($from = "", $to = "", $supported_by = 0) {
+    public function getStartedonART($from = "", $to = "", $supported_by = 0)
+    {
         //Variables
         $patient_total = 0;
         $facility_code = $this->session->userdata("facility");
@@ -6393,7 +6464,8 @@ public function getisoniazidPatients($from = "", $to = "") {
         $this->load->view('template', $data);
     }
 
-    public function patient_active_byregimen($from = "2013-06-06") {
+    public function patient_active_byregimen($from = "2013-06-06")
+    {
         //Variables
         $facility_code = $this->session->userdata("facility");
         $from = date('Y-m-d', strtotime($from));
@@ -6542,7 +6614,8 @@ public function getisoniazidPatients($from = "", $to = "") {
         $this->load->view('template', $data);
     }
 
-    public function cumulative_patients($from = "", $type = '1') {
+    public function cumulative_patients($from = "", $type = '1')
+    {
         //Variables
         $facility_code = $this->session->userdata("facility");
         $from = date('Y-m-d', strtotime($from));
@@ -6816,7 +6889,8 @@ public function getisoniazidPatients($from = "", $to = "") {
         }
     }
 
-    public function drug_consumption($year = "", $pack_unit = "unit") {
+    public function drug_consumption($year = "", $pack_unit = "unit")
+    {
         $data['year'] = $year;
         $facility_code = $this->session->userdata("facility");
         $facility_name = $this->session->userdata('facility_name');
@@ -6946,7 +7020,8 @@ public function getisoniazidPatients($from = "", $to = "") {
         echo json_encode($output);
     }
 
-    public function setConsumption() {
+    public function setConsumption()
+    {
         $facility_code = $this->session->userdata("facility");
         //truncate drug_consumption_balance
         $sql = "TRUNCATE drug_cons_balance";
@@ -6956,7 +7031,8 @@ public function getisoniazidPatients($from = "", $to = "") {
         return $this->db->affected_rows();
     }
 
-    public function stock_report($report_type, $stock_type = "", $start_date = "", $end_date = "") {
+    public function stock_report($report_type, $stock_type = "", $start_date = "", $end_date = "")
+    {
         $data['facility_name'] = $this->session->userdata('facility_name');
         $data['base_url'] = base_url();
         $data['stock_type'] = $stock_type;
@@ -7015,7 +7091,8 @@ public function getisoniazidPatients($from = "", $to = "") {
         $this->load->view('template', $data);
     }
 
-    public function drug_stock_on_hand($stock_type) {
+    public function drug_stock_on_hand($stock_type)
+    {
         $facility_code = $this->session->userdata('facility');
 
         //CCC Store Name
@@ -7163,7 +7240,8 @@ public function getisoniazidPatients($from = "", $to = "") {
         echo json_encode($output);
     }
 
-    public function expiring_drugs($stock_type) {
+    public function expiring_drugs($stock_type)
+    {
         if ($stock_type == 1) {
             $data['stock_type'] = 'Main Store';
         } else if ($stock_type == 2) {
@@ -7189,7 +7267,8 @@ public function getisoniazidPatients($from = "", $to = "") {
         $this->load->view('template', $data);
     }
 
-    public function expired_drugs($stock_type) {
+    public function expired_drugs($stock_type)
+    {
         $count = 0;
         $facility_code = $this->session->userdata('facility');
         $data['facility_name'] = $this->session->userdata('facility_name');
@@ -7216,7 +7295,8 @@ public function getisoniazidPatients($from = "", $to = "") {
         $this->load->view('template', $data);
     }
 
-    public function getBatchInfo($drug, $batch, $drug_unit, $drug_name, $expiry_date, $expired_days, $drug_id, $pack_size, $stock_type, $facility_code) {
+    public function getBatchInfo($drug, $batch, $drug_unit, $drug_name, $expiry_date, $expired_days, $drug_id, $pack_size, $stock_type, $facility_code)
+    {
         $stock_status = 0;
         $stock_param = "";
 
@@ -7301,7 +7381,8 @@ public function getisoniazidPatients($from = "", $to = "") {
         }
     }
 
-    public function commodity_summary($stock_type = "1", $start_date = "", $end_date = "") {
+    public function commodity_summary($stock_type = "1", $start_date = "", $end_date = "")
+    {
 
         //$start_date = date('Y-m-d', strtotime($start_date));
         //$end_date = date('Y-m-d', strtotime($end_date));
@@ -7436,7 +7517,8 @@ public function getisoniazidPatients($from = "", $to = "") {
          */
     }
 
-    function searchForTransactionId($name, $array) {
+    function searchForTransactionId($name, $array)
+    {
         foreach ($array as $key => $val) {
             $s_name = strtolower($val['name']);
             if (strpos($s_name, $name) === 0) {
@@ -7446,7 +7528,8 @@ public function getisoniazidPatients($from = "", $to = "") {
         return null;
     }
 
-    public function getDrugInfo($facility_code, $drug, $drug_name, $drug_unit, $drug_packsize, $start_date, $end_date, $stock_type, $transaction_names = "", $phys_count_id = 0, $output = "", $row = "") {
+    public function getDrugInfo($facility_code, $drug, $drug_name, $drug_unit, $drug_packsize, $start_date, $end_date, $stock_type, $transaction_names = "", $phys_count_id = 0, $output = "", $row = "")
+    {
         $stock_param = "";
         //Store
         $stock_param = " AND ccc_store_sp = $stock_type";
@@ -7507,7 +7590,8 @@ public function getisoniazidPatients($from = "", $to = "") {
         }
     }
 
-    public function getSafetyStock($drug, $stock_status, $drug_name, $drug_unit, $drug_packsize, $facility_code, $stock_type, $start_date, $end_date, $transaction_names = "", $phys_count_id = 0, $output = "", $row = "") {
+    public function getSafetyStock($drug, $stock_status, $drug_name, $drug_unit, $drug_packsize, $facility_code, $stock_type, $start_date, $end_date, $transaction_names = "", $phys_count_id = 0, $output = "", $row = "")
+    {
         $stock_param = "";
         //Store
         $stock_param = " AND ccc_store_sp = $stock_type";
@@ -7562,7 +7646,8 @@ public function getisoniazidPatients($from = "", $to = "") {
         }
     }
 
-    public function patients_who_changed_regimen($start_date = "", $end_date = "") {
+    public function patients_who_changed_regimen($start_date = "", $end_date = "")
+    {
         $data['from'] = $start_date;
         $data['to'] = $end_date;
         $facility_code = $this->session->userdata('facility');
@@ -7610,9 +7695,10 @@ public function getisoniazidPatients($from = "", $to = "") {
         $data['facility_name'] = $this->session->userdata('facility_name');
         $data['content_view'] = 'reports/patients_who_changed_regimen_v';
         $this->load->view('template', $data);
-     }
+    }
 
-    public function patients_switched_to_second_line_regimen($start_date = "", $end_date = "") {
+    public function patients_switched_to_second_line_regimen($start_date = "", $end_date = "")
+    {
         $data['from'] = $start_date;
         $data['to'] = $end_date;
         $facility_code = $this->session->userdata('facility');
@@ -7665,7 +7751,8 @@ public function getisoniazidPatients($from = "", $to = "") {
         $this->load->view('template', $data);
     }
 
-    public function patients_starting($start_date = "", $end_date = "") {
+    public function patients_starting($start_date = "", $end_date = "")
+    {
         $data['from'] = $start_date;
         $data['to'] = $end_date;
         $start_date = date('Y-m-d', strtotime($start_date));
@@ -7685,7 +7772,8 @@ public function getisoniazidPatients($from = "", $to = "") {
         $this->load->view('template', $data);
     }
 
-    public function early_warning_indicators($start_date = "", $end_date = "") {
+    public function early_warning_indicators($start_date = "", $end_date = "")
+    {
         $data['from'] = $start_date;
         $data['to'] = $end_date;
         $facility_code = $this->session->userdata('facility');
@@ -7693,17 +7781,17 @@ public function getisoniazidPatients($from = "", $to = "") {
         $end_date = date('Y-m-d', strtotime($end_date));
         //Get Total Patients started on ART
         $sql = "SELECT COUNT( * ) AS Total_Patients "
-                . " FROM patient p "
-                . " LEFT JOIN regimen_service_type rst ON rst.id=p.service "
-                . " LEFT JOIN regimen r ON r.id=p.start_regimen "
-                . " LEFT JOIN patient_source ps ON ps.id = p.source"
-                . " WHERE p.start_regimen_date"
-                . " BETWEEN '" . $start_date . "'"
-                . " AND '" . $end_date . "'"
-                . " AND p.facility_code='" . $facility_code . "'"
-                . " AND rst.name LIKE '%art%' "
-                . " AND ps.name NOT LIKE '%transfer%'"
-                . " AND p.start_regimen !=''";
+            . " FROM patient p "
+            . " LEFT JOIN regimen_service_type rst ON rst.id=p.service "
+            . " LEFT JOIN regimen r ON r.id=p.start_regimen "
+            . " LEFT JOIN patient_source ps ON ps.id = p.source"
+            . " WHERE p.start_regimen_date"
+            . " BETWEEN '" . $start_date . "'"
+            . " AND '" . $end_date . "'"
+            . " AND p.facility_code='" . $facility_code . "'"
+            . " AND rst.name LIKE '%art%' "
+            . " AND ps.name NOT LIKE '%transfer%'"
+            . " AND p.start_regimen !=''";
         $tot_patients_sql = $this->db->query($sql);
         $tot_patients = 0;
         $patients = $tot_patients_sql->result_array();
@@ -7712,18 +7800,18 @@ public function getisoniazidPatients($from = "", $to = "") {
         }
         //Get Total Patients started on first line ART
         $sql = "SELECT COUNT( * ) AS First_Line "
-                . "FROM patient p "
-                . "LEFT JOIN regimen_service_type rst ON rst.id=p.service "
-                . "LEFT JOIN regimen r ON r.id = p.start_regimen "
-                . "LEFT JOIN patient_source ps ON ps.id = p.source "
-                . "WHERE p.start_regimen_date "
-                . "BETWEEN '" . $start_date . "' "
-                . "AND '" . $end_date . "' "
-                . "AND r.line=1 "
-                . "AND p.facility_code='" . $facility_code . "' "
-                . "AND rst.name LIKE '%art%' "
-                . "AND ps.name NOT LIKE '%transfer%'"
-                . "AND p.start_regimen !=''";
+            . "FROM patient p "
+            . "LEFT JOIN regimen_service_type rst ON rst.id=p.service "
+            . "LEFT JOIN regimen r ON r.id = p.start_regimen "
+            . "LEFT JOIN patient_source ps ON ps.id = p.source "
+            . "WHERE p.start_regimen_date "
+            . "BETWEEN '" . $start_date . "' "
+            . "AND '" . $end_date . "' "
+            . "AND r.line=1 "
+            . "AND p.facility_code='" . $facility_code . "' "
+            . "AND rst.name LIKE '%art%' "
+            . "AND ps.name NOT LIKE '%transfer%'"
+            . "AND p.start_regimen !=''";
         $first_line_sql = $this->db->query($sql);
         $first_line = 0;
         $first_line_array = $first_line_sql->result_array();
@@ -7745,17 +7833,17 @@ public function getisoniazidPatients($from = "", $to = "") {
         $future_date = date('Y-m-d', strtotime($end_date . " -1 year"));
 
         $sql = "SELECT COUNT( * ) AS Total_Patients "
-                . " FROM patient p "
-                . " LEFT JOIN regimen_service_type rst ON rst.id=p.service "
-                . " LEFT JOIN regimen r ON r.id=p.start_regimen "
-                . " LEFT JOIN patient_source ps ON ps.id = p.source"
-                . " WHERE p.start_regimen_date"
-                . " BETWEEN '" . $to_date . "'"
-                . " AND '" . $future_date . "'"
-                . " AND p.facility_code='" . $facility_code . "'"
-                . " AND rst.name LIKE  '%art%' "
-                . " AND ps.name NOT LIKE '%transfer%'"
-                . " AND p.start_regimen !=''";
+            . " FROM patient p "
+            . " LEFT JOIN regimen_service_type rst ON rst.id=p.service "
+            . " LEFT JOIN regimen r ON r.id=p.start_regimen "
+            . " LEFT JOIN patient_source ps ON ps.id = p.source"
+            . " WHERE p.start_regimen_date"
+            . " BETWEEN '" . $to_date . "'"
+            . " AND '" . $future_date . "'"
+            . " AND p.facility_code='" . $facility_code . "'"
+            . " AND rst.name LIKE  '%art%' "
+            . " AND ps.name NOT LIKE '%transfer%'"
+            . " AND p.start_regimen !=''";
         $patient_from_period_sql = $this->db->query($sql);
         $total_from_period_array = $patient_from_period_sql->result_array();
         $total_from_period = 0;
@@ -7766,21 +7854,21 @@ public function getisoniazidPatients($from = "", $to = "") {
         //Gets patients started a year ago within selected period still in first line
         $stil_in_first_line = 0;
         $sql = "SELECT COUNT( * ) AS Total_Patients "
-                . "FROM patient p "
-                . "LEFT JOIN regimen_service_type rst ON rst.id=p.service "
-                . "LEFT JOIN regimen r ON r.id=p.start_regimen "
-                . "LEFT JOIN regimen r1 ON r1.id = p.current_regimen "
-                . "LEFT JOIN patient_source ps ON ps.id = p.source "
-                . "LEFT JOIN patient_status pt ON pt.id = p.current_status "
-                . "WHERE p.start_regimen_date "
-                . "BETWEEN '" . $to_date . "' "
-                . "AND '" . $future_date . "' "
-                . "AND p.facility_code='" . $facility_code . "' "
-                . "AND rst.name LIKE '%art%' "
-                . "AND ps.name NOT LIKE '%transfer%' "
-                . "AND r.line=1 "
-                . "AND r1.line ='1' "
-                . "AND pt.Name LIKE '%active%'";
+            . "FROM patient p "
+            . "LEFT JOIN regimen_service_type rst ON rst.id=p.service "
+            . "LEFT JOIN regimen r ON r.id=p.start_regimen "
+            . "LEFT JOIN regimen r1 ON r1.id = p.current_regimen "
+            . "LEFT JOIN patient_source ps ON ps.id = p.source "
+            . "LEFT JOIN patient_status pt ON pt.id = p.current_status "
+            . "WHERE p.start_regimen_date "
+            . "BETWEEN '" . $to_date . "' "
+            . "AND '" . $future_date . "' "
+            . "AND p.facility_code='" . $facility_code . "' "
+            . "AND rst.name LIKE '%art%' "
+            . "AND ps.name NOT LIKE '%transfer%' "
+            . "AND r.line=1 "
+            . "AND r1.line ='1' "
+            . "AND pt.Name LIKE '%active%'";
         $first_line_patient_from_period_sql = $this->db->query($sql);
         $first_line_patient_from_period_array = $first_line_patient_from_period_sql->result_array();
         foreach ($first_line_patient_from_period_array as $row) {
@@ -7796,18 +7884,18 @@ public function getisoniazidPatients($from = "", $to = "") {
         $total_before_period = $total_from_period;
         //Gets patients started a year ago within selected period lost to follow-up
         $sql = "SELECT COUNT( * ) AS Total_Patients "
-                . "FROM patient p "
-                . "LEFT JOIN regimen_service_type rst ON rst.id=p.service "
-                . "LEFT JOIN regimen r ON r.id=p.start_regimen "
-                . "LEFT JOIN patient_source ps ON ps.id = p.source "
-                . "LEFT JOIN patient_status pt ON pt.id = p.current_status "
-                . "WHERE p.start_regimen_date "
-                . "BETWEEN '" . $to_date . "' "
-                . "AND '" . $future_date . "' "
-                . "AND p.facility_code='" . $facility_code . "' "
-                . "AND rst.name LIKE '%art%' "
-                . "AND ps.name NOT LIKE '%transfer%' "
-                . "AND pt.Name LIKE '%lost%'";
+            . "FROM patient p "
+            . "LEFT JOIN regimen_service_type rst ON rst.id=p.service "
+            . "LEFT JOIN regimen r ON r.id=p.start_regimen "
+            . "LEFT JOIN patient_source ps ON ps.id = p.source "
+            . "LEFT JOIN patient_status pt ON pt.id = p.current_status "
+            . "WHERE p.start_regimen_date "
+            . "BETWEEN '" . $to_date . "' "
+            . "AND '" . $future_date . "' "
+            . "AND p.facility_code='" . $facility_code . "' "
+            . "AND rst.name LIKE '%art%' "
+            . "AND ps.name NOT LIKE '%transfer%' "
+            . "AND pt.Name LIKE '%lost%'";
         $patient_lost_followup_sql = $this->db->query($sql);
         $patient_lost_followup_array = $patient_lost_followup_sql->result_array();
         $lost_to_follow = 0;
@@ -7841,7 +7929,8 @@ public function getisoniazidPatients($from = "", $to = "") {
         $this->load->view('template', $data);
     }
 
-    public function graph_patients_enrolled_in_year($year = "") {
+    public function graph_patients_enrolled_in_year($year = "")
+    {
         $main_array = array();
         $facility_code = $this->session->userdata('facility');
         $months = array(
@@ -7856,7 +7945,8 @@ public function getisoniazidPatients($from = "", $to = "") {
             '9' => 'Sep',
             '10' => 'Oct',
             '11' => 'Nov',
-            '12' => 'Dec');
+            '12' => 'Dec'
+        );
 
         $services_data = Regimen_Service_Type::getHydratedAll();
         foreach ($services_data as $service) {
@@ -7916,7 +8006,8 @@ public function getisoniazidPatients($from = "", $to = "") {
         $this->load->view('template', $data);
     }
 
-    public function patients_adherence($start_date = "", $end_date = "") {
+    public function patients_adherence($start_date = "", $end_date = "")
+    {
         $data['from'] = $start_date;
         $data['to'] = $end_date;
         $start_date = date('Y-m-d', strtotime($start_date));
@@ -7948,7 +8039,8 @@ public function getisoniazidPatients($from = "", $to = "") {
         $this->load->view('template', $data);
     }
 
-    public function graphical_adherence($type = "appointment", $start_date = "", $end_date = "") {
+    public function graphical_adherence($type = "appointment", $start_date = "", $end_date = "")
+    {
         $data['start_date'] = date('Y-m-d', strtotime($start_date));
         $data['end_date'] = date('Y-m-d', strtotime($end_date));
         $data['type'] = $type;
@@ -7962,13 +8054,14 @@ public function getisoniazidPatients($from = "", $to = "") {
         $data['content_view'] = 'reports/graphical_adherence_v';
         $this->load->view('template', $data);
     }
-    function downlodadherence($name = "appointment", $start_date = "", $end_date = "", $type = "") {
-    
-$this->getAdherence($name = "appointment", $start_date , $end_date, $type,TRUE) ;
-    
+    function downlodadherence($name = "appointment", $start_date = "", $end_date = "", $type = "")
+    {
+
+        $this->getAdherence($name = "appointment", $start_date, $end_date, $type, TRUE);
     }
 
-    public function getAdherence($name = "appointment", $start_date = "", $end_date = "", $type = "",$download = FALSE) {
+    public function getAdherence($name = "appointment", $start_date = "", $end_date = "", $type = "", $download = FALSE)
+    {
 
         $this->load->dbutil();
         $this->load->helper('file');
@@ -7998,53 +8091,61 @@ $this->getAdherence($name = "appointment", $start_date , $end_date, $type,TRUE) 
                 'on_time' => 0,
                 'missed' => 0,
                 'defaulter' => 0,
-                'lost_to_followup' => 0);
+                'lost_to_followup' => 0
+            );
 
             $art_adherence['art'] = array(
                 'total' => 0,
                 'on_time' => 0,
                 'missed' => 0,
                 'defaulter' => 0,
-                'lost_to_followup' => 0);
+                'lost_to_followup' => 0
+            );
             $art_adherence['non_art'] = array(
                 'total' => 0,
                 'on_time' => 0,
                 'missed' => 0,
                 'defaulter' => 0,
-                'lost_to_followup' => 0);
+                'lost_to_followup' => 0
+            );
 
             $gender_adherence['male'] = array(
                 'total' => 0,
                 'on_time' => 0,
                 'missed' => 0,
                 'defaulter' => 0,
-                'lost_to_followup' => 0);
+                'lost_to_followup' => 0
+            );
             $gender_adherence['female'] = array(
                 'total' => 0,
                 'on_time' => 0,
                 'missed' => 0,
                 'defaulter' => 0,
-                'lost_to_followup' => 0);
+                'lost_to_followup' => 0
+            );
 
             $age_adherence['<15'] = array(
                 'total' => 0,
                 'on_time' => 0,
                 'missed' => 0,
                 'defaulter' => 0,
-                'lost_to_followup' => 0);
+                'lost_to_followup' => 0
+            );
             $age_adherence['15_24'] = array(
                 'total' => 0,
                 'on_time' => 0,
                 'missed' => 0,
                 'defaulter' => 0,
-                'lost_to_followup' => 0);
+                'lost_to_followup' => 0
+            );
 
             $age_adherence['>24'] = array(
                 'total' => 0,
                 'on_time' => 0,
                 'missed' => 0,
                 'defaulter' => 0,
-                'lost_to_followup' => 0);
+                'lost_to_followup' => 0
+            );
 
             /*
              * Get all appointments for a patient in selected period
@@ -8248,20 +8349,20 @@ $this->getAdherence($name = "appointment", $start_date , $end_date, $type,TRUE) 
         $data['suffix'] = '';
         $data['resultArray'] = $resultArray;
 
-        if ($download=='download'){
-    echo 'piure';
-        die;
-        $data = $this->dbutil->csv_from_result($data['resultArray'], '', $newline);
-        ob_clean();//Removes spaces
-        force_download($filename, $data);
-
-}
+        if ($download == 'download') {
+            echo 'piure';
+            die;
+            $data = $this->dbutil->csv_from_result($data['resultArray'], '', $newline);
+            ob_clean(); //Removes spaces
+            force_download($filename, $data);
+        }
 
 
         $this->load->view('graph_v', $data);
     }
 
-    public function get_pill_adherence($start_date, $end_date, $report_name, $report_filter) {
+    public function get_pill_adherence($start_date, $end_date, $report_name, $report_filter)
+    {
         //Parameters
         $params = array(
             'pill_count' => array(
@@ -8372,15 +8473,15 @@ $this->getAdherence($name = "appointment", $start_date , $end_date, $type,TRUE) 
             $main_array[] = array('name' => 'Overall', 'data' => array_values($main_data));
         } else {
             foreach ($main_data as $index => $mydata) {
-                $main_array[] = array('name' => $index, 'data' => array_values($mydata));
-                ;
+                $main_array[] = array('name' => $index, 'data' => array_values($mydata));;
             }
         }
 
         return $main_array;
     }
 
-    public function patients_nonadherence($start_date = "", $end_date = "") {
+    public function patients_nonadherence($start_date = "", $end_date = "")
+    {
         $data['from'] = $start_date;
         $data['to'] = $end_date;
         $start_date = date('Y-m-d', strtotime($start_date));
@@ -8396,9 +8497,9 @@ $this->getAdherence($name = "appointment", $start_date , $end_date, $type,TRUE) 
 			ON pv.non_adherence_reason=na.id ORDER BY na.id DESC  ";
         $query = $this->db->query($sql);
         $results = $query->result_array();
-        $uniqueNonAdherence = array_unique(array_map(function($i) {
-                    return $i['id'];
-                }, $results));
+        $uniqueNonAdherence = array_unique(array_map(function ($i) {
+            return $i['id'];
+        }, $results));
 
         $tot_adult_male = 0;
         $tot_a_male = 0;
@@ -8421,7 +8522,7 @@ $this->getAdherence($name = "appointment", $start_date , $end_date, $type,TRUE) 
 			</tr></thead><tbody>";
         foreach ($results as $value) {
             $y++;
-            if ($check_id != $value['id']) {//Check if new row
+            if ($check_id != $value['id']) { //Check if new row
                 if ($check_id != 0) {
                     $dyn_table .= "<td>" . $tot_adult_male . "</td><td>" . $total_adult_female . "</td><td>" . $total_child_male . "</td><td>" . $total_child_female . "</td></tr>";
                     $tot_adult_male = 0;
@@ -8435,18 +8536,18 @@ $this->getAdherence($name = "appointment", $start_date , $end_date, $type,TRUE) 
                 $check_id = $value['id'];
             }
             if ($value['age'] == "Adult") {
-                if ($value['gender'] == "1") {//Male
+                if ($value['gender'] == "1") { //Male
                     $tot_adult_male++;
                     $tot_a_male++;
-                } else if ($value['gender'] == "2") {//Female
+                } else if ($value['gender'] == "2") { //Female
                     $total_adult_female++;
                     $tot_a_female++;
                 }
             } else if ($value['age'] == "Child") {
-                if ($value['gender'] == "1") {//Male
+                if ($value['gender'] == "1") { //Male
                     $total_child_male++;
                     $tot_c_male++;
-                } else if ($value['gender'] == "2") {//Female
+                } else if ($value['gender'] == "2") { //Female
                     $total_child_female++;
                     $tot_c_female++;
                 }
@@ -8469,7 +8570,8 @@ $this->getAdherence($name = "appointment", $start_date , $end_date, $type,TRUE) 
         $this->load->view('template', $data);
     }
 
-    public function getFacilityConsumption($start_date = "", $end_date = "") {
+    public function getFacilityConsumption($start_date = "", $end_date = "")
+    {
         $data['from'] = $start_date;
         $data['to'] = $end_date;
         $start_date = date('Y-m-d', strtotime($start_date));
@@ -8599,7 +8701,8 @@ $this->getAdherence($name = "appointment", $start_date , $end_date, $type,TRUE) 
         $this->load->view('template', $data);
     }
 
-    public function patients_disclosure($start_date = "", $end_date = "") {
+    public function patients_disclosure($start_date = "", $end_date = "")
+    {
         $data['from'] = $start_date;
         $data['to'] = $end_date;
         $data['title'] = "webADT | Reports";
@@ -8613,7 +8716,8 @@ $this->getAdherence($name = "appointment", $start_date , $end_date, $type,TRUE) 
         $this->load->view('template', $data);
     }
 
-    public function disclosure_chart($start_date = "", $end_date = "") {
+    public function disclosure_chart($start_date = "", $end_date = "")
+    {
         $data['from'] = $start_date;
         $data['to'] = $end_date;
         $heading = "Patient Disclosure Between $start_date and $end_date";
@@ -8658,7 +8762,8 @@ $this->getAdherence($name = "appointment", $start_date , $end_date, $type,TRUE) 
         $this->load->view('chart_v', $data);
     }
 
-    public function getTBPatients($start_date = "", $end_date = "") {
+    public function getTBPatients($start_date = "", $end_date = "")
+    {
         $data['from'] = $start_date;
         $data['to'] = $end_date;
         $start_date = date('Y-m-d', strtotime($start_date));
@@ -8752,7 +8857,8 @@ $this->getAdherence($name = "appointment", $start_date , $end_date, $type,TRUE) 
         $this->load->view('template', $data);
     }
 
-    public function getFamilyPlanning($start_date = "") {
+    public function getFamilyPlanning($start_date = "")
+    {
         $data['from'] = $start_date;
         $start_date = date('Y-m-d', strtotime($start_date));
         //$end_date = date('Y-m-d', strtotime($end_date));
@@ -8809,7 +8915,8 @@ $this->getAdherence($name = "appointment", $start_date , $end_date, $type,TRUE) 
         $this->load->view('template', $data);
     }
 
-    public function getIndications($start_date = "", $end_date = "") {
+    public function getIndications($start_date = "", $end_date = "")
+    {
         $data['from'] = $start_date;
         $data['to'] = $end_date;
         $start_date = date('Y-m-d', strtotime($start_date));
@@ -8857,7 +8964,8 @@ $this->getAdherence($name = "appointment", $start_date , $end_date, $type,TRUE) 
         $this->load->view('template', $data);
     }
 
-    public function getChronic($start_date = "") {
+    public function getChronic($start_date = "")
+    {
         $data['from'] = $start_date;
         $start_date = date('Y-m-d', strtotime($start_date));
         $facility_code = $this->session->userdata('facility');
@@ -8883,8 +8991,8 @@ $this->getAdherence($name = "appointment", $start_date , $end_date, $type,TRUE) 
                     } else {
                         $arr[] = trim(strtoupper($result['other_illnesses']));
                     }
-                    if ($result['gender'] == 1) {//Check Male
-                        if ($result['age'] >= 15) {//Check Adult
+                    if ($result['gender'] == 1) { //Check Male
+                        if ($result['age'] >= 15) { //Check Adult
                             if (strstr(trim($result['other_illnesses']), ',', true)) {
                                 $values = explode(",", $result['other_illnesses']);
                                 foreach ($values as $value) {
@@ -8893,7 +9001,7 @@ $this->getAdherence($name = "appointment", $start_date , $end_date, $type,TRUE) 
                             } else {
                                 $adult_male[] = trim(strtoupper($result['other_illnesses']));
                             }
-                        } else if ($result['age'] < 15) {//Check Child
+                        } else if ($result['age'] < 15) { //Check Child
                             if (strstr(trim($result['other_illnesses']), ',', true)) {
                                 $values = explode(",", $result['other_illnesses']);
                                 foreach ($values as $value) {
@@ -8903,8 +9011,8 @@ $this->getAdherence($name = "appointment", $start_date , $end_date, $type,TRUE) 
                                 $child[] = trim(strtoupper($result['other_illnesses']));
                             }
                         }
-                    } else if ($result['gender'] == 2) {//Check Female
-                        if ($result['age'] >= 15) {//Check Adult
+                    } else if ($result['gender'] == 2) { //Check Female
+                        if ($result['age'] >= 15) { //Check Adult
                             if (strstr(trim($result['other_illnesses']), ',', true)) {
                                 $values = explode(",", $result['other_illnesses']);
                                 foreach ($values as $value) {
@@ -8913,7 +9021,7 @@ $this->getAdherence($name = "appointment", $start_date , $end_date, $type,TRUE) 
                             } else {
                                 $adult_female[] = trim(strtoupper($result['other_illnesses']));
                             }
-                        } else if ($result['age'] < 15) {//Check Child
+                        } else if ($result['age'] < 15) { //Check Child
                             if (strstr(trim($result['other_illnesses']), ',', true)) {
                                 $values = explode(",", $result['other_illnesses']);
                                 foreach ($values as $value) {
@@ -9024,7 +9132,8 @@ $this->getAdherence($name = "appointment", $start_date , $end_date, $type,TRUE) 
         $this->load->view('template', $data);
     }
 
-    public function getADR($start_date = "") {
+    public function getADR($start_date = "")
+    {
         $data['from'] = $start_date;
         //$data['to'] = $end_date;
         $start_date = date('Y-m-d', strtotime($start_date));
@@ -9093,22 +9202,23 @@ $this->getAdherence($name = "appointment", $start_date , $end_date, $type,TRUE) 
         $this->load->view('template', $data);
     }
 
-    public function getDrugsIssued($stock_type, $start_date = "", $end_date = "") {
+    public function getDrugsIssued($stock_type, $start_date = "", $end_date = "")
+    {
         $facility_code = $this->session->userdata("facility");
         $start_date = date('Y-m-d', strtotime($start_date));
         $end_date = date('Y-m-d', strtotime($end_date));
 
         //Get Drugs Received in Period
         $this->db->select("UPPER(d.drug) as drug_name,IF(ds.name IS NOT NULL,UPPER(ds.name),UPPER(dsm.source_destination)) as drug_source,SUM(dsm.quantity_out) as total")
-                ->from("drug_stock_movement dsm")
-                ->join("transaction_type t", "t.id = dsm.transaction_type", "LEFT")
-                ->join("drugcode d", "d.id = dsm.drug", "LEFT")
-                ->join("drug_destination ds", "ds.id = dsm.source_destination", "LEFT")
-                ->where("dsm.transaction_date BETWEEN '$start_date' AND '$end_date'")
-                ->where("dsm.facility", $facility_code)
-                ->like("t.name", "issue")
-                ->where("d.id IS NOT NULL")
-                ->group_by("d.drug,dsm.source_destination");
+            ->from("drug_stock_movement dsm")
+            ->join("transaction_type t", "t.id = dsm.transaction_type", "LEFT")
+            ->join("drugcode d", "d.id = dsm.drug", "LEFT")
+            ->join("drug_destination ds", "ds.id = dsm.source_destination", "LEFT")
+            ->where("dsm.transaction_date BETWEEN '$start_date' AND '$end_date'")
+            ->where("dsm.facility", $facility_code)
+            ->like("t.name", "issue")
+            ->where("d.id IS NOT NULL")
+            ->group_by("d.drug,dsm.source_destination");
         $query = $this->db->get();
         $results = $query->result_array();
 
@@ -9184,20 +9294,21 @@ $this->getAdherence($name = "appointment", $start_date , $end_date, $type,TRUE) 
         $this->load->view('template', $data);
     }
 
-    public function get_lost_followup($from = "", $to = "") {
+    public function get_lost_followup($from = "", $to = "")
+    {
         $facility_code = $this->session->userdata("facility");
         $start_date = date('Y-m-d', strtotime($from));
         $end_date = date('Y-m-d', strtotime($to));
 
         //Get Patients Lost to Follow Up
         $this->db->select("p.patient_number_ccc as ccc_no,UPPER(CONCAT_WS(' ',p.first_name,CONCAT_WS(' ',p.other_name,p.last_name))) as person_name,ps.name as status,DATE_FORMAT(p.status_change_date,'%d/%b/%Y') as status_date", FALSE)
-                ->from("patient p")
-                ->join("patient_status ps", "ps.id = p.current_status", "LEFT")
-                ->where("p.status_change_date BETWEEN '$start_date' AND '$end_date'")
-                ->where("p.facility_code", $facility_code)
-                ->like("ps.name", "lost")
-                ->where("p.patient_number_ccc IS NOT NULL")
-                ->group_by("p.id");
+            ->from("patient p")
+            ->join("patient_status ps", "ps.id = p.current_status", "LEFT")
+            ->where("p.status_change_date BETWEEN '$start_date' AND '$end_date'")
+            ->where("p.facility_code", $facility_code)
+            ->like("ps.name", "lost")
+            ->where("p.patient_number_ccc IS NOT NULL")
+            ->group_by("p.id");
         $query = $this->db->get();
         $results = $query->result_array();
 
@@ -9226,22 +9337,23 @@ $this->getAdherence($name = "appointment", $start_date , $end_date, $type,TRUE) 
         $this->load->view('template', $data);
     }
 
-    public function getDrugsReceived($stock_type, $start_date = "", $end_date = "") {
+    public function getDrugsReceived($stock_type, $start_date = "", $end_date = "")
+    {
         $facility_code = $this->session->userdata("facility");
         $start_date = date('Y-m-d', strtotime($start_date));
         $end_date = date('Y-m-d', strtotime($end_date));
 
         //Get Drugs Received in Period
         $this->db->select("UPPER(d.drug) as drug_name,IF(ds.name IS NOT NULL,UPPER(ds.name),UPPER(dsm.source_destination)) as drug_source,SUM(dsm.quantity) as total")
-                ->from("drug_stock_movement dsm")
-                ->join("transaction_type t", "t.id = dsm.transaction_type", "LEFT")
-                ->join("drugcode d", "d.id = dsm.drug", "LEFT")
-                ->join("drug_source ds", "ds.id = dsm.source_destination", "LEFT")
-                ->where("dsm.transaction_date BETWEEN '$start_date' AND '$end_date'")
-                ->where("dsm.facility", $facility_code)
-                ->like("t.name", "received")
-                ->where("d.id IS NOT NULL")
-                ->group_by("d.drug,dsm.source_destination");
+            ->from("drug_stock_movement dsm")
+            ->join("transaction_type t", "t.id = dsm.transaction_type", "LEFT")
+            ->join("drugcode d", "d.id = dsm.drug", "LEFT")
+            ->join("drug_source ds", "ds.id = dsm.source_destination", "LEFT")
+            ->where("dsm.transaction_date BETWEEN '$start_date' AND '$end_date'")
+            ->where("dsm.facility", $facility_code)
+            ->like("t.name", "received")
+            ->where("d.id IS NOT NULL")
+            ->group_by("d.drug,dsm.source_destination");
         $query = $this->db->get();
         $results = $query->result_array();
 
@@ -9317,7 +9429,8 @@ $this->getAdherence($name = "appointment", $start_date , $end_date, $type,TRUE) 
         $this->load->view('template', $data);
     }
 
-    public function getDrugsReceived_old($stock_type, $start_date = "", $end_date = "") {
+    public function getDrugsReceived_old($stock_type, $start_date = "", $end_date = "")
+    {
 
         $data['from'] = $start_date;
         $data['to'] = $end_date;
@@ -9432,7 +9545,8 @@ $this->getAdherence($name = "appointment", $start_date , $end_date, $type,TRUE) 
         $this->load->view('template', $data);
     }
 
-    public function getDailyConsumption($start_date = "", $end_date = "") {
+    public function getDailyConsumption($start_date = "", $end_date = "")
+    {
         $data['from'] = $start_date;
         $data['to'] = $end_date;
         $start_date = date('Y-m-d', strtotime($start_date));
@@ -9500,7 +9614,7 @@ $this->getAdherence($name = "appointment", $start_date , $end_date, $type,TRUE) 
         if ($results) {
             foreach ($results as $result) {
                 $qty_total = $result['qty_total'];
-                $row_string .= "<tr><td>" . $result['transaction_date'] . "</td><td><b>" . $result['drug_name'] . "</b></td><td><b>" . $result['drug_unit'] . "</b></td><td><b>" . $result['pack_size'] . "</b></td><td>" . number_format($qty_total) . "</td><td>" . number_format(( $qty_total / $overall_total) * 100) . "</td><td>" . number_format($result['qty_pharmacy']) . "</td><td>" . number_format($result['qty_pharmacy_percent']) . "</td><td>" . number_format($result['qty_store']) . "</td><td>" . number_format($result['qty_store_percent']) . "</td></tr>";
+                $row_string .= "<tr><td>" . $result['transaction_date'] . "</td><td><b>" . $result['drug_name'] . "</b></td><td><b>" . $result['drug_unit'] . "</b></td><td><b>" . $result['pack_size'] . "</b></td><td>" . number_format($qty_total) . "</td><td>" . number_format(($qty_total / $overall_total) * 100) . "</td><td>" . number_format($result['qty_pharmacy']) . "</td><td>" . number_format($result['qty_pharmacy_percent']) . "</td><td>" . number_format($result['qty_store']) . "</td><td>" . number_format($result['qty_store_percent']) . "</td></tr>";
             }
         }
 
@@ -9521,7 +9635,8 @@ $this->getAdherence($name = "appointment", $start_date , $end_date, $type,TRUE) 
         $this->load->view('template', $data);
     }
 
-    public function getBMI($start_date = "") {
+    public function getBMI($start_date = "")
+    {
         /*
           Formula BMI= weight(kg)/(height(m)*height(m))
 
@@ -9660,216 +9775,216 @@ $this->getAdherence($name = "appointment", $start_date , $end_date, $type,TRUE) 
                     if ($art_check !== false) {
                         if ($result['gender'] == 1) {
                             if ($result['BMI'] >= 0 && $result['BMI'] < 15) {
-                                $bmi_temp['ART']['Very Severely Underweight']['Male'] ++;
+                                $bmi_temp['ART']['Very Severely Underweight']['Male']++;
                                 $male_Very_Severely_Underweight++;
                             } else if ($result['BMI'] >= 15 && $result['BMI'] < 16) {
-                                $bmi_temp['ART']['Severely Underweight']['Male'] ++;
+                                $bmi_temp['ART']['Severely Underweight']['Male']++;
                                 $male_Severely_Underweight++;
                             } else if ($result['BMI'] >= 16 && $result['BMI'] < 18.5) {
-                                $bmi_temp['ART']['Underweight']['Male'] ++;
+                                $bmi_temp['ART']['Underweight']['Male']++;
                                 $male_Underweight++;
                             } else if ($result['BMI'] >= 18.5 && $result['BMI'] < 25) {
-                                $bmi_temp['ART']['Normal']['Male'] ++;
+                                $bmi_temp['ART']['Normal']['Male']++;
                                 $male_Normal++;
                             } else if ($result['BMI'] >= 25 && $result['BMI'] < 30) {
-                                $bmi_temp['ART']['Overweight']['Male'] ++;
+                                $bmi_temp['ART']['Overweight']['Male']++;
                                 $male_Overweight++;
                             } else if ($result['BMI'] >= 30 && $result['BMI'] < 35) {
-                                $bmi_temp['ART']['Moderately Obese']['Male'] ++;
+                                $bmi_temp['ART']['Moderately Obese']['Male']++;
                                 $male_Moderately_Obese++;
                             } else if ($result['BMI'] >= 35 && $result['BMI'] < 40) {
-                                $bmi_temp['ART']['Severely Obese']['Male'] ++;
+                                $bmi_temp['ART']['Severely Obese']['Male']++;
                                 $male_Severely_Obese++;
                             } else if ($result['BMI'] >= 40) {
-                                $bmi_temp['ART']['Very Severely Obese']['Male'] ++;
+                                $bmi_temp['ART']['Very Severely Obese']['Male']++;
                                 $male_Very_Severely_Obese++;
                             }
                         } else if ($result['gender'] == 2) {
                             if ($result['BMI'] >= 0 && $result['BMI'] < 15) {
-                                $bmi_temp['ART']['Very Severely Underweight']['Female'] ++;
+                                $bmi_temp['ART']['Very Severely Underweight']['Female']++;
                                 $female_Very_Severely_Underweight++;
                             } else if ($result['BMI'] >= 15 && $result['BMI'] < 16) {
-                                $bmi_temp['ART']['Severely Underweight']['Female'] ++;
+                                $bmi_temp['ART']['Severely Underweight']['Female']++;
                                 $female_Severely_Underweight++;
                             } else if ($result['BMI'] >= 16 && $result['BMI'] < 18.5) {
-                                $bmi_temp['ART']['Underweight']['Female'] ++;
+                                $bmi_temp['ART']['Underweight']['Female']++;
                                 $female_Underweight++;
                             } else if ($result['BMI'] >= 18.5 && $result['BMI'] < 25) {
-                                $bmi_temp['ART']['Normal']['Female'] ++;
+                                $bmi_temp['ART']['Normal']['Female']++;
                                 $female_Normal++;
                             } else if ($result['BMI'] >= 25 && $result['BMI'] < 30) {
-                                $bmi_temp['ART']['Overweight']['Female'] ++;
+                                $bmi_temp['ART']['Overweight']['Female']++;
                                 $female_Overweight++;
                             } else if ($result['BMI'] >= 30 && $result['BMI'] < 35) {
-                                $bmi_temp['ART']['Moderately Obese']['Female'] ++;
+                                $bmi_temp['ART']['Moderately Obese']['Female']++;
                                 $female_Moderately_Obese++;
                             } else if ($result['BMI'] >= 35 && $result['BMI'] < 40) {
-                                $bmi_temp['ART']['Severely Obese']['Female'] ++;
+                                $bmi_temp['ART']['Severely Obese']['Female']++;
                                 $female_Severely_Obese++;
                             } else if ($result['BMI'] >= 40) {
-                                $bmi_temp['ART']['Very Severely Obese']['Female'] ++;
+                                $bmi_temp['ART']['Very Severely Obese']['Female']++;
                                 $female_Very_Severely_Obese++;
                             }
                         }
                     } else if ($pep_check !== false) {
                         if ($result['gender'] == 1) {
                             if ($result['BMI'] >= 0 && $result['BMI'] < 15) {
-                                $bmi_temp['PEP']['Very Severely Underweight']['Male'] ++;
+                                $bmi_temp['PEP']['Very Severely Underweight']['Male']++;
                                 $male_Very_Severely_Underweight++;
                             } else if ($result['BMI'] >= 15 && $result['BMI'] < 16) {
-                                $bmi_temp['PEP']['Severely Underweight']['Male'] ++;
+                                $bmi_temp['PEP']['Severely Underweight']['Male']++;
                                 $male_Severely_Underweight++;
                             } else if ($result['BMI'] >= 16 && $result['BMI'] < 18.5) {
-                                $bmi_temp['PEP']['Underweight']['Male'] ++;
+                                $bmi_temp['PEP']['Underweight']['Male']++;
                                 $male_Underweight++;
                             } else if ($result['BMI'] >= 18.5 && $result['BMI'] < 25) {
-                                $bmi_temp['PEP']['Normal']['Male'] ++;
+                                $bmi_temp['PEP']['Normal']['Male']++;
                                 $male_Normal++;
                             } else if ($result['BMI'] >= 25 && $result['BMI'] < 30) {
-                                $bmi_temp['PEP']['Overweight']['Male'] ++;
+                                $bmi_temp['PEP']['Overweight']['Male']++;
                                 $male_Overweight++;
                             } else if ($result['BMI'] >= 30 && $result['BMI'] < 35) {
-                                $bmi_temp['PEP']['Moderately Obese']['Male'] ++;
+                                $bmi_temp['PEP']['Moderately Obese']['Male']++;
                                 $male_Moderately_Obese++;
                             } else if ($result['BMI'] >= 35 && $result['BMI'] < 40) {
-                                $bmi_temp['PEP']['Severely Obese']['Male'] ++;
+                                $bmi_temp['PEP']['Severely Obese']['Male']++;
                                 $male_Severely_Obese++;
                             } else if ($result['BMI'] >= 40) {
-                                $bmi_temp['PEP']['Very Severely Obese']['Male'] ++;
+                                $bmi_temp['PEP']['Very Severely Obese']['Male']++;
                                 $male_Very_Severely_Obese++;
                             }
                         } else if ($result['gender'] == 2) {
                             if ($result['BMI'] >= 0 && $result['BMI'] < 15) {
-                                $bmi_temp['PEP']['Very Severely Underweight']['Female'] ++;
+                                $bmi_temp['PEP']['Very Severely Underweight']['Female']++;
                                 $female_Very_Severely_Underweight++;
                             } else if ($result['BMI'] >= 15 && $result['BMI'] < 16) {
-                                $bmi_temp['PEP']['Severely Underweight']['Female'] ++;
+                                $bmi_temp['PEP']['Severely Underweight']['Female']++;
                                 $female_Severely_Underweight++;
                             } else if ($result['BMI'] >= 16 && $result['BMI'] < 18.5) {
-                                $bmi_temp['PEP']['Underweight']['Female'] ++;
+                                $bmi_temp['PEP']['Underweight']['Female']++;
                                 $female_Underweight++;
                             } else if ($result['BMI'] >= 18.5 && $result['BMI'] < 25) {
-                                $bmi_temp['PEP']['Normal']['Female'] ++;
+                                $bmi_temp['PEP']['Normal']['Female']++;
                                 $female_Normal++;
                             } else if ($result['BMI'] >= 25 && $result['BMI'] < 30) {
-                                $bmi_temp['PEP']['Overweight']['Female'] ++;
+                                $bmi_temp['PEP']['Overweight']['Female']++;
                                 $female_Overweight++;
                             } else if ($result['BMI'] >= 30 && $result['BMI'] < 35) {
-                                $bmi_temp['PEP']['Moderately Obese']['Female'] ++;
+                                $bmi_temp['PEP']['Moderately Obese']['Female']++;
                                 $female_Moderately_Obese++;
                             } else if ($result['BMI'] >= 35 && $result['BMI'] < 40) {
-                                $bmi_temp['PEP']['Severely Obese']['Female'] ++;
+                                $bmi_temp['PEP']['Severely Obese']['Female']++;
                                 $female_Severely_Obese++;
                             } else if ($result['BMI'] >= 40) {
-                                $bmi_temp['PEP']['Very Severely Obese']['Female'] ++;
+                                $bmi_temp['PEP']['Very Severely Obese']['Female']++;
                                 $female_Very_Severely_Obese++;
                             }
                         }
                     } else if ($pmtct_check !== false) {
                         if ($result['gender'] == 1) {
                             if ($result['BMI'] >= 0 && $result['BMI'] < 15) {
-                                $bmi_temp['PMTCT']['Very Severely Underweight']['Male'] ++;
+                                $bmi_temp['PMTCT']['Very Severely Underweight']['Male']++;
                                 $male_Very_Severely_Underweight++;
                             } else if ($result['BMI'] >= 15 && $result['BMI'] < 16) {
-                                $bmi_temp['PMTCT']['Severely Underweight']['Male'] ++;
+                                $bmi_temp['PMTCT']['Severely Underweight']['Male']++;
                                 $male_Severely_Underweight++;
                             } else if ($result['BMI'] >= 16 && $result['BMI'] < 18.5) {
-                                $bmi_temp['PMTCT']['Underweight']['Male'] ++;
+                                $bmi_temp['PMTCT']['Underweight']['Male']++;
                                 $male_Underweight++;
                             } else if ($result['BMI'] >= 18.5 && $result['BMI'] < 25) {
-                                $bmi_temp['PMTCT']['Normal']['Male'] ++;
+                                $bmi_temp['PMTCT']['Normal']['Male']++;
                                 $male_Normal++;
                             } else if ($result['BMI'] >= 25 && $result['BMI'] < 30) {
-                                $bmi_temp['PMTCT']['Overweight']['Male'] ++;
+                                $bmi_temp['PMTCT']['Overweight']['Male']++;
                                 $male_Overweight++;
                             } else if ($result['BMI'] >= 30 && $result['BMI'] < 35) {
-                                $bmi_temp['PMTCT']['Moderately Obese']['Male'] ++;
+                                $bmi_temp['PMTCT']['Moderately Obese']['Male']++;
                                 $male_Moderately_Obese++;
                             } else if ($result['BMI'] >= 35 && $result['BMI'] < 40) {
-                                $bmi_temp['PMTCT']['Severely Obese']['Male'] ++;
+                                $bmi_temp['PMTCT']['Severely Obese']['Male']++;
                                 $male_Severely_Obese++;
                             } else if ($result['BMI'] >= 40) {
-                                $bmi_temp['PMTCT']['Very Severely Obese']['Male'] ++;
+                                $bmi_temp['PMTCT']['Very Severely Obese']['Male']++;
                                 $male_Very_Severely_Obese++;
                             }
                         } else if ($result['gender'] == 2) {
                             if ($result['BMI'] >= 0 && $result['BMI'] < 15) {
-                                $bmi_temp['PMTCT']['Very Severely Underweight']['Female'] ++;
+                                $bmi_temp['PMTCT']['Very Severely Underweight']['Female']++;
                                 $female_Very_Severely_Underweight++;
                             } else if ($result['BMI'] >= 15 && $result['BMI'] < 16) {
-                                $bmi_temp['PMTCT']['Severely Underweight']['Female'] ++;
+                                $bmi_temp['PMTCT']['Severely Underweight']['Female']++;
                                 $female_Severely_Underweight++;
                             } else if ($result['BMI'] >= 16 && $result['BMI'] < 18.5) {
-                                $bmi_temp['PMTCT']['Underweight']['Female'] ++;
+                                $bmi_temp['PMTCT']['Underweight']['Female']++;
                                 $female_Underweight++;
                             } else if ($result['BMI'] >= 18.5 && $result['BMI'] < 25) {
-                                $bmi_temp['PMTCT']['Normal']['Female'] ++;
+                                $bmi_temp['PMTCT']['Normal']['Female']++;
                                 $female_Normal++;
                             } else if ($result['BMI'] >= 25 && $result['BMI'] < 30) {
-                                $bmi_temp['PMTCT']['Overweight']['Female'] ++;
+                                $bmi_temp['PMTCT']['Overweight']['Female']++;
                                 $female_Overweight++;
                             } else if ($result['BMI'] >= 30 && $result['BMI'] < 35) {
-                                $bmi_temp['PMTCT']['Moderately Obese']['Female'] ++;
+                                $bmi_temp['PMTCT']['Moderately Obese']['Female']++;
                                 $female_Moderately_Obese++;
                             } else if ($result['BMI'] >= 35 && $result['BMI'] < 40) {
-                                $bmi_temp['PMTCT']['Severely Obese']['Female'] ++;
+                                $bmi_temp['PMTCT']['Severely Obese']['Female']++;
                                 $female_Severely_Obese++;
                             } else if ($result['BMI'] >= 40) {
-                                $bmi_temp['PMTCT']['Very Severely Obese']['Female'] ++;
+                                $bmi_temp['PMTCT']['Very Severely Obese']['Female']++;
                                 $female_Very_Severely_Obese++;
                             }
                         }
                     } else if ($oi_check !== false) {
                         if ($result['gender'] == 1) {
                             if ($result['BMI'] >= 0 && $result['BMI'] < 15) {
-                                $bmi_temp['OI']['Very Severely Underweight']['Male'] ++;
+                                $bmi_temp['OI']['Very Severely Underweight']['Male']++;
                                 $male_Very_Severely_Underweight++;
                             } else if ($result['BMI'] >= 15 && $result['BMI'] < 16) {
-                                $bmi_temp['OI']['Severely Underweight']['Male'] ++;
+                                $bmi_temp['OI']['Severely Underweight']['Male']++;
                                 $male_Severely_Underweight++;
                             } else if ($result['BMI'] >= 16 && $result['BMI'] < 18.5) {
-                                $bmi_temp['OI']['Underweight']['Male'] ++;
+                                $bmi_temp['OI']['Underweight']['Male']++;
                                 $male_Underweight++;
                             } else if ($result['BMI'] >= 18.5 && $result['BMI'] < 25) {
-                                $bmi_temp['OI']['Normal']['Male'] ++;
+                                $bmi_temp['OI']['Normal']['Male']++;
                                 $male_Normal++;
                             } else if ($result['BMI'] >= 25 && $result['BMI'] < 30) {
-                                $bmi_temp['OI']['Overweight']['Male'] ++;
+                                $bmi_temp['OI']['Overweight']['Male']++;
                                 $male_Overweight++;
                             } else if ($result['BMI'] >= 30 && $result['BMI'] < 35) {
-                                $bmi_temp['OI']['Moderately Obese']['Male'] ++;
+                                $bmi_temp['OI']['Moderately Obese']['Male']++;
                                 $male_Moderately_Obese++;
                             } else if ($result['BMI'] >= 35 && $result['BMI'] < 40) {
-                                $bmi_temp['OI']['Severely Obese']['Male'] ++;
+                                $bmi_temp['OI']['Severely Obese']['Male']++;
                                 $male_Severely_Obese++;
                             } else if ($result['BMI'] >= 40) {
-                                $bmi_temp['OI']['Very Severely Obese']['Male'] ++;
+                                $bmi_temp['OI']['Very Severely Obese']['Male']++;
                                 $male_Very_Severely_Obese++;
                             }
                         } else if ($result['gender'] == 2) {
                             if ($result['BMI'] >= 0 && $result['BMI'] < 15) {
-                                $bmi_temp['OI']['Very Severely Underweight']['Female'] ++;
+                                $bmi_temp['OI']['Very Severely Underweight']['Female']++;
                                 $female_Very_Severely_Underweight++;
                             } else if ($result['BMI'] >= 15 && $result['BMI'] < 16) {
-                                $bmi_temp['OI']['Severely Underweight']['Female'] ++;
+                                $bmi_temp['OI']['Severely Underweight']['Female']++;
                                 $female_Severely_Underweight++;
                             } else if ($result['BMI'] >= 16 && $result['BMI'] < 18.5) {
-                                $bmi_temp['OI']['Underweight']['Female'] ++;
+                                $bmi_temp['OI']['Underweight']['Female']++;
                                 $female_Underweight++;
                             } else if ($result['BMI'] >= 18.5 && $result['BMI'] < 25) {
-                                $bmi_temp['OI']['Normal']['Female'] ++;
+                                $bmi_temp['OI']['Normal']['Female']++;
                                 $female_Normal++;
                             } else if ($result['BMI'] >= 25 && $result['BMI'] < 30) {
-                                $bmi_temp['OI']['Overweight']['Female'] ++;
+                                $bmi_temp['OI']['Overweight']['Female']++;
                                 $female_Overweight++;
                             } else if ($result['BMI'] >= 30 && $result['BMI'] < 35) {
-                                $bmi_temp['OI']['Moderately Obese']['Female'] ++;
+                                $bmi_temp['OI']['Moderately Obese']['Female']++;
                                 $female_Moderately_Obese++;
                             } else if ($result['BMI'] >= 35 && $result['BMI'] < 40) {
-                                $bmi_temp['OI']['Severely Obese']['Female'] ++;
+                                $bmi_temp['OI']['Severely Obese']['Female']++;
                                 $female_Severely_Obese++;
                             } else if ($result['BMI'] >= 40) {
-                                $bmi_temp['OI']['Very Severely Obese']['Female'] ++;
+                                $bmi_temp['OI']['Very Severely Obese']['Female']++;
                                 $female_Very_Severely_Obese++;
                             }
                         }
@@ -9906,7 +10021,8 @@ $this->getAdherence($name = "appointment", $start_date , $end_date, $type,TRUE) 
         //End
     }
 
-    public function service_statistics($start_date = "",$end_date = "",$gender='',$agegroup = '') {
+    public function service_statistics($start_date = "", $end_date = "", $gender = '', $agegroup = '')
+    {
         //Variables
         $facility_code = $this->session->userdata("facility");
         $data = array();
@@ -9917,7 +10033,7 @@ $this->getAdherence($name = "appointment", $start_date , $end_date, $type,TRUE) 
         $regimen_totals = array();
         $data['gender'] = $gender;
         $data['agegroup'] = $agegroup;
-        $_gender = ($gender =='male') ? 1 : 2 ;
+        $_gender = ($gender == 'male') ? 1 : 2;
         $total = 0;
         $overall_adult_male_art = 0;
         $overall_adult_male_pep = 0;
@@ -9929,91 +10045,91 @@ $this->getAdherence($name = "appointment", $start_date , $end_date, $type,TRUE) 
         $overall_adult_female_pmtct = 0;
         $overall_adult_female_oi = 0;
         $overall_adult_female_prep = 0;
-           $age_range = '';
+        $age_range = '';
         switch ($agegroup) {
-           case '4weeks': 
-           $age_range = '4 weeks to 4 years';
-           break;
-           case '5years': 
-           $age_range = 'Below 1 year';
-           break;
-           case '1year': 
-           $age_range = '1 Year -  4 years';
-           break;
-           $age_range = '5 years - 9 years';
-           break;
-           case '10years': 
-           $age_range = '10 years - 14 years';
-           break;
-           case '15years': 
-           $age_range = '15 years - 19 years';
-           break;
-           case '20years': 
-           $age_range = '20 years - 24 years';
-           break;
-           case '25years': 
-           $age_range = '25 years - 29 years';
-           break;
-           case '30years': 
-           $age_range = '30 years - 34 years';
-           break;
-           case '35years': 
-           $age_range = '35 years - 39 years';
-           break;
-           case '40years': 
-           $age_range = '40 years - 44 years';
-           break;
-           case '45years': 
-           $age_range = '45 years - 49 years';
-           break;
-           case 'above49': 
-           $age_range = 'above 49 years';
-           break;
-           case 'below1': 
+            case '4weeks':
+                $age_range = '4 weeks to 4 years';
+                break;
+            case '5years':
+                $age_range = 'Below 1 year';
+                break;
+            case '1year':
+                $age_range = '1 Year -  4 years';
+                break;
+                $age_range = '5 years - 9 years';
+                break;
+            case '10years':
+                $age_range = '10 years - 14 years';
+                break;
+            case '15years':
+                $age_range = '15 years - 19 years';
+                break;
+            case '20years':
+                $age_range = '20 years - 24 years';
+                break;
+            case '25years':
+                $age_range = '25 years - 29 years';
+                break;
+            case '30years':
+                $age_range = '30 years - 34 years';
+                break;
+            case '35years':
+                $age_range = '35 years - 39 years';
+                break;
+            case '40years':
+                $age_range = '40 years - 44 years';
+                break;
+            case '45years':
+                $age_range = '45 years - 49 years';
+                break;
+            case 'above49':
+                $age_range = 'above 49 years';
+                break;
+            case 'below1':
 
-           default:
+            default:
                 # code...
-           break;
+                break;
         }
-        if ($agegroup =='below4'){
+        if ($agegroup == 'below4') {
             $agecond =  "AND  FLOOR(datediff('$from',p.dob))<29 ";
         }
-        if ($agegroup =='4weeks'){
+        if ($agegroup == '4weeks') {
             $agecond =  "AND FLOOR(datediff('$from',p.dob)) > 28 AND FLOOR(datediff('$from',p.dob)/365)<5";
         }
-        if ($agegroup =='5years'){
+        if ($agegroup == '5years') {
             $agecond =  "AND FLOOR(datediff('$from',p.dob)/365)>4 AND FLOOR(datediff('$from',p.dob)/365)<10";
         }
-        if ($agegroup =='10years'){
+        if ($agegroup == '10years') {
             $agecond =  "AND FLOOR(datediff('$from',p.dob)/365)>9 AND FLOOR(datediff('$from',p.dob)/365)<15";
         }
-        if ($agegroup =='15years'){
+        if ($agegroup == '15years') {
             $agecond =  "AND FLOOR(datediff('$from',p.dob)/365)>14 AND FLOOR(datediff('$from',p.dob)/365)<20";
         }
-        if ($agegroup =='20years'){
+        if ($agegroup == '20years') {
             $agecond =  "AND FLOOR(datediff('$from',p.dob)/365)>19 AND FLOOR(datediff('$from',p.dob)/365)<25";
         }
-        if ($agegroup =='25years'){
+        if ($agegroup == '25years') {
             $agecond =  "AND FLOOR(datediff('$from',p.dob)/365)>24 AND FLOOR(datediff('$from',p.dob)/365)<30";
         }
-        if ($agegroup =='30years'){
+        if ($agegroup == '30years') {
             $agecond =  "AND FLOOR(datediff('$from',p.dob)/365)>29 AND FLOOR(datediff('$from',p.dob)/365)<35";
         }
-        if ($agegroup =='35years'){
+        if ($agegroup == '35years') {
             $agecond =  "AND FLOOR(datediff('$from',p.dob)/365)>34 AND FLOOR(datediff('$from',p.dob)/365)<40";
         }
-        if ($agegroup =='40years'){
+        if ($agegroup == '40years') {
             $agecond =  "AND FLOOR(datediff('$from',p.dob)/365)>39 AND FLOOR(datediff('$from',p.dob)/365)<45";
         }
-        if ($agegroup =='45years'){
+        if ($agegroup == '45years') {
             $agecond =  "AND FLOOR(datediff('$from',p.dob)/365)>44 AND FLOOR(datediff('$from',p.dob)/365)<50";
         }
-        if ($agegroup =='above49'){
+        if ($agegroup == 'above49') {
             $agecond =  "AND FLOOR(datediff('$from',p.dob)/365)>49";
         }
 
         //Get Total of all patients
-            $sql = "SELECT p.current_regimen,count(*) as total FROM patient p 
+        $sql = "SELECT p.current_regimen,count(*) as total FROM patient p 
            LEFT JOIN regimen r ON r.id = p.current_regimen 
            LEFT JOIN regimen_service_type rst ON rst.id = p.service 
            LEFT JOIN patient_status ps ON ps.id = p.current_status
@@ -10023,7 +10139,7 @@ $this->getAdherence($name = "appointment", $start_date , $end_date, $type,TRUE) 
         $results = $query->result_array();
         $total = $results[0]['total'];
         //Get Totals for each regimen
-            $sql = "SELECT count(*) as total, r.regimen_desc,r.regimen_code,p.current_regimen FROM patient p 
+        $sql = "SELECT count(*) as total, r.regimen_desc,r.regimen_code,p.current_regimen FROM patient p 
            LEFT JOIN regimen r ON r.id = p.current_regimen LEFT JOIN regimen_service_type rst ON rst.id = p.service 
            LEFT JOIN patient_status ps ON ps.id = p.current_status
            WHERE p.date_enrolled <='$from' AND ps.name ='active' AND p.facility_code = '$facility_code' 
@@ -10069,15 +10185,15 @@ $this->getAdherence($name = "appointment", $start_date , $end_date, $type,TRUE) 
                 $dyn_table .= "<tr><td><b>$regimen_code</b> | $regimen_name</td><td>$regimen_total</td><td>$regimen_total_percentage</td>";
 
                 //SQL for Adult Male Regimens
-   
-                    $sql = "SELECT count(*) as total,p.service as service_id,rst.name FROM patient p 
+
+                $sql = "SELECT count(*) as total,p.service as service_id,rst.name FROM patient p 
                    LEFT JOIN regimen r ON r.id = p.current_regimen LEFT JOIN regimen_service_type rst ON rst.id = p.service 
                    LEFT JOIN patient_status ps ON ps.id = p.current_status
                    WHERE p.date_enrolled <='$from' AND ps.name ='active' 
                    AND p.facility_code = '$facility_code' AND p.current_regimen != '' 
                    AND p.current_status != '' AND p.gender=1 AND p.current_regimen='$current_regimen' AND FLOOR(datediff('$from',p.dob)/365)>15
                    GROUP BY p.service ORDER BY rst.id ASC";
-                     
+
                 $query = $this->db->query($sql);
                 $results = $query->result_array();
                 $total_adult_male_art = "-";
@@ -10185,64 +10301,65 @@ $this->getAdherence($name = "appointment", $start_date , $end_date, $type,TRUE) 
         $this->load->view('template', $data);
     }
 
-        public function clinical_bands($start_date = "",$end_date = "",$gender='',$agegroup = '') {
+    public function clinical_bands($start_date = "", $end_date = "", $gender = '', $agegroup = '')
+    {
         //Variables
         $facility_code = $this->session->userdata("facility");
         $data = array();
         $data['from'] = date('d-M-Y', time());
         $data['to'] = date('d-M-Y', time());
         $from = date('Y-m-d', time());
-        $to = date('Y-m-t', time());        
+        $to = date('Y-m-t', time());
         $regimen_totals = array();
         $data['gender'] = $gender;
         $data['agegroup'] = $agegroup;
         $age_range = '';
         switch ($agegroup) {
-           case '4weeks': 
-           $age_range = '4 weeks to 4 years';
-           break;
-           case '5years': 
-           $age_range = 'Below 1 year';
-           break;
-           case '1year': 
-           $age_range = '1 Year -  4 years';
-           break;
-           $age_range = '5 years - 9 years';
-           break;
-           case '10years': 
-           $age_range = '10 years - 14 years';
-           break;
-           case '15years': 
-           $age_range = '15 years - 19 years';
-           break;
-           case '20years': 
-           $age_range = '20 years - 24 years';
-           break;
-           case '25years': 
-           $age_range = '25 years - 29 years';
-           break;
-           case '30years': 
-           $age_range = '30 years - 34 years';
-           break;
-           case '35years': 
-           $age_range = '35 years - 39 years';
-           break;
-           case '40years': 
-           $age_range = '40 years - 44 years';
-           break;
-           case '45years': 
-           $age_range = '45 years - 49 years';
-           break;
-           case 'above49': 
-           $age_range = 'above 49 years';
-           break;
-           case 'below1': 
+            case '4weeks':
+                $age_range = '4 weeks to 4 years';
+                break;
+            case '5years':
+                $age_range = 'Below 1 year';
+                break;
+            case '1year':
+                $age_range = '1 Year -  4 years';
+                break;
+                $age_range = '5 years - 9 years';
+                break;
+            case '10years':
+                $age_range = '10 years - 14 years';
+                break;
+            case '15years':
+                $age_range = '15 years - 19 years';
+                break;
+            case '20years':
+                $age_range = '20 years - 24 years';
+                break;
+            case '25years':
+                $age_range = '25 years - 29 years';
+                break;
+            case '30years':
+                $age_range = '30 years - 34 years';
+                break;
+            case '35years':
+                $age_range = '35 years - 39 years';
+                break;
+            case '40years':
+                $age_range = '40 years - 44 years';
+                break;
+            case '45years':
+                $age_range = '45 years - 49 years';
+                break;
+            case 'above49':
+                $age_range = 'above 49 years';
+                break;
+            case 'below1':
 
-           default:
+            default:
                 # code...
-           break;
-       }
-        $_gender = ($gender =='male') ? 1 : 2 ;
+                break;
+        }
+        $_gender = ($gender == 'male') ? 1 : 2;
         $total = 0;
         $overall_adult_male_art = 0;
         $overall_adult_male_pep = 0;
@@ -10254,45 +10371,45 @@ $this->getAdherence($name = "appointment", $start_date , $end_date, $type,TRUE) 
         $overall_adult_female_pmtct = 0;
         $overall_adult_female_oi = 0;
         $overall_adult_female_prep = 0;
-        if ($agegroup =='below1'){
+        if ($agegroup == 'below1') {
             $agecond =  "AND FLOOR(datediff('$from',p.dob)/365)<1";
         }
-        if ($agegroup =='1year'){
+        if ($agegroup == '1year') {
             $agecond =  "AND FLOOR(datediff('$from',p.dob)/365)>1 AND FLOOR(datediff('$from',p.dob)/365)<5";
         }
-        if ($agegroup =='5years'){
+        if ($agegroup == '5years') {
             $agecond =  "AND FLOOR(datediff('$from',p.dob)/365)>4 AND FLOOR(datediff('$from',p.dob)/365)<10";
         }
-        if ($agegroup =='10years'){
+        if ($agegroup == '10years') {
             $agecond =  "AND FLOOR(datediff('$from',p.dob)/365)>9 AND FLOOR(datediff('$from',p.dob)/365)<15";
         }
-        if ($agegroup =='15years'){
+        if ($agegroup == '15years') {
             $agecond =  "AND FLOOR(datediff('$from',p.dob)/365)>14 AND FLOOR(datediff('$from',p.dob)/365)<20";
         }
-        if ($agegroup =='20years'){
+        if ($agegroup == '20years') {
             $agecond =  "AND FLOOR(datediff('$from',p.dob)/365)>19 AND FLOOR(datediff('$from',p.dob)/365)<25";
         }
-        if ($agegroup =='25years'){
+        if ($agegroup == '25years') {
             $agecond =  "AND FLOOR(datediff('$from',p.dob)/365)>24 AND FLOOR(datediff('$from',p.dob)/365)<30";
         }
-        if ($agegroup =='30years'){
+        if ($agegroup == '30years') {
             $agecond =  "AND FLOOR(datediff('$from',p.dob)/365)>29 AND FLOOR(datediff('$from',p.dob)/365)<35";
         }
-        if ($agegroup =='35years'){
+        if ($agegroup == '35years') {
             $agecond =  "AND FLOOR(datediff('$from',p.dob)/365)>34 AND FLOOR(datediff('$from',p.dob)/365)<40";
         }
-        if ($agegroup =='40years'){
+        if ($agegroup == '40years') {
             $agecond =  "AND FLOOR(datediff('$from',p.dob)/365)>39 AND FLOOR(datediff('$from',p.dob)/365)<45";
         }
-        if ($agegroup =='45years'){
+        if ($agegroup == '45years') {
             $agecond =  "AND FLOOR(datediff('$from',p.dob)/365)>44 AND FLOOR(datediff('$from',p.dob)/365)<50";
         }
-        if ($agegroup =='above49'){
+        if ($agegroup == 'above49') {
             $agecond =  "AND FLOOR(datediff('$from',p.dob)/365)>49";
         }
 
         //Get Total of all patients
-            $sql = "SELECT count(t.regimen_desc)    as total ,t.regimen from
+        $sql = "SELECT count(t.regimen_desc)    as total ,t.regimen from
                     (select
                     r.regimen_desc ,
                     max(pv.dispensing_date),
@@ -10312,7 +10429,7 @@ $this->getAdherence($name = "appointment", $start_date , $end_date, $type,TRUE) 
         $results = $query->result_array();
         $total = $results[0]['total'];
         //Get Totals for each regimen
-            $sql = "SELECT count(t.regimen_desc) as total   ,t.regimen_desc,t.regimen_code  ,t.regimen
+        $sql = "SELECT count(t.regimen_desc) as total   ,t.regimen_desc,t.regimen_code  ,t.regimen
             from
                 (SELECT
                 r.regimen_desc ,
@@ -10370,8 +10487,8 @@ $this->getAdherence($name = "appointment", $start_date , $end_date, $type,TRUE) 
                 $dyn_table .= "<tr><td><b>$regimen_code</b> | $regimen_name</td><td>$regimen_total</td><td>$regimen_total_percentage</td>";
 
                 //SQL for Adult Male Regimens
-   
-                    $sql = "SELECT count(t.patient_id) as total , p.service as service_id,rst.name 
+
+                $sql = "SELECT count(t.patient_id) as total , p.service as service_id,rst.name 
                     FROM 
                     (SELECT pv.patient_id,
                     r.regimen_desc ,
@@ -10390,7 +10507,7 @@ $this->getAdherence($name = "appointment", $start_date , $end_date, $type,TRUE) 
                      where p.gender = $_gender 
                      $agecond
                      GROUP BY p.service ORDER BY rst.id ASC ";
-                     
+
                 $query = $this->db->query($sql);
                 $results = $query->result_array();
                 $total_adult_male_art = "-";
@@ -10497,7 +10614,8 @@ $this->getAdherence($name = "appointment", $start_date , $end_date, $type,TRUE) 
         $data['content_view'] = 'reports/no_of_patients_receiving_art_byregimen_v';
         $this->load->view('template', $data);
     }
-       public function all_service_statistics($start_date = "",$end_date = "") {
+    public function all_service_statistics($start_date = "", $end_date = "")
+    {
         //Variables
         $facility_code = $this->session->userdata("facility");
         $data['from'] = $start_date;
@@ -10874,7 +10992,8 @@ $this->getAdherence($name = "appointment", $start_date , $end_date, $type,TRUE) 
         $this->load->view('template', $data);
     }
 
-    public function patient_consumption($period_start = "", $period_end = "") {
+    public function patient_consumption($period_start = "", $period_end = "")
+    {
         $patients = array();
         $oi_drugs = array();
         //get all regimen drugs from OI
@@ -11001,7 +11120,8 @@ $this->getAdherence($name = "appointment", $start_date , $end_date, $type,TRUE) 
         }
     }
 
-    public function dispensingReport($start_date = "", $end_date = "") {
+    public function dispensingReport($start_date = "", $end_date = "")
+    {
         ini_set("max_execution_time", "1000000");
         $filter = "";
         if ($start_date != "" && $end_date != "") {
@@ -11064,7 +11184,8 @@ $this->getAdherence($name = "appointment", $start_date , $end_date, $type,TRUE) 
         $this->mpdf->Output($name, 'D');
     }
 
-    function deleteAllFiles($directory = "") {
+    function deleteAllFiles($directory = "")
+    {
         if ($directory != "") {
             foreach (glob("{$directory}/*") as $file) {
                 if (is_dir($file)) {
@@ -11080,7 +11201,8 @@ $this->getAdherence($name = "appointment", $start_date , $end_date, $type,TRUE) 
 
     //loading guidelines
 
-    public function load_guidelines_view() {
+    public function load_guidelines_view()
+    {
         $this->load->helper('directory');
 
         $dir = realpath($_SERVER['DOCUMENT_ROOT']);
@@ -11109,7 +11231,8 @@ $this->getAdherence($name = "appointment", $start_date , $end_date, $type,TRUE) 
     }
 
     //Differentiated Care
-    public function differenciated_package_of_care($start_date, $end_date) {
+    public function differenciated_package_of_care($start_date, $end_date)
+    {
         $start_date = date('Y-m-d', strtotime($start_date));
         $end_date = date('Y-m-d', strtotime($end_date));
         $viralcount = 1000;
@@ -11245,20 +11368,20 @@ $this->getAdherence($name = "appointment", $start_date , $end_date, $type,TRUE) 
         $data['content_view'] = 'reports/differenciated_package_of_care_v';
         $this->load->view('template', $data);
     }
-public function get_viral_load_results($start_date = null,$end_date = null)
-        {
-            $start_date = date('Y-m-d', strtotime($start_date));
-            $end_date = date('Y-m-d', strtotime($end_date));
-            $overall_total = 0;
+    public function get_viral_load_results($start_date = null, $end_date = null)
+    {
+        $start_date = date('Y-m-d', strtotime($start_date));
+        $end_date = date('Y-m-d', strtotime($end_date));
+        $overall_total = 0;
         // print_r($start_date);die;
 
 
-            $sql = "select * from patient_viral_load where test_date >= '$start_date' and  test_date <= '$end_date'";
+        $sql = "select * from patient_viral_load where test_date >= '$start_date' and  test_date <= '$end_date'";
 
-            $query = $this -> db -> query($sql, array($start_date, $end_date));
-            $results = $query -> result_array();
+        $query = $this->db->query($sql, array($start_date, $end_date));
+        $results = $query->result_array();
 
-            $row_string = "<table border='1' class='dataTables'>
+        $row_string = "<table border='1' class='dataTables'>
             <thead >
             <tr>
             <th>patient_ccc_number Duration</th>
@@ -11268,37 +11391,36 @@ public function get_viral_load_results($start_date = null,$end_date = null)
             </tr>
             </thead>
             <tbody>";
-            foreach ($results as $result) {
+        foreach ($results as $result) {
             // print_r($result['patient_ccc_number']);die;
-                $appointment_description = $result['appointment_description'];
-                $app_desc = str_ireplace(array(' ','(s)'), array('_',''), $appointment_description);
-                $total = $result['total'];
-                $overall_total += $total;
-                $action_link = anchor('report_management/getScheduledPatients/'.$result['from_date'].'/'.$result['to_date'].'/'.$from.'/'.$to.'/'.$app_desc, 'View Patients', array('target' => '_blank'));
-                $row_string .= '<tr><td>'.$result['patient_ccc_number'].'</td> <td>'.$result['test_date'].'</td><td>'.$result['result'].'</td><td>'.$result['justification'].'</td></tr>';
-            }
-            $row_string .= "</tbody></table>";
-
-
-            $data['start_date'] = date('d-M-Y', strtotime($start_date));
-            $data['end_date'] = date('d-M-Y', strtotime($end_date));
-            $data['dyn_table'] = $row_string;
-            $data['overall_total'] = count($results);
-            $data['title'] = "webADT | Reports";
-            $data['hide_side_menu'] = 1;
-            $data['banner_text'] = "Facility Reports";
-            $data['selected_report_type_link'] = "visiting_patient_report_row";
-            $data['selected_report_type'] = "Visiting Patients";
-            $data['report_title'] = "Patient Viral Load Results";
-            $data['facility_name'] = $this -> session -> userdata('facility_name');
-            $data['content_view'] = 'reports/patient_viralload_results_v';
-            $this -> load -> view('template', $data);
-
-
+            $appointment_description = $result['appointment_description'];
+            $app_desc = str_ireplace(array(' ', '(s)'), array('_', ''), $appointment_description);
+            $total = $result['total'];
+            $overall_total += $total;
+            $action_link = anchor('report_management/getScheduledPatients/' . $result['from_date'] . '/' . $result['to_date'] . '/' . $from . '/' . $to . '/' . $app_desc, 'View Patients', array('target' => '_blank'));
+            $row_string .= '<tr><td>' . $result['patient_ccc_number'] . '</td> <td>' . $result['test_date'] . '</td><td>' . $result['result'] . '</td><td>' . $result['justification'] . '</td></tr>';
         }
+        $row_string .= "</tbody></table>";
 
 
-    public function get_viral_loadsummary($start_date = null, $end_date = null) {
+        $data['start_date'] = date('d-M-Y', strtotime($start_date));
+        $data['end_date'] = date('d-M-Y', strtotime($end_date));
+        $data['dyn_table'] = $row_string;
+        $data['overall_total'] = count($results);
+        $data['title'] = "webADT | Reports";
+        $data['hide_side_menu'] = 1;
+        $data['banner_text'] = "Facility Reports";
+        $data['selected_report_type_link'] = "visiting_patient_report_row";
+        $data['selected_report_type'] = "Visiting Patients";
+        $data['report_title'] = "Patient Viral Load Results";
+        $data['facility_name'] = $this->session->userdata('facility_name');
+        $data['content_view'] = 'reports/patient_viralload_results_v';
+        $this->load->view('template', $data);
+    }
+
+
+    public function get_viral_loadsummary($start_date = null, $end_date = null)
+    {
         $start_date = date('Y-m-d', strtotime($start_date));
         $end_date = date('Y-m-d', strtotime($end_date));
         $overall_total = 0;
@@ -11445,11 +11567,11 @@ public function get_viral_load_results($start_date = null,$end_date = null)
         $this->load->view('template', $data);
     }
 
-    public function base_params($data) {
+    public function base_params($data)
+    {
         $data['reports'] = true;
         $data['title'] = "webADT | Reports";
         $data['banner_text'] = "Facility Reports";
         $this->load->view('template', $data);
     }
-
 }
