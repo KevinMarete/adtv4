@@ -16,9 +16,9 @@ if (file_exists(SYSTEMPATH . 'Config/Routes.php')) {
  * Router Setup
  * --------------------------------------------------------------------
  */
-$routes->setDefaultNamespace('App\Controllers');
+$routes->setDefaultNamespace('\Modules\ADT\Controllers');
 $routes->setDefaultController('User_management');
-$routes->setDefaultMethod('login');
+$routes->setDefaultMethod('logout');
 $routes->setTranslateURIDashes(false);
 $routes->set404Override();
 $routes->setAutoRoute(true);
@@ -30,7 +30,7 @@ $routes->setAutoRoute(true);
  */
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
-$routes->get('/public/login', 'User_management::login');
+$routes->get('/', '\Modules\ADT\Controllers\User_management::sendToLgin');
 //$routes->get('/recover', 'Modules\Recover\Controllers\Recover::index');
 
 

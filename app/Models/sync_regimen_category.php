@@ -1,27 +1,29 @@
 <?php
-class Sync_regimen_category extends Doctrine_Record {
 
-	public function setTableDefinition() {
-		$this -> hasColumn('Name', 'varchar', 50);
-		$this -> hasColumn('Active', 'varchar', 2);
-	}
+namespace Modules\ADT\Models;
 
-	public function setUp() {
-		$this -> setTableName('sync_regimen_category');
-		$this -> hasMany('sync_regimen as Regimens', array('local' => 'id', 'foreign' => 'category_id'));
-	}
+use App\Models\BaseModel;
+use App\Models\Sync_regimen_category;
+use Illuminate\Database\Capsule\Manager as DB;
 
-	public function getAll() {
-		$query = Doctrine_Query::create() -> select("*") -> from("sync_regimen_category") -> where("Active", "1") -> orderBy("Name asc");
-		$regimens = $query -> execute();
-		return $regimens;
-	}
+class Sync_regimen_category extends BaseModel {
 
-	public function getAllHydrate() {
-		$query = Doctrine_Query::create() -> select("*") -> from("sync_regimen_category") -> where("Active", "1");
-		$regimens = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
-		return $regimens;
-	}
+    protected $table = 'sync_regimen_category';
+    protected $fillable = array('Name', 'Active');
+
+    public static function Sync_regimen() {
+        $this->hasOne('Sync_Regimen_Category', array('id', 'category_id'));
+    }
+
+    public static function getAll() {
+        $query = DB::table('sync_regimen_category')->select("sync_regimen_category")->where("Active", "1")->orderBy("Name asc")->get();
+        return $query;
+    }
+
+    public static function getAllHydrate() {
+        $query = DB::table('sync_regimen_category')->select("sync_regimen_category")->where("Active", "1")->orderBy("Name asc")->get();
+        return BaseModel::resultSet($query);
+    }
 
 }
-?>
+

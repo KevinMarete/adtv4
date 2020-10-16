@@ -45,7 +45,12 @@ $routes->get('getDrugTransactions/(:any)/(:any)', '\Modules\ADT\Controllers\Inve
 
 /* Settings Management */
 $routes->get('settings_management', '\Modules\ADT\Controllers\Settings_management::index');
-$routes->get('regimen_management/', '\Modules\ADT\Controllers\Settings_management::index');
+$routes->get('regimen_management', '\Modules\ADT\Controllers\Regimen_management::index');
+$routes->get('settings/listing/(:any)', '\Modules\ADT\Controllers\Settings::listing');
+$routes->get('regimen_drug_management', '\Modules\ADT\Controllers\Regimen_drug_management::listing');
+$routes->get('regimenchange_management', '\Modules\ADT\Controllers\Regimenchange_management::listing');
+$routes->get('drugcode_classification', '\Modules\ADT\Controllers\Drugcode_classification::listing');
+$routes->get('drugcode_management', '\Modules\ADT\Controllers\Drugcode_management::listing');
 
 
 

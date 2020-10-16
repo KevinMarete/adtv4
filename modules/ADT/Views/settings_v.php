@@ -190,7 +190,7 @@ if (session()->get('link_id') and session()->get('linkSub')) {
                 //Change the page title value
                 $("#actual_page").html(linkTitle);
                 //console.log(linkSub);
-                $(".settings").load('<?php echo base_url(); ?>' + linkSub + '/' + linkIdUrl, function () {
+                $(".settings").load('<?php echo base_url(); ?>/public/' + linkSub , function () {
                     //$("input[type='text']").attr("required","required");
                     $("#loadingDiv").css("display", "none");
                     $(".settings").css("display", "block");

@@ -2,7 +2,7 @@
 /**
  * Using Session Data
  */
-helper('url','form');
+helper('url', 'form');
 $session = session();
 $request = \Config\Services::request();
 if (!$session->get('user_id') && $content_view != '\Modules\ADT\Views\\resend_password_v') {
@@ -235,6 +235,13 @@ if ($user_is_administrator) {
             .input-append .btn{
             margin:0px;
             }
+            thead tr th:first-child,
+            tbody tr td:first-child {
+            width: 50px;
+            min-width: 50px;
+            max-width: 50px;
+            word-break: break-all;
+            }
         </style>
     </head>
 
@@ -247,7 +254,7 @@ if ($user_is_administrator) {
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <div class="top_logo" style="background: url(<?php echo base_url().'/public/assets/images/top_logo.png';?>) no-repeat">
+                    <div class="top_logo" style="background: url(<?php echo base_url() . '/public/assets/images/top_logo.png'; ?>) no-repeat">
                         <div id="system_title">
                             <?php
                             echo view('\Modules\ADT\Views\sections\\banner');
@@ -279,7 +286,7 @@ if ($user_is_administrator) {
                                         <?php
                                     } else {
                                         ?>
-                                        <li> <a href = "<?php echo base_url('/public/'.$menu['url']); ?>" class="top_menu_link <?php
+                                        <li> <a href = "<?php echo base_url('/public/' . $menu['url']); ?>" class="top_menu_link <?php
                                             if ($current == $menu['url'] || $menu['url'] == $link) {
                                                 echo " top_menu_active ";
                                             }
@@ -333,48 +340,48 @@ if ($user_is_administrator) {
                 }
             </style>
             <script type="text/javascript">
-                $(document).ready(function () {
-                    $("select,input").css("font-weight", "bold");
-                    $("select").css("width", "auto");
-                    $("select").css("height", "30px");
-                    $("input").css("height", "30px");
+            $(document).ready(function () {
+                $("select,input").css("font-weight", "bold");
+                $("select").css("width", "auto");
+                $("select").css("height", "30px");
+                $("input").css("height", "30px");
 
-                    window.addEventListener("load", function () {
+                window.addEventListener("load", function () {
 
-                        // does the actual opening
-                        function openWindow(event) {
-                            event = event || window.event;
+                    // does the actual opening
+                    function openWindow(event) {
+                        event = event || window.event;
 
-                            // find the url and title to set
-                            var href = this.getAttribute("href");
-                            var newTitle = this.getAttribute("data-title");
-                            // or if you work the title out some other way...
-                            // var newTitle = "Some constant string";
+                        // find the url and title to set
+                        var href = this.getAttribute("href");
+                        var newTitle = this.getAttribute("data-title");
+                        // or if you work the title out some other way...
+                        // var newTitle = "Some constant string";
 
-                            // open the window
-                            var newWin = window.open(href, "_blank");
+                        // open the window
+                        var newWin = window.open(href, "_blank");
 
-                            // add a load listener to the window so that the title gets changed on page load
-                            newWin.addEventListener("load", function () {
-                                newWin.document.title = newTitle;
-                            });
+                        // add a load listener to the window so that the title gets changed on page load
+                        newWin.addEventListener("load", function () {
+                            newWin.document.title = newTitle;
+                        });
 
-                            // stop the default `a` link or you will get 2 new windows!
-                            event.returnValue = false;
-                        }
+                        // stop the default `a` link or you will get 2 new windows!
+                        event.returnValue = false;
+                    }
 
-                        // find all a tags opening in a new window
-                        var links = document.querySelectorAll("a[target=_blank][data-title]");
-                        // or this if you don't want to store custom titles with each link
-                        //var links = document.querySelectorAll("a[target=_blank]");
+                    // find all a tags opening in a new window
+                    var links = document.querySelectorAll("a[target=_blank][data-title]");
+                    // or this if you don't want to store custom titles with each link
+                    //var links = document.querySelectorAll("a[target=_blank]");
 
-                        // add a click event for each so we can do our own thing
-                        for (var i = 0; i < links.length; i++) {
-                            links[i].addEventListener("click", openWindow.bind(links[i]));
-                        }
+                    // add a click event for each so we can do our own thing
+                    for (var i = 0; i < links.length; i++) {
+                        links[i].addEventListener("click", openWindow.bind(links[i]));
+                    }
 
-                    });
                 });
+            });
             </script>
             <?php
         }
@@ -547,7 +554,7 @@ if ($user_is_administrator) {
                             Government of Kenya &copy; <?php echo date('Y'); ?>.
                             All Rights Reserved . <strong>Web-ADT version 3.5.0</strong>
                             <?php //if (str_replace('.', '', $update_available->release) + 0 > '3.4.2') { ?>
-                                <a class="badge badge-warning blinking" href="#adt_update_modal" data-toggle="modal">New Update available</div>
+                            <a class="badge badge-warning blinking" href="#adt_update_modal" data-toggle="modal">New Update available</div>
                         <?php // } ?>
                     </div>  
                 </div>

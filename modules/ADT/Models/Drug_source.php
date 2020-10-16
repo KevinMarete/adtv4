@@ -16,8 +16,8 @@ class Drug_source extends BaseModel {
     }
 
     public  static function getAllHydrated() {
-       $result = DB::table("drug_source")->where("active", '1')->orderBy("id", "ASC")->get();
-       return json_decode(json_encode($res), true);
+       $query = DB::table("drug_source")->where("active", '1')->orderBy("id", "ASC")->get();
+      return BaseModel::resultSet($query);
     }
 
     public function getAllHydrate() {

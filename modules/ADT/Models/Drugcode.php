@@ -3,101 +3,104 @@
 namespace Modules\ADT\Models;
 
 use App\Models\BaseModel;
+use \Modules\ADT\Models\Generic_name;
+use \Modules\ADT\Models\Drug_unit;
+use \Modules\ADT\Models\Supporter;
+use \Modules\ADT\Models\Brand;
+use \Modules\ADT\Models\Dose;
+use \Modules\ADT\Models\Sync_drug;
+use \Modules\ADT\Models\Suppliers;
 use Illuminate\Database\Capsule\Manager as DB;
 
 class Drugcode extends BaseModel {
-    /* public function setTableDefinition() {
-      $this -> hasColumn('Drug', 'varchar', 100);
-      $this -> hasColumn('Unit', 'varchar', 30);
-      $this -> hasColumn('Pack_Size', 'varchar', 100);
-      $this -> hasColumn('Safety_Quantity', 'varchar', 4);
-      $this -> hasColumn('Generic_Name', 'varchar', 100);
-      $this -> hasColumn('Supported_By', 'varchar', 30);
-      $this -> hasColumn('classification', 'varchar', 50);
-      $this -> hasColumn('none_arv', 'varchar', 1);
-      $this -> hasColumn('Tb_Drug', 'varchar', 1);
-      $this -> hasColumn('Drug_In_Use', 'varchar', 1);
-      $this -> hasColumn('Comment', 'varchar', 50);
-      $this -> hasColumn('Dose', 'varchar', 20);
-      $this -> hasColumn('Duration', 'varchar', 4);
-      $this -> hasColumn('Quantity', 'varchar', 4);
-      $this -> hasColumn('Source', 'varchar', 10);
-      $this -> hasColumn('Type', 'varchar', 1);
-      $this -> hasColumn('Supplied', 'varchar', 1);
-      $this -> hasColumn('Enabled', 'varchar', 1);
-      $this -> hasColumn('Strength', 'varchar', 20);
-      $this -> hasColumn('Merged_To', 'varchar', 50);
-      $this -> hasColumn('map', 'int', 11);
-      $this -> hasColumn('instructions', 'varchar',255);
-      }
 
-      public function setUp() {
-      $this -> setTableName('drugcode');
-      $this -> hasOne('Generic_Name as Generic', array('local' => 'Generic_Name', 'foreign' => 'id'));
-      $this -> hasOne('Drug_Unit as Drug_Unit', array('local' => 'Unit', 'foreign' => 'id'));
-      $this -> hasOne('Supporter as Supporter', array('local' => 'Supported_By', 'foreign' => 'id'));
-      $this -> hasOne('suppliers as Suppliers', array('local' => 'Supported_By', 'foreign' => 'id'));
-      $this -> hasMany('Brand as Brands', array('local' => 'id', 'foreign' => 'Drug_Id'));
-      $this -> hasOne('Dose as Drug_Dose', array('local' => 'Dose', 'foreign' => 'id'));
-      $this -> hasOne('Sync_Drug as S_Drug', array('local' => 'map', 'foreign' => 'id'));
+    protected $table = 'drugcode';
+    protected $fillable = array('Drug', 'Unit', 'Pack_Size', 'Safety_Quantity', 'Generic_Name', 'Supported_By', 'classification', 'none_arv', 'Tb_Drug', 'Drug_In_Use',
+        'Comment', 'Dose', 'Quantity', 'Duration', 'Source', 'Type', 'Supplied', 'Enabled', 'Strength', 'Merged_To', 'map', 'instructions');
+    protected $with = ['Generic_Name', 'Drug_Unit', 'Supporter', 'Suppliers', 'Brand', 'Dose', 'Sync_Drug'];
 
-      } */
+    function Generic_Name() {
+        return $this->hasOne(Generic_name::class, 'id', 'generic_name');
+    }
 
-    public function getAll($source = 0, $access_level = "") {
+    function Drug_Unit() {
+        return $this->hasOne(Drug_unit::class, 'id', 'unit');
+    }
+
+    function Supporter() {
+        return $this->hasOne(Supporter::class, 'id', 'supported_by');
+    }
+
+    function Suppliers() {
+        return $this->hasOne(Suppliers::class, 'id', 'supported_by');
+    }
+
+    function Brand() {
+        return $this->hasMany(Brand::class, 'id', 'drug_id');
+    }
+
+    function Dose() {
+        return $this->hasOne(Dose::class, 'id', 'dose');
+    }
+
+    function Sync_Drug() {
+        return $this->hasOne(Sync_drug::class, 'id', 'map');
+    }
+
+    public static function getAll($source = 0, $access_level = "") {
         if ($access_level == "" || $access_level == "facility_administrator") {
             $displayed_enabled = "Source='0' or Source !='0'";
         } else {
             $displayed_enabled = "(Source='$source' or Source='0') AND Enabled='1'";
         }
 
-        $query = Doctrine_Query::create()->select("d.id,d.Drug,du.Name as drug_unit,d.Pack_Size,d.Dose,s.Name as supplier,d.Safety_Quantity,d.Quantity,d.Duration,d.Enabled,d.Merged_To,d.map")->from("Drugcode d")->leftJoin('d.Drug_Unit du, d.Suppliers s')->where($displayed_enabled)->orderBy("id asc");
-        $drugsandcodes = $query->execute(array(), Doctrine::HYDRATE_ARRAY);
-        return $drugsandcodes;
+        //$query = Doctrine_Query::create()->select("SELECT d.id,d.Drug,du.Name as drug_unit,d.Pack_Size,d.Dose,s.Name as supplier,d.Safety_Quantity,d.Quantity,d.Duration,d.Enabled,d.Merged_To,d.map")->from("Drugcode d")->leftJoin('d.Drug_Unit du, d.Suppliers s')->where($displayed_enabled)->orderBy("id asc");
+        $query = DB::select("SELECT d.id, d.drug AS Drug, d.pack_size AS Pack_Size, d.dose AS Dose, d.safety_quantity AS Safety_Quantity, d.quantity AS Quantity, d.duration AS Duration, d.enabled AS Enabled, d.merged_to AS Merged_to, d.map , d2.name, s.name AS supplier FROM drugcode d LEFT JOIN drug_unit d2 ON d.unit = d2.id LEFT JOIN suppliers s ON d.supported_by = s.id WHERE $displayed_enabled ORDER BY d.id asc");
+        return BaseModel::resultSet($query);
     }
 
-    public function getAllEnabled($source = 0, $access_level = "") {
-        $query = Doctrine_Query::create()->select("id,Drug,Pack_Size,Safety_Quantity,Quantity,Duration,Enabled,Merged_To")->from("Drugcode")->where('enabled="1"')->orderBy("Drug asc");
-        $drugsandcodes = $query->execute(array(), Doctrine::HYDRATE_ARRAY);
-        return $drugsandcodes;
+    public static function getAllEnabled($source = 0, $access_level = "") {
+        $query = DB::select("SELECT id,Drug,Pack_Size,Safety_Quantity,Quantity,Duration,Enabled,Merged_To from Drugcode where enabled='1' order By Drug asc");
+        return BaseModel::resultSet($query);
     }
 
-    public function getARVs() {
+    public static function getARVs() {
         $query = Doctrine_Query::create()->select("Drug,Pack_Size,Safety_Quantity,Quantity,Duration")->from("Drugcode")->where("None_Arv != '1'")->orderBy("id asc");
         $drugsandcodes = $query->execute(array(), Doctrine::HYDRATE_ARRAY);
         return $drugsandcodes;
     }
 
-    public function getAllObjects($source = 0) {
+    public static function getAllObjects($source = 0) {
         $query = Doctrine_Query::create()->select("UPPER(d.Drug) As Drug,d.Pack_Size,d.Safety_Quantity,d.Quantity,d.Duration")->from("Drugcode d")->where("d.Supported_By='$source' and Enabled='1'")->orderBy("id asc");
         $drugsandcodes = $query->execute(array());
         return $drugsandcodes;
     }
 
-    public function getBrands() {
+    public static function getBrands() {
         $query = Doctrine_Query::create()->select("id,Drug")->from("Drugcode")->where("enabled='1'");
         $drugsandcodes = $query->execute();
         return $drugsandcodes;
     }
 
-    public function getEnabledDrugs() {
+    public static function getEnabledDrugs() {
         $query = Doctrine_Query::create()->select("id,Drug")->from("Drugcode")->where("Enabled='1'");
         $drugsandcodes = $query->execute(array(), Doctrine::HYDRATE_ARRAY);
         return $drugsandcodes;
     }
 
-    public function getNonMappedDrugs() {
+    public static function getNonMappedDrugs() {
         $query = Doctrine_Query::create()->select("d.*,du.Name as drug_unit")->from("drugcode d")->leftJoin('d.Drug_Unit du')->where("Enabled = '1' AND (map='' OR map='0')")->orderBy("drug asc");
         $drugcodes = $query->execute(array(), Doctrine::HYDRATE_ARRAY);
         return $drugcodes;
     }
 
-    public function getTotalNumber($source = 0) {
+    public static function getTotalNumber($source = 0) {
         $query = Doctrine_Query::create()->select("count(*) as Total_Drugs")->from("Drugcode")->where('Source = "' . $source . '" or Source ="0"');
         $total = $query->execute();
         return $total[0]['Total_Drugs'];
     }
 
-    public function getPagedDrugs($offset, $items, $source = 0) {
+    public static function getPagedDrugs($offset, $items, $source = 0) {
         $query = Doctrine_Query::create()->select("Drug,Unit,Pack_Size,Safety_Quantity,Generic_Name,Supported_By,Dose,Duration,Quantity,Source,Enabled,Supplied")->from("Drugcode")->where('Source = "' . $source . '" or Source ="0"')->offset($offset)->limit($items);
         $drugs = $query->execute();
         return $drugs;
@@ -144,19 +147,19 @@ class Drugcode extends BaseModel {
         return $query;
     }
 
-    public function deleteBrand($id) {
+    public static function deleteBrand($id) {
         $query = Doctrine_Query::create()->delete('brand b')->where("b.id ='$id'");
         $rows = $query->execute();
         return $rows;
     }
 
-    public function getDrugID($drugname) {
+    public static function getDrugID($drugname) {
         $query = Doctrine_Query::create()->select("id")->from("Drugcode")->where("Drug like '%$drugname%'");
         $drugs = $query->execute(array(), Doctrine::HYDRATE_ARRAY);
         return $drugs[0]['id'];
     }
 
-    public function getItems() {
+    public static function getItems() {
         $query = Doctrine_Query::create()->select("id,Drug AS Name")->from("Drugcode")->where("Enabled='1'")->orderby("Drug asc");
         $drugs = $query->execute(array(), Doctrine::HYDRATE_ARRAY);
         return $drugs;

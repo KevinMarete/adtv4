@@ -48,6 +48,13 @@ class BaseController extends Controller {
         date_default_timezone_set('Africa/Nairobi');
         $this->db = \Config\Database::connect();
         service('eloquent');
+        if (session()->get('user_id')=='') {
+          // echo 'This session'.session()->get('user_id');
+            //header('Location:'.base_url().'/public/login');
+           // return redirect()->to(site_url('/public/login'));
+        }else{
+          //  echo 'No sessin';
+        }
     }
 
 }

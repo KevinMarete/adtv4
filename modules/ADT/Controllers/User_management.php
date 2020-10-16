@@ -11,6 +11,8 @@ use App\Libraries\Zip;
 use \Modules\ADT\Models\User;
 use \Modules\ADT\Models\Facilities;
 use \Modules\ADT\Models\Access_log;
+use \Modules\ADT\Models\Access_level;
+use \Modules\ADT\Models\Sync_facility;
 use \Modules\ADT\Models\CCC_store_service_point;
 use Illuminate\Database\Capsule\Manager as DB;
 
@@ -28,6 +30,10 @@ class User_management extends \App\Controllers\BaseController {
         $this->endpoint = "https://hiskenya.org/api/";
     }
 
+    function sendToLgin() {
+         return redirect()->to(base_url('public/login'));
+    }
+
     public function index() {
         $table = new \CodeIgniter\View\Table();
         $access_level = session()->get('user_indicator');
@@ -36,18 +42,20 @@ class User_management extends \App\Controllers\BaseController {
         //If user is a super admin, allow him to add only facilty admin and nascop pharmacist
         if ($access_level == "system_administrator") {
             $user_type = "indicator not in ('system_administrator')";
-            $facilities = Facilities::getAll();
-            $users = Users::getAll();
+            $facilities = json_decode(json_encode(Facilities::getAll()), TRUE);
+            $users = json_decode(json_encode(User::getAll()), TRUE);
         }
         //If user is a facility admin, allow him to add only facilty users
         else {
             $facility_code = session()->get('facility');
             $user_type = "indicator not in ('system_administrator', 'facility_administrator') and indicator != '" . $access_level . "'";
-            $facilities = Facilities::getCurrentFacility($facility_code);
-            $q = "u.Facility_Code='" . $facility_code . "' and Access_Level > '1'";
-            $users = Users::getUsersFacility($q);
+            $facilities = json_decode(json_encode(Facilities::getCurrentFacility($facility_code)), TRUE);
+            $q = "u.Facility_Code='" . $facility_code . "' and u.access_level > '1'";
+            $users = json_decode(json_encode(User::getUsersFacility($q)), TRUE);
         }
         $user_types = Access_Level::getAll($user_type);
+
+        //dd($users);
 
         $tmpl = array('table_open' => '<table class=" table table-bordered table-striped setting_table ">');
         $table->setTemplate($tmpl);
@@ -80,7 +88,7 @@ class User_management extends \App\Controllers\BaseController {
         $data['link'] = "users";
         $actions = array(0 => array('Edit', 'edit'), 1 => array('Disable', 'disable'));
         $data['actions'] = $actions;
-        echo view("\Modles\ADT\Views\users_v", $data);
+        echo view("\Modules\ADT\Views\users_v", $data);
     }
 
     function login() {
@@ -121,6 +129,7 @@ class User_management extends \App\Controllers\BaseController {
         if ($query) {
             $user2 = User::find($query[0]->id);
 
+
             //    echo  $query[0]->Password .'=='. md5($password);
             //    die;
 
@@ -158,7 +167,8 @@ class User_management extends \App\Controllers\BaseController {
             $encrypted_password = $key . $password;
             $logged_in = $this->loginUser($username, $encrypted_password);
             //  dd($logged_in);
-            $load_access = DB::table('access_level')->where('id', $logged_in->id)->get();
+            $load_access = DB::table('access_level')->where('id', $logged_in->Access_Level)->get();
+            // dd($load_access);
             //This code checks if the credentials are valid
             if ($logged_in == false) {
                 $data['invalid'] = true;
@@ -259,7 +269,7 @@ class User_management extends \App\Controllers\BaseController {
                     $phone = $logged_in->Phone_Number;
                     $check = substr($phone, 0);
                     $phone = str_replace('+254', '', $phone);
-                    $load_access = DB::table('access_level')->where('id', $logged_in->id)->get();
+                    $load_access = DB::table('access_level')->where('id', $logged_in->Access_Level)->get();
                     $session_data = array(
                         'user_id' => $logged_in->id,
                         'user_indicator' => $load_access[0]->indicator,

@@ -5,7 +5,7 @@ namespace App\Controllers;
 class Home_controller extends \CodeIgniter\Controller {
 
     public function index() {
-        $this->platform_home();
+        return redirect(base_url().'/public/login');
     }
 
     public function platform_home() {
