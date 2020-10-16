@@ -29,8 +29,7 @@ if ($access_level == "nascop_staff") {
 	<title>My Reports</title>
 	<script type="text/javascript">
 		$(document).ready(function() {
-			$("#default").load('<?php $today = date('d-M-Y');
-													echo base_url('public/report_management/cumulative_patients/' . $today . '/2'); ?>', function() {
+			$("#default").load('<?php echo base_url('public/report_management/cumulative_patients/' . date('d-M-Y') . '/2'); ?>', function() {
 				$('.dataTables').dataTable({
 					"bJQueryUI": true,
 					"sPaginationType": "full_numbers",
@@ -91,7 +90,8 @@ if ($access_level == "nascop_staff") {
 			</ul>
 
 			<div id="report_container">
-				<?php echo view('\Modules\ADT\Views\reports\\report_home_types_v'); ?>
+				<?php echo view('\Modules\ADT\Views\\reports\\report_home_types_v');
+				?>
 			</div>
 			<div id="default">
 

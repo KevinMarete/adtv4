@@ -7,7 +7,7 @@ $ccc_stores = session()->get("ccc_store");
             if ($('#standard_report_select').val() == 'all_service_statistics') {
                 $('.show_report_type').hide();
                 $('#month_period').hide();
-                $('#generate_month_period_report').after("<a class='btn btn-warning generate_btn' href='<?= base_url(); ?>report_management/all_service_statistics/1'>Generate Report</a>");
+                $('#generate_month_period_report').after("<a class='btn btn-warning generate_btn' href='<?= base_url("report_management/all_service_statistics/1"); ?>'>Generate Report</a>");
                 $('#generate_month_period_report').remove();
 
             }
@@ -28,7 +28,7 @@ $ccc_stores = session()->get("ccc_store");
                 dropdown.css('display', 'block');
                 dropdown.show();
                 dropdown.empty();
-                $.getJSON("<?= base_url(); ?>report_management/getDrugs", function(resp) {
+                $.getJSON("<?= base_url('report_management/getDrugs'); ?>", function(resp) {
                     $.each(resp, function(i, r) {
                         dropdown.append('<option value="' + r.id + '">' + r.drug + '</option>')
                     });
@@ -51,7 +51,7 @@ $ccc_stores = session()->get("ccc_store");
             if (val === '') {
                 alert('Please select a drug to proceed');
             } else {
-                window.location.href = "<?php echo base_url() . 'report_management/getPatientList/'; ?>" + val + "/" + $('#date_range_from').val() + "/" + $('#date_range_to').val();
+                window.location.href = "<?php echo base_url('report_management/getPatientList/'); ?>" + val + "/" + $('#date_range_from').val() + "/" + $('#date_range_to').val();
             }
         });
 

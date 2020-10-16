@@ -6,7 +6,7 @@ $routes->get('/', '\Modules\ADT\Controllers\User_management::login');
 $routes->get('login', '\Modules\ADT\Controllers\User_management::login');
 $routes->post('user_management/authenticate', '\Modules\ADT\Controllers\User_management::authenticate');
 $routes->get('home', '\Modules\ADT\Controllers\Home_controller::home');
-$routes->get('logout/(:any)', '\Modules\ADT\Controllers\User_management::logout');
+$routes->get('logout/(:any)', '\Modules\ADT\Controllers\User_management::logout/$1');
 
 /* Notification Management */
 $routes->get('error_notification', '\Modules\ADT\Controllers\Notification_management::error_notification');
@@ -23,15 +23,15 @@ $routes->get('prescriptions_notification_view', '\Modules\ADT\Controllers\Notifi
 $routes->get('update_notification', '\Modules\ADT\Controllers\Notification_management::update_notification');
 
 /* Home Dashboard */
-$routes->get('getExpiringDrugs/(:any)/(:any)', '\Modules\ADT\Controllers\Facilitydashboard_Management::getExpiringDrugs');
-$routes->get('getPatientEnrolled/(:any)/(:any)', '\Modules\ADT\Controllers\Facilitydashboard_Management::getPatientEnrolled');
-$routes->get('getExpectedPatients/(:any)/(:any)', '\Modules\ADT\Controllers\Facilitydashboard_Management::getExpectedPatients');
+$routes->get('getExpiringDrugs/(:any)/(:any)', '\Modules\ADT\Controllers\Facilitydashboard_Management::getExpiringDrugs/$1/$2');
+$routes->get('getPatientEnrolled/(:any)/(:any)', '\Modules\ADT\Controllers\Facilitydashboard_Management::getPatientEnrolled/$1/$2');
+$routes->get('getExpectedPatients/(:any)/(:any)', '\Modules\ADT\Controllers\Facilitydashboard_Management::getExpectedPatients/$1/$2');
 $routes->get('getStockSafetyQty', '\Modules\ADT\Controllers\Facilitydashboard_Management::getStockSafetyQty');
-$routes->get('getStockSafetyQty/(:any)', '\Modules\ADT\Controllers\Facilitydashboard_Management::getStockSafetyQty');
+$routes->get('getStockSafetyQty/(:any)', '\Modules\ADT\Controllers\Facilitydashboard_Management::getStockSafetyQty/$1');
 $routes->post('drillAccessLevel', '\Modules\ADT\Controllers\Admin_management::drillAccessLevel');
 
 /* Inventory Stock Management */
-$routes->get('stock_transaction/(:any)', '\Modules\ADT\Controllers\Inventory_management::stock_transaction');
+$routes->get('stock_transaction/(:any)', '\Modules\ADT\Controllers\Inventory_management::stock_transaction/$1');
 $routes->post('getAllDrugs', '\Modules\ADT\Controllers\Inventory_management::getAllDrugs');
 $routes->post('getDrugDetails', '\Modules\ADT\Controllers\Inventory_management::getDrugDetails');
 $routes->post('checkConnection', '\Modules\ADT\Controllers\System_management::checkConnection');
@@ -40,9 +40,9 @@ $routes->post('getBacthes', '\Modules\ADT\Controllers\Inventory_management::getB
 $routes->post('getBacthDetails', '\Modules\ADT\Controllers\Inventory_management::getBacthDetails');
 $routes->post('inventory_management/save', '\Modules\ADT\Controllers\Inventory_management::save');
 $routes->get('inventory_management', '\Modules\ADT\Controllers\Inventory_management::index');
-$routes->get('stock_listing/(:any)', '\Modules\ADT\Controllers\Inventory_management::stock_listing');
-$routes->get('getDrugBinCard/(:any)/(:any)', '\Modules\ADT\Controllers\Inventory_management::getDrugBinCard');
-$routes->get('getDrugTransactions/(:any)/(:any)', '\Modules\ADT\Controllers\Inventory_management::getDrugTransactions');
+$routes->get('stock_listing/(:any)', '\Modules\ADT\Controllers\Inventory_management::stock_listing/$1');
+$routes->get('getDrugBinCard/(:any)/(:any)', '\Modules\ADT\Controllers\Inventory_management::getDrugBinCard/$1/$2');
+$routes->get('getDrugTransactions/(:any)/(:any)', '\Modules\ADT\Controllers\Inventory_management::getDrugTransactions/$1/$2');
 
 /* Settings Management */
 $routes->get('settings_management', '\Modules\ADT\Controllers\Settings_management::index');
@@ -50,9 +50,12 @@ $routes->get('regimen_management/', '\Modules\ADT\Controllers\Settings_managemen
 
 /*User Management*/
 $routes->get('user_management', '\Modules\ADT\Controllers\User_management::index');
+$routes->get('user_management/get_stores', '\Modules\ADT\Controllers\User_management::get_stores');
 
 /* Report Management*/
 $routes->group('report_management', ['namespace' => '\Modules\ADT\Controllers'], function ($routes) {
   $routes->get('/', 'Report_management::index');
-  $routes->get('cumulative_patients/(:any)/(:any)', 'Report_management::cumulative_patients');
+  $routes->get('cumulative_patients/(:any)/(:any)', 'Report_management::cumulative_patients/$1//$2');
+  $routes->get('patient_enrolled/(:any)/(:any)/(:any)', 'Report_management::patient_enrolled/$1/$2/$3');
+  $routes->get('getStartedonART/(:any)/(:any)/(:any)', 'Report_management::getStartedonART/$1/$2/$3');
 });

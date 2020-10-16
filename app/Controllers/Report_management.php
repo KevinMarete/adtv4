@@ -2827,89 +2827,89 @@ class Report_management extends MY_Controller
 
         $dyn_table = "<table border='1' id='patient_listing'  cellpadding='5' class='dataTables'>";
         $dyn_table .= "<thead>
-	<tr>
-	<th ></th>
-	<th >Total</th><th></th>
-	<th > Adult</th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th>
-	<th > Children </th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th>
-	</tr>
-	<tr>
-	<th></th>
-	<th ></th>
-	<th ></th>
-	<th >Male</th><th></th><th></th><th></th><th></th><th></th><th></th><th></th>
-	<th >Female</th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th>
-	<th >Male</th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th>
-	<th >Female</th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th>
-	</tr>
-	<tr>
-	<th></th>
-	<th></th>
-	<th></th>
-	<th >ART</th><th></th>
-	<th >PEP</th><th></th>
-	<th >OI</th><th></th>
-	<th >PREP</th><th></th>
-	<th >ART</th><th></th>
-	<th >PEP</th><th></th>
-	<th >PMTCT</th><th></th>
-	<th >OI</th><th></th>
-	<th >PREP</th><th></th>
-	<th >ART</th><th></th>
-	<th >PEP</th><th></th>
-	<th >PMTCT</th><th></th>
-	<th >OI</th><th></th>
-	<th >PREP</th><th></th>
-	<th >ART</th><th></th>
-	<th >PEP</th><th></th>
-	<th >PMTCT</th><th></th>
-	<th >OI</th><th></th>
-	<th >PREP</th><th></th>
-	</tr>
-	<tr>
-	<th>Source</th>
-	<th>No.</th>
-	<th>%</th>
-	<th>No.</th>
-	<th>%</th>
-	<th>No.</th>
-	<th>%</th>
-	<th>No.</th>
-	<th>%</th>
-	<th>No.</th>
-	<th>%</th>
-	<th>No.</th>
-	<th>%</th>
-	<th>No.</th>
-	<th>%</th>
-	<th>No.</th>
-	<th>%</th>
-	<th>No.</th>
-	<th>%</th>
-	<th>No.</th>
-	<th>%</th>
-	<th>No.</th>
-	<th>%</th>
-	<th>No.</th>
-	<th>%</th>
-	<th>No.</th>
-	<th>%</th>
-	<th>No.</th>
-	<th>%</th>
-	<th>No.</th>
-	<th>%</th>
-	<th>No.</th>
-	<th>%</th>
-	<th>No.</th>
-	<th>%</th>
-	<th>No.</th>
-	<th>%</th>
-	<th>No.</th>
-	<th>%</th>
-	<th>No.</th>
-	<th>%</th>
-	</tr>
-	</thead><tbody>";
+                        <tr>
+                        <th ></th>
+                        <th >Total</th><th></th>
+                        <th > Adult</th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th>
+                        <th > Children </th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th>
+                        </tr>
+                        <tr>
+                        <th></th>
+                        <th ></th>
+                        <th ></th>
+                        <th >Male</th><th></th><th></th><th></th><th></th><th></th><th></th><th></th>
+                        <th >Female</th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th>
+                        <th >Male</th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th>
+                        <th >Female</th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th>
+                        </tr>
+                        <tr>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th >ART</th><th></th>
+                        <th >PEP</th><th></th>
+                        <th >OI</th><th></th>
+                        <th >PREP</th><th></th>
+                        <th >ART</th><th></th>
+                        <th >PEP</th><th></th>
+                        <th >PMTCT</th><th></th>
+                        <th >OI</th><th></th>
+                        <th >PREP</th><th></th>
+                        <th >ART</th><th></th>
+                        <th >PEP</th><th></th>
+                        <th >PMTCT</th><th></th>
+                        <th >OI</th><th></th>
+                        <th >PREP</th><th></th>
+                        <th >ART</th><th></th>
+                        <th >PEP</th><th></th>
+                        <th >PMTCT</th><th></th>
+                        <th >OI</th><th></th>
+                        <th >PREP</th><th></th>
+                        </tr>
+                        <tr>
+                        <th>Source</th>
+                        <th>No.</th>
+                        <th>%</th>
+                        <th>No.</th>
+                        <th>%</th>
+                        <th>No.</th>
+                        <th>%</th>
+                        <th>No.</th>
+                        <th>%</th>
+                        <th>No.</th>
+                        <th>%</th>
+                        <th>No.</th>
+                        <th>%</th>
+                        <th>No.</th>
+                        <th>%</th>
+                        <th>No.</th>
+                        <th>%</th>
+                        <th>No.</th>
+                        <th>%</th>
+                        <th>No.</th>
+                        <th>%</th>
+                        <th>No.</th>
+                        <th>%</th>
+                        <th>No.</th>
+                        <th>%</th>
+                        <th>No.</th>
+                        <th>%</th>
+                        <th>No.</th>
+                        <th>%</th>
+                        <th>No.</th>
+                        <th>%</th>
+                        <th>No.</th>
+                        <th>%</th>
+                        <th>No.</th>
+                        <th>%</th>
+                        <th>No.</th>
+                        <th>%</th>
+                        <th>No.</th>
+                        <th>%</th>
+                        <th>No.</th>
+                        <th>%</th>
+                        </tr>
+                        </thead><tbody>";
 
         //Get Total of all patients
         $sql = "SELECT count( * ) AS total FROM patient p LEFT JOIN patient_source ps ON ps.id = p.source WHERE date_enrolled BETWEEN '$from' AND '$to' $supported_query AND facility_code = '$facility_code' AND source !='' AND p.active='1'";
@@ -2919,8 +2919,8 @@ class Report_management extends MY_Controller
 
         //Get Totals for each Source
         $sql = "SELECT count(*) AS total,p.source,ps.name 
-	FROM patient p LEFT JOIN patient_source ps ON ps.id = p.source 
-	WHERE date_enrolled BETWEEN '$from' AND '$to' $supported_query AND facility_code = '$facility_code' AND source !=''  AND p.active='1' GROUP BY p.source";
+                FROM patient p LEFT JOIN patient_source ps ON ps.id = p.source 
+                WHERE date_enrolled BETWEEN '$from' AND '$to' $supported_query AND facility_code = '$facility_code' AND source !=''  AND p.active='1' GROUP BY p.source";
         $query = $this->db->query($sql);
         $results = $query->result_array();
         if ($results) {
@@ -6130,11 +6130,11 @@ GROUP BY  patient_id
 
         //Get Patient Totals
         $sql = "select count(*) as total 
-	from patient p,gender g,regimen_service_type rs,regimen r,patient_status ps 
-	where start_regimen_date between '$from' and '$to' and 
-	p.gender=g.id and p.service=rs.id and p.start_regimen=r.id 
-	and ps.id=p.current_status and ps.name LIKE '%active%'
-	and rs.name LIKE '%art%' and p.facility_code='$facility_code'";
+        from patient p,gender g,regimen_service_type rs,regimen r,patient_status ps 
+        where start_regimen_date between '$from' and '$to' and 
+        p.gender=g.id and p.service=rs.id and p.start_regimen=r.id 
+        and ps.id=p.current_status and ps.name LIKE '%active%'
+        and rs.name LIKE '%art%' and p.facility_code='$facility_code'";
         $query = $this->db->query($sql);
         $results = $query->result_array();
         $source_total = $results[0]['total'];
@@ -6145,78 +6145,78 @@ GROUP BY  patient_id
         $query = $this->db->query($sql);
         $results = $query->result_array();
         $row_string = "<table border='1'  cellpadding='5' class='dataTables'>
-	<thead>
-	<tr>
-	<th ></th>
-	<th >Total</th><th></th>
-	<th> Adult</th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th>
-	<th> Children </th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th>
-	</tr>
-	<tr>
-	<th></th>
-	<th ></th>
-	<th ></th>
-	<th>Male</th><th></th><th></th><th></th><th></th><th></th>
-	<th>Female</th><th></th><th></th><th></th><th></th><th></th><th></th><th></th>
-	<th>Male</th><th></th><th></th><th></th><th></th><th></th><th></th><th></th>
-	<th>Female</th><th></th><th></th><th></th><th></th><th></th><th></th><th></th>
-	</tr>
-	<tr>
-	<th></th>
-	<th></th>
-	<th></th>
-	<th >ART</th><th></th>
-	<th >PEP</th><th></th>
-	<th >OI</th><th></th>
-	<th >ART</th><th></th>
-	<th >PEP</th><th></th>
-	<th >PMTCT</th><th></th>
-	<th >OI</th><th></th>
-	<th >ART</th><th></th>
-	<th >PEP</th><th></th>
-	<th >PMTCT</th><th></th>
-	<th >OI</th><th></th>
-	<th >ART</th><th></th>
-	<th >PEP</th><th></th>
-	<th >PMTCT</th><th></th>
-	<th >OI</th><th></th>
-	</tr>
-	<tr>
-	<th>Regimen</th>
-	<th>No.</th>
-	<th>%</th>
-	<th>No.</th>
-	<th>%</th>
-	<th>No.</th>
-	<th>%</th>
-	<th>No.</th>
-	<th>%</th>
-	<th>No.</th>
-	<th>%</th>
-	<th>No.</th>
-	<th>%</th>
-	<th>No.</th>
-	<th>%</th>
-	<th>No.</th>
-	<th>%</th>
-	<th>No.</th>
-	<th>%</th>
-	<th>No.</th>
-	<th>%</th>
-	<th>No.</th>
-	<th>%</th>
-	<th>No.</th>
-	<th>%</th>
-	<th>No.</th>
-	<th>%</th>
-	<th>No.</th>
-	<th>%</th>
-	<th>No.</th>
-	<th>%</th>
-	<th>No.</th>
-	<th>%</th>
-	</tr>
-	</thead><tbody>";
+                        <thead>
+                        <tr>
+                        <th ></th>
+                        <th >Total</th><th></th>
+                        <th> Adult</th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th>
+                        <th> Children </th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th>
+                        </tr>
+                        <tr>
+                        <th></th>
+                        <th ></th>
+                        <th ></th>
+                        <th>Male</th><th></th><th></th><th></th><th></th><th></th>
+                        <th>Female</th><th></th><th></th><th></th><th></th><th></th><th></th><th></th>
+                        <th>Male</th><th></th><th></th><th></th><th></th><th></th><th></th><th></th>
+                        <th>Female</th><th></th><th></th><th></th><th></th><th></th><th></th><th></th>
+                        </tr>
+                        <tr>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th >ART</th><th></th>
+                        <th >PEP</th><th></th>
+                        <th >OI</th><th></th>
+                        <th >ART</th><th></th>
+                        <th >PEP</th><th></th>
+                        <th >PMTCT</th><th></th>
+                        <th >OI</th><th></th>
+                        <th >ART</th><th></th>
+                        <th >PEP</th><th></th>
+                        <th >PMTCT</th><th></th>
+                        <th >OI</th><th></th>
+                        <th >ART</th><th></th>
+                        <th >PEP</th><th></th>
+                        <th >PMTCT</th><th></th>
+                        <th >OI</th><th></th>
+                        </tr>
+                        <tr>
+                        <th>Regimen</th>
+                        <th>No.</th>
+                        <th>%</th>
+                        <th>No.</th>
+                        <th>%</th>
+                        <th>No.</th>
+                        <th>%</th>
+                        <th>No.</th>
+                        <th>%</th>
+                        <th>No.</th>
+                        <th>%</th>
+                        <th>No.</th>
+                        <th>%</th>
+                        <th>No.</th>
+                        <th>%</th>
+                        <th>No.</th>
+                        <th>%</th>
+                        <th>No.</th>
+                        <th>%</th>
+                        <th>No.</th>
+                        <th>%</th>
+                        <th>No.</th>
+                        <th>%</th>
+                        <th>No.</th>
+                        <th>%</th>
+                        <th>No.</th>
+                        <th>%</th>
+                        <th>No.</th>
+                        <th>%</th>
+                        <th>No.</th>
+                        <th>%</th>
+                        <th>No.</th>
+                        <th>%</th>
+                        </tr>
+                        </thead><tbody>";
         if ($source_total == 0) {
             $source_total = 1;
         }
