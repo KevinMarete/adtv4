@@ -23,7 +23,7 @@ class App extends BaseConfig
 	| environments.
 	|
 	*/
-	public $baseURL = 'http://localhost/ADTv4/';
+	public $baseURL = 'http://localhost/adtv4/';
 
 	/*
 	|--------------------------------------------------------------------------
