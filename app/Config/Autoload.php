@@ -70,5 +70,7 @@ class Autoload extends AutoloadConfig
         'Mysqldump' => APPPATH . 'Libraries/Mysqldump.php',
         'Encrypt' => APPPATH . 'Libraries/Encrypt.php',
         'Updater' => APPPATH . 'Libraries/Updater.php',
+        'PHPExcel' => APPPATH . 'Libraries/PHPExcel.php',
+        'PHPExcel_IOFactory' => APPPATH . 'Libraries/PHPExcel/IOFactory.php'
     ];
 }
