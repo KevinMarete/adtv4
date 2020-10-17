@@ -347,7 +347,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
 <script src="<?= base_url(); ?>assets/scripts/datatable/buttons.html5.min.js"></script> -->
 
-<script src="<?= base_url('public/assets/scripts/datatable/jquery-3.5.1.min.js'); ?>"></script>
+
 <script src="<?= base_url('public/assets/scripts/datatable/dt.1.10.21.jquery.dataTables.min.js'); ?>"></script>
 <script src="<?= base_url('public/assets/scripts/datatable/dataTables.buttons.min.js'); ?>"></script>
 <script src="<?= base_url('public/assets/scripts/datatable/jszip.min.js'); ?>"></script>
@@ -363,7 +363,8 @@
 				'excelHtml5',
 				'csvHtml5',
 				'pdfHtml5'
-			]
+			],
+			pagingType: "full_numbers"
 		});
 	});
 </script>
