@@ -3,7 +3,6 @@
 namespace Modules\ADT\Models;
 
 use App\Models\BaseModel;
-//use Illuminate\Database\Capsule\Manager as DB;
 
 class Regimen_service_type extends BaseModel
 {
