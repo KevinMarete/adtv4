@@ -68,6 +68,9 @@ $routes->group('report_management', ['namespace' => '\Modules\ADT\Controllers'],
   $routes->get('getTBPatients/(:any)/(:any)', 'Report_management::getTBPatients/$1/$2');
   $routes->get('getChronic/(:any)', 'Report_management::getChronic/$1');
   $routes->get('getADR/(:any)', 'Report_management::getADR/$1');
+
+  $routes->get('disclosure_chart/(:any)/(:any)', 'Report_management::getADR/$1/$2');
+
   $routes->get('patients_disclosure/(:any)/(:any)', 'Report_management::patients_disclosure/$1/$2');
   $routes->get('getBMI/(:any)', 'Report_management::getBMI/$1');
   $routes->get('getisoniazidPatients/(:any)/(:any)', 'Report_management::getisoniazidPatients/$1/$2');
@@ -98,12 +101,19 @@ $routes->group('report_management', ['namespace' => '\Modules\ADT\Controllers'],
   $routes->get('patients_who_changed_regimen/(:any)/(:any)', 'Report_management::patients_who_changed_regimen/$1/$2');
   $routes->get('patients_switched_to_second_line_regimen/(:any)/(:any)', 'Report_management::patients_switched_to_second_line_regimen/$1/$2');
   $routes->get('patients_starting/(:any)/(:any)', 'Report_management::patients_starting/$1/$2');
+
+  $routes->get('getAdherence/(:any)/(:any)/(:any)/(:any)', 'Report_management::getAdherence/$1/$2/$3/$4');
+
   $routes->get('graphical_adherence/(:any)/(:any)/(:any)', 'Report_management::graphical_adherence/$1/$2/$3');
   $routes->get('patients_nonadherence/(:any)/(:any)', 'Report_management::patients_nonadherence/$1/$2');
   $routes->get('get_lost_followup/(:any)/(:any)', 'Report_management::get_lost_followup/$1/$2');
   $routes->get('get_viral_loadsummary/(:any)', 'Report_management::get_viral_loadsummary/$1');
 
   //Drug Inventory
+  $routes->get('getMoreHelp/(:any)/(:any)/(:any)', 'Report_management::getMoreHelp/$1/$2/$3');
+  $routes->get('drug_consumption/(:any)/(:any)', 'Report_management::drug_consumption/$1/$2');
+  $routes->get('drug_stock_on_hand/(:any)', 'Report_management::drug_stock_on_hand/$1');
+
   $routes->get('stock_report/(:any)/(:any)/(:any)', 'Report_management::stock_report/$1/$2/$3');
   $routes->get('patient_consumption/(:any)/(:any)', 'Report_management::patient_consumption/$1/$2');
   $routes->get('stock_report/(:any)/(:any)/(:any)/(:any)', 'Report_management::stock_report/$1/$2/$3/$4');
