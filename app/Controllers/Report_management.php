@@ -1908,14 +1908,14 @@ class Report_management extends MY_Controller
 
         //Get patients using modern contraceptives
         $sql = "SELECT COUNT(DISTINCT(p.id)) as total 
-		FROM patient p
-		WHERE p.date_enrolled <='$to'
-		AND p.fplan IN 
-		(
-		SELECT indicator 
-		FROM family_planning 
-		WHERE name NOT LIKE '%condom%'
-	)";
+                FROM patient p
+                WHERE p.date_enrolled <='$to'
+                AND p.fplan IN 
+                (
+                    SELECT indicator 
+                    FROM family_planning 
+                    WHERE name NOT LIKE '%condom%'
+                )";
         $query = $this->db->query($sql);
         $results = $query->result_array();
         if ($results) {
@@ -1924,14 +1924,14 @@ class Report_management extends MY_Controller
 
         //Get patients using condoms
         $sql = "SELECT COUNT(DISTINCT(p.id)) as total 
-	FROM patient p
-	WHERE p.date_enrolled <='$to'
-	AND p.fplan IN 
-	(
-	SELECT indicator 
-	FROM family_planning 
-	WHERE name LIKE '%condom%'
-)";
+                FROM patient p
+                WHERE p.date_enrolled <='$to'
+                AND p.fplan IN 
+                (
+                    SELECT indicator 
+                    FROM family_planning 
+                    WHERE name LIKE '%condom%'
+                )";
         $query = $this->db->query($sql);
         $results = $query->result_array();
         if ($results) {
@@ -1954,11 +1954,11 @@ class Report_management extends MY_Controller
         $unscheduled_visits = 0;
 
         $sql = "SELECT patient_number_ccc,gender_desc as gender,dispensing_date,appointment, regimen_service_type AS service
-	FROM v_patient_visits
-	WHERE dispensing_date
-	BETWEEN '$from'
-	AND '$to'
-	GROUP BY patient_number_ccc";
+                FROM v_patient_visits
+                WHERE dispensing_date
+                BETWEEN '$from'
+                AND '$to'
+                GROUP BY patient_number_ccc";
         $query = $this->db->query($sql);
         $results = $query->result_array();
         if ($results) {
@@ -1997,13 +1997,13 @@ class Report_management extends MY_Controller
         $other_reason_female = 0;
 
         $sql = "SELECT pr.name,g.name as gender
-	FROM patient p
-	LEFT JOIN gender g ON g.id=p.gender
-	LEFT JOIN pep_reason pr ON pr.id=p.pep_reason
-	WHERE p.date_enrolled 
-	BETWEEN '$from'
-	AND '$to'
-	GROUP BY p.id";
+                FROM patient p
+                LEFT JOIN gender g ON g.id=p.gender
+                LEFT JOIN pep_reason pr ON pr.id=p.pep_reason
+                WHERE p.date_enrolled 
+                BETWEEN '$from'
+                AND '$to'
+                GROUP BY p.id";
         $query = $this->db->query($sql);
         $results = $query->result_array();
         if ($results) {
@@ -2049,16 +2049,16 @@ class Report_management extends MY_Controller
         $other_reason_female = 0;
 
         $sql = "SELECT 
-	pr.name,g.name as gender
-	FROM patient p
-	LEFT JOIN gender g ON g.id=p.gender
-	LEFT JOIN pep_reason pr ON pr.id=p.pep_reason
-	LEFT JOIN regimen_service_type rst ON rst.id=p.service
-	WHERE p.date_enrolled 
-	BETWEEN '$from'
-	AND '$to'
-	AND rst.name LIKE '%pep%'
-	GROUP BY p.id";
+                pr.name,g.name as gender
+                FROM patient p
+                LEFT JOIN gender g ON g.id=p.gender
+                LEFT JOIN pep_reason pr ON pr.id=p.pep_reason
+                LEFT JOIN regimen_service_type rst ON rst.id=p.service
+                WHERE p.date_enrolled 
+                BETWEEN '$from'
+                AND '$to'
+                AND rst.name LIKE '%pep%'
+                GROUP BY p.id";
         $query = $this->db->query($sql);
         $results = $query->result_array();
         if ($results) {
@@ -2397,27 +2397,27 @@ class Report_management extends MY_Controller
 
         $dyn_table = "<table border='1' id='patient_listing'  cellpadding='5' class='dataTables'>";
         $dyn_table .= "<thead>
-<tr>
-<th>Description</th>
-<th>Total</th>
-<th colspan='4'>Male</th>
-<th colspan='4'>Female</th>
-</tr>
-<tr>
-<th></th>
-<th></th>
-<th>15 - 19</th>
-<th>20 - 24</th>
-<th>25 - 30</th>
-<th>30 & Above</th>
+                        <tr>
+                        <th>Description</th>
+                        <th>Total</th>
+                        <th colspan='4'>Male</th>
+                        <th colspan='4'>Female</th>
+                        </tr>
+                        <tr>
+                        <th></th>
+                        <th></th>
+                        <th>15 - 19</th>
+                        <th>20 - 24</th>
+                        <th>25 - 30</th>
+                        <th>30 & Above</th>
 
-<th>15 - 19</th>
-<th>20 - 24</th>
-<th>25 - 30</th>
-<th>30 & Above</th>
-</tr>
-</thead>
-<tbody>";
+                        <th>15 - 19</th>
+                        <th>20 - 24</th>
+                        <th>25 - 30</th>
+                        <th>30 & Above</th>
+                        </tr>
+                        </thead>
+                        <tbody>";
 
         foreach ($report_items as $report => $sql) {
             // print_r($sql);die;
@@ -2465,71 +2465,71 @@ class Report_management extends MY_Controller
         $period_end = date('Y-m-d', strtotime($period_end));
 
         $sql = "SELECT  pr.name,pr.id,
-	COUNT(IF(LOWER(g.name) = 'male' AND (YEAR(CURDATE())-YEAR(dob)) >= 15 AND (YEAR(CURDATE())-YEAR(dob)) < 20 , 1, NULL)) as male_15,
-	COUNT(IF(LOWER(g.name) = 'male' AND (YEAR(CURDATE())-YEAR(dob)) >= 20 AND (YEAR(CURDATE())-YEAR(dob)) < 25 , 1, NULL)) as male_20,
-	COUNT(IF(LOWER(g.name) = 'male' AND (YEAR(CURDATE())-YEAR(dob)) >= 25 AND (YEAR(CURDATE())-YEAR(dob)) < 30 , 1, NULL)) as male_25,
-	COUNT(IF(LOWER(g.name) = 'male' AND (YEAR(CURDATE())-YEAR(dob)) >= 30  , 1, NULL)) as male_30,
+                COUNT(IF(LOWER(g.name) = 'male' AND (YEAR(CURDATE())-YEAR(dob)) >= 15 AND (YEAR(CURDATE())-YEAR(dob)) < 20 , 1, NULL)) as male_15,
+                COUNT(IF(LOWER(g.name) = 'male' AND (YEAR(CURDATE())-YEAR(dob)) >= 20 AND (YEAR(CURDATE())-YEAR(dob)) < 25 , 1, NULL)) as male_20,
+                COUNT(IF(LOWER(g.name) = 'male' AND (YEAR(CURDATE())-YEAR(dob)) >= 25 AND (YEAR(CURDATE())-YEAR(dob)) < 30 , 1, NULL)) as male_25,
+                COUNT(IF(LOWER(g.name) = 'male' AND (YEAR(CURDATE())-YEAR(dob)) >= 30  , 1, NULL)) as male_30,
 
-	COUNT(IF(LOWER(g.name) = 'female' AND (YEAR(CURDATE())-YEAR(dob)) >= 15 AND (YEAR(CURDATE())-YEAR(dob)) < 20 , 1, NULL)) as female_15,
-	COUNT(IF(LOWER(g.name) = 'female' AND (YEAR(CURDATE())-YEAR(dob)) >= 20 AND (YEAR(CURDATE())-YEAR(dob)) < 25 , 1, NULL)) as female_20,
-	COUNT(IF(LOWER(g.name) = 'female' AND (YEAR(CURDATE())-YEAR(dob)) >= 25 AND (YEAR(CURDATE())-YEAR(dob)) < 30 , 1, NULL)) as female_25,
-	COUNT(IF(LOWER(g.name) = 'female' AND (YEAR(CURDATE())-YEAR(dob)) >= 30  , 1, NULL)) as female_30
-	FROM patient p
-	INNER JOIN gender g ON g.id = p.gender
-	INNER join pep_reason pr on 
-	pr.id = p.pep_reason	
-	INNER join regimen_service_type rst on rst.id = p.service WHERE LOWER(rst.name) = 'pep'
-	AND p.date_enrolled between '$period_start' and '$period_end'
-	group by pep_reason
-	union 
-	SELECT 'Total',pr.id,
-	COUNT(IF(LOWER(g.name) = 'male' AND (YEAR(CURDATE())-YEAR(dob)) >= 15 AND (YEAR(CURDATE())-YEAR(dob)) < 20 , 1, NULL)) as male_15,
-	COUNT(IF(LOWER(g.name) = 'male' AND (YEAR(CURDATE())-YEAR(dob)) >= 20 AND (YEAR(CURDATE())-YEAR(dob)) < 25 , 1, NULL)) as male_20,
-	COUNT(IF(LOWER(g.name) = 'male' AND (YEAR(CURDATE())-YEAR(dob)) >= 25 AND (YEAR(CURDATE())-YEAR(dob)) < 30 , 1, NULL)) as male_25,
-	COUNT(IF(LOWER(g.name) = 'male' AND (YEAR(CURDATE())-YEAR(dob)) >= 30  , 1, NULL)) as male_30,
+                COUNT(IF(LOWER(g.name) = 'female' AND (YEAR(CURDATE())-YEAR(dob)) >= 15 AND (YEAR(CURDATE())-YEAR(dob)) < 20 , 1, NULL)) as female_15,
+                COUNT(IF(LOWER(g.name) = 'female' AND (YEAR(CURDATE())-YEAR(dob)) >= 20 AND (YEAR(CURDATE())-YEAR(dob)) < 25 , 1, NULL)) as female_20,
+                COUNT(IF(LOWER(g.name) = 'female' AND (YEAR(CURDATE())-YEAR(dob)) >= 25 AND (YEAR(CURDATE())-YEAR(dob)) < 30 , 1, NULL)) as female_25,
+                COUNT(IF(LOWER(g.name) = 'female' AND (YEAR(CURDATE())-YEAR(dob)) >= 30  , 1, NULL)) as female_30
+                FROM patient p
+                INNER JOIN gender g ON g.id = p.gender
+                INNER join pep_reason pr on 
+                pr.id = p.pep_reason	
+                INNER join regimen_service_type rst on rst.id = p.service WHERE LOWER(rst.name) = 'pep'
+                AND p.date_enrolled between '$period_start' and '$period_end'
+                group by pep_reason
+                union 
+                SELECT 'Total',pr.id,
+                COUNT(IF(LOWER(g.name) = 'male' AND (YEAR(CURDATE())-YEAR(dob)) >= 15 AND (YEAR(CURDATE())-YEAR(dob)) < 20 , 1, NULL)) as male_15,
+                COUNT(IF(LOWER(g.name) = 'male' AND (YEAR(CURDATE())-YEAR(dob)) >= 20 AND (YEAR(CURDATE())-YEAR(dob)) < 25 , 1, NULL)) as male_20,
+                COUNT(IF(LOWER(g.name) = 'male' AND (YEAR(CURDATE())-YEAR(dob)) >= 25 AND (YEAR(CURDATE())-YEAR(dob)) < 30 , 1, NULL)) as male_25,
+                COUNT(IF(LOWER(g.name) = 'male' AND (YEAR(CURDATE())-YEAR(dob)) >= 30  , 1, NULL)) as male_30,
 
-	COUNT(IF(LOWER(g.name) = 'female' AND (YEAR(CURDATE())-YEAR(dob)) >= 15 AND (YEAR(CURDATE())-YEAR(dob)) < 20 , 1, NULL)) as female_15,
-	COUNT(IF(LOWER(g.name) = 'female' AND (YEAR(CURDATE())-YEAR(dob)) >= 20 AND (YEAR(CURDATE())-YEAR(dob)) < 25 , 1, NULL)) as female_20,
-	COUNT(IF(LOWER(g.name) = 'female' AND (YEAR(CURDATE())-YEAR(dob)) >= 25 AND (YEAR(CURDATE())-YEAR(dob)) < 30 , 1, NULL)) as female_25,
-	COUNT(IF(LOWER(g.name) = 'female' AND (YEAR(CURDATE())-YEAR(dob)) >= 30  , 1, NULL)) as female_30
-	FROM patient p
-	INNER JOIN gender g ON g.id = p.gender
-	INNER join pep_reason pr on 
-	pr.id = p.pep_reason
-	INNER join regimen_service_type rst on rst.id = p.service WHERE LOWER(rst.name) = 'pep'
-	AND p.date_enrolled between '$period_start' and '$period_end'
-	";
+                COUNT(IF(LOWER(g.name) = 'female' AND (YEAR(CURDATE())-YEAR(dob)) >= 15 AND (YEAR(CURDATE())-YEAR(dob)) < 20 , 1, NULL)) as female_15,
+                COUNT(IF(LOWER(g.name) = 'female' AND (YEAR(CURDATE())-YEAR(dob)) >= 20 AND (YEAR(CURDATE())-YEAR(dob)) < 25 , 1, NULL)) as female_20,
+                COUNT(IF(LOWER(g.name) = 'female' AND (YEAR(CURDATE())-YEAR(dob)) >= 25 AND (YEAR(CURDATE())-YEAR(dob)) < 30 , 1, NULL)) as female_25,
+                COUNT(IF(LOWER(g.name) = 'female' AND (YEAR(CURDATE())-YEAR(dob)) >= 30  , 1, NULL)) as female_30
+                FROM patient p
+                INNER JOIN gender g ON g.id = p.gender
+                INNER join pep_reason pr on 
+                pr.id = p.pep_reason
+                INNER join regimen_service_type rst on rst.id = p.service WHERE LOWER(rst.name) = 'pep'
+                AND p.date_enrolled between '$period_start' and '$period_end'
+                ";
 
 
         $dyn_table = "<table border='1' id='patient_listing'  cellpadding='5' class='dataTables'>";
         $dyn_table .= "<thead>
-	<tr>
-	<th>Description</th>
-	<th>Total</th>
-	<th>Male</th>
-	<th></th>
-	<th></th>
-	<th></th>
-	<th>Female</th>
-	<th></th>
-	<th></th>
-	<th></th>
-	</tr>
-	<tr>
-	<th></th>
-	<th></th>
-	<th>15 - 19</th>
-	<th>20 - 24</th>
-	<th>25 - 30</th>
-	<th>30 & Above</th>
+                        <tr>
+                        <th>Description</th>
+                        <th>Total</th>
+                        <th>Male</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th>Female</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        </tr>
+                        <tr>
+                        <th></th>
+                        <th></th>
+                        <th>15 - 19</th>
+                        <th>20 - 24</th>
+                        <th>25 - 30</th>
+                        <th>30 & Above</th>
 
-	<th>15 - 19</th>
-	<th>20 - 24</th>
-	<th>25 - 30</th>
-	<th>30 & Above</th>
-	</tr>
-	</thead>
-	<tbody>";
+                        <th>15 - 19</th>
+                        <th>20 - 24</th>
+                        <th>25 - 30</th>
+                        <th>30 & Above</th>
+                        </tr>
+                        </thead>
+                        <tbody>";
 
 
         //$sql = "SELECT count( * ) AS total FROM patient p LEFT JOIN patient_source ps ON ps.id = p.source WHERE date_enrolled BETWEEN '$from' AND '$to' $supported_query AND facility_code = '$facility_code' AND source !='' AND p.active='1'";
@@ -2571,70 +2571,70 @@ class Report_management extends MY_Controller
     public function get_prep_reasons($period_start = "", $period_end = "")
     {
         $sql = "SELECT  pr.name,pr.id,
-	COUNT(IF(LOWER(g.name) = 'male' AND (YEAR(CURDATE())-YEAR(dob)) >= 15 AND (YEAR(CURDATE())-YEAR(dob)) < 20 , 1, NULL)) as male_15,
-	COUNT(IF(LOWER(g.name) = 'male' AND (YEAR(CURDATE())-YEAR(dob)) >= 20 AND (YEAR(CURDATE())-YEAR(dob)) < 25 , 1, NULL)) as male_20,
-	COUNT(IF(LOWER(g.name) = 'male' AND (YEAR(CURDATE())-YEAR(dob)) >= 25 AND (YEAR(CURDATE())-YEAR(dob)) < 30 , 1, NULL)) as male_25,
-	COUNT(IF(LOWER(g.name) = 'male' AND (YEAR(CURDATE())-YEAR(dob)) >= 30  , 1, NULL)) as male_30,
+                COUNT(IF(LOWER(g.name) = 'male' AND (YEAR(CURDATE())-YEAR(dob)) >= 15 AND (YEAR(CURDATE())-YEAR(dob)) < 20 , 1, NULL)) as male_15,
+                COUNT(IF(LOWER(g.name) = 'male' AND (YEAR(CURDATE())-YEAR(dob)) >= 20 AND (YEAR(CURDATE())-YEAR(dob)) < 25 , 1, NULL)) as male_20,
+                COUNT(IF(LOWER(g.name) = 'male' AND (YEAR(CURDATE())-YEAR(dob)) >= 25 AND (YEAR(CURDATE())-YEAR(dob)) < 30 , 1, NULL)) as male_25,
+                COUNT(IF(LOWER(g.name) = 'male' AND (YEAR(CURDATE())-YEAR(dob)) >= 30  , 1, NULL)) as male_30,
 
-	COUNT(IF(LOWER(g.name) = 'female' AND (YEAR(CURDATE())-YEAR(dob)) >= 15 AND (YEAR(CURDATE())-YEAR(dob)) < 20 , 1, NULL)) as female_15,
-	COUNT(IF(LOWER(g.name) = 'female' AND (YEAR(CURDATE())-YEAR(dob)) >= 20 AND (YEAR(CURDATE())-YEAR(dob)) < 25 , 1, NULL)) as female_20,
-	COUNT(IF(LOWER(g.name) = 'female' AND (YEAR(CURDATE())-YEAR(dob)) >= 25 AND (YEAR(CURDATE())-YEAR(dob)) < 30 , 1, NULL)) as female_25,
-	COUNT(IF(LOWER(g.name) = 'female' AND (YEAR(CURDATE())-YEAR(dob)) >= 30  , 1, NULL)) as female_30
-	FROM patient p
-	INNER JOIN gender g ON g.id = p.gender
-	inner join patient_prep_test ppt on p.id = ppt.patient_id
-	inner join prep_reason pr on pr.id = ppt.prep_reason_id
-	INNER join regimen_service_type rst on rst.id = p.service WHERE LOWER(rst.name) = 'prep'
-	AND p.date_enrolled between '$period_start' and '$period_end'
-	group by pr.name
-	union 
-	SELECT 'Total',pr.id,
-	COUNT(IF(LOWER(g.name) = 'male' AND (YEAR(CURDATE())-YEAR(dob)) >= 15 AND (YEAR(CURDATE())-YEAR(dob)) < 20 , 1, NULL)) as male_15,
-	COUNT(IF(LOWER(g.name) = 'male' AND (YEAR(CURDATE())-YEAR(dob)) >= 20 AND (YEAR(CURDATE())-YEAR(dob)) < 25 , 1, NULL)) as male_20,
-	COUNT(IF(LOWER(g.name) = 'male' AND (YEAR(CURDATE())-YEAR(dob)) >= 25 AND (YEAR(CURDATE())-YEAR(dob)) < 30 , 1, NULL)) as male_25,
-	COUNT(IF(LOWER(g.name) = 'male' AND (YEAR(CURDATE())-YEAR(dob)) >= 30  , 1, NULL)) as male_30,
+                COUNT(IF(LOWER(g.name) = 'female' AND (YEAR(CURDATE())-YEAR(dob)) >= 15 AND (YEAR(CURDATE())-YEAR(dob)) < 20 , 1, NULL)) as female_15,
+                COUNT(IF(LOWER(g.name) = 'female' AND (YEAR(CURDATE())-YEAR(dob)) >= 20 AND (YEAR(CURDATE())-YEAR(dob)) < 25 , 1, NULL)) as female_20,
+                COUNT(IF(LOWER(g.name) = 'female' AND (YEAR(CURDATE())-YEAR(dob)) >= 25 AND (YEAR(CURDATE())-YEAR(dob)) < 30 , 1, NULL)) as female_25,
+                COUNT(IF(LOWER(g.name) = 'female' AND (YEAR(CURDATE())-YEAR(dob)) >= 30  , 1, NULL)) as female_30
+                FROM patient p
+                INNER JOIN gender g ON g.id = p.gender
+                inner join patient_prep_test ppt on p.id = ppt.patient_id
+                inner join prep_reason pr on pr.id = ppt.prep_reason_id
+                INNER join regimen_service_type rst on rst.id = p.service WHERE LOWER(rst.name) = 'prep'
+                AND p.date_enrolled between '$period_start' and '$period_end'
+                group by pr.name
+                union 
+                SELECT 'Total',pr.id,
+                COUNT(IF(LOWER(g.name) = 'male' AND (YEAR(CURDATE())-YEAR(dob)) >= 15 AND (YEAR(CURDATE())-YEAR(dob)) < 20 , 1, NULL)) as male_15,
+                COUNT(IF(LOWER(g.name) = 'male' AND (YEAR(CURDATE())-YEAR(dob)) >= 20 AND (YEAR(CURDATE())-YEAR(dob)) < 25 , 1, NULL)) as male_20,
+                COUNT(IF(LOWER(g.name) = 'male' AND (YEAR(CURDATE())-YEAR(dob)) >= 25 AND (YEAR(CURDATE())-YEAR(dob)) < 30 , 1, NULL)) as male_25,
+                COUNT(IF(LOWER(g.name) = 'male' AND (YEAR(CURDATE())-YEAR(dob)) >= 30  , 1, NULL)) as male_30,
 
-	COUNT(IF(LOWER(g.name) = 'female' AND (YEAR(CURDATE())-YEAR(dob)) >= 15 AND (YEAR(CURDATE())-YEAR(dob)) < 20 , 1, NULL)) as female_15,
-	COUNT(IF(LOWER(g.name) = 'female' AND (YEAR(CURDATE())-YEAR(dob)) >= 20 AND (YEAR(CURDATE())-YEAR(dob)) < 25 , 1, NULL)) as female_20,
-	COUNT(IF(LOWER(g.name) = 'female' AND (YEAR(CURDATE())-YEAR(dob)) >= 25 AND (YEAR(CURDATE())-YEAR(dob)) < 30 , 1, NULL)) as female_25,
-	COUNT(IF(LOWER(g.name) = 'female' AND (YEAR(CURDATE())-YEAR(dob)) >= 30  , 1, NULL)) as female_30
-	FROM patient p
-	INNER JOIN gender g ON g.id = p.gender
-	inner join patient_prep_test ppt on p.id = ppt.patient_id
-	inner join prep_reason pr on pr.id = ppt.prep_reason_id
-	INNER join regimen_service_type rst on rst.id = p.service WHERE LOWER(rst.name) = 'prep'
-	AND p.date_enrolled between '$period_start' and '$period_end'	
-	";
+                COUNT(IF(LOWER(g.name) = 'female' AND (YEAR(CURDATE())-YEAR(dob)) >= 15 AND (YEAR(CURDATE())-YEAR(dob)) < 20 , 1, NULL)) as female_15,
+                COUNT(IF(LOWER(g.name) = 'female' AND (YEAR(CURDATE())-YEAR(dob)) >= 20 AND (YEAR(CURDATE())-YEAR(dob)) < 25 , 1, NULL)) as female_20,
+                COUNT(IF(LOWER(g.name) = 'female' AND (YEAR(CURDATE())-YEAR(dob)) >= 25 AND (YEAR(CURDATE())-YEAR(dob)) < 30 , 1, NULL)) as female_25,
+                COUNT(IF(LOWER(g.name) = 'female' AND (YEAR(CURDATE())-YEAR(dob)) >= 30  , 1, NULL)) as female_30
+                FROM patient p
+                INNER JOIN gender g ON g.id = p.gender
+                inner join patient_prep_test ppt on p.id = ppt.patient_id
+                inner join prep_reason pr on pr.id = ppt.prep_reason_id
+                INNER join regimen_service_type rst on rst.id = p.service WHERE LOWER(rst.name) = 'prep'
+                AND p.date_enrolled between '$period_start' and '$period_end'	
+                ";
 
         $dyn_table = "<table border='1' id='patient_listing'  cellpadding='5' class='dataTables'>";
         $dyn_table .= "<thead>
-	<tr>
-	<th>Description</th>
-	<th>Total</th>
-	<th>Male</th>
-	<th></th>
-	<th></th>
-	<th></th>
-	<th>Female</th>
-	<th></th>
-	<th></th>
-	<th></th>
-	</tr>
-	<tr>
-	<th></th>
-	<th></th>
-	<th>15 - 19</th>
-	<th>20 - 24</th>
-	<th>25 - 30</th>
-	<th>30 & Above</th>
+                        <tr>
+                        <th>Description</th>
+                        <th>Total</th>
+                        <th>Male</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th>Female</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        </tr>
+                        <tr>
+                        <th></th>
+                        <th></th>
+                        <th>15 - 19</th>
+                        <th>20 - 24</th>
+                        <th>25 - 30</th>
+                        <th>30 & Above</th>
 
-	<th>15 - 19</th>
-	<th>20 - 24</th>
-	<th>25 - 30</th>
-	<th>30 & Above</th>
-	</tr>
-	</thead>
-	<tbody>";
+                        <th>15 - 19</th>
+                        <th>20 - 24</th>
+                        <th>25 - 30</th>
+                        <th>30 & Above</th>
+                        </tr>
+                        </thead>
+                        <tbody>";
 
 
         //$sql = "SELECT count( * ) AS total FROM patient p LEFT JOIN patient_source ps ON ps.id = p.source WHERE date_enrolled BETWEEN '$from' AND '$to' $supported_query AND facility_code = '$facility_code' AND source !='' AND p.active='1'";
@@ -2676,25 +2676,25 @@ class Report_management extends MY_Controller
     public function get_prep_reasons_patients($period_start = "", $period_end = "")
     {
         $sql = "SELECT p.patient_number_ccc,p.first_name,p.last_name,g.name as gender, FLOOR(DATEDIFF(now(),dob)/365) as age, pr.name as prep_reason
-	FROM patient p
-	INNER JOIN gender g ON g.id = p.gender
-	INNER join patient_prep_test ppt on p.id = ppt.patient_id
-	INNER join prep_reason pr on pr.id = ppt.prep_reason_id
-	INNER join regimen_service_type rst on rst.id = p.service WHERE LOWER(rst.name) = 'prep'
-	AND p.date_enrolled between '$period_start' and '$period_end'	";
+                FROM patient p
+                INNER JOIN gender g ON g.id = p.gender
+                INNER join patient_prep_test ppt on p.id = ppt.patient_id
+                INNER join prep_reason pr on pr.id = ppt.prep_reason_id
+                INNER join regimen_service_type rst on rst.id = p.service WHERE LOWER(rst.name) = 'prep'
+                AND p.date_enrolled between '$period_start' and '$period_end'	";
 
-        $dyn_table = "<table border='1' id='patient_listing'  cellpadding='5' class='dataTables'>";
-        $dyn_table .= "<thead>
-	<tr>
-	<th>CCC Number</th>
-	<th>First Name</th>
-	<th>Last Name</th>
-	<th>Gender </th>
-	<th>Age</th>
-	<th>Prep Reason</th>
-	</tr>
-	</thead>
-	<tbody>";
+                    $dyn_table = "<table border='1' id='patient_listing'  cellpadding='5' class='dataTables'>";
+                    $dyn_table .= "<thead>
+                <tr>
+                <th>CCC Number</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Gender </th>
+                <th>Age</th>
+                <th>Prep Reason</th>
+                </tr>
+                </thead>
+                <tbody>";
 
         $query = $this->db->query($sql);
         $results = $query->result_array();
@@ -2728,25 +2728,25 @@ class Report_management extends MY_Controller
     public function get_pep_reasons_patients($period_start = "", $period_end = "")
     {
         $sql = "SELECT p.patient_number_ccc,p.first_name,p.last_name,g.name as gender, FLOOR(DATEDIFF(now(),dob)/365) as age, pr.name as pep_reason
-	FROM patient p
-	INNER JOIN gender g ON g.id = p.gender
-	INNER join pep_reason pr on 
-	pr.id = p.pep_reason	
-	INNER join regimen_service_type rst on rst.id = p.service WHERE LOWER(rst.name) = 'pep'
-	AND p.date_enrolled between '$period_start' and '$period_end'	";
+                FROM patient p
+                INNER JOIN gender g ON g.id = p.gender
+                INNER join pep_reason pr on 
+                pr.id = p.pep_reason	
+                INNER join regimen_service_type rst on rst.id = p.service WHERE LOWER(rst.name) = 'pep'
+                AND p.date_enrolled between '$period_start' and '$period_end'	";
 
-        $dyn_table = "<table border='1' id='patient_listing'  cellpadding='5' class='dataTables'>";
-        $dyn_table .= "<thead>
-	<tr>
-	<th>CCC Number</th>
-	<th>First Name</th>
-	<th>Last Name</th>
-	<th>Gender </th>
-	<th>Age</th>
-	<th>Prep Reason</th>
-	</tr>
-	</thead>
-	<tbody>";
+                    $dyn_table = "<table border='1' id='patient_listing'  cellpadding='5' class='dataTables'>";
+                    $dyn_table .= "<thead>
+                <tr>
+                <th>CCC Number</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Gender </th>
+                <th>Age</th>
+                <th>Prep Reason</th>
+                </tr>
+                </thead>
+                <tbody>";
 
         $query = $this->db->query($sql);
         $results = $query->result_array();
@@ -3241,59 +3241,59 @@ class Report_management extends MY_Controller
         $overall_total = 0;
 
         $sql = "SELECT 
-	tmp.appointment_description,
-	DATE_FORMAT(min(appointment), '%d-%b-%Y') from_date,
-	DATE_FORMAT(max(appointment), '%d-%b-%Y') to_date,
-	COUNT(*) as total
-	FROM
-	(
-	SELECT 
-	pv.patient_id, 
-	pv.visit_date, 
-	MIN(pa.appointment) appointment, 
-	DATEDIFF(MIN(pa.appointment), pv.visit_date) appointment_days,
-	CASE 
-	WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 0 AND DATEDIFF(MIN(pa.appointment), pv.visit_date) < 31 THEN '1 Month(s)'
-	WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 30 AND DATEDIFF(MIN(pa.appointment), pv.visit_date) < 61 THEN '2 Month(s)'
-	WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 60 AND DATEDIFF(MIN(pa.appointment), pv.visit_date) < 91 THEN '3 Month(s)'
-	WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 90 AND DATEDIFF(MIN(pa.appointment), pv.visit_date) < 121 THEN '4 Month(s)'
-	WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 120 AND DATEDIFF(MIN(pa.appointment), pv.visit_date) < 151 THEN '5 Month(s)'
-	WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 150 AND DATEDIFF(MIN(pa.appointment), pv.visit_date) < 181 THEN '6 Month(s)'
-	WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 180 AND DATEDIFF(MIN(pa.appointment), pv.visit_date) < 211 THEN '7 Month(s)'
-	WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 210 AND DATEDIFF(MIN(pa.appointment), pv.visit_date) < 241 THEN '8 Month(s)'
-	WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 240 AND DATEDIFF(MIN(pa.appointment), pv.visit_date) < 271 THEN '9 Month(s)'
-	WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 270 AND DATEDIFF(MIN(pa.appointment), pv.visit_date) < 301 THEN '10 Month(s)'
-	WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 300 AND DATEDIFF(MIN(pa.appointment), pv.visit_date) < 331 THEN '11 Month(s)'
-	WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 330 AND DATEDIFF(MIN(pa.appointment), pv.visit_date) < 361 THEN '12 Month(s)'
-	WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 360 THEN 'Over 1 Year'
-	ELSE 'N/A'
-	END AS appointment_description
-	FROM clinic_appointment pa 
-	INNER JOIN 
-	(
-	SELECT 
-	patient_id, dispensing_date visit_date
-	FROM patient_visit
-	WHERE dispensing_date BETWEEN ? AND ?
-	AND differentiated_care = '1'
-	GROUP BY patient_id, visit_date
-	) pv ON pv.patient_id = pa.patient AND pa.appointment > visit_date
-	GROUP BY patient_id,visit_date
-	) tmp
-	GROUP BY tmp.appointment_description";
+                tmp.appointment_description,
+                DATE_FORMAT(min(appointment), '%d-%b-%Y') from_date,
+                DATE_FORMAT(max(appointment), '%d-%b-%Y') to_date,
+                COUNT(*) as total
+                FROM
+                (
+                SELECT 
+                pv.patient_id, 
+                pv.visit_date, 
+                MIN(pa.appointment) appointment, 
+                DATEDIFF(MIN(pa.appointment), pv.visit_date) appointment_days,
+                CASE 
+                WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 0 AND DATEDIFF(MIN(pa.appointment), pv.visit_date) < 31 THEN '1 Month(s)'
+                WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 30 AND DATEDIFF(MIN(pa.appointment), pv.visit_date) < 61 THEN '2 Month(s)'
+                WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 60 AND DATEDIFF(MIN(pa.appointment), pv.visit_date) < 91 THEN '3 Month(s)'
+                WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 90 AND DATEDIFF(MIN(pa.appointment), pv.visit_date) < 121 THEN '4 Month(s)'
+                WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 120 AND DATEDIFF(MIN(pa.appointment), pv.visit_date) < 151 THEN '5 Month(s)'
+                WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 150 AND DATEDIFF(MIN(pa.appointment), pv.visit_date) < 181 THEN '6 Month(s)'
+                WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 180 AND DATEDIFF(MIN(pa.appointment), pv.visit_date) < 211 THEN '7 Month(s)'
+                WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 210 AND DATEDIFF(MIN(pa.appointment), pv.visit_date) < 241 THEN '8 Month(s)'
+                WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 240 AND DATEDIFF(MIN(pa.appointment), pv.visit_date) < 271 THEN '9 Month(s)'
+                WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 270 AND DATEDIFF(MIN(pa.appointment), pv.visit_date) < 301 THEN '10 Month(s)'
+                WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 300 AND DATEDIFF(MIN(pa.appointment), pv.visit_date) < 331 THEN '11 Month(s)'
+                WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 330 AND DATEDIFF(MIN(pa.appointment), pv.visit_date) < 361 THEN '12 Month(s)'
+                WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 360 THEN 'Over 1 Year'
+                ELSE 'N/A'
+                END AS appointment_description
+                FROM clinic_appointment pa 
+                INNER JOIN 
+                (
+                SELECT 
+                patient_id, dispensing_date visit_date
+                FROM patient_visit
+                WHERE dispensing_date BETWEEN ? AND ?
+                AND differentiated_care = '1'
+                GROUP BY patient_id, visit_date
+                ) pv ON pv.patient_id = pa.patient AND pa.appointment > visit_date
+                GROUP BY patient_id,visit_date
+                ) tmp
+                GROUP BY tmp.appointment_description";
 
         $query = $this->db->query($sql, array($start_date, $end_date));
         $results = $query->result_array();
 
         $row_string = "<table border='1' class='dataTables'>
-	<thead >
-	<tr>
-	<th>Appointment Duration</th>
-	<th>Total</th>
-	<th>Action</th>
-	</tr>
-	</thead>
-	<tbody>";
+                        <thead >
+                        <tr>
+                        <th>Appointment Duration</th>
+                        <th>Total</th>
+                        <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>";
         foreach ($results as $result) {
             $appointment_description = $result['appointment_description'];
             $app_desc = str_ireplace(array(' ', '(s)'), array('_', ''), $appointment_description);
@@ -3345,195 +3345,195 @@ class Report_management extends MY_Controller
 
         // pick regimen categories, loop getMMDbyRegimen($date,regimen);
         $query_str = "SELECT 
-    SUM(CASE WHEN GENDER='Male' AND age<1 AND (DIFFAPPDISP>=0 and DIFFAPPDISP<36) THEN 1 else 0 end ) AS  '1MONEMONTH',
-    SUM(CASE WHEN GENDER='Female' AND age<1 AND (DIFFAPPDISP>=0 and DIFFAPPDISP<36) THEN 1 else 0 end ) AS  '1FONEMONTH',
-    SUM(CASE WHEN GENDER='Male' AND (age>0 AND age<5) AND (DIFFAPPDISP>=0 and DIFFAPPDISP<36) THEN 1 else 0 end ) AS  '1-4MONEMONTH',
-    SUM(CASE WHEN GENDER='Female' AND (age>0 AND age<5) AND (DIFFAPPDISP>=0 and DIFFAPPDISP<36) THEN 1 else 0 end ) AS  '1-4FONEMONTH',
-    SUM(CASE WHEN GENDER='Male' AND (age>4 AND age<10) AND (DIFFAPPDISP>=0 and DIFFAPPDISP<36) THEN 1 else 0 end ) AS  '5-9MONEMONTH',
-    SUM(CASE WHEN GENDER='Female' AND (age>4 AND age<10) AND (DIFFAPPDISP>=0 and DIFFAPPDISP<36) THEN 1 else 0 end ) AS  '5-9FONEMONTH',
-    SUM(CASE WHEN GENDER='Male' AND (age>9 AND age<15) AND (DIFFAPPDISP>=0 and DIFFAPPDISP<36) THEN 1 else 0 end ) AS  '10-14MONEMONTH',
-    SUM(CASE WHEN GENDER='Female' AND (age>9 AND age<15) AND (DIFFAPPDISP>=0 and DIFFAPPDISP<36) THEN 1 else 0 end ) AS  '10-14FONEMONTH',
-    SUM(CASE WHEN GENDER='Male' AND (age>14 AND age<20) AND (DIFFAPPDISP>=0 and DIFFAPPDISP<36) THEN 1 else 0 end ) AS  '15-19MONEMONTH',
-    SUM(CASE WHEN GENDER='Female' AND (age>14 AND age<20) AND (DIFFAPPDISP>=0 and DIFFAPPDISP<36) THEN 1 else 0 end ) AS  '15-19FONEMONTH',
-    SUM(CASE WHEN GENDER='Male' AND (age>19 AND age<25) AND (DIFFAPPDISP>=0 and DIFFAPPDISP<36) THEN 1 else 0 end ) AS  '20-24MONEMONTH',
-    SUM(CASE WHEN GENDER='Female' AND (age>19 AND age<25) AND (DIFFAPPDISP>=0 and DIFFAPPDISP<36) THEN 1 else 0 end ) AS  '20-24FONEMONTH',
-    SUM(CASE WHEN GENDER='Male' AND (age>24 AND age<30) AND (DIFFAPPDISP>=0 and DIFFAPPDISP<36) THEN 1 else 0 end ) AS  '25-29MONEMONTH',
-    SUM(CASE WHEN GENDER='Female' AND (age>24 AND age<30) AND (DIFFAPPDISP>=0 and DIFFAPPDISP<36) THEN 1 else 0 end ) AS  '25-29FONEMONTH',
-    SUM(CASE WHEN GENDER='Male' AND (age>29 AND age<35) AND (DIFFAPPDISP>=0 and DIFFAPPDISP<36) THEN 1 else 0 end ) AS  '30-34MONEMONTH',
-    SUM(CASE WHEN GENDER='Female' AND (age>29 AND age<35) AND (DIFFAPPDISP>=0 and DIFFAPPDISP<36) THEN 1 else 0 end ) AS  '30-34FONEMONTH',
-    SUM(CASE WHEN GENDER='Male' AND (age>34 AND age<40) AND (DIFFAPPDISP>=0 and DIFFAPPDISP<36) THEN 1 else 0 end ) AS  '35-39MONEMONTH',
-    SUM(CASE WHEN GENDER='Female' AND (age>34 AND age<40) AND (DIFFAPPDISP>=0 and DIFFAPPDISP<36) THEN 1 else 0 end ) AS  '35-39FONEMONTH',
-    SUM(CASE WHEN GENDER='Male' AND (age>39 AND age<45) AND (DIFFAPPDISP>=0 and DIFFAPPDISP<36) THEN 1 else 0 end ) AS  '40-44MONEMONTH',
-    SUM(CASE WHEN GENDER='Female' AND (age>39 AND age<45) AND (DIFFAPPDISP>=0 and DIFFAPPDISP<36) THEN 1 else 0 end ) AS  '40-44FONEMONTH',
-    SUM(CASE WHEN GENDER='Male' AND (age>44 AND age<50) AND (DIFFAPPDISP>=0 and DIFFAPPDISP<36) THEN 1 else 0 end ) AS  '45-49MONEMONTH',
-    SUM(CASE WHEN GENDER='Female' AND (age>44 AND age<50) AND (DIFFAPPDISP>=0 and DIFFAPPDISP<36) THEN 1 else 0 end ) AS  '45-49FONEMONTH',
-    SUM(CASE WHEN GENDER='Male' AND (age>=50) AND (DIFFAPPDISP>=0 and DIFFAPPDISP<36) THEN 1 else 0 end ) AS  '50MONEMONTH',
-    SUM(CASE WHEN GENDER='Female' AND (age>=50) AND (DIFFAPPDISP>=0 and DIFFAPPDISP<36) THEN 1 else 0 end ) AS  '50FONEMONTH',
-    SUM(CASE WHEN (GENDER='Female' or GENDER='Male') AND (DIFFAPPDISP>=0 and DIFFAPPDISP<36) THEN 1 else 0 end ) AS  'SUBTOTAL1MONTH',
+                        SUM(CASE WHEN GENDER='Male' AND age<1 AND (DIFFAPPDISP>=0 and DIFFAPPDISP<36) THEN 1 else 0 end ) AS  '1MONEMONTH',
+                        SUM(CASE WHEN GENDER='Female' AND age<1 AND (DIFFAPPDISP>=0 and DIFFAPPDISP<36) THEN 1 else 0 end ) AS  '1FONEMONTH',
+                        SUM(CASE WHEN GENDER='Male' AND (age>0 AND age<5) AND (DIFFAPPDISP>=0 and DIFFAPPDISP<36) THEN 1 else 0 end ) AS  '1-4MONEMONTH',
+                        SUM(CASE WHEN GENDER='Female' AND (age>0 AND age<5) AND (DIFFAPPDISP>=0 and DIFFAPPDISP<36) THEN 1 else 0 end ) AS  '1-4FONEMONTH',
+                        SUM(CASE WHEN GENDER='Male' AND (age>4 AND age<10) AND (DIFFAPPDISP>=0 and DIFFAPPDISP<36) THEN 1 else 0 end ) AS  '5-9MONEMONTH',
+                        SUM(CASE WHEN GENDER='Female' AND (age>4 AND age<10) AND (DIFFAPPDISP>=0 and DIFFAPPDISP<36) THEN 1 else 0 end ) AS  '5-9FONEMONTH',
+                        SUM(CASE WHEN GENDER='Male' AND (age>9 AND age<15) AND (DIFFAPPDISP>=0 and DIFFAPPDISP<36) THEN 1 else 0 end ) AS  '10-14MONEMONTH',
+                        SUM(CASE WHEN GENDER='Female' AND (age>9 AND age<15) AND (DIFFAPPDISP>=0 and DIFFAPPDISP<36) THEN 1 else 0 end ) AS  '10-14FONEMONTH',
+                        SUM(CASE WHEN GENDER='Male' AND (age>14 AND age<20) AND (DIFFAPPDISP>=0 and DIFFAPPDISP<36) THEN 1 else 0 end ) AS  '15-19MONEMONTH',
+                        SUM(CASE WHEN GENDER='Female' AND (age>14 AND age<20) AND (DIFFAPPDISP>=0 and DIFFAPPDISP<36) THEN 1 else 0 end ) AS  '15-19FONEMONTH',
+                        SUM(CASE WHEN GENDER='Male' AND (age>19 AND age<25) AND (DIFFAPPDISP>=0 and DIFFAPPDISP<36) THEN 1 else 0 end ) AS  '20-24MONEMONTH',
+                        SUM(CASE WHEN GENDER='Female' AND (age>19 AND age<25) AND (DIFFAPPDISP>=0 and DIFFAPPDISP<36) THEN 1 else 0 end ) AS  '20-24FONEMONTH',
+                        SUM(CASE WHEN GENDER='Male' AND (age>24 AND age<30) AND (DIFFAPPDISP>=0 and DIFFAPPDISP<36) THEN 1 else 0 end ) AS  '25-29MONEMONTH',
+                        SUM(CASE WHEN GENDER='Female' AND (age>24 AND age<30) AND (DIFFAPPDISP>=0 and DIFFAPPDISP<36) THEN 1 else 0 end ) AS  '25-29FONEMONTH',
+                        SUM(CASE WHEN GENDER='Male' AND (age>29 AND age<35) AND (DIFFAPPDISP>=0 and DIFFAPPDISP<36) THEN 1 else 0 end ) AS  '30-34MONEMONTH',
+                        SUM(CASE WHEN GENDER='Female' AND (age>29 AND age<35) AND (DIFFAPPDISP>=0 and DIFFAPPDISP<36) THEN 1 else 0 end ) AS  '30-34FONEMONTH',
+                        SUM(CASE WHEN GENDER='Male' AND (age>34 AND age<40) AND (DIFFAPPDISP>=0 and DIFFAPPDISP<36) THEN 1 else 0 end ) AS  '35-39MONEMONTH',
+                        SUM(CASE WHEN GENDER='Female' AND (age>34 AND age<40) AND (DIFFAPPDISP>=0 and DIFFAPPDISP<36) THEN 1 else 0 end ) AS  '35-39FONEMONTH',
+                        SUM(CASE WHEN GENDER='Male' AND (age>39 AND age<45) AND (DIFFAPPDISP>=0 and DIFFAPPDISP<36) THEN 1 else 0 end ) AS  '40-44MONEMONTH',
+                        SUM(CASE WHEN GENDER='Female' AND (age>39 AND age<45) AND (DIFFAPPDISP>=0 and DIFFAPPDISP<36) THEN 1 else 0 end ) AS  '40-44FONEMONTH',
+                        SUM(CASE WHEN GENDER='Male' AND (age>44 AND age<50) AND (DIFFAPPDISP>=0 and DIFFAPPDISP<36) THEN 1 else 0 end ) AS  '45-49MONEMONTH',
+                        SUM(CASE WHEN GENDER='Female' AND (age>44 AND age<50) AND (DIFFAPPDISP>=0 and DIFFAPPDISP<36) THEN 1 else 0 end ) AS  '45-49FONEMONTH',
+                        SUM(CASE WHEN GENDER='Male' AND (age>=50) AND (DIFFAPPDISP>=0 and DIFFAPPDISP<36) THEN 1 else 0 end ) AS  '50MONEMONTH',
+                        SUM(CASE WHEN GENDER='Female' AND (age>=50) AND (DIFFAPPDISP>=0 and DIFFAPPDISP<36) THEN 1 else 0 end ) AS  '50FONEMONTH',
+                        SUM(CASE WHEN (GENDER='Female' or GENDER='Male') AND (DIFFAPPDISP>=0 and DIFFAPPDISP<36) THEN 1 else 0 end ) AS  'SUBTOTAL1MONTH',
 
-    SUM(CASE WHEN GENDER='Male' AND age<1 AND (DIFFAPPDISP>35 and DIFFAPPDISP<66) THEN 1 else 0 end ) AS  '1MTWOMONTH',
-    SUM(CASE WHEN GENDER='Female' AND age<1 AND (DIFFAPPDISP>35 and DIFFAPPDISP<66) THEN 1 else 0 end ) AS  '1FTWOMONTH',
-    SUM(CASE WHEN GENDER='Male' AND (age>0 AND age<5) AND (DIFFAPPDISP>35 and DIFFAPPDISP<66) THEN 1 else 0 end ) AS  '1-4MTWOMONTH',
-    SUM(CASE WHEN GENDER='Female' AND (age>0 AND age<5) AND (DIFFAPPDISP>35 and DIFFAPPDISP<66) THEN 1 else 0 end ) AS  '1-4FTWOMONTH',
-    SUM(CASE WHEN GENDER='Male' AND (age>4 AND age<10) AND (DIFFAPPDISP>35 and DIFFAPPDISP<66) THEN 1 else 0 end ) AS  '5-9MTWOMONTH',
-    SUM(CASE WHEN GENDER='Female' AND (age>4 AND age<10) AND (DIFFAPPDISP>35 and DIFFAPPDISP<66) THEN 1 else 0 end ) AS  '5-9FTWOMONTH',
-    SUM(CASE WHEN GENDER='Male' AND (age>9 AND age<15) AND (DIFFAPPDISP>35 and DIFFAPPDISP<66) THEN 1 else 0 end ) AS  '10-14MTWOMONTH',
-    SUM(CASE WHEN GENDER='Female' AND (age>9 AND age<15) AND (DIFFAPPDISP>35 and DIFFAPPDISP<66) THEN 1 else 0 end ) AS  '10-14FTWOMONTH',
-    SUM(CASE WHEN GENDER='Male' AND (age>14 AND age<20) AND (DIFFAPPDISP>35 and DIFFAPPDISP<66) THEN 1 else 0 end ) AS  '15-19MTWOMONTH',
-    SUM(CASE WHEN GENDER='Female' AND (age>14 AND age<20) AND (DIFFAPPDISP>35 and DIFFAPPDISP<66) THEN 1 else 0 end ) AS  '15-19FTWOMONTH',
-    SUM(CASE WHEN GENDER='Male' AND (age>19 AND age<25) AND (DIFFAPPDISP>35 and DIFFAPPDISP<66) THEN 1 else 0 end ) AS  '20-24MTWOMONTH',
-    SUM(CASE WHEN GENDER='Female' AND (age>19 AND age<25) AND (DIFFAPPDISP>35 and DIFFAPPDISP<66) THEN 1 else 0 end ) AS  '20-24FTWOMONTH',
-    SUM(CASE WHEN GENDER='Male' AND (age>24 AND age<30) AND (DIFFAPPDISP>35 and DIFFAPPDISP<66) THEN 1 else 0 end ) AS  '25-29MTWOMONTH',
-    SUM(CASE WHEN GENDER='Female' AND (age>24 AND age<30) AND (DIFFAPPDISP>35 and DIFFAPPDISP<66) THEN 1 else 0 end ) AS  '25-29FTWOMONTH',
-    SUM(CASE WHEN GENDER='Male' AND (age>29 AND age<35) AND (DIFFAPPDISP>35 and DIFFAPPDISP<66) THEN 1 else 0 end ) AS  '30-34MTWOMONTH',
-    SUM(CASE WHEN GENDER='Female' AND (age>29 AND age<35) AND (DIFFAPPDISP>35 and DIFFAPPDISP<66) THEN 1 else 0 end ) AS  '30-34FTWOMONTH',
-    SUM(CASE WHEN GENDER='Male' AND (age>34 AND age<40) AND (DIFFAPPDISP>35 and DIFFAPPDISP<66) THEN 1 else 0 end ) AS  '35-39MTWOMONTH',
-    SUM(CASE WHEN GENDER='Female' AND (age>34 AND age<40) AND (DIFFAPPDISP>35 and DIFFAPPDISP<66) THEN 1 else 0 end ) AS  '35-39FTWOMONTH',
-    SUM(CASE WHEN GENDER='Male' AND (age>39 AND age<45) AND (DIFFAPPDISP>35 and DIFFAPPDISP<66) THEN 1 else 0 end ) AS  '40-44MTWOMONTH',
-    SUM(CASE WHEN GENDER='Female' AND (age>39 AND age<45) AND (DIFFAPPDISP>35 and DIFFAPPDISP<66) THEN 1 else 0 end ) AS  '40-44FTWOMONTH',
-    SUM(CASE WHEN GENDER='Male' AND (age>44 AND age<50) AND (DIFFAPPDISP>35 and DIFFAPPDISP<66) THEN 1 else 0 end ) AS  '45-49MTWOMONTH',
-    SUM(CASE WHEN GENDER='Female' AND (age>44 AND age<50) AND (DIFFAPPDISP>35 and DIFFAPPDISP<66) THEN 1 else 0 end ) AS  '45-49FTWOMONTH',
-    SUM(CASE WHEN GENDER='Male' AND (age>=50) AND (DIFFAPPDISP>35 and DIFFAPPDISP<66) THEN 1 else 0 end ) AS  '50MTWOMONTH',
-    SUM(CASE WHEN GENDER='Female' AND (age>=50) AND (DIFFAPPDISP>35 and DIFFAPPDISP<66) THEN 1 else 0 end ) AS  '50FTWOMONTH',
-    SUM(CASE WHEN (GENDER='Female' or GENDER='Male') AND (DIFFAPPDISP>35 and DIFFAPPDISP<66) THEN 1 else 0 end ) AS  'SUBTOTAL2MONTH',
+                        SUM(CASE WHEN GENDER='Male' AND age<1 AND (DIFFAPPDISP>35 and DIFFAPPDISP<66) THEN 1 else 0 end ) AS  '1MTWOMONTH',
+                        SUM(CASE WHEN GENDER='Female' AND age<1 AND (DIFFAPPDISP>35 and DIFFAPPDISP<66) THEN 1 else 0 end ) AS  '1FTWOMONTH',
+                        SUM(CASE WHEN GENDER='Male' AND (age>0 AND age<5) AND (DIFFAPPDISP>35 and DIFFAPPDISP<66) THEN 1 else 0 end ) AS  '1-4MTWOMONTH',
+                        SUM(CASE WHEN GENDER='Female' AND (age>0 AND age<5) AND (DIFFAPPDISP>35 and DIFFAPPDISP<66) THEN 1 else 0 end ) AS  '1-4FTWOMONTH',
+                        SUM(CASE WHEN GENDER='Male' AND (age>4 AND age<10) AND (DIFFAPPDISP>35 and DIFFAPPDISP<66) THEN 1 else 0 end ) AS  '5-9MTWOMONTH',
+                        SUM(CASE WHEN GENDER='Female' AND (age>4 AND age<10) AND (DIFFAPPDISP>35 and DIFFAPPDISP<66) THEN 1 else 0 end ) AS  '5-9FTWOMONTH',
+                        SUM(CASE WHEN GENDER='Male' AND (age>9 AND age<15) AND (DIFFAPPDISP>35 and DIFFAPPDISP<66) THEN 1 else 0 end ) AS  '10-14MTWOMONTH',
+                        SUM(CASE WHEN GENDER='Female' AND (age>9 AND age<15) AND (DIFFAPPDISP>35 and DIFFAPPDISP<66) THEN 1 else 0 end ) AS  '10-14FTWOMONTH',
+                        SUM(CASE WHEN GENDER='Male' AND (age>14 AND age<20) AND (DIFFAPPDISP>35 and DIFFAPPDISP<66) THEN 1 else 0 end ) AS  '15-19MTWOMONTH',
+                        SUM(CASE WHEN GENDER='Female' AND (age>14 AND age<20) AND (DIFFAPPDISP>35 and DIFFAPPDISP<66) THEN 1 else 0 end ) AS  '15-19FTWOMONTH',
+                        SUM(CASE WHEN GENDER='Male' AND (age>19 AND age<25) AND (DIFFAPPDISP>35 and DIFFAPPDISP<66) THEN 1 else 0 end ) AS  '20-24MTWOMONTH',
+                        SUM(CASE WHEN GENDER='Female' AND (age>19 AND age<25) AND (DIFFAPPDISP>35 and DIFFAPPDISP<66) THEN 1 else 0 end ) AS  '20-24FTWOMONTH',
+                        SUM(CASE WHEN GENDER='Male' AND (age>24 AND age<30) AND (DIFFAPPDISP>35 and DIFFAPPDISP<66) THEN 1 else 0 end ) AS  '25-29MTWOMONTH',
+                        SUM(CASE WHEN GENDER='Female' AND (age>24 AND age<30) AND (DIFFAPPDISP>35 and DIFFAPPDISP<66) THEN 1 else 0 end ) AS  '25-29FTWOMONTH',
+                        SUM(CASE WHEN GENDER='Male' AND (age>29 AND age<35) AND (DIFFAPPDISP>35 and DIFFAPPDISP<66) THEN 1 else 0 end ) AS  '30-34MTWOMONTH',
+                        SUM(CASE WHEN GENDER='Female' AND (age>29 AND age<35) AND (DIFFAPPDISP>35 and DIFFAPPDISP<66) THEN 1 else 0 end ) AS  '30-34FTWOMONTH',
+                        SUM(CASE WHEN GENDER='Male' AND (age>34 AND age<40) AND (DIFFAPPDISP>35 and DIFFAPPDISP<66) THEN 1 else 0 end ) AS  '35-39MTWOMONTH',
+                        SUM(CASE WHEN GENDER='Female' AND (age>34 AND age<40) AND (DIFFAPPDISP>35 and DIFFAPPDISP<66) THEN 1 else 0 end ) AS  '35-39FTWOMONTH',
+                        SUM(CASE WHEN GENDER='Male' AND (age>39 AND age<45) AND (DIFFAPPDISP>35 and DIFFAPPDISP<66) THEN 1 else 0 end ) AS  '40-44MTWOMONTH',
+                        SUM(CASE WHEN GENDER='Female' AND (age>39 AND age<45) AND (DIFFAPPDISP>35 and DIFFAPPDISP<66) THEN 1 else 0 end ) AS  '40-44FTWOMONTH',
+                        SUM(CASE WHEN GENDER='Male' AND (age>44 AND age<50) AND (DIFFAPPDISP>35 and DIFFAPPDISP<66) THEN 1 else 0 end ) AS  '45-49MTWOMONTH',
+                        SUM(CASE WHEN GENDER='Female' AND (age>44 AND age<50) AND (DIFFAPPDISP>35 and DIFFAPPDISP<66) THEN 1 else 0 end ) AS  '45-49FTWOMONTH',
+                        SUM(CASE WHEN GENDER='Male' AND (age>=50) AND (DIFFAPPDISP>35 and DIFFAPPDISP<66) THEN 1 else 0 end ) AS  '50MTWOMONTH',
+                        SUM(CASE WHEN GENDER='Female' AND (age>=50) AND (DIFFAPPDISP>35 and DIFFAPPDISP<66) THEN 1 else 0 end ) AS  '50FTWOMONTH',
+                        SUM(CASE WHEN (GENDER='Female' or GENDER='Male') AND (DIFFAPPDISP>35 and DIFFAPPDISP<66) THEN 1 else 0 end ) AS  'SUBTOTAL2MONTH',
 
-    SUM(CASE WHEN GENDER='Male' AND age<1 AND (DIFFAPPDISP>65 and DIFFAPPDISP<96) THEN 1 else 0 end ) AS  '1MTHREEMONTH',
-    SUM(CASE WHEN GENDER='Female' AND age<1 AND (DIFFAPPDISP>65 and DIFFAPPDISP<96) THEN 1 else 0 end ) AS  '1FTHREEMONTH',
-    SUM(CASE WHEN GENDER='Male' AND (age>60 AND age<5) AND (DIFFAPPDISP>65 and DIFFAPPDISP<96) THEN 1 else 0 end ) AS  '1-4MTHREEMONTH',
-    SUM(CASE WHEN GENDER='Female' AND (age>60 AND age<5) AND (DIFFAPPDISP>65 and DIFFAPPDISP<96) THEN 1 else 0 end ) AS  '1-4FTHREEMONTH',
-    SUM(CASE WHEN GENDER='Male' AND (age>4 AND age<10) AND (DIFFAPPDISP>65 and DIFFAPPDISP<96) THEN 1 else 0 end ) AS  '5-9MTHREEMONTH',
-    SUM(CASE WHEN GENDER='Female' AND (age>4 AND age<10) AND (DIFFAPPDISP>65 and DIFFAPPDISP<96) THEN 1 else 0 end ) AS  '5-9FTHREEMONTH',
-    SUM(CASE WHEN GENDER='Male' AND (age>9 AND age<15) AND (DIFFAPPDISP>65 and DIFFAPPDISP<96) THEN 1 else 0 end ) AS  '10-14MTHREEMONTH',
-    SUM(CASE WHEN GENDER='Female' AND (age>9 AND age<15) AND (DIFFAPPDISP>65 and DIFFAPPDISP<96) THEN 1 else 0 end ) AS  '10-14FTHREEMONTH',
-    SUM(CASE WHEN GENDER='Male' AND (age>14 AND age<20) AND (DIFFAPPDISP>65 and DIFFAPPDISP<96) THEN 1 else 0 end ) AS  '15-19MTHREEMONTH',
-    SUM(CASE WHEN GENDER='Female' AND (age>14 AND age<20) AND (DIFFAPPDISP>65 and DIFFAPPDISP<96) THEN 1 else 0 end ) AS  '15-19FTHREEMONTH',
-    SUM(CASE WHEN GENDER='Male' AND (age>19 AND age<25) AND (DIFFAPPDISP>65 and DIFFAPPDISP<96) THEN 1 else 0 end ) AS  '20-24MTHREEMONTH',
-    SUM(CASE WHEN GENDER='Female' AND (age>19 AND age<25) AND (DIFFAPPDISP>65 and DIFFAPPDISP<96) THEN 1 else 0 end ) AS  '20-24FTHREEMONTH',
-    SUM(CASE WHEN GENDER='Male' AND (age>24 AND age<30) AND (DIFFAPPDISP>65 and DIFFAPPDISP<96) THEN 1 else 0 end ) AS  '25-29MTHREEMONTH',
-    SUM(CASE WHEN GENDER='Female' AND (age>24 AND age<30) AND (DIFFAPPDISP>65 and DIFFAPPDISP<96) THEN 1 else 0 end ) AS  '25-29FTHREEMONTH',
-    SUM(CASE WHEN GENDER='Male' AND (age>29 AND age<35) AND (DIFFAPPDISP>65 and DIFFAPPDISP<96) THEN 1 else 0 end ) AS  '30-34MTHREEMONTH',
-    SUM(CASE WHEN GENDER='Female' AND (age>29 AND age<35) AND (DIFFAPPDISP>65 and DIFFAPPDISP<96) THEN 1 else 0 end ) AS  '30-34FTHREEMONTH',
-    SUM(CASE WHEN GENDER='Male' AND (age>34 AND age<40) AND (DIFFAPPDISP>65 and DIFFAPPDISP<96) THEN 1 else 0 end ) AS  '35-39MTHREEMONTH',
-    SUM(CASE WHEN GENDER='Female' AND (age>34 AND age<40) AND (DIFFAPPDISP>65 and DIFFAPPDISP<96) THEN 1 else 0 end ) AS  '35-39FTHREEMONTH',
-    SUM(CASE WHEN GENDER='Male' AND (age>39 AND age<45) AND (DIFFAPPDISP>65 and DIFFAPPDISP<96) THEN 1 else 0 end ) AS  '40-44MTHREEMONTH',
-    SUM(CASE WHEN GENDER='Female' AND (age>39 AND age<45) AND (DIFFAPPDISP>65 and DIFFAPPDISP<96) THEN 1 else 0 end ) AS  '40-44FTHREEMONTH',
-    SUM(CASE WHEN GENDER='Male' AND (age>44 AND age<50) AND (DIFFAPPDISP>65 and DIFFAPPDISP<96) THEN 1 else 0 end ) AS  '45-49MTHREEMONTH',
-    SUM(CASE WHEN GENDER='Female' AND (age>44 AND age<50) AND (DIFFAPPDISP>65 and DIFFAPPDISP<96) THEN 1 else 0 end ) AS  '45-49FTHREEMONTH',
-    SUM(CASE WHEN GENDER='Male' AND (age>=50) AND (DIFFAPPDISP>65 and DIFFAPPDISP<96) THEN 1 else 0 end ) AS  '50MTHREEMONTH',
-    SUM(CASE WHEN GENDER='Female' AND (age>=50) AND (DIFFAPPDISP>65 and DIFFAPPDISP<96) THEN 1 else 0 end ) AS  '50FTHREEMONTH',
-    SUM(CASE WHEN (GENDER='Female' or GENDER='Male') AND (DIFFAPPDISP>65 and DIFFAPPDISP<96) THEN 1 else 0 end ) AS  'SUBTOTAL3MONTH',
-
-
-    SUM(CASE WHEN GENDER='Male' AND age<1 AND (DIFFAPPDISP>95 and DIFFAPPDISP<126) THEN 1 else 0 end ) AS  '1MFOURMONTH',
-    SUM(CASE WHEN GENDER='Female' AND age<1 AND (DIFFAPPDISP>95 and DIFFAPPDISP<126) THEN 1 else 0 end ) AS  '1FFOURMONTH',
-    SUM(CASE WHEN GENDER='Male' AND (age>90 AND age<5) AND (DIFFAPPDISP>95 and DIFFAPPDISP<126) THEN 1 else 0 end ) AS  '1-4MFOURMONTH',
-    SUM(CASE WHEN GENDER='Female' AND (age>90 AND age<5) AND (DIFFAPPDISP>95 and DIFFAPPDISP<126) THEN 1 else 0 end ) AS  '1-4FFOURMONTH',
-    SUM(CASE WHEN GENDER='Male' AND (age>4 AND age<10) AND (DIFFAPPDISP>95 and DIFFAPPDISP<126) THEN 1 else 0 end ) AS  '5-9MFOURMONTH',
-    SUM(CASE WHEN GENDER='Female' AND (age>4 AND age<10) AND (DIFFAPPDISP>95 and DIFFAPPDISP<126) THEN 1 else 0 end ) AS  '5-9FFOURMONTH',
-    SUM(CASE WHEN GENDER='Male' AND (age>9 AND age<15) AND (DIFFAPPDISP>95 and DIFFAPPDISP<126) THEN 1 else 0 end ) AS  '10-14MFOURMONTH',
-    SUM(CASE WHEN GENDER='Female' AND (age>9 AND age<15) AND (DIFFAPPDISP>95 and DIFFAPPDISP<126) THEN 1 else 0 end ) AS  '10-14FFOURMONTH',
-    SUM(CASE WHEN GENDER='Male' AND (age>14 AND age<20) AND (DIFFAPPDISP>95 and DIFFAPPDISP<126) THEN 1 else 0 end ) AS  '15-19MFOURMONTH',
-    SUM(CASE WHEN GENDER='Female' AND (age>14 AND age<20) AND (DIFFAPPDISP>95 and DIFFAPPDISP<126) THEN 1 else 0 end ) AS  '15-19FFOURMONTH',
-    SUM(CASE WHEN GENDER='Male' AND (age>19 AND age<25) AND (DIFFAPPDISP>95 and DIFFAPPDISP<126) THEN 1 else 0 end ) AS  '20-24MFOURMONTH',
-    SUM(CASE WHEN GENDER='Female' AND (age>19 AND age<25) AND (DIFFAPPDISP>95 and DIFFAPPDISP<126) THEN 1 else 0 end ) AS  '20-24FFOURMONTH',
-    SUM(CASE WHEN GENDER='Male' AND (age>24 AND age<30) AND (DIFFAPPDISP>95 and DIFFAPPDISP<126) THEN 1 else 0 end ) AS  '25-29MFOURMONTH',
-    SUM(CASE WHEN GENDER='Female' AND (age>24 AND age<30) AND (DIFFAPPDISP>95 and DIFFAPPDISP<126) THEN 1 else 0 end ) AS  '25-29FFOURMONTH',
-    SUM(CASE WHEN GENDER='Male' AND (age>29 AND age<35) AND (DIFFAPPDISP>95 and DIFFAPPDISP<126) THEN 1 else 0 end ) AS  '30-34MFOURMONTH',
-    SUM(CASE WHEN GENDER='Female' AND (age>29 AND age<35) AND (DIFFAPPDISP>95 and DIFFAPPDISP<126) THEN 1 else 0 end ) AS  '30-34FFOURMONTH',
-    SUM(CASE WHEN GENDER='Male' AND (age>34 AND age<40) AND (DIFFAPPDISP>95 and DIFFAPPDISP<126) THEN 1 else 0 end ) AS  '35-39MFOURMONTH',
-    SUM(CASE WHEN GENDER='Female' AND (age>34 AND age<40) AND (DIFFAPPDISP>95 and DIFFAPPDISP<126) THEN 1 else 0 end ) AS  '35-39FFOURMONTH',
-    SUM(CASE WHEN GENDER='Male' AND (age>39 AND age<45) AND (DIFFAPPDISP>95 and DIFFAPPDISP<126) THEN 1 else 0 end ) AS  '40-44MFOURMONTH',
-    SUM(CASE WHEN GENDER='Female' AND (age>39 AND age<45) AND (DIFFAPPDISP>95 and DIFFAPPDISP<126) THEN 1 else 0 end ) AS  '40-44FFOURMONTH',
-    SUM(CASE WHEN GENDER='Male' AND (age>44 AND age<50) AND (DIFFAPPDISP>95 and DIFFAPPDISP<126) THEN 1 else 0 end ) AS  '45-49MFOURMONTH',
-    SUM(CASE WHEN GENDER='Female' AND (age>44 AND age<50) AND (DIFFAPPDISP>95 and DIFFAPPDISP<126) THEN 1 else 0 end ) AS  '45-49FFOURMONTH',
-    SUM(CASE WHEN GENDER='Male' AND (age>=50) AND (DIFFAPPDISP>95 and DIFFAPPDISP<126) THEN 1 else 0 end ) AS  '50MFOURMONTH',
-    SUM(CASE WHEN GENDER='Female' AND (age>=50) AND (DIFFAPPDISP>95 and DIFFAPPDISP<126) THEN 1 else 0 end ) AS  '50FFOURMONTH',
-    SUM(CASE WHEN (GENDER='Female' or GENDER='Male') AND (DIFFAPPDISP>95 and DIFFAPPDISP<126) THEN 1 else 0 end ) AS  'SUBTOTAL4MONTH',
-
-    SUM(CASE WHEN GENDER='Male' AND age<1 AND (DIFFAPPDISP>125 and DIFFAPPDISP<156) THEN 1 else 0 end ) AS  '1MFIVEMONTH',
-    SUM(CASE WHEN GENDER='Female' AND age<1 AND (DIFFAPPDISP>125 and DIFFAPPDISP<156) THEN 1 else 0 end ) AS  '1FFIVEMONTH',
-    SUM(CASE WHEN GENDER='Male' AND (age>90 AND age<5) AND (DIFFAPPDISP>125 and DIFFAPPDISP<156) THEN 1 else 0 end ) AS  '1-4MFIVEMONTH',
-    SUM(CASE WHEN GENDER='Female' AND (age>90 AND age<5) AND (DIFFAPPDISP>125 and DIFFAPPDISP<156) THEN 1 else 0 end ) AS  '1-4FFIVEMONTH',
-    SUM(CASE WHEN GENDER='Male' AND (age>4 AND age<10) AND (DIFFAPPDISP>125 and DIFFAPPDISP<156) THEN 1 else 0 end ) AS  '5-9MFIVEMONTH',
-    SUM(CASE WHEN GENDER='Female' AND (age>4 AND age<10) AND (DIFFAPPDISP>125 and DIFFAPPDISP<156) THEN 1 else 0 end ) AS  '5-9FFIVEMONTH',
-    SUM(CASE WHEN GENDER='Male' AND (age>9 AND age<15) AND (DIFFAPPDISP>125 and DIFFAPPDISP<156) THEN 1 else 0 end ) AS  '10-14MFIVEMONTH',
-    SUM(CASE WHEN GENDER='Female' AND (age>9 AND age<15) AND (DIFFAPPDISP>125 and DIFFAPPDISP<156) THEN 1 else 0 end ) AS  '10-14FFIVEMONTH',
-    SUM(CASE WHEN GENDER='Male' AND (age>14 AND age<20) AND (DIFFAPPDISP>125 and DIFFAPPDISP<156) THEN 1 else 0 end ) AS  '15-19MFIVEMONTH',
-    SUM(CASE WHEN GENDER='Female' AND (age>14 AND age<20) AND (DIFFAPPDISP>125 and DIFFAPPDISP<156) THEN 1 else 0 end ) AS  '15-19FFIVEMONTH',
-    SUM(CASE WHEN GENDER='Male' AND (age>19 AND age<25) AND (DIFFAPPDISP>125 and DIFFAPPDISP<156) THEN 1 else 0 end ) AS  '20-24MFIVEMONTH',
-    SUM(CASE WHEN GENDER='Female' AND (age>19 AND age<25) AND (DIFFAPPDISP>125 and DIFFAPPDISP<156) THEN 1 else 0 end ) AS  '20-24FFIVEMONTH',
-    SUM(CASE WHEN GENDER='Male' AND (age>24 AND age<30) AND (DIFFAPPDISP>125 and DIFFAPPDISP<156) THEN 1 else 0 end ) AS  '25-29MFIVEMONTH',
-    SUM(CASE WHEN GENDER='Female' AND (age>24 AND age<30) AND (DIFFAPPDISP>125 and DIFFAPPDISP<156) THEN 1 else 0 end ) AS  '25-29FFIVEMONTH',
-    SUM(CASE WHEN GENDER='Male' AND (age>29 AND age<35) AND (DIFFAPPDISP>125 and DIFFAPPDISP<156) THEN 1 else 0 end ) AS  '30-34MFIVEMONTH',
-    SUM(CASE WHEN GENDER='Female' AND (age>29 AND age<35) AND (DIFFAPPDISP>125 and DIFFAPPDISP<156) THEN 1 else 0 end ) AS  '30-34FFIVEMONTH',
-    SUM(CASE WHEN GENDER='Male' AND (age>34 AND age<40) AND (DIFFAPPDISP>125 and DIFFAPPDISP<156) THEN 1 else 0 end ) AS  '35-39MFIVEMONTH',
-    SUM(CASE WHEN GENDER='Female' AND (age>34 AND age<40) AND (DIFFAPPDISP>125 and DIFFAPPDISP<156) THEN 1 else 0 end ) AS  '35-39FFIVEMONTH',
-    SUM(CASE WHEN GENDER='Male' AND (age>39 AND age<45) AND (DIFFAPPDISP>125 and DIFFAPPDISP<156) THEN 1 else 0 end ) AS  '40-44MFIVEMONTH',
-    SUM(CASE WHEN GENDER='Female' AND (age>39 AND age<45) AND (DIFFAPPDISP>125 and DIFFAPPDISP<156) THEN 1 else 0 end ) AS  '40-44FFIVEMONTH',
-    SUM(CASE WHEN GENDER='Male' AND (age>44 AND age<50) AND (DIFFAPPDISP>125 and DIFFAPPDISP<156) THEN 1 else 0 end ) AS  '45-49MFIVEMONTH',
-    SUM(CASE WHEN GENDER='Female' AND (age>44 AND age<50) AND (DIFFAPPDISP>125 and DIFFAPPDISP<156) THEN 1 else 0 end ) AS  '45-49FFIVEMONTH',
-    SUM(CASE WHEN GENDER='Male' AND (age>=50) AND (DIFFAPPDISP>125 and DIFFAPPDISP<156) THEN 1 else 0 end ) AS  '50MFIVEMONTH',
-    SUM(CASE WHEN GENDER='Female' AND (age>=50) AND (DIFFAPPDISP>125 and DIFFAPPDISP<156) THEN 1 else 0 end ) AS  '50FFIVEMONTH',
-    SUM(CASE WHEN (GENDER='Female' or GENDER='Male') AND (DIFFAPPDISP>125 and DIFFAPPDISP<156) THEN 1 else 0 end ) AS  'SUBTOTAL5MONTH',
+                        SUM(CASE WHEN GENDER='Male' AND age<1 AND (DIFFAPPDISP>65 and DIFFAPPDISP<96) THEN 1 else 0 end ) AS  '1MTHREEMONTH',
+                        SUM(CASE WHEN GENDER='Female' AND age<1 AND (DIFFAPPDISP>65 and DIFFAPPDISP<96) THEN 1 else 0 end ) AS  '1FTHREEMONTH',
+                        SUM(CASE WHEN GENDER='Male' AND (age>60 AND age<5) AND (DIFFAPPDISP>65 and DIFFAPPDISP<96) THEN 1 else 0 end ) AS  '1-4MTHREEMONTH',
+                        SUM(CASE WHEN GENDER='Female' AND (age>60 AND age<5) AND (DIFFAPPDISP>65 and DIFFAPPDISP<96) THEN 1 else 0 end ) AS  '1-4FTHREEMONTH',
+                        SUM(CASE WHEN GENDER='Male' AND (age>4 AND age<10) AND (DIFFAPPDISP>65 and DIFFAPPDISP<96) THEN 1 else 0 end ) AS  '5-9MTHREEMONTH',
+                        SUM(CASE WHEN GENDER='Female' AND (age>4 AND age<10) AND (DIFFAPPDISP>65 and DIFFAPPDISP<96) THEN 1 else 0 end ) AS  '5-9FTHREEMONTH',
+                        SUM(CASE WHEN GENDER='Male' AND (age>9 AND age<15) AND (DIFFAPPDISP>65 and DIFFAPPDISP<96) THEN 1 else 0 end ) AS  '10-14MTHREEMONTH',
+                        SUM(CASE WHEN GENDER='Female' AND (age>9 AND age<15) AND (DIFFAPPDISP>65 and DIFFAPPDISP<96) THEN 1 else 0 end ) AS  '10-14FTHREEMONTH',
+                        SUM(CASE WHEN GENDER='Male' AND (age>14 AND age<20) AND (DIFFAPPDISP>65 and DIFFAPPDISP<96) THEN 1 else 0 end ) AS  '15-19MTHREEMONTH',
+                        SUM(CASE WHEN GENDER='Female' AND (age>14 AND age<20) AND (DIFFAPPDISP>65 and DIFFAPPDISP<96) THEN 1 else 0 end ) AS  '15-19FTHREEMONTH',
+                        SUM(CASE WHEN GENDER='Male' AND (age>19 AND age<25) AND (DIFFAPPDISP>65 and DIFFAPPDISP<96) THEN 1 else 0 end ) AS  '20-24MTHREEMONTH',
+                        SUM(CASE WHEN GENDER='Female' AND (age>19 AND age<25) AND (DIFFAPPDISP>65 and DIFFAPPDISP<96) THEN 1 else 0 end ) AS  '20-24FTHREEMONTH',
+                        SUM(CASE WHEN GENDER='Male' AND (age>24 AND age<30) AND (DIFFAPPDISP>65 and DIFFAPPDISP<96) THEN 1 else 0 end ) AS  '25-29MTHREEMONTH',
+                        SUM(CASE WHEN GENDER='Female' AND (age>24 AND age<30) AND (DIFFAPPDISP>65 and DIFFAPPDISP<96) THEN 1 else 0 end ) AS  '25-29FTHREEMONTH',
+                        SUM(CASE WHEN GENDER='Male' AND (age>29 AND age<35) AND (DIFFAPPDISP>65 and DIFFAPPDISP<96) THEN 1 else 0 end ) AS  '30-34MTHREEMONTH',
+                        SUM(CASE WHEN GENDER='Female' AND (age>29 AND age<35) AND (DIFFAPPDISP>65 and DIFFAPPDISP<96) THEN 1 else 0 end ) AS  '30-34FTHREEMONTH',
+                        SUM(CASE WHEN GENDER='Male' AND (age>34 AND age<40) AND (DIFFAPPDISP>65 and DIFFAPPDISP<96) THEN 1 else 0 end ) AS  '35-39MTHREEMONTH',
+                        SUM(CASE WHEN GENDER='Female' AND (age>34 AND age<40) AND (DIFFAPPDISP>65 and DIFFAPPDISP<96) THEN 1 else 0 end ) AS  '35-39FTHREEMONTH',
+                        SUM(CASE WHEN GENDER='Male' AND (age>39 AND age<45) AND (DIFFAPPDISP>65 and DIFFAPPDISP<96) THEN 1 else 0 end ) AS  '40-44MTHREEMONTH',
+                        SUM(CASE WHEN GENDER='Female' AND (age>39 AND age<45) AND (DIFFAPPDISP>65 and DIFFAPPDISP<96) THEN 1 else 0 end ) AS  '40-44FTHREEMONTH',
+                        SUM(CASE WHEN GENDER='Male' AND (age>44 AND age<50) AND (DIFFAPPDISP>65 and DIFFAPPDISP<96) THEN 1 else 0 end ) AS  '45-49MTHREEMONTH',
+                        SUM(CASE WHEN GENDER='Female' AND (age>44 AND age<50) AND (DIFFAPPDISP>65 and DIFFAPPDISP<96) THEN 1 else 0 end ) AS  '45-49FTHREEMONTH',
+                        SUM(CASE WHEN GENDER='Male' AND (age>=50) AND (DIFFAPPDISP>65 and DIFFAPPDISP<96) THEN 1 else 0 end ) AS  '50MTHREEMONTH',
+                        SUM(CASE WHEN GENDER='Female' AND (age>=50) AND (DIFFAPPDISP>65 and DIFFAPPDISP<96) THEN 1 else 0 end ) AS  '50FTHREEMONTH',
+                        SUM(CASE WHEN (GENDER='Female' or GENDER='Male') AND (DIFFAPPDISP>65 and DIFFAPPDISP<96) THEN 1 else 0 end ) AS  'SUBTOTAL3MONTH',
 
 
-    SUM(CASE WHEN GENDER='Male' AND age<1 AND (DIFFAPPDISP>155) THEN 1 else 0 end ) AS  '1MSIXMONTH',
-    SUM(CASE WHEN GENDER='Female' AND age<1 AND (DIFFAPPDISP>155) THEN 1 else 0 end ) AS  '1FSIXMONTH',
-    SUM(CASE WHEN GENDER='Male' AND (age>90 AND age<5) AND (DIFFAPPDISP>155) THEN 1 else 0 end ) AS  '1-4MSIXMONTH',
-    SUM(CASE WHEN GENDER='Female' AND (age>90 AND age<5) AND (DIFFAPPDISP>155) THEN 1 else 0 end ) AS  '1-4FSIXMONTH',
-    SUM(CASE WHEN GENDER='Male' AND (age>4 AND age<10) AND (DIFFAPPDISP>155) THEN 1 else 0 end ) AS  '5-9MSIXMONTH',
-    SUM(CASE WHEN GENDER='Female' AND (age>4 AND age<10) AND (DIFFAPPDISP>155) THEN 1 else 0 end ) AS  '5-9FSIXMONTH',
-    SUM(CASE WHEN GENDER='Male' AND (age>9 AND age<15) AND (DIFFAPPDISP>155) THEN 1 else 0 end ) AS  '10-14MSIXMONTH',
-    SUM(CASE WHEN GENDER='Female' AND (age>9 AND age<15) AND (DIFFAPPDISP>155) THEN 1 else 0 end ) AS  '10-14FSIXMONTH',
-    SUM(CASE WHEN GENDER='Male' AND (age>14 AND age<20) AND (DIFFAPPDISP>155) THEN 1 else 0 end ) AS  '15-19MSIXMONTH',
-    SUM(CASE WHEN GENDER='Female' AND (age>14 AND age<20) AND (DIFFAPPDISP>155) THEN 1 else 0 end ) AS  '15-19FSIXMONTH',
-    SUM(CASE WHEN GENDER='Male' AND (age>19 AND age<25) AND (DIFFAPPDISP>155) THEN 1 else 0 end ) AS  '20-24MSIXMONTH',
-    SUM(CASE WHEN GENDER='Female' AND (age>19 AND age<25) AND (DIFFAPPDISP>155) THEN 1 else 0 end ) AS  '20-24FSIXMONTH',
-    SUM(CASE WHEN GENDER='Male' AND (age>24 AND age<30) AND (DIFFAPPDISP>155) THEN 1 else 0 end ) AS  '25-29MSIXMONTH',
-    SUM(CASE WHEN GENDER='Female' AND (age>24 AND age<30) AND (DIFFAPPDISP>155) THEN 1 else 0 end ) AS  '25-29FSIXMONTH',
-    SUM(CASE WHEN GENDER='Male' AND (age>29 AND age<35) AND (DIFFAPPDISP>155) THEN 1 else 0 end ) AS  '30-34MSIXMONTH',
-    SUM(CASE WHEN GENDER='Female' AND (age>29 AND age<35) AND (DIFFAPPDISP>155) THEN 1 else 0 end ) AS  '30-34FSIXMONTH',
-    SUM(CASE WHEN GENDER='Male' AND (age>34 AND age<40) AND (DIFFAPPDISP>155) THEN 1 else 0 end ) AS  '35-39MSIXMONTH',
-    SUM(CASE WHEN GENDER='Female' AND (age>34 AND age<40) AND (DIFFAPPDISP>155) THEN 1 else 0 end ) AS  '35-39FSIXMONTH',
-    SUM(CASE WHEN GENDER='Male' AND (age>39 AND age<45) AND (DIFFAPPDISP>155) THEN 1 else 0 end ) AS  '40-44MSIXMONTH',
-    SUM(CASE WHEN GENDER='Female' AND (age>39 AND age<45) AND (DIFFAPPDISP>155) THEN 1 else 0 end ) AS  '40-44FSIXMONTH',
-    SUM(CASE WHEN GENDER='Male' AND (age>44 AND age<50) AND (DIFFAPPDISP>155) THEN 1 else 0 end ) AS  '45-49MSIXMONTH',
-    SUM(CASE WHEN GENDER='Female' AND (age>44 AND age<50) AND (DIFFAPPDISP>155) THEN 1 else 0 end ) AS  '45-49FSIXMONTH',
-    SUM(CASE WHEN GENDER='Male' AND (age>=50) AND (DIFFAPPDISP>155) THEN 1 else 0 end ) AS  '50MSIXMONTH',
-    SUM(CASE WHEN GENDER='Female' AND (age>=50) AND (DIFFAPPDISP>155) THEN 1 else 0 end ) AS  '50FSIXMONTH',
-    SUM(CASE WHEN (GENDER='Female' or GENDER='Male') AND (DIFFAPPDISP>155) THEN 1 else 0 end ) AS  'SUBTOTAL6MONTH',
-    SUM(CASE WHEN (GENDER='Female' or GENDER='Male') THEN 1 else 0 end ) AS  'TOTALMONTHS',
+                        SUM(CASE WHEN GENDER='Male' AND age<1 AND (DIFFAPPDISP>95 and DIFFAPPDISP<126) THEN 1 else 0 end ) AS  '1MFOURMONTH',
+                        SUM(CASE WHEN GENDER='Female' AND age<1 AND (DIFFAPPDISP>95 and DIFFAPPDISP<126) THEN 1 else 0 end ) AS  '1FFOURMONTH',
+                        SUM(CASE WHEN GENDER='Male' AND (age>90 AND age<5) AND (DIFFAPPDISP>95 and DIFFAPPDISP<126) THEN 1 else 0 end ) AS  '1-4MFOURMONTH',
+                        SUM(CASE WHEN GENDER='Female' AND (age>90 AND age<5) AND (DIFFAPPDISP>95 and DIFFAPPDISP<126) THEN 1 else 0 end ) AS  '1-4FFOURMONTH',
+                        SUM(CASE WHEN GENDER='Male' AND (age>4 AND age<10) AND (DIFFAPPDISP>95 and DIFFAPPDISP<126) THEN 1 else 0 end ) AS  '5-9MFOURMONTH',
+                        SUM(CASE WHEN GENDER='Female' AND (age>4 AND age<10) AND (DIFFAPPDISP>95 and DIFFAPPDISP<126) THEN 1 else 0 end ) AS  '5-9FFOURMONTH',
+                        SUM(CASE WHEN GENDER='Male' AND (age>9 AND age<15) AND (DIFFAPPDISP>95 and DIFFAPPDISP<126) THEN 1 else 0 end ) AS  '10-14MFOURMONTH',
+                        SUM(CASE WHEN GENDER='Female' AND (age>9 AND age<15) AND (DIFFAPPDISP>95 and DIFFAPPDISP<126) THEN 1 else 0 end ) AS  '10-14FFOURMONTH',
+                        SUM(CASE WHEN GENDER='Male' AND (age>14 AND age<20) AND (DIFFAPPDISP>95 and DIFFAPPDISP<126) THEN 1 else 0 end ) AS  '15-19MFOURMONTH',
+                        SUM(CASE WHEN GENDER='Female' AND (age>14 AND age<20) AND (DIFFAPPDISP>95 and DIFFAPPDISP<126) THEN 1 else 0 end ) AS  '15-19FFOURMONTH',
+                        SUM(CASE WHEN GENDER='Male' AND (age>19 AND age<25) AND (DIFFAPPDISP>95 and DIFFAPPDISP<126) THEN 1 else 0 end ) AS  '20-24MFOURMONTH',
+                        SUM(CASE WHEN GENDER='Female' AND (age>19 AND age<25) AND (DIFFAPPDISP>95 and DIFFAPPDISP<126) THEN 1 else 0 end ) AS  '20-24FFOURMONTH',
+                        SUM(CASE WHEN GENDER='Male' AND (age>24 AND age<30) AND (DIFFAPPDISP>95 and DIFFAPPDISP<126) THEN 1 else 0 end ) AS  '25-29MFOURMONTH',
+                        SUM(CASE WHEN GENDER='Female' AND (age>24 AND age<30) AND (DIFFAPPDISP>95 and DIFFAPPDISP<126) THEN 1 else 0 end ) AS  '25-29FFOURMONTH',
+                        SUM(CASE WHEN GENDER='Male' AND (age>29 AND age<35) AND (DIFFAPPDISP>95 and DIFFAPPDISP<126) THEN 1 else 0 end ) AS  '30-34MFOURMONTH',
+                        SUM(CASE WHEN GENDER='Female' AND (age>29 AND age<35) AND (DIFFAPPDISP>95 and DIFFAPPDISP<126) THEN 1 else 0 end ) AS  '30-34FFOURMONTH',
+                        SUM(CASE WHEN GENDER='Male' AND (age>34 AND age<40) AND (DIFFAPPDISP>95 and DIFFAPPDISP<126) THEN 1 else 0 end ) AS  '35-39MFOURMONTH',
+                        SUM(CASE WHEN GENDER='Female' AND (age>34 AND age<40) AND (DIFFAPPDISP>95 and DIFFAPPDISP<126) THEN 1 else 0 end ) AS  '35-39FFOURMONTH',
+                        SUM(CASE WHEN GENDER='Male' AND (age>39 AND age<45) AND (DIFFAPPDISP>95 and DIFFAPPDISP<126) THEN 1 else 0 end ) AS  '40-44MFOURMONTH',
+                        SUM(CASE WHEN GENDER='Female' AND (age>39 AND age<45) AND (DIFFAPPDISP>95 and DIFFAPPDISP<126) THEN 1 else 0 end ) AS  '40-44FFOURMONTH',
+                        SUM(CASE WHEN GENDER='Male' AND (age>44 AND age<50) AND (DIFFAPPDISP>95 and DIFFAPPDISP<126) THEN 1 else 0 end ) AS  '45-49MFOURMONTH',
+                        SUM(CASE WHEN GENDER='Female' AND (age>44 AND age<50) AND (DIFFAPPDISP>95 and DIFFAPPDISP<126) THEN 1 else 0 end ) AS  '45-49FFOURMONTH',
+                        SUM(CASE WHEN GENDER='Male' AND (age>=50) AND (DIFFAPPDISP>95 and DIFFAPPDISP<126) THEN 1 else 0 end ) AS  '50MFOURMONTH',
+                        SUM(CASE WHEN GENDER='Female' AND (age>=50) AND (DIFFAPPDISP>95 and DIFFAPPDISP<126) THEN 1 else 0 end ) AS  '50FFOURMONTH',
+                        SUM(CASE WHEN (GENDER='Female' or GENDER='Male') AND (DIFFAPPDISP>95 and DIFFAPPDISP<126) THEN 1 else 0 end ) AS  'SUBTOTAL4MONTH',
 
-    SUM(CASE WHEN GENDER='Male' AND age<1 AND DIFFERENTIATED_CARE=1 THEN 1 else 0 end ) AS  'MMSMLESS1YEAR',
-    SUM(CASE WHEN GENDER='Female' AND age<1 AND DIFFERENTIATED_CARE=1 THEN 1 else 0 end ) AS  'MMSFLESS1YEAR',
-    SUM(CASE WHEN GENDER='Male' AND (age>0 AND age<5) AND DIFFERENTIATED_CARE=1 THEN 1 else 0 end ) AS  'MMS1-4M',
-    SUM(CASE WHEN GENDER='Female' AND (age>0 AND age<5) AND DIFFERENTIATED_CARE=1 THEN 1 else 0 end ) AS  'MMS1-4F',
-    SUM(CASE WHEN GENDER='Male' AND (age>4 AND age<10) AND DIFFERENTIATED_CARE=1 THEN 1 else 0 end ) AS  'MMS5-9M',
-    SUM(CASE WHEN GENDER='Female' AND (age>4 AND age<10) AND DIFFERENTIATED_CARE=1 THEN 1 else 0 end ) AS  'MMS5-9F',
-    SUM(CASE WHEN GENDER='Male' AND (age>9 AND age<15) AND DIFFERENTIATED_CARE=1 THEN 1 else 0 end ) AS  'MMS10-14M',
-    SUM(CASE WHEN GENDER='Female' AND (age>9 AND age<15) AND DIFFERENTIATED_CARE=1 THEN 1 else 0 end ) AS  'MMS10-14F',
-    SUM(CASE WHEN GENDER='Male' AND (age>14 AND age<20) AND DIFFERENTIATED_CARE=1 THEN 1 else 0 end ) AS  'MMS15-19M',
-    SUM(CASE WHEN GENDER='Female' AND (age>14 AND age<20) AND DIFFERENTIATED_CARE=1 THEN 1 else 0 end ) AS  'MMS15-19F',
-    SUM(CASE WHEN GENDER='Male' AND (age>19 AND age<25) AND DIFFERENTIATED_CARE=1 THEN 1 else 0 end ) AS  'MMS20-24M',
-    SUM(CASE WHEN GENDER='Female' AND (age>19 AND age<25) AND DIFFERENTIATED_CARE=1 THEN 1 else 0 end ) AS  'MMS20-24F',
-    SUM(CASE WHEN GENDER='Male' AND (age>24 AND age<30) AND DIFFERENTIATED_CARE=1 THEN 1 else 0 end ) AS  'MMS25-29M',
-    SUM(CASE WHEN GENDER='Female' AND (age>24 AND age<30) AND DIFFERENTIATED_CARE=1 THEN 1 else 0 end ) AS  'MMS25-29F',
-    SUM(CASE WHEN GENDER='Male' AND (age>29 AND age<35) AND DIFFERENTIATED_CARE=1 THEN 1 else 0 end ) AS  'MMS30-34M',
-    SUM(CASE WHEN GENDER='Female' AND (age>29 AND age<35) AND DIFFERENTIATED_CARE=1 THEN 1 else 0 end ) AS  'MMS30-34F',
-    SUM(CASE WHEN GENDER='Male' AND (age>34 AND age<40) AND DIFFERENTIATED_CARE=1 THEN 1 else 0 end ) AS  'MMS35-39M',
-    SUM(CASE WHEN GENDER='Female' AND (age>34 AND age<40) AND DIFFERENTIATED_CARE=1 THEN 1 else 0 end ) AS  'MMS35-39F',
-    SUM(CASE WHEN GENDER='Male' AND (age>39 AND age<45) AND DIFFERENTIATED_CARE=1 THEN 1 else 0 end ) AS  'MMS40-44M',
-    SUM(CASE WHEN GENDER='Female' AND (age>39 AND age<45) AND DIFFERENTIATED_CARE=1 THEN 1 else 0 end ) AS  'MMS40-44F',
-    SUM(CASE WHEN GENDER='Male' AND (age>44 AND age<50) AND DIFFERENTIATED_CARE=1 THEN 1 else 0 end ) AS  'MMS45-49M',
-    SUM(CASE WHEN GENDER='Female' AND (age>44 AND age<50) AND DIFFERENTIATED_CARE=1 THEN 1 else 0 end ) AS  'MMS45-49F',
-    SUM(CASE WHEN GENDER='Male' AND (age>=50) AND DIFFERENTIATED_CARE=1 THEN 1 else 0 end ) AS  'MMSOVER50M',
-    SUM(CASE WHEN GENDER='Female' AND (age>=50) AND DIFFERENTIATED_CARE=1 THEN 1 else 0 end ) AS  'MMSOVER50F',
-    SUM(CASE WHEN (GENDER='Female' or GENDER='Male') AND DIFFERENTIATED_CARE=1 THEN 1 else 0 end ) AS  'MMSTOTAL'
+                        SUM(CASE WHEN GENDER='Male' AND age<1 AND (DIFFAPPDISP>125 and DIFFAPPDISP<156) THEN 1 else 0 end ) AS  '1MFIVEMONTH',
+                        SUM(CASE WHEN GENDER='Female' AND age<1 AND (DIFFAPPDISP>125 and DIFFAPPDISP<156) THEN 1 else 0 end ) AS  '1FFIVEMONTH',
+                        SUM(CASE WHEN GENDER='Male' AND (age>90 AND age<5) AND (DIFFAPPDISP>125 and DIFFAPPDISP<156) THEN 1 else 0 end ) AS  '1-4MFIVEMONTH',
+                        SUM(CASE WHEN GENDER='Female' AND (age>90 AND age<5) AND (DIFFAPPDISP>125 and DIFFAPPDISP<156) THEN 1 else 0 end ) AS  '1-4FFIVEMONTH',
+                        SUM(CASE WHEN GENDER='Male' AND (age>4 AND age<10) AND (DIFFAPPDISP>125 and DIFFAPPDISP<156) THEN 1 else 0 end ) AS  '5-9MFIVEMONTH',
+                        SUM(CASE WHEN GENDER='Female' AND (age>4 AND age<10) AND (DIFFAPPDISP>125 and DIFFAPPDISP<156) THEN 1 else 0 end ) AS  '5-9FFIVEMONTH',
+                        SUM(CASE WHEN GENDER='Male' AND (age>9 AND age<15) AND (DIFFAPPDISP>125 and DIFFAPPDISP<156) THEN 1 else 0 end ) AS  '10-14MFIVEMONTH',
+                        SUM(CASE WHEN GENDER='Female' AND (age>9 AND age<15) AND (DIFFAPPDISP>125 and DIFFAPPDISP<156) THEN 1 else 0 end ) AS  '10-14FFIVEMONTH',
+                        SUM(CASE WHEN GENDER='Male' AND (age>14 AND age<20) AND (DIFFAPPDISP>125 and DIFFAPPDISP<156) THEN 1 else 0 end ) AS  '15-19MFIVEMONTH',
+                        SUM(CASE WHEN GENDER='Female' AND (age>14 AND age<20) AND (DIFFAPPDISP>125 and DIFFAPPDISP<156) THEN 1 else 0 end ) AS  '15-19FFIVEMONTH',
+                        SUM(CASE WHEN GENDER='Male' AND (age>19 AND age<25) AND (DIFFAPPDISP>125 and DIFFAPPDISP<156) THEN 1 else 0 end ) AS  '20-24MFIVEMONTH',
+                        SUM(CASE WHEN GENDER='Female' AND (age>19 AND age<25) AND (DIFFAPPDISP>125 and DIFFAPPDISP<156) THEN 1 else 0 end ) AS  '20-24FFIVEMONTH',
+                        SUM(CASE WHEN GENDER='Male' AND (age>24 AND age<30) AND (DIFFAPPDISP>125 and DIFFAPPDISP<156) THEN 1 else 0 end ) AS  '25-29MFIVEMONTH',
+                        SUM(CASE WHEN GENDER='Female' AND (age>24 AND age<30) AND (DIFFAPPDISP>125 and DIFFAPPDISP<156) THEN 1 else 0 end ) AS  '25-29FFIVEMONTH',
+                        SUM(CASE WHEN GENDER='Male' AND (age>29 AND age<35) AND (DIFFAPPDISP>125 and DIFFAPPDISP<156) THEN 1 else 0 end ) AS  '30-34MFIVEMONTH',
+                        SUM(CASE WHEN GENDER='Female' AND (age>29 AND age<35) AND (DIFFAPPDISP>125 and DIFFAPPDISP<156) THEN 1 else 0 end ) AS  '30-34FFIVEMONTH',
+                        SUM(CASE WHEN GENDER='Male' AND (age>34 AND age<40) AND (DIFFAPPDISP>125 and DIFFAPPDISP<156) THEN 1 else 0 end ) AS  '35-39MFIVEMONTH',
+                        SUM(CASE WHEN GENDER='Female' AND (age>34 AND age<40) AND (DIFFAPPDISP>125 and DIFFAPPDISP<156) THEN 1 else 0 end ) AS  '35-39FFIVEMONTH',
+                        SUM(CASE WHEN GENDER='Male' AND (age>39 AND age<45) AND (DIFFAPPDISP>125 and DIFFAPPDISP<156) THEN 1 else 0 end ) AS  '40-44MFIVEMONTH',
+                        SUM(CASE WHEN GENDER='Female' AND (age>39 AND age<45) AND (DIFFAPPDISP>125 and DIFFAPPDISP<156) THEN 1 else 0 end ) AS  '40-44FFIVEMONTH',
+                        SUM(CASE WHEN GENDER='Male' AND (age>44 AND age<50) AND (DIFFAPPDISP>125 and DIFFAPPDISP<156) THEN 1 else 0 end ) AS  '45-49MFIVEMONTH',
+                        SUM(CASE WHEN GENDER='Female' AND (age>44 AND age<50) AND (DIFFAPPDISP>125 and DIFFAPPDISP<156) THEN 1 else 0 end ) AS  '45-49FFIVEMONTH',
+                        SUM(CASE WHEN GENDER='Male' AND (age>=50) AND (DIFFAPPDISP>125 and DIFFAPPDISP<156) THEN 1 else 0 end ) AS  '50MFIVEMONTH',
+                        SUM(CASE WHEN GENDER='Female' AND (age>=50) AND (DIFFAPPDISP>125 and DIFFAPPDISP<156) THEN 1 else 0 end ) AS  '50FFIVEMONTH',
+                        SUM(CASE WHEN (GENDER='Female' or GENDER='Male') AND (DIFFAPPDISP>125 and DIFFAPPDISP<156) THEN 1 else 0 end ) AS  'SUBTOTAL5MONTH',
 
-FROM vw_master_visit
-WHERE SERVICE like '%ART%' or SERVICE like '%PMTCT%' 
-AND REGIMEN_CATEGORY NOT LIKE '%PMTCT Child%'
- ";
+
+                        SUM(CASE WHEN GENDER='Male' AND age<1 AND (DIFFAPPDISP>155) THEN 1 else 0 end ) AS  '1MSIXMONTH',
+                        SUM(CASE WHEN GENDER='Female' AND age<1 AND (DIFFAPPDISP>155) THEN 1 else 0 end ) AS  '1FSIXMONTH',
+                        SUM(CASE WHEN GENDER='Male' AND (age>90 AND age<5) AND (DIFFAPPDISP>155) THEN 1 else 0 end ) AS  '1-4MSIXMONTH',
+                        SUM(CASE WHEN GENDER='Female' AND (age>90 AND age<5) AND (DIFFAPPDISP>155) THEN 1 else 0 end ) AS  '1-4FSIXMONTH',
+                        SUM(CASE WHEN GENDER='Male' AND (age>4 AND age<10) AND (DIFFAPPDISP>155) THEN 1 else 0 end ) AS  '5-9MSIXMONTH',
+                        SUM(CASE WHEN GENDER='Female' AND (age>4 AND age<10) AND (DIFFAPPDISP>155) THEN 1 else 0 end ) AS  '5-9FSIXMONTH',
+                        SUM(CASE WHEN GENDER='Male' AND (age>9 AND age<15) AND (DIFFAPPDISP>155) THEN 1 else 0 end ) AS  '10-14MSIXMONTH',
+                        SUM(CASE WHEN GENDER='Female' AND (age>9 AND age<15) AND (DIFFAPPDISP>155) THEN 1 else 0 end ) AS  '10-14FSIXMONTH',
+                        SUM(CASE WHEN GENDER='Male' AND (age>14 AND age<20) AND (DIFFAPPDISP>155) THEN 1 else 0 end ) AS  '15-19MSIXMONTH',
+                        SUM(CASE WHEN GENDER='Female' AND (age>14 AND age<20) AND (DIFFAPPDISP>155) THEN 1 else 0 end ) AS  '15-19FSIXMONTH',
+                        SUM(CASE WHEN GENDER='Male' AND (age>19 AND age<25) AND (DIFFAPPDISP>155) THEN 1 else 0 end ) AS  '20-24MSIXMONTH',
+                        SUM(CASE WHEN GENDER='Female' AND (age>19 AND age<25) AND (DIFFAPPDISP>155) THEN 1 else 0 end ) AS  '20-24FSIXMONTH',
+                        SUM(CASE WHEN GENDER='Male' AND (age>24 AND age<30) AND (DIFFAPPDISP>155) THEN 1 else 0 end ) AS  '25-29MSIXMONTH',
+                        SUM(CASE WHEN GENDER='Female' AND (age>24 AND age<30) AND (DIFFAPPDISP>155) THEN 1 else 0 end ) AS  '25-29FSIXMONTH',
+                        SUM(CASE WHEN GENDER='Male' AND (age>29 AND age<35) AND (DIFFAPPDISP>155) THEN 1 else 0 end ) AS  '30-34MSIXMONTH',
+                        SUM(CASE WHEN GENDER='Female' AND (age>29 AND age<35) AND (DIFFAPPDISP>155) THEN 1 else 0 end ) AS  '30-34FSIXMONTH',
+                        SUM(CASE WHEN GENDER='Male' AND (age>34 AND age<40) AND (DIFFAPPDISP>155) THEN 1 else 0 end ) AS  '35-39MSIXMONTH',
+                        SUM(CASE WHEN GENDER='Female' AND (age>34 AND age<40) AND (DIFFAPPDISP>155) THEN 1 else 0 end ) AS  '35-39FSIXMONTH',
+                        SUM(CASE WHEN GENDER='Male' AND (age>39 AND age<45) AND (DIFFAPPDISP>155) THEN 1 else 0 end ) AS  '40-44MSIXMONTH',
+                        SUM(CASE WHEN GENDER='Female' AND (age>39 AND age<45) AND (DIFFAPPDISP>155) THEN 1 else 0 end ) AS  '40-44FSIXMONTH',
+                        SUM(CASE WHEN GENDER='Male' AND (age>44 AND age<50) AND (DIFFAPPDISP>155) THEN 1 else 0 end ) AS  '45-49MSIXMONTH',
+                        SUM(CASE WHEN GENDER='Female' AND (age>44 AND age<50) AND (DIFFAPPDISP>155) THEN 1 else 0 end ) AS  '45-49FSIXMONTH',
+                        SUM(CASE WHEN GENDER='Male' AND (age>=50) AND (DIFFAPPDISP>155) THEN 1 else 0 end ) AS  '50MSIXMONTH',
+                        SUM(CASE WHEN GENDER='Female' AND (age>=50) AND (DIFFAPPDISP>155) THEN 1 else 0 end ) AS  '50FSIXMONTH',
+                        SUM(CASE WHEN (GENDER='Female' or GENDER='Male') AND (DIFFAPPDISP>155) THEN 1 else 0 end ) AS  'SUBTOTAL6MONTH',
+                        SUM(CASE WHEN (GENDER='Female' or GENDER='Male') THEN 1 else 0 end ) AS  'TOTALMONTHS',
+
+                        SUM(CASE WHEN GENDER='Male' AND age<1 AND DIFFERENTIATED_CARE=1 THEN 1 else 0 end ) AS  'MMSMLESS1YEAR',
+                        SUM(CASE WHEN GENDER='Female' AND age<1 AND DIFFERENTIATED_CARE=1 THEN 1 else 0 end ) AS  'MMSFLESS1YEAR',
+                        SUM(CASE WHEN GENDER='Male' AND (age>0 AND age<5) AND DIFFERENTIATED_CARE=1 THEN 1 else 0 end ) AS  'MMS1-4M',
+                        SUM(CASE WHEN GENDER='Female' AND (age>0 AND age<5) AND DIFFERENTIATED_CARE=1 THEN 1 else 0 end ) AS  'MMS1-4F',
+                        SUM(CASE WHEN GENDER='Male' AND (age>4 AND age<10) AND DIFFERENTIATED_CARE=1 THEN 1 else 0 end ) AS  'MMS5-9M',
+                        SUM(CASE WHEN GENDER='Female' AND (age>4 AND age<10) AND DIFFERENTIATED_CARE=1 THEN 1 else 0 end ) AS  'MMS5-9F',
+                        SUM(CASE WHEN GENDER='Male' AND (age>9 AND age<15) AND DIFFERENTIATED_CARE=1 THEN 1 else 0 end ) AS  'MMS10-14M',
+                        SUM(CASE WHEN GENDER='Female' AND (age>9 AND age<15) AND DIFFERENTIATED_CARE=1 THEN 1 else 0 end ) AS  'MMS10-14F',
+                        SUM(CASE WHEN GENDER='Male' AND (age>14 AND age<20) AND DIFFERENTIATED_CARE=1 THEN 1 else 0 end ) AS  'MMS15-19M',
+                        SUM(CASE WHEN GENDER='Female' AND (age>14 AND age<20) AND DIFFERENTIATED_CARE=1 THEN 1 else 0 end ) AS  'MMS15-19F',
+                        SUM(CASE WHEN GENDER='Male' AND (age>19 AND age<25) AND DIFFERENTIATED_CARE=1 THEN 1 else 0 end ) AS  'MMS20-24M',
+                        SUM(CASE WHEN GENDER='Female' AND (age>19 AND age<25) AND DIFFERENTIATED_CARE=1 THEN 1 else 0 end ) AS  'MMS20-24F',
+                        SUM(CASE WHEN GENDER='Male' AND (age>24 AND age<30) AND DIFFERENTIATED_CARE=1 THEN 1 else 0 end ) AS  'MMS25-29M',
+                        SUM(CASE WHEN GENDER='Female' AND (age>24 AND age<30) AND DIFFERENTIATED_CARE=1 THEN 1 else 0 end ) AS  'MMS25-29F',
+                        SUM(CASE WHEN GENDER='Male' AND (age>29 AND age<35) AND DIFFERENTIATED_CARE=1 THEN 1 else 0 end ) AS  'MMS30-34M',
+                        SUM(CASE WHEN GENDER='Female' AND (age>29 AND age<35) AND DIFFERENTIATED_CARE=1 THEN 1 else 0 end ) AS  'MMS30-34F',
+                        SUM(CASE WHEN GENDER='Male' AND (age>34 AND age<40) AND DIFFERENTIATED_CARE=1 THEN 1 else 0 end ) AS  'MMS35-39M',
+                        SUM(CASE WHEN GENDER='Female' AND (age>34 AND age<40) AND DIFFERENTIATED_CARE=1 THEN 1 else 0 end ) AS  'MMS35-39F',
+                        SUM(CASE WHEN GENDER='Male' AND (age>39 AND age<45) AND DIFFERENTIATED_CARE=1 THEN 1 else 0 end ) AS  'MMS40-44M',
+                        SUM(CASE WHEN GENDER='Female' AND (age>39 AND age<45) AND DIFFERENTIATED_CARE=1 THEN 1 else 0 end ) AS  'MMS40-44F',
+                        SUM(CASE WHEN GENDER='Male' AND (age>44 AND age<50) AND DIFFERENTIATED_CARE=1 THEN 1 else 0 end ) AS  'MMS45-49M',
+                        SUM(CASE WHEN GENDER='Female' AND (age>44 AND age<50) AND DIFFERENTIATED_CARE=1 THEN 1 else 0 end ) AS  'MMS45-49F',
+                        SUM(CASE WHEN GENDER='Male' AND (age>=50) AND DIFFERENTIATED_CARE=1 THEN 1 else 0 end ) AS  'MMSOVER50M',
+                        SUM(CASE WHEN GENDER='Female' AND (age>=50) AND DIFFERENTIATED_CARE=1 THEN 1 else 0 end ) AS  'MMSOVER50F',
+                        SUM(CASE WHEN (GENDER='Female' or GENDER='Male') AND DIFFERENTIATED_CARE=1 THEN 1 else 0 end ) AS  'MMSTOTAL'
+
+                    FROM vw_master_visit
+                    WHERE SERVICE like '%ART%' or SERVICE like '%PMTCT%' 
+                    AND REGIMEN_CATEGORY NOT LIKE '%PMTCT Child%'
+                    ";
 
         $query = $this->db->query($query_str);
         $data['results'] = $query->result_array()[0];
@@ -3558,7 +3558,7 @@ AND REGIMEN_CATEGORY NOT LIKE '%PMTCT Child%'
                 CASE 
                 WHEN  Datediff(p.nextappointment, max(dispensing_date) ) > 0 AND  Datediff(p.nextappointment, max(dispensing_date) ) < 36 THEN '1 MONTH(S)'
                 WHEN  Datediff(p.nextappointment, max(dispensing_date) ) > 35 AND  Datediff(p.nextappointment, max(dispensing_date) ) < 66 THEN '2 MONTH(S)'
-                 WHEN  Datediff(p.nextappointment, max(dispensing_date) ) > 65 AND  Datediff(p.nextappointment, max(dispensing_date) ) < 96 THEN '3 MONTH(S)'
+                WHEN  Datediff(p.nextappointment, max(dispensing_date) ) > 65 AND  Datediff(p.nextappointment, max(dispensing_date) ) < 96 THEN '3 MONTH(S)'
                 WHEN  Datediff(p.nextappointment, max(dispensing_date) ) > 95 AND  Datediff(p.nextappointment, max(dispensing_date) ) < 126 THEN '4 MONTH(S)'
                 WHEN  Datediff(p.nextappointment, max(dispensing_date) ) > 125 AND  Datediff(p.nextappointment, max(dispensing_date) ) < 156 THEN '5 MONTH(S)'
                 WHEN  Datediff(p.nextappointment, max(dispensing_date) ) > 155 THEN '6 MONTH(S)'
@@ -3574,20 +3574,20 @@ AND REGIMEN_CATEGORY NOT LIKE '%PMTCT Child%'
                 AND(rst.name LIKE '%art%' OR rst.name LIKE '%pmtct%' AND rc.name NOT LIKE '%pmtct child%' )
                 AND dispensing_date<=?
                 GROUP BY  patient_id
-                 ) tmp group by appointment_description";
+                ) tmp group by appointment_description";
 
         $query = $this->db->query($sql, array($end_date));
         $results = $query->result_array();
 
         $row_string = "<table border='1' class='dataTables'>
-    <thead >
-    <tr>
-    <th>Appointment Duration</th>
-    <th>Total</th>
-    <th>Action</th>
-    </tr>
-    </thead>
-    <tbody>";
+                        <thead >
+                        <tr>
+                        <th>Appointment Duration</th>
+                        <th>Total</th>
+                        <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>";
         foreach ($results as $result) {
             $appointment_description = $result['appointment_description'];
             $app_desc = str_ireplace(array(' ', '(s)'), array('_', ''), $appointment_description);
@@ -3598,7 +3598,7 @@ AND REGIMEN_CATEGORY NOT LIKE '%PMTCT Child%'
         }
         $row_string .= "</tbody></table>";
 
-        $data['from'] = date('d-M-Y', strtotime($from));
+        //$data['from'] = date('d-M-Y', strtotime($from));
         $data['to'] = date('d-M-Y', strtotime($to));
         $data['dyn_table'] = $row_string;
         $data['overall_total'] = $overall_total;
@@ -3620,35 +3620,35 @@ AND REGIMEN_CATEGORY NOT LIKE '%PMTCT Child%'
         $overall_total = 0;
 
         $sql = "SELECT appointment_description, count( tmp.patient_id) as total from(
-SELECT patient_id, p.clinicalappointment, max(dispensing_date),  Datediff(p.clinicalappointment, max(dispensing_date)) appointment_days,
-CASE 
-WHEN  Datediff(p.clinicalappointment, max(dispensing_date) ) > 0 AND  Datediff(p.clinicalappointment, max(dispensing_date) ) < 31 THEN '1 MONTH(S)'
-WHEN  Datediff(p.clinicalappointment, max(dispensing_date) ) > 30 AND  Datediff(p.clinicalappointment, max(dispensing_date) ) < 61 THEN '2 MONTH(S)'
-WHEN  Datediff(p.clinicalappointment, max(dispensing_date) ) > 60 AND  Datediff(p.clinicalappointment, max(dispensing_date) ) < 91 THEN '3 MONTH(S)'
-WHEN  Datediff(p.clinicalappointment, max(dispensing_date) ) > 90 AND  Datediff(p.clinicalappointment, max(dispensing_date) ) < 121 THEN '4 MONTH(S)'
-WHEN  Datediff(p.clinicalappointment, max(dispensing_date) ) > 120 AND  Datediff(p.clinicalappointment, max(dispensing_date) ) < 151 THEN '5 MONTH(S)'
-WHEN  Datediff(p.clinicalappointment, max(dispensing_date) ) > 150 AND  Datediff(p.clinicalappointment, max(dispensing_date) ) < 181 THEN '6 MONTH(S)'
-WHEN  Datediff(p.clinicalappointment, max(dispensing_date) ) > 180 AND  Datediff(p.clinicalappointment, max(dispensing_date) ) < 211 THEN '7 MONTH(S)'
-WHEN  Datediff(p.clinicalappointment, max(dispensing_date) ) > 210 THEN 'Over 7 months'
-ELSE 'N/A' END AS appointment_description
-FROM patient_visit pv
-LEFT JOIN patient p ON p.patient_number_ccc=pv.patient_id
-WHERE p.current_status=1 AND p.differentiated_care=1 AND dispensing_date<=?
-GROUP BY  patient_id
- ) tmp group by appointment_description";
+                    SELECT patient_id, p.clinicalappointment, max(dispensing_date),  Datediff(p.clinicalappointment, max(dispensing_date)) appointment_days,
+                    CASE 
+                    WHEN  Datediff(p.clinicalappointment, max(dispensing_date) ) > 0 AND  Datediff(p.clinicalappointment, max(dispensing_date) ) < 31 THEN '1 MONTH(S)'
+                    WHEN  Datediff(p.clinicalappointment, max(dispensing_date) ) > 30 AND  Datediff(p.clinicalappointment, max(dispensing_date) ) < 61 THEN '2 MONTH(S)'
+                    WHEN  Datediff(p.clinicalappointment, max(dispensing_date) ) > 60 AND  Datediff(p.clinicalappointment, max(dispensing_date) ) < 91 THEN '3 MONTH(S)'
+                    WHEN  Datediff(p.clinicalappointment, max(dispensing_date) ) > 90 AND  Datediff(p.clinicalappointment, max(dispensing_date) ) < 121 THEN '4 MONTH(S)'
+                    WHEN  Datediff(p.clinicalappointment, max(dispensing_date) ) > 120 AND  Datediff(p.clinicalappointment, max(dispensing_date) ) < 151 THEN '5 MONTH(S)'
+                    WHEN  Datediff(p.clinicalappointment, max(dispensing_date) ) > 150 AND  Datediff(p.clinicalappointment, max(dispensing_date) ) < 181 THEN '6 MONTH(S)'
+                    WHEN  Datediff(p.clinicalappointment, max(dispensing_date) ) > 180 AND  Datediff(p.clinicalappointment, max(dispensing_date) ) < 211 THEN '7 MONTH(S)'
+                    WHEN  Datediff(p.clinicalappointment, max(dispensing_date) ) > 210 THEN 'Over 7 months'
+                    ELSE 'N/A' END AS appointment_description
+                    FROM patient_visit pv
+                    LEFT JOIN patient p ON p.patient_number_ccc=pv.patient_id
+                    WHERE p.current_status=1 AND p.differentiated_care=1 AND dispensing_date<=?
+                    GROUP BY  patient_id
+                    ) tmp group by appointment_description";
 
         $query = $this->db->query($sql, array($end_date));
         $results = $query->result_array();
 
         $row_string = "<table border='1' class='dataTables'>
-    <thead >
-    <tr>
-    <th>Appointment Duration</th>
-    <th>Total</th>
-    <th>Action</th>
-    </tr>
-    </thead>
-    <tbody>";
+                        <thead >
+                        <tr>
+                        <th>Appointment Duration</th>
+                        <th>Total</th>
+                        <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>";
         foreach ($results as $result) {
             $appointment_description = $result['appointment_description'];
             $app_desc = str_ireplace(array(' ', '(s)'), array('_', ''), $appointment_description);
@@ -3659,7 +3659,7 @@ GROUP BY  patient_id
         }
         $row_string .= "</tbody></table>";
 
-        $data['from'] = date('d-M-Y', strtotime($from));
+        //$data['from'] = date('d-M-Y', strtotime($from));
         $data['to'] = date('d-M-Y', strtotime($to));
         $data['dyn_table'] = $row_string;
         $data['overall_total'] = $overall_total;
@@ -3894,78 +3894,78 @@ GROUP BY  patient_id
             $app_desc = str_ireplace('_', ' ', $appointment_description) . '(s)';
             //Get all patients who have apppointments on the selected date range and visited in the filtered date range
             $sql = "SELECT 
-		tmp.patient,
-		tmp.appointment
-		FROM
-		(
-		SELECT
-		pa.patient,
-		MIN(pa.appointment) appointment, 
-		CASE 
-		WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 0 AND DATEDIFF(MIN(pa.appointment), pv.visit_date) < 31 THEN '1 Month(s)'
-		WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 30 AND DATEDIFF(MIN(pa.appointment), pv.visit_date) < 61 THEN '2 Month(s)'
-		WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 60 AND DATEDIFF(MIN(pa.appointment), pv.visit_date) < 91 THEN '3 Month(s)'
-		WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 90 AND DATEDIFF(MIN(pa.appointment), pv.visit_date) < 121 THEN '4 Month(s)'
-		WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 120 AND DATEDIFF(MIN(pa.appointment), pv.visit_date) < 151 THEN '5 Month(s)'
-		WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 150 AND DATEDIFF(MIN(pa.appointment), pv.visit_date) < 181 THEN '6 Month(s)'
-		WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 180 AND DATEDIFF(MIN(pa.appointment), pv.visit_date) < 211 THEN '7 Month(s)'
-		WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 210 AND DATEDIFF(MIN(pa.appointment), pv.visit_date) < 241 THEN '8 Month(s)'
-		WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 240 AND DATEDIFF(MIN(pa.appointment), pv.visit_date) < 271 THEN '9 Month(s)'
-		WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 270 AND DATEDIFF(MIN(pa.appointment), pv.visit_date) < 301 THEN '10 Month(s)'
-		WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 300 AND DATEDIFF(MIN(pa.appointment), pv.visit_date) < 331 THEN '11 Month(s)'
-		WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 330 AND DATEDIFF(MIN(pa.appointment), pv.visit_date) < 361 THEN '12 Month(s)'
-		WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 360 THEN 'Over 1 Year'
-		ELSE 'N/A'
-		END AS appointment_description
-		FROM clinic_appointment pa 
-		INNER JOIN 
-		(
-		SELECT 
-		patient_id, dispensing_date visit_date
-		FROM patient_visit
-		WHERE dispensing_date BETWEEN '$filter_from' AND '$filter_to'
-		GROUP BY patient_id, visit_date
-		) pv ON pv.patient_id = pa.patient AND pa.appointment > visit_date
-		GROUP BY patient_id,visit_date
-		) tmp
-		WHERE tmp.appointment_description = '$app_desc'";
+                    tmp.patient,
+                    tmp.appointment
+                    FROM
+                    (
+                    SELECT
+                    pa.patient,
+                    MIN(pa.appointment) appointment, 
+                    CASE 
+                    WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 0 AND DATEDIFF(MIN(pa.appointment), pv.visit_date) < 31 THEN '1 Month(s)'
+                    WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 30 AND DATEDIFF(MIN(pa.appointment), pv.visit_date) < 61 THEN '2 Month(s)'
+                    WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 60 AND DATEDIFF(MIN(pa.appointment), pv.visit_date) < 91 THEN '3 Month(s)'
+                    WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 90 AND DATEDIFF(MIN(pa.appointment), pv.visit_date) < 121 THEN '4 Month(s)'
+                    WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 120 AND DATEDIFF(MIN(pa.appointment), pv.visit_date) < 151 THEN '5 Month(s)'
+                    WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 150 AND DATEDIFF(MIN(pa.appointment), pv.visit_date) < 181 THEN '6 Month(s)'
+                    WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 180 AND DATEDIFF(MIN(pa.appointment), pv.visit_date) < 211 THEN '7 Month(s)'
+                    WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 210 AND DATEDIFF(MIN(pa.appointment), pv.visit_date) < 241 THEN '8 Month(s)'
+                    WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 240 AND DATEDIFF(MIN(pa.appointment), pv.visit_date) < 271 THEN '9 Month(s)'
+                    WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 270 AND DATEDIFF(MIN(pa.appointment), pv.visit_date) < 301 THEN '10 Month(s)'
+                    WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 300 AND DATEDIFF(MIN(pa.appointment), pv.visit_date) < 331 THEN '11 Month(s)'
+                    WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 330 AND DATEDIFF(MIN(pa.appointment), pv.visit_date) < 361 THEN '12 Month(s)'
+                    WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 360 THEN 'Over 1 Year'
+                    ELSE 'N/A'
+                    END AS appointment_description
+                    FROM clinic_appointment pa 
+                    INNER JOIN 
+                    (
+                    SELECT 
+                    patient_id, dispensing_date visit_date
+                    FROM patient_visit
+                    WHERE dispensing_date BETWEEN '$filter_from' AND '$filter_to'
+                    GROUP BY patient_id, visit_date
+                    ) pv ON pv.patient_id = pa.patient AND pa.appointment > visit_date
+                    GROUP BY patient_id,visit_date
+                    ) tmp
+                    WHERE tmp.appointment_description = '$app_desc'";
         } else {
             //Get all patients who have apppointments on the selected date range
             $sql = "SELECT pa.patient,pa.appointment ,ca.appointment as clinic_appointment,
-		CASE
-		WHEN  p.differentiated_care = 1 THEN 'YES' ELSE  'NO' END as diff_care,
-		DATEDIFF(ca.appointment, pa.appointment) as days_diff
-		FROM patient_appointment pa
-		LEFT JOIN clinic_appointment ca on ca.id = pa.clinical_appointment
-		LEFT JOIN patient p on p.patient_number_ccc = pa.patient
-		WHERE pa.appointment BETWEEN '$from' AND '$to' 
-		AND pa.facility='$facility_code' 
-		GROUP BY patient,appointment";
+                    CASE
+                    WHEN  p.differentiated_care = 1 THEN 'YES' ELSE  'NO' END as diff_care,
+                    DATEDIFF(ca.appointment, pa.appointment) as days_diff
+                    FROM patient_appointment pa
+                    LEFT JOIN clinic_appointment ca on ca.id = pa.clinical_appointment
+                    LEFT JOIN patient p on p.patient_number_ccc = pa.patient
+                    WHERE pa.appointment BETWEEN '$from' AND '$to' 
+                    AND pa.facility='$facility_code' 
+                    GROUP BY patient,appointment";
         }
 
         $query = $this->db->query($sql);
         $results = $query->result_array();
         $row_string = "
-	<table border='1' class='dataTables'>
-	<thead >
-	<tr>
-	<th> Patient No </th>
-	<th> Patient Name </th>
-	<th> Phone No /Alternate No</th>
-	<th> Phys. Address </th>
-	<th> Sex </th>
-	<th> Age </th>
-	<th> Service </th>
-	<th> Last Regimen </th>
-	<th> Appointment Date </th>
-	<th> Visit Status</th>
-	<th> Source</th>
-	<th> On Diff Care</th>
-	<th> Days to Clinic Appointment</th>
+                        <table border='1' class='dataTables'>
+                        <thead >
+                        <tr>
+                        <th> Patient No </th>
+                        <th> Patient Name </th>
+                        <th> Phone No /Alternate No</th>
+                        <th> Phys. Address </th>
+                        <th> Sex </th>
+                        <th> Age </th>
+                        <th> Service </th>
+                        <th> Last Regimen </th>
+                        <th> Appointment Date </th>
+                        <th> Visit Status</th>
+                        <th> Source</th>
+                        <th> On Diff Care</th>
+                        <th> Days to Clinic Appointment</th>
 
-	</tr>
-	</thead>
-	<tbody>";
+                        </tr>
+                        </thead>
+                        <tbody>";
         if ($results) {
             foreach ($results as $result) {
                 $patient = $result['patient'];
@@ -4098,25 +4098,24 @@ GROUP BY  patient_id
 
         $query = $this->db->query($sql);
         $results = $query->result_array();
-        $row_string = "
-    <table border='1' class='dataTables'>
-    <thead >
-    <tr>
-    <th> Patient No </th>
-    <th> Patient Name </th>
-    <th> Phone No /Alternate No</th>
-    <th> Phys. Address </th>
-    <th> Sex </th>
-    <th> Age </th>
-    <th> Service </th>
-    <th> Diff Care </th>
-    <th> Last Regimen </th>
-    <th> Appointment Date </th>
-    <th> Visit Status</th>
-    <th> Source</th>
-    </tr>
-    </thead>
-    <tbody>";
+        $row_string = "<table border='1' class='dataTables'>
+                        <thead >
+                        <tr>
+                        <th> Patient No </th>
+                        <th> Patient Name </th>
+                        <th> Phone No /Alternate No</th>
+                        <th> Phys. Address </th>
+                        <th> Sex </th>
+                        <th> Age </th>
+                        <th> Service </th>
+                        <th> Diff Care </th>
+                        <th> Last Regimen </th>
+                        <th> Appointment Date </th>
+                        <th> Visit Status</th>
+                        <th> Source</th>
+                        </tr>
+                        </thead>
+                        <tbody>";
         if ($results) {
             foreach ($results as $result) {
                 $patient = $result['patient'];
