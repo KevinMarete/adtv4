@@ -6,11 +6,11 @@
 		<div id='disclosure_chart'></div>
 	</div>
 </div>
-<script src="<?= base_url() ?>public/assets/scripts/highcharts/highcharts.js"></script>
+<script src="<?= base_url() ?>/public/assets/scripts/highcharts/highcharts.js"></script>
 
 <script type="text/javascript">
 	$(document).ready(function() {
-		$("#disclosure_chart").load("<?php echo base_url() . 'public/report_management/disclosure_chart/' . $from . '/' . $to ?>")
+		$("#disclosure_chart").load("<?php echo base_url() . '/public/report_management/disclosure_chart/' . $from . '/' . $to ?>")
 
 	});
 </script>

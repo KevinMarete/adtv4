@@ -64,20 +64,20 @@ $routes->group('report_management', ['namespace' => '\Modules\ADT\Controllers'],
   $routes->get('cumulative_patients/(:any)/(:any)', 'Report_management::cumulative_patients/$1/$2');
   $routes->get('all_service_statistics/(:any)', 'Report_management::all_service_statistics/$1');
   $routes->get('getFamilyPlanning/(:any)', 'Report_management::getFamilyPlanning/$1');
-  $routes->get('getIndications/(:any)/(:any)', 'Report_management::getFamilyPlanning/$1/$2');
+  $routes->get('getIndications/(:any)/(:any)', 'Report_management::getIndications/$1/$2');
   $routes->get('getTBPatients/(:any)/(:any)', 'Report_management::getTBPatients/$1/$2');
   $routes->get('getChronic/(:any)', 'Report_management::getChronic/$1');
   $routes->get('getADR/(:any)', 'Report_management::getADR/$1');
-
-  $routes->get('disclosure_chart/(:any)/(:any)', 'Report_management::getADR/$1/$2');
-
+  $routes->get('disclosure_chart/(:any)/(:any)', 'Report_management::disclosure_chart/$1/$2');
   $routes->get('patients_disclosure/(:any)/(:any)', 'Report_management::patients_disclosure/$1/$2');
   $routes->get('getBMI/(:any)', 'Report_management::getBMI/$1');
   $routes->get('getisoniazidPatients/(:any)/(:any)', 'Report_management::getisoniazidPatients/$1/$2');
   $routes->get('getnonisoniazidPatients/(:any)', 'Report_management::getnonisoniazidPatients/$1');
   $routes->get('get_prep_patients/(:any)/(:any)', 'Report_management::get_prep_patients/$1/$2');
   $routes->get('get_pep_reasons/(:any)/(:any)', 'Report_management::get_pep_reasons/$1/$2');
+  $routes->get('get_pep_reasons_patients/(:any)/(:any)', 'Report_management::get_pep_reasons_patients/$1/$2');
   $routes->get('get_prep_reasons/(:any)/(:any)', 'Report_management::get_prep_reasons/$1/$2');
+  $routes->get('get_prep_reasons_patients/(:any)/(:any)', 'Report_management::get_prep_reasons_patients/$1/$2');
 
   //Visting Patients
   $routes->get('getScheduledPatients/(:any)/(:any)', 'Report_management::getScheduledPatients/$1/$2');

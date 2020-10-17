@@ -5432,147 +5432,147 @@ class Report_management extends MY_Controller
 
 
         $row_string = "
-    <table border='1' class='dataTables'>
-    <thead >
-    <tr>
-    <th></th>
-    <th></th>
-    <th></th>
-    <th>Adults</th>
-    <th></th>
-    <th></th>
-    <th>Children</th>
-    <th></th>
-    </tr>
-    <tr>
-    <th> </th>
-    <th> <b>Total</b></th>
-    <th> Male </th>
-    <th> Female </th>
-    <th> Total </th>
+                        <table border='1' class='dataTables'>
+                        <thead >
+                        <tr>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th>Adults</th>
+                        <th></th>
+                        <th></th>
+                        <th>Children</th>
+                        <th></th>
+                        </tr>
+                        <tr>
+                        <th> </th>
+                        <th> <b>Total</b></th>
+                        <th> Male </th>
+                        <th> Female </th>
+                        <th> Total </th>
 
-    <th> Male  </th>
-    <th> Female </th>
-    <th> Total </th>
+                        <th> Male  </th>
+                        <th> Female </th>
+                        <th> Total </th>
 
 
 
-    </tr></thead><tbody>
+                        </tr></thead><tbody>
 
-    <tr>
-    <td>No of patients on Cotrimoxazole</td>
-    <td><b>" . $cotrimoxazole_total . "</b></td>
-    <td>" . $result12 . "</td>
-    <td>" . $result13 . "</td>
-    <td>" . $adults_cotrimoxazole_total . "</td>
-    <td>" . $result14 . "</td>
-    <td>" . $result15 . "</td>
-    <td>" . $children_cotrimoxazole_total . "</td>
-    </tr>
+                        <tr>
+                        <td>No of patients on Cotrimoxazole</td>
+                        <td><b>" . $cotrimoxazole_total . "</b></td>
+                        <td>" . $result12 . "</td>
+                        <td>" . $result13 . "</td>
+                        <td>" . $adults_cotrimoxazole_total . "</td>
+                        <td>" . $result14 . "</td>
+                        <td>" . $result15 . "</td>
+                        <td>" . $children_cotrimoxazole_total . "</td>
+                        </tr>
 
-    <tr>
-    <td>No of patients on Dapsone</td>
-    <td><strong>" . $dapsone_total . "</strong></td>
-    <td>" . $result16 . "</td>
-    <td>" . $result17 . "</td>
-    <td>" . $adults_dapsone_total . "</td>
-    <td>" . $result18 . "</td>
-    <td>" . $result19 . "</td>
-    <td>" . $children_dapsone_total . "</td>
-    </tr>
+                        <tr>
+                        <td>No of patients on Dapsone</td>
+                        <td><strong>" . $dapsone_total . "</strong></td>
+                        <td>" . $result16 . "</td>
+                        <td>" . $result17 . "</td>
+                        <td>" . $adults_dapsone_total . "</td>
+                        <td>" . $result18 . "</td>
+                        <td>" . $result19 . "</td>
+                        <td>" . $children_dapsone_total . "</td>
+                        </tr>
 
-    <tr>
-    <td>No of patients on Fluconazole</td>
-    <td><b>" . $fluconazole_total . "</b></td>
-    <td>" . $result20 . "</td>
-    <td>" . $result21 . "</td>
-    <td>" . $adults_fluconazole_total . "</td>
-    <td>" . $result22 . "</td>
-    <td>" . $result23 . "</td>
-    <td>" . $children_fluconazole_total . "</td>
-    </tr>
+                        <tr>
+                        <td>No of patients on Fluconazole</td>
+                        <td><b>" . $fluconazole_total . "</b></td>
+                        <td>" . $result20 . "</td>
+                        <td>" . $result21 . "</td>
+                        <td>" . $adults_fluconazole_total . "</td>
+                        <td>" . $result22 . "</td>
+                        <td>" . $result23 . "</td>
+                        <td>" . $children_fluconazole_total . "</td>
+                        </tr>
 
-    <tr>
-    <td>No of patients started on Isoniazid </td>
-    <td><b>" . $patients_started_on_isoniazid_total . "</b></td>
-    <td>" . $result4 . "</td>
-    <td>" . $result5 . "</td>
-    <td>" . $adults_patients_started_on_isoniazid_total . "</td>
-    <td>" . $result6 . "</td>
-    <td>" . $result7 . "</td>
-    <td>" . $children_patients_started_on_isoniazid_total . "</td>
-    </tr>
+                        <tr>
+                        <td>No of patients started on Isoniazid </td>
+                        <td><b>" . $patients_started_on_isoniazid_total . "</b></td>
+                        <td>" . $result4 . "</td>
+                        <td>" . $result5 . "</td>
+                        <td>" . $adults_patients_started_on_isoniazid_total . "</td>
+                        <td>" . $result6 . "</td>
+                        <td>" . $result7 . "</td>
+                        <td>" . $children_patients_started_on_isoniazid_total . "</td>
+                        </tr>
 
-    <tr>
-    <td>No of patients started on Rifapentine/Isoniazid </td>
-    <td><b>" . $patients_started_on_rifapentine_isoniazid_total . "</b></td>
-    <td>" . $result28 . "</td>
-    <td>" . $result29 . "</td>
-    <td>" . $adults_patients_started_on_rifapentine_isoniazid_total . "</td>
-    <td>" . $result30 . "</td>
-    <td>" . $result31 . "</td>
-    <td>" . $children_patients_started_on_rifapentine_isoniazid_total . "</td>
-    </tr>
+                        <tr>
+                        <td>No of patients started on Rifapentine/Isoniazid </td>
+                        <td><b>" . $patients_started_on_rifapentine_isoniazid_total . "</b></td>
+                        <td>" . $result28 . "</td>
+                        <td>" . $result29 . "</td>
+                        <td>" . $adults_patients_started_on_rifapentine_isoniazid_total . "</td>
+                        <td>" . $result30 . "</td>
+                        <td>" . $result31 . "</td>
+                        <td>" . $children_patients_started_on_rifapentine_isoniazid_total . "</td>
+                        </tr>
 
-    <tr>
-    <td>No of patients on routine Isoniazid </td>
-    <td><b>" . $routine_isoniazid_total . "</b></td>
-    <td>" . $result . "</td>
-    <td>" . $result1 . "</td>
-    <td>" . $adults_routine_isoniazid_total . "</td>
-    <td>" . $result2 . "</td>
-    <td>" . $result3 . "</td>
-    <td>" . $children_routine_isoniazid_total . "</td>
-    </tr>
+                        <tr>
+                        <td>No of patients on routine Isoniazid </td>
+                        <td><b>" . $routine_isoniazid_total . "</b></td>
+                        <td>" . $result . "</td>
+                        <td>" . $result1 . "</td>
+                        <td>" . $adults_routine_isoniazid_total . "</td>
+                        <td>" . $result2 . "</td>
+                        <td>" . $result3 . "</td>
+                        <td>" . $children_routine_isoniazid_total . "</td>
+                        </tr>
 
-    <tr>
-    <td>No of patients on routine Rifapentine/Isoniazid </td>
-    <td><b>" . $routine_rifapentine_isoniazid_total . "</b></td>
-    <td>" . $result32 . "</td>
-    <td>" . $result33 . "</td>
-    <td>" . $adults_routine_rifapentine_isoniazid_total . "</td>
-    <td>" . $result34 . "</td>
-    <td>" . $result35 . "</td>
-    <td>" . $children_routine_rifapentine_isoniazid_total . "</td>
-    </tr>
+                        <tr>
+                        <td>No of patients on routine Rifapentine/Isoniazid </td>
+                        <td><b>" . $routine_rifapentine_isoniazid_total . "</b></td>
+                        <td>" . $result32 . "</td>
+                        <td>" . $result33 . "</td>
+                        <td>" . $adults_routine_rifapentine_isoniazid_total . "</td>
+                        <td>" . $result34 . "</td>
+                        <td>" . $result35 . "</td>
+                        <td>" . $children_routine_rifapentine_isoniazid_total . "</td>
+                        </tr>
 
-    <tr>
-    <td>No of patients completed  Isoniazid </td>
-    <td><b>" . $isoniazid_total . "</b></td>
-    <td>" . $result8 . "</td>
-    <td>" . $result9 . "</td>
-    <td>" . $adults_isoniazid_total . "</td>
-    <td>" . $result10 . "</td>
-    <td>" . $result11 . "</td>
-    <td>" . $children_isoniazid_total . "</td>
-    </tr>
+                        <tr>
+                        <td>No of patients completed  Isoniazid </td>
+                        <td><b>" . $isoniazid_total . "</b></td>
+                        <td>" . $result8 . "</td>
+                        <td>" . $result9 . "</td>
+                        <td>" . $adults_isoniazid_total . "</td>
+                        <td>" . $result10 . "</td>
+                        <td>" . $result11 . "</td>
+                        <td>" . $children_isoniazid_total . "</td>
+                        </tr>
 
-    <tr>
-    <td>No of patients completed Rifapentine/Isoniazid</td>
-    <td><b>" . $rifap_isoniazid_total . "</b></td>
-    <td>" . $result24 . "</td>
-    <td>" . $result25 . "</td>
-    <td>" . $adults_rifap_isoniazid_total . "</td>
-    <td>" . $result26 . "</td>
-    <td>" . $result27 . "</td>
-    <td>" . $children_rifap_isoniazid_total . "</td>
-    </tr>
+                        <tr>
+                        <td>No of patients completed Rifapentine/Isoniazid</td>
+                        <td><b>" . $rifap_isoniazid_total . "</b></td>
+                        <td>" . $result24 . "</td>
+                        <td>" . $result25 . "</td>
+                        <td>" . $adults_rifap_isoniazid_total . "</td>
+                        <td>" . $result26 . "</td>
+                        <td>" . $result27 . "</td>
+                        <td>" . $children_rifap_isoniazid_total . "</td>
+                        </tr>
 
-    </tbody>
-    <tfoot>
-    <tr>
-    <th>Total</th>
-    <th><b>" . $total_patients . "</b></th>
-    <th>" . $male_adults_total . "</th>
-    <th>" . $female_adults_total . "</th>
-    <th>" . $adults_total . "</th>
-    <th>" . $male_children_total . "</th>
-    <th>" . $female_children_total . "</th>
-    <th>" . $children_total . "</th>
-    </tr>
-    </tfoot>
+                        </tbody>
+                        <tfoot>
+                        <tr>
+                        <th>Total</th>
+                        <th><b>" . $total_patients . "</b></th>
+                        <th>" . $male_adults_total . "</th>
+                        <th>" . $female_adults_total . "</th>
+                        <th>" . $adults_total . "</th>
+                        <th>" . $male_children_total . "</th>
+                        <th>" . $female_children_total . "</th>
+                        <th>" . $children_total . "</th>
+                        </tr>
+                        </tfoot>
 
-    ";
+                        ";
 
 
         $row_string .= "</table>";
@@ -5635,55 +5635,55 @@ class Report_management extends MY_Controller
         $non_isoniazid_total = $result + $result1 + $result3 + $result4;
 
         $row_string = "
-	<table border='1' class='dataTables'>
-	<thead >
-	<tr>
-	<th></th>
-	<th></th>
-	<th></th>
-	<th>Adults</th>
-	<th></th>
-	<th></th>
-	<th>Children</th>
-	<th></th>
-	</tr>
-	<tr>
-	<th> </th>
-	<th> <b>Total (All)</b></th>
-	<th> Male </th>
-	<th> Female </th>
-	<th> Total </th>
+                        <table border='1' class='dataTables'>
+                        <thead >
+                        <tr>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th>Adults</th>
+                        <th></th>
+                        <th></th>
+                        <th>Children</th>
+                        <th></th>
+                        </tr>
+                        <tr>
+                        <th> </th>
+                        <th> <b>Total (All)</b></th>
+                        <th> Male </th>
+                        <th> Female </th>
+                        <th> Total </th>
 
-	<th> Male  </th>
-	<th> Female </th>
-	<th> Total </th>
+                        <th> Male  </th>
+                        <th> Female </th>
+                        <th> Total </th>
 
 
 
-	</tr></thead><tbody>
-	<tr>
-	<td><a href='../getnonisoniazidPatientslist/" . $from . "'>No of patients not on isoniazid</a> </td>
-	<td><b>" . $non_isoniazid_total . "</b></td>
-	<td>" . $result . "</td>
-	<td>" . $result1 . "</td>
-	<td>" . $adults_routine_isoniazid_total . "</td>
-	<td>" . $result3 . "</td>
-	<td>" . $result4 . "</td>
-	<td>" . $children_non_isoniazid_total . "</td>
-	</tr>
-	</tbody>
-	<tfoot>
-	<tr>
-	<th>Total</th>
-	<th><b>" . $non_isoniazid_total . "</b></th>
-	<th>" . $result . "</th>
-	<th>" . $result1 . "</th>
-	<th>" . $adults_routine_isoniazid_total . "</th>
-	<th>" . $result3 . "</th>
-	<th>" . $result4 . "</th>
-	<th>" . $children_non_isoniazid_total . "</th>
-	</tr>
-	</tfoot>";
+                        </tr></thead><tbody>
+                        <tr>
+                        <td><a href='../getnonisoniazidPatientslist/" . $from . "'>No of patients not on isoniazid</a> </td>
+                        <td><b>" . $non_isoniazid_total . "</b></td>
+                        <td>" . $result . "</td>
+                        <td>" . $result1 . "</td>
+                        <td>" . $adults_routine_isoniazid_total . "</td>
+                        <td>" . $result3 . "</td>
+                        <td>" . $result4 . "</td>
+                        <td>" . $children_non_isoniazid_total . "</td>
+                        </tr>
+                        </tbody>
+                        <tfoot>
+                        <tr>
+                        <th>Total</th>
+                        <th><b>" . $non_isoniazid_total . "</b></th>
+                        <th>" . $result . "</th>
+                        <th>" . $result1 . "</th>
+                        <th>" . $adults_routine_isoniazid_total . "</th>
+                        <th>" . $result3 . "</th>
+                        <th>" . $result4 . "</th>
+                        <th>" . $children_non_isoniazid_total . "</th>
+                        </tr>
+                        </tfoot>";
 
 
         $row_string .= "</table>";
@@ -5720,12 +5720,12 @@ class Report_management extends MY_Controller
         //Isoniazid
         //male adult
         $sql1 = "SELECT * FROM patient 
-	inner join gender on patient.gender = gender.id 
-	left join regimen on patient.start_regimen	= regimen.id
-	left join patient_status on patient_status.id = patient.current_status
-	WHERE (isoniazid_start_date = '' OR isoniazid_start_date IS NULL)
-	AND patient_status.name LIKE '%active%' AND date_enrolled <= '$to'
-	AND dob != '' ";
+                inner join gender on patient.gender = gender.id 
+                left join regimen on patient.start_regimen	= regimen.id
+                left join patient_status on patient_status.id = patient.current_status
+                WHERE (isoniazid_start_date = '' OR isoniazid_start_date IS NULL)
+                AND patient_status.name LIKE '%active%' AND date_enrolled <= '$to'
+                AND dob != '' ";
 
         $query1 = $this->db->query($sql1);
         $result = $query1->result();
@@ -5744,30 +5744,30 @@ class Report_management extends MY_Controller
 		</tr>";
         }
         $row_string = "
-	<table border='1' class='dataTables'>
-	<thead >
-	<tr>
-	<th> patient ccc number</th>
-	<th> medical recordno. </th>
-	<th> name </th>
-	<th> gender </th>
-	<th> next appointment </th>
-	<th> current regimen </th>
-	</tr>
-	</thead>
-	<tbody>					
-	$tr
-	</tbody>
-	<tfoot>
-	<tr>
-	<th> patient ccc number</th>
-	<th> medical recordno. </th>
-	<th> name </th>
-	<th> gender </th>
-	<th> next appointment </th>
-	<th> current regimen </th>
-	</tr>
-	</tfoot>";
+                    <table border='1' class='dataTables'>
+                    <thead >
+                    <tr>
+                    <th> patient ccc number</th>
+                    <th> medical recordno. </th>
+                    <th> name </th>
+                    <th> gender </th>
+                    <th> next appointment </th>
+                    <th> current regimen </th>
+                    </tr>
+                    </thead>
+                    <tbody>					
+                    $tr
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                    <th> patient ccc number</th>
+                    <th> medical recordno. </th>
+                    <th> name </th>
+                    <th> gender </th>
+                    <th> next appointment </th>
+                    <th> current regimen </th>
+                    </tr>
+                    </tfoot>";
 
 
         $row_string .= "</table>";
