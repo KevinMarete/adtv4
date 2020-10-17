@@ -5,8 +5,13 @@ namespace Modules\ADT\Controllers;
 use \Modules\Tables\Controllers\Tables;
 use \Modules\Template\Controllers\Template;
 use App\Libraries\mPDF;
+use App\Libraries\PHPExcel;
+use App\Libraries\PHPExcel_IOFactory;
 use \Modules\ADT\Models\CCC_store_service_point;
 use \Modules\ADT\Models\Regimen_service_type;
+use \Modules\ADT\Models\Facilities;
+use \Modules\ADT\Models\District;
+use \Modules\ADT\Models\Patient;
 use Illuminate\Database\Capsule\Manager as DB;
 
 class Report_management extends \App\Controllers\BaseController
@@ -5969,6 +5974,17 @@ class Report_management extends \App\Controllers\BaseController
     echo view('\Modules\ADT\Views\\template', $data);
   }
 
+  public function setConsumption()
+  {
+    $facility_code = session()->get("facility");
+    //truncate drug_consumption_balance
+    $sql = "TRUNCATE drug_cons_balance";
+    $this->db->query($sql);
+    $sql = "INSERT INTO drug_cons_balance(drug_id,stock_type,period,facility,amount)SELECT dsm.drug,dsm.ccc_store_sp,DATE_FORMAT(dsm.transaction_date,'%Y-%m-01') as period, $facility_code facility_code,SUM(dsm.quantity_out) AS total FROM  drug_stock_movement dsm LEFT JOIN transaction_type t ON t.id=dsm.transaction_type WHERE dsm.drug > 0 AND t.name LIKE '%dispense%' GROUP BY dsm.drug,dsm.ccc_store_sp,period ORDER BY  dsm.drug";
+    $this->db->query($sql);
+    return $this->db->affectedRows();
+  }
+
   public function getMoreHelp($stock_type = '2', $start_date = '', $end_date = '')
   {
     //Check if user is logged in
@@ -6145,12 +6161,12 @@ class Report_management extends \App\Controllers\BaseController
     $data = array();
     $aColumns = array('drug', 'Unit');
 
-    $iDisplayStart = $this->input->get_post('iDisplayStart', true);
-    $iDisplayLength = $this->input->get_post('iDisplayLength', true);
-    $iSortCol_0 = $this->input->get_post('iSortCol_0', false);
-    $iSortingCols = $this->input->get_post('iSortingCols', true);
-    $sSearch = $this->input->get_post('sSearch', true);
-    $sEcho = $this->input->get_post('sEcho', true);
+    $iDisplayStart = $this->request->getGetPost('iDisplayStart', true);
+    $iDisplayLength = $this->request->getGetPost('iDisplayLength', true);
+    $iSortCol_0 = $this->request->getGetPost('iSortCol_0', false);
+    $iSortingCols = $this->request->getGetPost('iSortingCols', true);
+    $sSearch = $this->request->getGetPost('sSearch', true);
+    $sEcho = $this->request->getGetPost('sEcho', true);
 
     $count = 0;
 
@@ -6162,9 +6178,9 @@ class Report_management extends \App\Controllers\BaseController
     // Ordering
     if (isset($iSortCol_0)) {
       for ($i = 0; $i < intval($iSortingCols); $i++) {
-        $iSortCol = $this->input->get_post('iSortCol_' . $i, true);
-        $bSortable = $this->input->get_post('bSortable_' . intval($iSortCol), true);
-        $sSortDir = $this->input->get_post('sSortDir_' . $i, true);
+        $iSortCol = $this->request->getGetPost('iSortCol_' . $i, true);
+        $bSortable = $this->request->getGetPost('bSortable_' . intval($iSortCol), true);
+        $sSortDir = $this->request->getGetPost('sSortDir_' . $i, true);
 
         if ($bSortable == 'true') {
           $this->db->order_by($aColumns[intval($this->db->escape_str($iSortCol))], $this->db->escape_str($sSortDir));
@@ -6179,7 +6195,7 @@ class Report_management extends \App\Controllers\BaseController
        */
     if (isset($sSearch) && !empty($sSearch)) {
       for ($i = 0; $i < count($aColumns); $i++) {
-        $bSearchable = $this->input->get_post('bSearchable_' . $i, true);
+        $bSearchable = $this->request->getGetPost('bSearchable_' . $i, true);
 
         // Individual column filtering
         if (isset($bSearchable) && $bSearchable == 'true') {
@@ -6422,6 +6438,7 @@ class Report_management extends \App\Controllers\BaseController
     $data['base_url'] = base_url();
     $data['stock_type'] = $stock_type;
     $data['title'] = "webADT | Reports";
+    $data['selected_report_type_link'] = "drug_inventory_report_row";
     $data['selected_report_type'] = "Drug Inventory";
     $data['hide_side_menu'] = 1;
     $data['banner_text'] = "Facility Reports";
@@ -6433,13 +6450,12 @@ class Report_management extends \App\Controllers\BaseController
       $data['report_title'] = "Expiring Drugs";
       $data['content_view'] = '\Modules\ADT\Views\\reports\\expiring_drugs_v';
     } else if ($report_type == "drug_consumption") {
-
       // run drug_consumption
       // drug_stock_balance_sync/setConsumption
       $this->setConsumption();
       //Get actual page
-      if ($this->uri->segment(4) != "") {
-        $data['year'] = $this->uri->segment(4);
+      if ($this->request->uri->getSegment(5) != "") {
+        $data['year'] = $this->request->uri->getSegment(5);
       }
       $data['pack_unit'] = $start_date; //Generating packs or units is based on this parameter
       $data['report_title'] = "Drug consumption";
@@ -6454,25 +6470,24 @@ class Report_management extends \App\Controllers\BaseController
       }
       //Get transaction names
       $sql = "SELECT id,name,effect 
-    FROM transaction_type 
-    WHERE active = '1' 
-    AND (name LIKE '%received%' 
-    OR name LIKE '%adjustment%' 
-    OR name LIKE '%return%' OR name LIKE '%dispense%' 
-    OR name LIKE '%issue%' OR name LIKE '%loss%' 
-    OR name LIKE '%ajustment%' OR name LIKE '%physical%count%' 
-    OR name LIKE '%starting%stock%')  
-    GROUP BY name, effect 
-    ORDER BY id ASC";
+              FROM transaction_type 
+              WHERE active = '1' 
+              AND (name LIKE '%received%' 
+              OR name LIKE '%adjustment%' 
+              OR name LIKE '%return%' OR name LIKE '%dispense%' 
+              OR name LIKE '%issue%' OR name LIKE '%loss%' 
+              OR name LIKE '%ajustment%' OR name LIKE '%physical%count%' 
+              OR name LIKE '%starting%stock%')  
+              GROUP BY name, effect 
+              ORDER BY id ASC";
       $get_transaction_names = $this->db->query($sql);
       $get_transaction_array = $get_transaction_names->getResultArray();
       $data['trans_names'] = $get_transaction_array;
-      $data['start_date'] = date('d-M-Y', strtotime($this->uri->segment(5)));
-      $data['end_date'] = date('d-M-Y', strtotime($this->uri->segment(6)));
+      $data['start_date'] = date('d-M-Y', strtotime($this->request->uri->getSegment(5)));
+      $data['end_date'] = date('d-M-Y', strtotime($this->request->uri->getSegment(6)));
       $data['report_title'] = "Facility Commodity Summary";
       $data['content_view'] = '\Modules\ADT\Views\\reports\\commodity_summary_v';
     }
-
     echo view('\Modules\ADT\Views\\template', $data);
   }
 
@@ -6482,12 +6497,12 @@ class Report_management extends \App\Controllers\BaseController
     $oi_drugs = array();
     //get all regimen drugs from OI
     $sql = "SELECT IF(d.drug IS NULL,rd.drugcode,d.drug) as drugname,'' as drugqty
-    FROM regimen_drug rd 
-    LEFT JOIN regimen r ON r.id=rd.regimen
-    LEFT JOIN regimen_service_type rst ON rst.id=r.type_of_service
-    LEFT JOIN drugcode d ON d.id=rd.drugcode
-          WHERE d.enabled = '1'
-      GROUP BY drugname";
+            FROM regimen_drug rd 
+            LEFT JOIN regimen r ON r.id=rd.regimen
+            LEFT JOIN regimen_service_type rst ON rst.id=r.type_of_service
+            LEFT JOIN drugcode d ON d.id=rd.drugcode
+            WHERE d.enabled = '1'
+            GROUP BY drugname";
     $query = $this->db->query($sql);
     $drugs = $query->getResultArray();
     if ($drugs) {
@@ -6498,13 +6513,13 @@ class Report_management extends \App\Controllers\BaseController
 
     //get all patients dispensed,drug and in this period
     $sql = "SELECT pv.patient_id,CONCAT_WS( '/', MONTH( pv.dispensing_date ) , YEAR( pv.dispensing_date ) ) AS Month_Year, group_concat(d.drug) AS ARVDrug, group_concat(pv.quantity) AS ARVQTY
-    FROM v_patient_visits pv 
-    LEFT JOIN drugcode d ON d.id = pv.drug_id
-    WHERE pv.dispensing_date
-    BETWEEN '" . $period_start . "'
-    AND '" . $period_end . "'
-    GROUP BY pv.patient_id, CONCAT_WS( '/', MONTH( pv.dispensing_date ) , YEAR( pv.dispensing_date ) )
-    ORDER BY pv.patient_id";
+            FROM v_patient_visits pv 
+            LEFT JOIN drugcode d ON d.id = pv.drug_id
+            WHERE pv.dispensing_date
+            BETWEEN '" . $period_start . "'
+            AND '" . $period_end . "'
+            GROUP BY pv.patient_id, CONCAT_WS( '/', MONTH( pv.dispensing_date ) , YEAR( pv.dispensing_date ) )
+            ORDER BY pv.patient_id";
     $query = $this->db->query($sql);
     $transactions = $query->getResultArray();
 
@@ -6533,9 +6548,9 @@ class Report_management extends \App\Controllers\BaseController
     }
 
     //export patient transactions
-    $this->load->library('PHPExcel');
+    //$this->load->library('PHPExcel');
     $dir = "assets/download";
-    $objPHPExcel = new PHPExcel();
+    $objPHPExcel = new \PHPExcel();
     $objPHPExcel->setActiveSheetIndex(0);
 
     /* Delete all files in export folder */
@@ -6594,13 +6609,13 @@ class Report_management extends \App\Controllers\BaseController
     $period_start = date("F-Y", strtotime($period_start));
     $original_filename = "PATIENT DRUG CONSUMPTION[" . $period_start . "].xls";
     $filename = $dir . "/" . urldecode($original_filename);
-    $objWriter = new PHPExcel_Writer_Excel5($objPHPExcel);
+    $objWriter = new \PHPExcel_Writer_Excel5($objPHPExcel);
     $objWriter->save($filename);
     $objPHPExcel->disconnectWorksheets();
     unset($objPHPExcel);
     if (file_exists($filename)) {
       $filename = str_replace("#", "%23", $filename);
-      redirect($filename);
+      return redirect()->to(base_url('public/' . $filename));
     }
   }
 
@@ -6624,6 +6639,7 @@ class Report_management extends \App\Controllers\BaseController
     $data['title'] = "webADT | Reports";
     $data['hide_side_menu'] = 1;
     $data['banner_text'] = "Facility Reports";
+    $data['selected_report_type_link'] = "drug_inventory_report_row";
     $data['selected_report_type'] = "Drug Inventory";
     $data['report_title'] = "Expiring Drugs within 6 months";
     $data['title'] = "Reports";
@@ -6636,15 +6652,9 @@ class Report_management extends \App\Controllers\BaseController
     $count = 0;
     $facility_code = session()->get('facility');
     $data['facility_name'] = session()->get('facility_name');
-    //$drugs_sql = "SELECT s.id AS id,s.drug AS Drug_Id,d.drug AS Drug_Name,d.pack_size AS pack_size, u.name AS Unit, s.batch_number AS Batch,s.expiry_date AS Date_Expired,DATEDIFF(CURDATE(),DATE(s.expiry_date)) AS Days_Since_Expiry FROM drugcode d LEFT JOIN drug_unit u ON d.unit = u.id LEFT JOIN drug_stock_movement s ON d.id = s.drug LEFT JOIN transaction_type t ON t.id=s.transaction_type WHERE t.effect=1 AND DATEDIFF(CURDATE(),DATE(s.expiry_date)) >0  AND d.enabled=1 AND s.facility ='" . $facility_code . "' GROUP BY Batch ORDER BY Days_Since_Expiry asc";
     $drugs_sql = "SELECT d.drug as drug_name,d.pack_size,u.name as drug_unit,dsb.batch_number as batch,dsb.balance as stocks_display,dsb.expiry_date,DATEDIFF(CURDATE(),dsb.expiry_date) as expired_days_display FROM drugcode d LEFT JOIN drug_unit u ON d.unit=u.id LEFT JOIN drug_stock_balance dsb ON d.id=dsb.drug_id WHERE DATEDIFF(CURDATE(),DATE(dsb.expiry_date)) >0  AND d.enabled=1 AND d.enabled=1 AND dsb.facility_code ='" . $facility_code . "' AND dsb.stock_type='" . $stock_type . "' AND dsb.balance>0 ORDER BY expired_days_display asc";
     $drugs = $this->db->query($drugs_sql);
     $results = $drugs->getResultArray();
-    //Get all expiring drugs
-    //foreach ($results as $result => $value) {
-    //	$count = 1;
-    //$this -> getBatchInfo($value['Drug_Id'], $value['Batch'], $value['Unit'], $value['Drug_Name'], $value['Date_Expired'], $value['Days_Since_Expiry'], $value['id'], $value['pack_size'], $stock_type, $facility_code);
-    //};
 
     $d = 0;
     $drugs = $results;
@@ -6652,6 +6662,7 @@ class Report_management extends \App\Controllers\BaseController
     $data['title'] = "webADT | Reports";
     $data['hide_side_menu'] = 1;
     $data['banner_text'] = "Facility Reports";
+    $data['selected_report_type_link'] = "drug_inventory_report_row";
     $data['selected_report_type'] = "Drug Inventory";
     $data['report_title'] = "Expired Drugs";
     $data['title'] = "Reports";
@@ -6885,19 +6896,26 @@ class Report_management extends \App\Controllers\BaseController
     $facility_code = session()->get("facility");
     $start_date = date('Y-m-d', strtotime($start_date));
     $end_date = date('Y-m-d', strtotime($end_date));
+    $drugs = [];
 
     //Get Drugs Received in Period
-    $this->db->select("UPPER(d.drug) as drug_name,IF(ds.name IS NOT NULL,UPPER(ds.name),UPPER(dsm.source_destination)) as drug_source,SUM(dsm.quantity_out) as total")
-      ->from("drug_stock_movement dsm")
-      ->join("transaction_type t", "t.id = dsm.transaction_type", "LEFT")
-      ->join("drugcode d", "d.id = dsm.drug", "LEFT")
-      ->join("drug_destination ds", "ds.id = dsm.source_destination", "LEFT")
-      ->where("dsm.transaction_date BETWEEN '$start_date' AND '$end_date'")
-      ->where("dsm.facility", $facility_code)
-      ->like("t.name", "issue")
-      ->where("d.id IS NOT NULL")
-      ->group_by("d.drug,dsm.source_destination");
-    $query = $this->db->get();
+    $sql = "
+    SELECT 
+      UPPER(d.drug) as drug_name,
+      IF(ds.name IS NOT NULL,UPPER(ds.name),UPPER(dsm.source_destination)) as drug_source,
+      SUM(dsm.quantity_out) as total
+    FROM drug_stock_movement dsm
+    LEFT JOIN transaction_type t ON t.id = dsm.transaction_type
+    LEFT JOIN drugcode d ON d.id = dsm.drug
+    LEFT JOIN drug_destination ds ON ds.id = dsm.source_destination
+    WHERE dsm.transaction_date BETWEEN ? AND ?
+    AND dsm.facility = ?
+    AND t.name LIKE '%issue%'
+    AND d.id IS NOT NULL
+    GROUP BY d.drug,dsm.source_destination
+    ";
+
+    $query = $this->db->query($sql, [$start_date, $end_date, $facility_code]);
     $results = $query->getResultArray();
 
     $sources = array();
@@ -6957,7 +6975,7 @@ class Report_management extends \App\Controllers\BaseController
     }
 
     $ccc = CCC_store_service_point::getCCC($stock_type);
-    $data['transaction_type'] = $ccc['Name'];
+    $data['transaction_type'] = $ccc['name'];
     $data['from'] = $start_date;
     $data['to'] = $end_date;
     $data['dyn_table'] = $this->table->generate();
@@ -6977,19 +6995,26 @@ class Report_management extends \App\Controllers\BaseController
     $facility_code = session()->get("facility");
     $start_date = date('Y-m-d', strtotime($start_date));
     $end_date = date('Y-m-d', strtotime($end_date));
+    $drugs = [];
 
     //Get Drugs Received in Period
-    $this->db->select("UPPER(d.drug) as drug_name,IF(ds.name IS NOT NULL,UPPER(ds.name),UPPER(dsm.source_destination)) as drug_source,SUM(dsm.quantity) as total")
-      ->from("drug_stock_movement dsm")
-      ->join("transaction_type t", "t.id = dsm.transaction_type", "LEFT")
-      ->join("drugcode d", "d.id = dsm.drug", "LEFT")
-      ->join("drug_source ds", "ds.id = dsm.source_destination", "LEFT")
-      ->where("dsm.transaction_date BETWEEN '$start_date' AND '$end_date'")
-      ->where("dsm.facility", $facility_code)
-      ->like("t.name", "received")
-      ->where("d.id IS NOT NULL")
-      ->group_by("d.drug,dsm.source_destination");
-    $query = $this->db->get();
+    $sql = "
+      SELECT 
+        UPPER(d.drug) as drug_name,
+        IF(ds.name IS NOT NULL,UPPER(ds.name),UPPER(dsm.source_destination)) as drug_source,
+        SUM(dsm.quantity) as total
+      FROM drug_stock_movement dsm
+      LEFT JOIN transaction_type t ON t.id = dsm.transaction_type
+      LEFT JOIN drugcode d ON d.id = dsm.drug
+      LEFT JOIN drug_source ds ON ds.id = dsm.source_destination
+      WHERE dsm.transaction_date BETWEEN ? AND ?
+      AND dsm.facility = ?
+      AND t.name LIKE '%received%'
+      AND d.id IS NOT NULL
+      GROUP BY d.drug,dsm.source_destination
+      ";
+
+    $query = $this->db->query($sql, [$start_date, $end_date, $facility_code]);
     $results = $query->getResultArray();
 
     $sources = array();
@@ -7038,8 +7063,12 @@ class Report_management extends \App\Controllers\BaseController
     $this->table->setTemplate($tmpl);
     $this->table->setHeading($columns);
 
+    $row_count = 0;
+
     foreach ($temp as $drug => $quantities) {
+      $row_count++;
       $result = array();
+      $result['COUNTER'] = $row_count;
       $result['DRUGNAME'] = $drug;
 
       foreach ($quantities as $source_name => $quantity) {
@@ -7049,7 +7078,7 @@ class Report_management extends \App\Controllers\BaseController
     }
 
     $ccc = CCC_store_service_point::getCCC($stock_type);
-    $data['transaction_type'] = $ccc['Name'];
+    $data['transaction_type'] = $ccc['name'];
     $data['from'] = $start_date;
     $data['to'] = $end_date;
     $data['dyn_table'] = $this->table->generate();
@@ -7066,7 +7095,7 @@ class Report_management extends \App\Controllers\BaseController
 
   public function getMOHForm($type = "", $period_start = "", $period_end)
   {
-    $this->load->library('PHPExcel');
+    //$this->load->library('PHPExcel');
     $dir = "assets/download";
     if ($type == "711") {
       $template = "711_template";
@@ -7076,7 +7105,7 @@ class Report_management extends \App\Controllers\BaseController
 
     $inputFileType = 'Excel5';
     $inputFileName = $_SERVER['DOCUMENT_ROOT'] . '/adtv4/public/assets/templates/moh_forms/' . $template . '.xls';
-    $objReader = PHPExcel_IOFactory::createReader($inputFileType);
+    $objReader = \PHPExcel_IOFactory::createReader($inputFileType);
     $objPHPExcel = $objReader->load($inputFileName);
 
     /* Delete all files in export folder */
@@ -7094,12 +7123,13 @@ class Report_management extends \App\Controllers\BaseController
     //Facility Info
     $year = date('Y', strtotime($period_start));
     $facility = Facilities::getCodeFacility(session()->get("facility"));
+    $district = District::find($facility->district);
 
     if ($type == "711") {
       $month = date('F', strtotime($period_start));
       $objPHPExcel->getActiveSheet()->SetCellValue('C7', $facility->name);
       $objPHPExcel->getActiveSheet()->SetCellValue('A9', $facility->facilitycode);
-      $objPHPExcel->getActiveSheet()->SetCellValue('C9', $facility->Parent_District->Name);
+      $objPHPExcel->getActiveSheet()->SetCellValue('C9', $district->name);
       $objPHPExcel->getActiveSheet()->SetCellValue('H9', $month);
       $objPHPExcel->getActiveSheet()->SetCellValue('J9', $year);
 
@@ -7521,6 +7551,7 @@ class Report_management extends \App\Controllers\BaseController
   {
     $period_start = date('Y-m-01', strtotime($period));
     $period_end = date('Y-m-t', strtotime($period));
+    $data = [];
     $counter = 0;
     $total = 0;
     $main = array();
