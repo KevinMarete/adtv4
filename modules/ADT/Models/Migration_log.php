@@ -1,6 +1,8 @@
 <?php
+namespace Modules\ADT\Models;
 
 use App\Models\BaseModel;
+use Illuminate\Database\Capsule\Manager as DB;
 
 class Migration_log extends BaseModel {
 
@@ -18,13 +20,9 @@ class Migration_log extends BaseModel {
     }
 
     public static function getLog($source) {
-        $query = DB::select("SELECT * FROM migration_log WHERE source='$source'");
-        $result = array_map(function ($query) {
-            return (array) $query;
-        }, $result);
-        return $result[0];
+       return BaseModel::resultSet(DB::select("SELECT * FROM migration_log WHERE source='$source'"))[0];
+     
     }
 
 }
 
-?>

@@ -4,20 +4,14 @@ namespace Modules\ADT\Controllers;
 
 use App\Libraries\Ftp;
 use \Modules\Tables\Controllers\Tables;
-use \Modules\Template\Controllers\Template;
-use App\Libraries\Mysqldump;
-use App\Libraries\Encrypt;
-use App\Libraries\Updater;
-use App\Libraries\Zip;
-use \Modules\ADT\Models\User;
-use \Modules\ADT\Models\User_right;
-use \Modules\ADT\Models\Patient_appointment;
-use \Modules\ADT\Models\CCC_store_service_point;
+use \Modules\ADT\Models\Migration_log;
+use \Modules\ADT\Models\Facilities;
 
 class Auto_management extends \App\Controllers\BaseController {
 
     var $viral_load_url = "";
     var $db;
+
     function __construct() {
 
         ini_set("max_execution_time", "100000");
@@ -29,11 +23,13 @@ class Auto_management extends \App\Controllers\BaseController {
     }
 
     public function index($manual = FALSE) {
+
         $message = "";
         $retry_seconds = 3600; //1 hour (60*60)
         $today = date('YmdHis');
         //get last update time of log file for auto_update
-        $log = Migration_Log::getLog('auto_update');
+        $log = Migration_log::getLog('auto_update');
+        //dd($log);
         $last_update = $log['last_index'];
         $status = (int) $log['count'];
 
@@ -85,10 +81,10 @@ class Auto_management extends \App\Controllers\BaseController {
             $message .= $this->updateViralLoad();
 
             //finally update the log file for auto_update 
-            if ($this->session->userdata("curl_error") == '') {
+            if (session()->get("curl_error") == '') {
                 $sql = "UPDATE migration_log SET  count = 1 WHERE source='auto_update'";
                 $this->db->query($sql);
-                $this->session->set_userdata("curl_error", "");
+                $this->session->set("curl_error", "");
             }
         }
         if ($manual == TRUE) {
@@ -102,7 +98,7 @@ class Auto_management extends \App\Controllers\BaseController {
 		 	SET destination='1'
 		 	WHERE destination LIKE '%pharm%'";
         $this->db->query($sql);
-        $count = $this->db->affected_rows();
+        $count = $this->db->affectedRows();
         $message = "(" . $count . ") issued to transactions updated!<br/>";
         $message = "";
         if ($count > 0) {
@@ -126,7 +122,7 @@ class Auto_management extends \App\Controllers\BaseController {
 		 		WHERE t.name LIKE '%$transaction%'
 		 		AND(dsm.source_destination IS NULL OR dsm.source_destination='' OR dsm.source_destination='0')";
             $this->db->query($sql);
-            $count = $this->db->affected_rows();
+            $count = $this->db->affectedRows();
             $message .= $count . " " . $transaction . " transactions missing source_destination(" . $column . ") have been updated!<br/>";
         }
         if ($count <= 0) {
@@ -136,14 +132,14 @@ class Auto_management extends \App\Controllers\BaseController {
     }
 
     public function updateCCC_Store() {
-        $facility_code = $this->session->userdata("facility");
+        $facility_code = $this->session->get("facility");
         $sql = "UPDATE drug_stock_movement dsm
 		 	SET ccc_store_sp='1'
 		 	WHERE dsm.source !=dsm.destination
 		 	AND ccc_store_sp='2' 
 		 	AND (dsm.source='$facility_code' OR dsm.destination='$facility_code')";
         $this->db->query($sql);
-        $count = $this->db->affected_rows();
+        $count = $this->db->affectedRows();
         $message = "(" . $count . ") transactions changed from main pharmacy to main store!<br/>";
         if ($count <= 0) {
             $message = "";
@@ -152,13 +148,13 @@ class Auto_management extends \App\Controllers\BaseController {
     }
 
     public function setBatchBalance() {
-        $facility_code = $this->session->userdata("facility");
+        $facility_code = $this->session->get("facility");
         $sql = "UPDATE drug_stock_balance dsb
 		 	SET dsb.balance=0
 		 	WHERE dsb.balance<0 
 		 	AND dsb.facility_code='$facility_code'";
         $this->db->query($sql);
-        $count = $this->db->affected_rows();
+        $count = $this->db->affectedRows();
         $message = "(" . $count . ") batches with negative balance have been updated!<br/>";
         if ($count <= 0) {
             $message = "";
@@ -175,7 +171,7 @@ class Auto_management extends \App\Controllers\BaseController {
 		 	WHERE current_regimen = '' 
 		 	AND ps.name != 'active'";
         $query = $this->db->query($sql_get_current_regimen);
-        $result_array = $query->result_array();
+        $result_array = $query->getResultArray();
         if ($result_array) {
             foreach ($result_array as $value) {
                 $patient_id = $value['id'];
@@ -183,7 +179,7 @@ class Auto_management extends \App\Controllers\BaseController {
                 //Get last regimen
                 $sql_last_regimen = "SELECT pv.last_regimen FROM patient_visit pv WHERE pv.patient_id= ? ORDER BY id DESC LIMIT 1";
                 $query = $this->db->query($sql_last_regimen, $patient_ccc);
-                $res = $query->result_array();
+                $res = $query->getResultArray();
                 if (count($res) > 0) {
                     $last_regimen_id = $res[0]['last_regimen'];
                     $sql = "UPDATE patient p SET p.current_regimen = ?  WHERE p.id = ?";
@@ -200,7 +196,7 @@ class Auto_management extends \App\Controllers\BaseController {
     }
 
     public function updatePatientData() {
-        $days_to_lost_followup = $this->session->userdata('lost_to_follow_up'); //Default lost to follow up
+        $days_to_lost_followup = $this->session->get('lost_to_follow_up'); //Default lost to follow up
         $days_to_pep_end = 30;
         $days_to_prep_inactive = 30; //They should not be late for their appointments
         $days_in_year = date("z", mktime(0, 0, 0, 12, 31, date('Y'))) + 1;
@@ -219,7 +215,7 @@ class Auto_management extends \App\Controllers\BaseController {
         foreach ($status_array as $status) {
             $s = "SELECT id,name FROM patient_status ps WHERE ps.name LIKE '%$status%'";
             $q = $this->db->query($s);
-            $rs = $q->result_array();
+            $rs = $q->getResultArray();
             if ($rs) {
                 $state[$status] = $rs[0]['id'];
             } else {
@@ -342,8 +338,8 @@ class Auto_management extends \App\Controllers\BaseController {
                 $stmt1 .= $stmt2;
 
                 $q = $this->db->query($stmt1);
-                if ($this->db->affected_rows() > 0) {
-                    $message .= $i . "(<b>" . $this->db->affected_rows() . "</b>) rows affected<br/>";
+                if ($this->db->affectedRows() > 0) {
+                    $message .= $i . "(<b>" . $this->db->affectedRows() . "</b>) rows affected<br/>";
                 }
             }
         }
@@ -351,7 +347,7 @@ class Auto_management extends \App\Controllers\BaseController {
     }
 
     public function updateFixes() {
-        $days_to_lost_followup = $this->session->userdata('lost_to_follow_up'); //Default lost to follow up
+        $days_to_lost_followup = $this->session->get('lost_to_follow_up'); //Default lost to follow up
         //Rename the prophylaxis cotrimoxazole
         $fixes[] = "UPDATE drug_prophylaxis
 		SET name='cotrimoxazole'
@@ -386,7 +382,7 @@ class Auto_management extends \App\Controllers\BaseController {
         $fixes[] = "UPDATE drug_instructions 
 		SET name=REPLACE(name, '?', '.')
 		WHERE name LIKE '%?%'";
-        $facility_code = $this->session->userdata("facility");
+        $facility_code = $this->session->get("facility");
         //Auto Update Supported and supplied columns for satellite facilities
         $fixes[] = "UPDATE facilities f, 
 		(SELECT facilitycode,supported_by,supplied_by
@@ -415,13 +411,14 @@ class Auto_management extends \App\Controllers\BaseController {
         $total = 0;
         foreach ($fixes as $fix) {
             //will exempt all database errors
-            $db_debug = $this->db->db_debug;
-            $this->db->db_debug = false;
-            $this->db->query($fix);
-            $this->db->db_debug = $db_debug;
+            $db = \Config\Database::connect();
+            $db_debug = $db->DBDebug;
+            $db->DBDebug = true;
+            $db->query($fix);
+            $db->DBDebug = $db_debug;
             //count rows affected by fixes
-            if ($this->db->affected_rows() > 0) {
-                $total += $this->db->affected_rows();
+            if ($this->db->affectedRows() > 0) {
+                $total += $this->db->affectedRows();
             }
         }
 
@@ -517,7 +514,7 @@ class Auto_management extends \App\Controllers\BaseController {
     }
 
     public function updateViralLoad() {
-        $facility_code = $this->session->userdata("facility");
+        $facility_code = $this->session->get("facility");
         $url = $this->viralload_url . "vlapi.php?mfl=" . $facility_code;
         $patient_tests = array();
         $ch = curl_init();
@@ -567,13 +564,13 @@ class Auto_management extends \App\Controllers\BaseController {
         $message = '';
         $sql = "SELECT id, Name FROM dose";
         $query = $this->db->query($sql);
-        $doses = $query->result_array();
+        $doses = $query->getResultArray();
         foreach ($doses as $dose) {
             $dose_id = $dose['id'];
             $dose_name = $dose['Name'];
             $sql1 = "UPDATE patient_visit set dose='$dose_name' where dose='$dose_id' ";
             $query1 = $this->db->query($sql1);
-            $message = 'Updated Dose Records in Visits (' . $this->db->affected_rows() . ')';
+            $message = 'Updated Dose Records in Visits (' . $this->db->affectedRows() . ')';
         }
 
         return $message;
@@ -591,7 +588,7 @@ class Auto_management extends \App\Controllers\BaseController {
             //Get all executed migrations
             $migrations = array();
             $get_migrations_sql = "SELECT migration from migrations";
-            $results = $this->db->query($get_migrations_sql)->result_array();
+            $results = $this->db->query($get_migrations_sql)->getResultArray();
             if (!empty($results)) {
                 foreach ($results as $result) {
                     $migrations[] = $result['migration'];
@@ -600,6 +597,7 @@ class Auto_management extends \App\Controllers\BaseController {
 
             //Get migration files
             foreach ($files as $file_name) {
+               // echo $file_name;
                 $error_status = 0;
                 $ext = pathinfo($file_name, PATHINFO_EXTENSION);
                 if ($file_name != '.' && $file_name != '..' && in_array($ext, $accepted_files) && !in_array($file_name, $migrations)) {
@@ -611,10 +609,10 @@ class Auto_management extends \App\Controllers\BaseController {
                     foreach ($statements as $statement) {
                         $statement = trim($statement);
                         if ($statement) {
-                            if (!$this->db->simple_query($statement)) {
-                                $error_code = $this->db->_error_number();
+                            if (!$this->db->query($statement)) {
+                                $error_code = $this->db->getErrorCode();
                                 $error_status = 1;
-                                $error = $file_name . '==>' . $this->db->_error_message() . '<br/>';
+                                $error = $file_name . '==>' . $this->db->getErrorMessage() . '<br/>';
                             }
                         }
                     }
@@ -634,7 +632,7 @@ class Auto_management extends \App\Controllers\BaseController {
 
     public function auto_backup() {
         $returnable = "AutoBackup: ";
-        $autobackup = $this->session->userdata("autobackup");
+        $autobackup = $this->session->get("autobackup");
 
         if ($autobackup == 1) {
             // check if auto backup is set
@@ -759,9 +757,10 @@ class Auto_management extends \App\Controllers\BaseController {
     }
 
     public function get_viral_load($patient_no) {
+        $uri = $this->request->uri;
         //Validate patient_no when use of / to separate mflcode and ccc_no
-        $mflcode = $this->uri->segment(3);
-        $ccc_no = $this->uri->segment(4);
+        $mflcode = $uri->getSegment(3);
+        $ccc_no = $uri->getSegment(4);
         if ($ccc_no) {
             $patient_no = $mflcode . '/' . $ccc_no;
         }
@@ -770,7 +769,7 @@ class Auto_management extends \App\Controllers\BaseController {
         $this->db->from('patient_viral_load');
         $this->db->order_by('test_date', 'desc');
         $query = $this->db->get();
-        $result = $query->result_array();
+        $result = $query->getResultArray();
         echo json_encode($result);
     }
 
@@ -782,7 +781,7 @@ class Auto_management extends \App\Controllers\BaseController {
 
         $procs = array();
         $get_migrations_sql = "SELECT migration from migrations";
-        $results = $this->db->query($get_migrations_sql)->result_array();
+        $results = $this->db->query($get_migrations_sql)->getResultArray();
         if (!empty($results)) {
             foreach ($results as $result) {
                 $procs[] = $result['migration'];
@@ -790,20 +789,21 @@ class Auto_management extends \App\Controllers\BaseController {
         }
         $proc_files = scandir($file_path);
 
-        $CI = &get_instance();
-        $CI->load->database();
-        $hostname = explode(':', $CI->db->hostname)[0];
-        $port = (isset($CI->db->port)) ? $CI->db->port : 3306;
-        $username = $CI->db->username;
-        $password = $CI->db->password;
-        $database = $CI->db->database;
+        $db = \Config\Database::connect();
+        $hostname = explode(':', $db->hostname)[0];
+        $port = (isset($db->port)) ? $db->port : 3306;
+        $username = $db->username;
+        $password = $db->password;
+        $database = $db->database;
+
+        //removed password flag RETURN
 
         $mysql_home = realpath($_SERVER['MYSQL_HOME']) . "\mysql";
 
         for ($key = 2; $key < count($proc_files); $key++) {
             if (!(in_array($proc_files[$key], $procs))) {
                 $mysql_bin = str_replace("\\", "\\\\", $mysql_home);
-                $mysql_con = $mysql_bin . ' -u ' . $username . ' -p' . $password . ' -P' . $port . ' -h ' . $hostname . ' ' . $database . ' < ' . $file_path . '' . $proc_files[$key];
+                $mysql_con = $mysql_bin . ' -u ' . $username . ' -P' . $port . ' -h ' . $hostname . ' ' . $database . ' < ' . $file_path . '' . $proc_files[$key];
 
                 if (!exec($mysql_con)) {
                     $data = array(

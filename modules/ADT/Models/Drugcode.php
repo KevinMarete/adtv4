@@ -36,7 +36,7 @@ class Drugcode extends BaseModel {
     }
 
     function Brand() {
-        return $this->hasMany(Brand::class, 'id', 'drug_id');
+        return $this->hasMany(Brand::class, 'drug_id');
     }
 
     function Dose() {
@@ -77,57 +77,54 @@ class Drugcode extends BaseModel {
     }
 
     public static function getBrands() {
-        $query = Doctrine_Query::create()->select("id,Drug")->from("Drugcode")->where("enabled='1'");
-        $drugsandcodes = $query->execute();
-        return $drugsandcodes;
+        $query = DB::table('Drugcode')->where('enabled', '1')->get();
+        return $query;
     }
 
     public static function getEnabledDrugs() {
-        $query = Doctrine_Query::create()->select("id,Drug")->from("Drugcode")->where("Enabled='1'");
-        $drugsandcodes = $query->execute(array(), Doctrine::HYDRATE_ARRAY);
-        return $drugsandcodes;
+        return BaseModel::resultSet(DB::table('Drugcode')->where('enabled', '1')->get());
     }
 
     public static function getNonMappedDrugs() {
-        $query = Doctrine_Query::create()->select("d.*,du.Name as drug_unit")->from("drugcode d")->leftJoin('d.Drug_Unit du')->where("Enabled = '1' AND (map='' OR map='0')")->orderBy("drug asc");
-        $drugcodes = $query->execute(array(), Doctrine::HYDRATE_ARRAY);
-        return $drugcodes;
-    }
+    $query = Doctrine_Query::create()->select("d.*,du.Name as drug_unit")->from("drugcode d")->leftJoin('d.Drug_Unit du')->where("Enabled = '1' AND (map='' OR map='0')")->orderBy("drug asc");
+    $drugcodes = $query->execute(array(), Doctrine::HYDRATE_ARRAY);
+    return $drugcodes;
+}
 
-    public static function getTotalNumber($source = 0) {
-        $query = Doctrine_Query::create()->select("count(*) as Total_Drugs")->from("Drugcode")->where('Source = "' . $source . '" or Source ="0"');
-        $total = $query->execute();
-        return $total[0]['Total_Drugs'];
-    }
+public static function getTotalNumber($source = 0) {
+$query = Doctrine_Query::create()->select("count(*) as Total_Drugs")->from("Drugcode")->where('Source = "' . $source . '" or Source ="0"');
+$total = $query->execute();
+return $total[0]['Total_Drugs'];
+}
 
-    public static function getPagedDrugs($offset, $items, $source = 0) {
-        $query = Doctrine_Query::create()->select("Drug,Unit,Pack_Size,Safety_Quantity,Generic_Name,Supported_By,Dose,Duration,Quantity,Source,Enabled,Supplied")->from("Drugcode")->where('Source = "' . $source . '" or Source ="0"')->offset($offset)->limit($items);
-        $drugs = $query->execute();
-        return $drugs;
-    }
+public static function getPagedDrugs($offset, $items, $source = 0) {
+$query = Doctrine_Query::create()->select("Drug,Unit,Pack_Size,Safety_Quantity,Generic_Name,Supported_By,Dose,Duration,Quantity,Source,Enabled,Supplied")->from("Drugcode")->where('Source = "' . $source . '" or Source ="0"')->offset($offset)->limit($items);
+$drugs = $query->execute();
+return $drugs;
+}
 
-    public static function getDrugCode($id) {
-        $query = Doctrine_Query::create()->select("*")->from("Drugcode")->where("id = '$id'");
-        $drugs = $query->execute();
-        return $drugs[0];
-    }
+public static function getDrugCode($id) {
+$query = Doctrine_Query::create()->select("*")->from("Drugcode")->where("id = '$id'");
+$drugs = $query->execute();
+return $drugs[0];
+}
 
-    public static function getDrug($drug_id, $ccc_id) {
-        $db = \Config\Database::connect();
-        $sql = "SELECT dc.*,du.Name as drugunit,dc.map
+public static function getDrug($drug_id, $ccc_id) {
+$db = \Config\Database::connect();
+$sql = "SELECT dc.*,du.Name as drugunit,dc.map
              FROM drugcode dc
              LEFT JOIN drug_unit du ON du.id=dc.unit
              WHERE dc.id='$drug_id'";
-        $query = $db->query($sql);
-        $drugs = $query->getResultArray();
-        if ($drugs) {
-            return $drugs[0];
-        }
-    }
+$query = $db->query($sql);
+$drugs = $query->getResultArray();
+if ($drugs) {
+return $drugs[0];
+}
+}
 
-    public static function getDrugBatches($drug_id, $ccc_id, $facility_code, $today) {
-        $db = \Config\Database::connect();
-        $sql = "SELECT d.id,d.drug as drugname,du.Name AS unit,d.pack_size,dsb.batch_number,dsb.expiry_date,dsb.stock_type,dsb.balance 
+public static function getDrugBatches($drug_id, $ccc_id, $facility_code, $today) {
+$db = \Config\Database::connect();
+$sql = "SELECT d.id,d.drug as drugname,du.Name AS unit,d.pack_size,dsb.batch_number,dsb.expiry_date,dsb.stock_type,dsb.balance 
 				FROM drug_stock_balance dsb 
 				LEFT JOIN drugcode d ON d.id=dsb.drug_id 
 				LEFT JOIN drug_unit du ON du.id = d.unit 
@@ -137,33 +134,33 @@ class Drugcode extends BaseModel {
 				AND dsb.facility_code='$facility_code' 
 				AND dsb.stock_type='$ccc_id' 
 				ORDER BY dsb.expiry_date asc";
-        $query = $db->query($sql);
-        $batches = $query->getResultArray();
-        return $batches;
-    }
+$query = $db->query($sql);
+$batches = $query->getResultArray();
+return $batches;
+}
 
-    public static function getDrugCodeHydrated($id) {
-        $query = DB::table('drugcode')->where('id', $id)->get();
-        return $query;
-    }
+public static function getDrugCodeHydrated($id) {
+$query = DB::table('drugcode')->where('id', $id)->get();
+return $query;
+}
 
-    public static function deleteBrand($id) {
-        $query = Doctrine_Query::create()->delete('brand b')->where("b.id ='$id'");
-        $rows = $query->execute();
-        return $rows;
-    }
+public static function deleteBrand($id) {
+$query = Doctrine_Query::create()->delete('brand b')->where("b.id ='$id'");
+$rows = $query->execute();
+return $rows;
+}
 
-    public static function getDrugID($drugname) {
-        $query = Doctrine_Query::create()->select("id")->from("Drugcode")->where("Drug like '%$drugname%'");
-        $drugs = $query->execute(array(), Doctrine::HYDRATE_ARRAY);
-        return $drugs[0]['id'];
-    }
+public static function getDrugID($drugname) {
+$query = Doctrine_Query::create()->select("id")->from("Drugcode")->where("Drug like '%$drugname%'");
+$drugs = $query->execute(array(), Doctrine::HYDRATE_ARRAY);
+return $drugs[0]['id'];
+}
 
-    public static function getItems() {
-        $query = Doctrine_Query::create()->select("id,Drug AS Name")->from("Drugcode")->where("Enabled='1'")->orderby("Drug asc");
-        $drugs = $query->execute(array(), Doctrine::HYDRATE_ARRAY);
-        return $drugs;
-    }
+public static function getItems() {
+$query = Doctrine_Query::create()->select("id,Drug AS Name")->from("Drugcode")->where("Enabled='1'")->orderby("Drug asc");
+$drugs = $query->execute(array(), Doctrine::HYDRATE_ARRAY);
+return $drugs;
+}
 
 }
 

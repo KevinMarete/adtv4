@@ -235,12 +235,12 @@ if ($user_is_administrator) {
             .input-append .btn{
             margin:0px;
             }
-            thead tr th:first-child,
+            /*thead tr th:first-child,
             tbody tr td:first-child {
             width: 50px;
             min-width: 50px;
             max-width: 50px;
-            word-break: break-all;
+            word-break: break-all;*/
             }
         </style>
     </head>

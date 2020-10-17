@@ -2,6 +2,8 @@
 
 namespace App\Controllers;
 
+
+
 /**
  * Class BaseController
  *
@@ -50,10 +52,11 @@ class BaseController extends Controller {
         service('eloquent');
         if (session()->get('user_id')=='') {
           // echo 'This session'.session()->get('user_id');
-            //header('Location:'.base_url().'/public/login');
+           //header('Location :'.base_url().'/public/login');
            // return redirect()->to(site_url('/public/login'));
         }else{
           //  echo 'No sessin';
+            
         }
     }
 

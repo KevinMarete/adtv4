@@ -27,12 +27,11 @@ class Facilities extends BaseModel {
 
     public static function getTotalNumber($district = 0) {
         if ($district == 0) {
-            $query = Doctrine_Query::create()->select("COUNT(*) as Total_Facilities")->from("Facilities");
+            $query = DB::select("SELECT COUNT(*) as Total_Facilities FROM Facilities");
         } else if ($district > 0) {
-            $query = Doctrine_Query::create()->select("COUNT(*) as Total_Facilities")->from("Facilities")->where("district = '$district'");
+            $query = DB::select("SELECT COUNT(*) as Total_Facilities FROM Facilities WHERE district = '$district'");
         }
-        $count = $query->execute();
-        return $count[0]->Total_Facilities;
+        return $query[0]->Total_Facilities;
     }
 
     public static function getTotalNumberInfo($facility_code) {
@@ -64,15 +63,13 @@ class Facilities extends BaseModel {
     }
 
     public function getAll() {
-        $query = Doctrine_Query::create()->select("*")->from("Facilities")->orderBy("name");
-        $facility = $query->execute(array(), Doctrine::HYDRATE_ARRAY);
-        return $facility;
+        $query = DB::table('Facilities')->get();
+        return BaseModel::resultSet($query);
     }
 
-    public function getFacilities() {
-        $query = Doctrine_Query::create()->select("facilitycode,name")->from("Facilities")->orderBy("name");
-        $facility = $query->execute(array(), Doctrine::HYDRATE_ARRAY);
-        return $facility;
+    public static function getFacilities() {
+        $query = DB::table('Facilities')->select('facilitycode','name')->orderBy("name")->get();
+        return BaseModel::resultSet($query);
     }
 
     public static function getSatellites($parent) {

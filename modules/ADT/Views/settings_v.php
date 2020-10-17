@@ -346,7 +346,7 @@ if (session()->get('link_id') and session()->get('linkSub')) {
                                 </li>
                                 <!-- <li><a href="#" class="order_settings/listing/sync_drug" title="Order Drug Management">Drugs Order</a></li> -->
                                 <li>
-                                    <a href="#" class="drug_stock_balance_sync/update_balances" title="Drug Stock Balances">Drug Stock Balances </a>
+                                    <a href="#" class="update_balances" title="Drug Stock Balances">Drug Stock Balances </a>
                                 </li>
                             </ul>
                         </li>
