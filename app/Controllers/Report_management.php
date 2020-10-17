@@ -38,7 +38,7 @@ class Report_management extends MY_Controller
         }
 
         $inputFileType = 'Excel5';
-        $inputFileName = $_SERVER['DOCUMENT_ROOT'] . '/ADT/assets/templates/moh_forms/' . $template . '.xls';
+        $inputFileName = $_SERVER['DOCUMENT_ROOT'] . '/adtv4/public/assets/templates/moh_forms/' . $template . '.xls';
         $objReader = PHPExcel_IOFactory::createReader($inputFileType);
         $objPHPExcel = $objReader->load($inputFileName);
 
@@ -2683,8 +2683,8 @@ class Report_management extends MY_Controller
                 INNER join regimen_service_type rst on rst.id = p.service WHERE LOWER(rst.name) = 'prep'
                 AND p.date_enrolled between '$period_start' and '$period_end'	";
 
-                    $dyn_table = "<table border='1' id='patient_listing'  cellpadding='5' class='dataTables'>";
-                    $dyn_table .= "<thead>
+        $dyn_table = "<table border='1' id='patient_listing'  cellpadding='5' class='dataTables'>";
+        $dyn_table .= "<thead>
                 <tr>
                 <th>CCC Number</th>
                 <th>First Name</th>
@@ -2735,8 +2735,8 @@ class Report_management extends MY_Controller
                 INNER join regimen_service_type rst on rst.id = p.service WHERE LOWER(rst.name) = 'pep'
                 AND p.date_enrolled between '$period_start' and '$period_end'	";
 
-                    $dyn_table = "<table border='1' id='patient_listing'  cellpadding='5' class='dataTables'>";
-                    $dyn_table .= "<thead>
+        $dyn_table = "<table border='1' id='patient_listing'  cellpadding='5' class='dataTables'>";
+        $dyn_table .= "<thead>
                 <tr>
                 <th>CCC Number</th>
                 <th>First Name</th>
@@ -4258,24 +4258,24 @@ class Report_management extends MY_Controller
         $query = $this->db->query($sql);
         $results = $query->result_array();
         $row_string = "
-    <table border='1' class='dataTables'>
-    <thead >
-    <tr>
-    <th> Patient No </th>
-    <th> Patient Name </th>
-    <th> Phone No /Alternate No</th>
-    <th> Phys. Address </th>
-    <th> Sex </th>
-    <th> Age </th>
-    <th> Service </th>
-    <th> Diff Care </th>
-    <th> Last Regimen </th>
-    <th> Appointment Date </th>
-    <th> Visit Status</th>
-    <th> Source</th>
-    </tr>
-    </thead>
-    <tbody>";
+                        <table border='1' class='dataTables'>
+                        <thead >
+                        <tr>
+                        <th> Patient No </th>
+                        <th> Patient Name </th>
+                        <th> Phone No /Alternate No</th>
+                        <th> Phys. Address </th>
+                        <th> Sex </th>
+                        <th> Age </th>
+                        <th> Service </th>
+                        <th> Diff Care </th>
+                        <th> Last Regimen </th>
+                        <th> Appointment Date </th>
+                        <th> Visit Status</th>
+                        <th> Source</th>
+                        </tr>
+                        </thead>
+                        <tbody>";
         if ($results) {
             foreach ($results as $result) {
                 $patient = $result['patient'];
@@ -4394,67 +4394,67 @@ class Report_management extends MY_Controller
             $app_desc = str_ireplace('_', ' ', $appointment_description) . '(s)';
             //Get all patients who have apppointments on the selected date range and visited in the filtered date range
             $sql = "SELECT 
-		tmp.patient,
-		tmp.appointment
-		FROM
-		(
-		SELECT 
-		pa.patient,
-		MIN(pa.appointment) appointment, 
-		CASE 
-		WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) >0 AND DATEDIFF(MIN(pa.appointment), pv.visit_date) < 3 THEN 'Within 3 Days'		
-		ELSE 'N/A'
-		END AS appointment_description
-		FROM clinic_appointment pa 
-		INNER JOIN 
-		(
-		SELECT 
-		patient_id, dispensing_date visit_date
-		FROM patient_visit
-		WHERE dispensing_date BETWEEN '$filter_from' AND '$filter_to'
-		GROUP BY patient_id, visit_date
-		) pv ON pv.patient_id = pa.patient 
-                WHERE DATEDIFF(pa.appointment, pv.visit_date) > 0 AND DATEDIFF(pa.appointment, pv.visit_date) < 3
-		GROUP BY patient_id,visit_date
-		) tmp
-		WHERE tmp.appointment_description = '$app_desc'";
+                    tmp.patient,
+                    tmp.appointment
+                    FROM
+                    (
+                    SELECT 
+                    pa.patient,
+                    MIN(pa.appointment) appointment, 
+                    CASE 
+                    WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) >0 AND DATEDIFF(MIN(pa.appointment), pv.visit_date) < 3 THEN 'Within 3 Days'		
+                    ELSE 'N/A'
+                    END AS appointment_description
+                    FROM clinic_appointment pa 
+                    INNER JOIN 
+                    (
+                    SELECT 
+                    patient_id, dispensing_date visit_date
+                    FROM patient_visit
+                    WHERE dispensing_date BETWEEN '$filter_from' AND '$filter_to'
+                    GROUP BY patient_id, visit_date
+                    ) pv ON pv.patient_id = pa.patient 
+                            WHERE DATEDIFF(pa.appointment, pv.visit_date) > 0 AND DATEDIFF(pa.appointment, pv.visit_date) < 3
+                    GROUP BY patient_id,visit_date
+                    ) tmp
+                    WHERE tmp.appointment_description = '$app_desc'";
         } else {
             //Get all patients who have apppointments on the selected date range
             $sql = "SELECT pa.patient,pa.appointment ,ca.appointment as clinic_appointment,
-		CASE
-		WHEN  p.differentiated_care = 1 THEN 'YES' ELSE  'NO' END as diff_care,
-		DATEDIFF(ca.appointment, pa.appointment) as days_diff
-		FROM patient_appointment pa
-		LEFT JOIN clinic_appointment ca on ca.id = pa.clinical_appointment
-		LEFT JOIN patient p on p.patient_number_ccc = pa.patient
-		WHERE pa.appointment BETWEEN '$from' AND '$to' 
-		AND pa.facility='$facility_code' 
-		GROUP BY patient,appointment";
+                    CASE
+                    WHEN  p.differentiated_care = 1 THEN 'YES' ELSE  'NO' END as diff_care,
+                    DATEDIFF(ca.appointment, pa.appointment) as days_diff
+                    FROM patient_appointment pa
+                    LEFT JOIN clinic_appointment ca on ca.id = pa.clinical_appointment
+                    LEFT JOIN patient p on p.patient_number_ccc = pa.patient
+                    WHERE pa.appointment BETWEEN '$from' AND '$to' 
+                    AND pa.facility='$facility_code' 
+                    GROUP BY patient,appointment";
         }
 
         $query = $this->db->query($sql);
         $results = $query->result_array();
         $row_string = "
-	<table border='1' class='dataTables'>
-	<thead >
-	<tr>
-	<th> Patient No </th>
-	<th> Patient Name </th>
-	<th> Phone No /Alternate No</th>
-	<th> Phys. Address </th>
-	<th> Sex </th>
-	<th> Age </th>
-	<th> Service </th>
-	<th> Last Regimen </th>
-	<th> Appointment Date </th>
-	<th> Visit Status</th>
-	<th> Source</th>
-	<th> On Diff Care</th>
-	<th> Days to Clinic Appointment</th>
+                    <table border='1' class='dataTables'>
+                    <thead >
+                    <tr>
+                    <th> Patient No </th>
+                    <th> Patient Name </th>
+                    <th> Phone No /Alternate No</th>
+                    <th> Phys. Address </th>
+                    <th> Sex </th>
+                    <th> Age </th>
+                    <th> Service </th>
+                    <th> Last Regimen </th>
+                    <th> Appointment Date </th>
+                    <th> Visit Status</th>
+                    <th> Source</th>
+                    <th> On Diff Care</th>
+                    <th> Days to Clinic Appointment</th>
 
-	</tr>
-	</thead>
-	<tbody>";
+                    </tr>
+                    </thead>
+                    <tbody>";
         if ($results) {
             foreach ($results as $result) {
                 $patient = $result['patient'];
@@ -4487,24 +4487,24 @@ class Report_management extends MY_Controller
                     }
                 }
                 $sql = "SELECT 
-			patient_number_ccc as art_no,
-			UPPER(first_name)as first_name,
-			pss.name as source,
-			UPPER(other_name)as other_name,
-			UPPER(last_name)as last_name, 
-			IF(gender=1,'Male','Female')as gender,
-			UPPER(physical) as physical,
-			phone,
-			alternate,
-			FLOOR(DATEDIFF('$today',dob)/365) as age,
-			regimen_service_type.name as service,
-			r.regimen_desc as last_regimen 
-			FROM patient 
-			LEFT JOIN patient_source pss on pss.id=patient.source 
-			LEFT JOIN regimen_service_type on regimen_service_type.id = patient.service
-			LEFT JOIN regimen r ON current_regimen = r.id 
-			WHERE patient_number_ccc = '$patient' 
-			AND facility_code='$facility_code'";
+                        patient_number_ccc as art_no,
+                        UPPER(first_name)as first_name,
+                        pss.name as source,
+                        UPPER(other_name)as other_name,
+                        UPPER(last_name)as last_name, 
+                        IF(gender=1,'Male','Female')as gender,
+                        UPPER(physical) as physical,
+                        phone,
+                        alternate,
+                        FLOOR(DATEDIFF('$today',dob)/365) as age,
+                        regimen_service_type.name as service,
+                        r.regimen_desc as last_regimen 
+                        FROM patient 
+                        LEFT JOIN patient_source pss on pss.id=patient.source 
+                        LEFT JOIN regimen_service_type on regimen_service_type.id = patient.service
+                        LEFT JOIN regimen r ON current_regimen = r.id 
+                        WHERE patient_number_ccc = '$patient' 
+                        AND facility_code='$facility_code'";
                 $query = $this->db->query($sql);
                 $results = $query->result_array();
                 if ($results) {
@@ -4561,75 +4561,74 @@ class Report_management extends MY_Controller
         $facility_code = $this->session->userdata("facility");
 
         $sql = "SELECT 
-    dcl.patient as ccc_number,
-    CONCAT(first_name   ,' ',other_name ,' ', last_name) as name, 
-    concat(phone) as contact,
-    round(((to_days(curdate()) - to_days(dob)) / 365),0) AS age,
-    g.name as gender,
-    r.regimen_code as current_regimen,
-    rs.name as service,
-    nextappointment,
-    p.adherence,
+                dcl.patient as ccc_number,
+                CONCAT(first_name   ,' ',other_name ,' ', last_name) as name, 
+                concat(phone) as contact,
+                round(((to_days(curdate()) - to_days(dob)) / 365),0) AS age,
+                g.name as gender,
+                r.regimen_code as current_regimen,
+                rs.name as service,
+                nextappointment,
+                p.adherence,
 
-    start_date,
-    end_date,
-    dxr.name as exit_reason,
-    (select result from patient_viral_load where patient_ccc_number= p.patient_number_ccc order by test_date desc limit 1 )as   viral_load_test_results,
-    ps.Name as current_status
-    FROM patient p 
-    left join dcm_change_log dcl on dcl.patient = p.patient_number_ccc
-    left join dcm_exit_reason dxr on dcl.exit_reason = dxr.id
-    left join regimen r on r.id = p.current_regimen 
-    left join patient_status ps on ps.id = p.current_status
-    left join regimen_service_type rs on rs.id = p.service 
-    left join gender g on p.gender = g.id
-    WHERE dcl.start_date BETWEEN '$start_date' AND '$end_date' 
-    group by ccc_number
-	";
+                start_date,
+                end_date,
+                dxr.name as exit_reason,
+                (select result from patient_viral_load where patient_ccc_number= p.patient_number_ccc order by test_date desc limit 1 )as   viral_load_test_results,
+                ps.Name as current_status
+                FROM patient p 
+                left join dcm_change_log dcl on dcl.patient = p.patient_number_ccc
+                left join dcm_exit_reason dxr on dcl.exit_reason = dxr.id
+                left join regimen r on r.id = p.current_regimen 
+                left join patient_status ps on ps.id = p.current_status
+                left join regimen_service_type rs on rs.id = p.service 
+                left join gender g on p.gender = g.id
+                WHERE dcl.start_date BETWEEN '$start_date' AND '$end_date' 
+                group by ccc_number
+                ";
         // echo $sql;die;
         $query = $this->db->query($sql);
         $results = $query->result_array();
         $row_string = "
-	<table border='1' class='dataTables'>
-	<thead >
-	<tr>
-	<th> Patient CCC </th>
-	<th> Patient Name </th>
-	<th> Contact</th>
-	<th> Age</th>
-	<th> Sex </th>
-	<th> Current Regimen </th>
-	<th> Service </th>
-	<th> Next Appointment</th>
-    <th> Adherence</th>
-    <th> DCM Started</th>
-    <th> DCM Ended</th>
-	<th> DCM EXit reason</th>
+                    <table border='1' class='dataTables'>
+                    <thead >
+                    <tr>
+                    <th> Patient CCC </th>
+                    <th> Patient Name </th>
+                    <th> Contact</th>
+                    <th> Age</th>
+                    <th> Sex </th>
+                    <th> Current Regimen </th>
+                    <th> Service </th>
+                    <th> Next Appointment</th>
+                    <th> Adherence</th>
+                    <th> DCM Started</th>
+                    <th> DCM Ended</th>
+                    <th> DCM EXit reason</th>
 
-	<th> VL Results</th>
-	<th> Status</th>
-	</tr>
-	</thead>
-	<tbody>";
+                    <th> VL Results</th>
+                    <th> Status</th>
+                    </tr>
+                    </thead>
+                    <tbody>";
 
         foreach ($results as $result) {
-
             $row_string .= "<tr>
-		<td>" . $result['ccc_number'] . "</td>
-		<td>" . $result['name'] . "</td>
-		<td>" . $result['contact'] . "</td>
-		<td>" . $result['age'] . "</td>
-		<td>" . $result['gender'] . "</td>
-		<td>" . $result['current_regimen'] . "</td>
-		<td>" . $result['service'] . "</td>
-		<td>" . $result['nextappointment'] . "</td>
-        <td>" . $result['adherence'] . "</td>
-        <td>" . $result['start_date'] . "</td>
-        <td>" . $result['end_date'] . "</td>
-		<td>" . $result['exit_reason'] . "</td>
-		<td>" . $result['viral_load_test_results'] . "</td>
-		<td>" . $result['current_status'] . "</td
-		</tr>";
+                            <td>" . $result['ccc_number'] . "</td>
+                            <td>" . $result['name'] . "</td>
+                            <td>" . $result['contact'] . "</td>
+                            <td>" . $result['age'] . "</td>
+                            <td>" . $result['gender'] . "</td>
+                            <td>" . $result['current_regimen'] . "</td>
+                            <td>" . $result['service'] . "</td>
+                            <td>" . $result['nextappointment'] . "</td>
+                            <td>" . $result['adherence'] . "</td>
+                            <td>" . $result['start_date'] . "</td>
+                            <td>" . $result['end_date'] . "</td>
+                            <td>" . $result['exit_reason'] . "</td>
+                            <td>" . $result['viral_load_test_results'] . "</td>
+                            <td>" . $result['current_status'] . "</td
+                            </tr>";
             $overall_total++;
         }
 
@@ -4671,80 +4670,80 @@ class Report_management extends MY_Controller
             $app_desc = str_ireplace('_', ' ', $appointment_description) . '(s)';
             //Get all patients who have apppointments on the selected date range and visited in the filtered date range
             $sql = "SELECT 
-		tmp.patient,
-		tmp.appointment
-		FROM
-		(
-		SELECT 
-		pa.patient,
-		MIN(pa.appointment) appointment, 
-		CASE 
-		WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 0 AND DATEDIFF(MIN(pa.appointment), pv.visit_date) < 31 THEN '1 Month(s)'
-		WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 30 AND DATEDIFF(MIN(pa.appointment), pv.visit_date) < 61 THEN '2 Month(s)'
-		WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 60 AND DATEDIFF(MIN(pa.appointment), pv.visit_date) < 91 THEN '3 Month(s)'
-		WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 90 AND DATEDIFF(MIN(pa.appointment), pv.visit_date) < 121 THEN '4 Month(s)'
-		WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 120 AND DATEDIFF(MIN(pa.appointment), pv.visit_date) < 151 THEN '5 Month(s)'
-		WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 150 AND DATEDIFF(MIN(pa.appointment), pv.visit_date) < 181 THEN '6 Month(s)'
-		WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 180 AND DATEDIFF(MIN(pa.appointment), pv.visit_date) < 211 THEN '7 Month(s)'
-		WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 210 AND DATEDIFF(MIN(pa.appointment), pv.visit_date) < 241 THEN '8 Month(s)'
-		WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 240 AND DATEDIFF(MIN(pa.appointment), pv.visit_date) < 271 THEN '9 Month(s)'
-		WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 270 AND DATEDIFF(MIN(pa.appointment), pv.visit_date) < 301 THEN '10 Month(s)'
-		WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 300 AND DATEDIFF(MIN(pa.appointment), pv.visit_date) < 331 THEN '11 Month(s)'
-		WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 330 AND DATEDIFF(MIN(pa.appointment), pv.visit_date) < 361 THEN '12 Month(s)'
-		WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 360 THEN 'Over 1 Year'
-		ELSE 'N/A'
-		END AS appointment_description
-		FROM clinic_appointment pa 
-		INNER JOIN 
-		(
-		SELECT 
-		patient_id, dispensing_date visit_date
-		FROM patient_visit
-		WHERE dispensing_date BETWEEN '$filter_from' AND '$filter_to'
-		and differentiated_care = '1'
-		GROUP BY patient_id, visit_date
-		) pv ON pv.patient_id = pa.patient AND pa.appointment > visit_date
-		GROUP BY patient_id,visit_date
-		) tmp
-		WHERE tmp.appointment_description = '$app_desc'";
+                    tmp.patient,
+                    tmp.appointment
+                    FROM
+                    (
+                    SELECT 
+                    pa.patient,
+                    MIN(pa.appointment) appointment, 
+                    CASE 
+                    WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 0 AND DATEDIFF(MIN(pa.appointment), pv.visit_date) < 31 THEN '1 Month(s)'
+                    WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 30 AND DATEDIFF(MIN(pa.appointment), pv.visit_date) < 61 THEN '2 Month(s)'
+                    WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 60 AND DATEDIFF(MIN(pa.appointment), pv.visit_date) < 91 THEN '3 Month(s)'
+                    WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 90 AND DATEDIFF(MIN(pa.appointment), pv.visit_date) < 121 THEN '4 Month(s)'
+                    WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 120 AND DATEDIFF(MIN(pa.appointment), pv.visit_date) < 151 THEN '5 Month(s)'
+                    WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 150 AND DATEDIFF(MIN(pa.appointment), pv.visit_date) < 181 THEN '6 Month(s)'
+                    WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 180 AND DATEDIFF(MIN(pa.appointment), pv.visit_date) < 211 THEN '7 Month(s)'
+                    WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 210 AND DATEDIFF(MIN(pa.appointment), pv.visit_date) < 241 THEN '8 Month(s)'
+                    WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 240 AND DATEDIFF(MIN(pa.appointment), pv.visit_date) < 271 THEN '9 Month(s)'
+                    WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 270 AND DATEDIFF(MIN(pa.appointment), pv.visit_date) < 301 THEN '10 Month(s)'
+                    WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 300 AND DATEDIFF(MIN(pa.appointment), pv.visit_date) < 331 THEN '11 Month(s)'
+                    WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 330 AND DATEDIFF(MIN(pa.appointment), pv.visit_date) < 361 THEN '12 Month(s)'
+                    WHEN DATEDIFF(MIN(pa.appointment), pv.visit_date) > 360 THEN 'Over 1 Year'
+                    ELSE 'N/A'
+                    END AS appointment_description
+                    FROM clinic_appointment pa 
+                    INNER JOIN 
+                    (
+                    SELECT 
+                    patient_id, dispensing_date visit_date
+                    FROM patient_visit
+                    WHERE dispensing_date BETWEEN '$filter_from' AND '$filter_to'
+                    and differentiated_care = '1'
+                    GROUP BY patient_id, visit_date
+                    ) pv ON pv.patient_id = pa.patient AND pa.appointment > visit_date
+                    GROUP BY patient_id,visit_date
+                    ) tmp
+                    WHERE tmp.appointment_description = '$app_desc'";
         } else {
             //Get all patients who have apppointments on the selected date range
             $sql = "SELECT pa.patient,pa.appointment ,ca.appointment as clinic_appointment,
-		CASE
-		WHEN  p.differentiated_care = 1 THEN 'YES' ELSE  'NO' END as diff_care,
-		DATEDIFF(ca.appointment, pa.appointment) as days_diff
-		FROM patient_appointment pa
-		LEFT JOIN clinic_appointment ca on ca.id = pa.clinical_appointment
-		LEFT JOIN patient p on p.patient_number_ccc = pa.patient
-		WHERE pa.appointment BETWEEN '$from' AND '$to' 
-		AND pa.facility='$facility_code' 
-		AND p.differentiated_care = '1'
-		GROUP BY patient,appointment";
+                    CASE
+                    WHEN  p.differentiated_care = 1 THEN 'YES' ELSE  'NO' END as diff_care,
+                    DATEDIFF(ca.appointment, pa.appointment) as days_diff
+                    FROM patient_appointment pa
+                    LEFT JOIN clinic_appointment ca on ca.id = pa.clinical_appointment
+                    LEFT JOIN patient p on p.patient_number_ccc = pa.patient
+                    WHERE pa.appointment BETWEEN '$from' AND '$to' 
+                    AND pa.facility='$facility_code' 
+                    AND p.differentiated_care = '1'
+                    GROUP BY patient,appointment";
         }
 
         $query = $this->db->query($sql);
         $results = $query->result_array();
         $row_string = "
-	<table border='1' class='dataTables'>
-	<thead >
-	<tr>
-	<th> Patient No </th>
-	<th> Patient Name </th>
-	<th> Phone No /Alternate No</th>
-	<th> Phys. Address </th>
-	<th> Sex </th>
-	<th> Age </th>
-	<th> Service </th>
-	<th> Last Regimen </th>
-	<th> Appointment Date </th>
-	<th> Visit Status</th>
-	<th> Source</th>
-	<th> On Diff Care</th>
-	<th> Days to Clinic Appointment</th>
+                        <table border='1' class='dataTables'>
+                        <thead >
+                        <tr>
+                        <th> Patient No </th>
+                        <th> Patient Name </th>
+                        <th> Phone No /Alternate No</th>
+                        <th> Phys. Address </th>
+                        <th> Sex </th>
+                        <th> Age </th>
+                        <th> Service </th>
+                        <th> Last Regimen </th>
+                        <th> Appointment Date </th>
+                        <th> Visit Status</th>
+                        <th> Source</th>
+                        <th> On Diff Care</th>
+                        <th> Days to Clinic Appointment</th>
 
-	</tr>
-	</thead>
-	<tbody>";
+                        </tr>
+                        </thead>
+                        <tbody>";
         if ($results) {
             foreach ($results as $result) {
                 $patient = $result['patient'];
@@ -4777,24 +4776,24 @@ class Report_management extends MY_Controller
                     }
                 }
                 $sql = "SELECT 
-			patient_number_ccc as art_no,
-			UPPER(first_name)as first_name,
-			pss.name as source,
-			UPPER(other_name)as other_name,
-			UPPER(last_name)as last_name, 
-			IF(gender=1,'Male','Female')as gender,
-			UPPER(physical) as physical,
-			phone,
-			alternate,
-			FLOOR(DATEDIFF('$today',dob)/365) as age,
-			regimen_service_type.name as service,
-			r.regimen_desc as last_regimen 
-			FROM patient 
-			LEFT JOIN patient_source pss on pss.id=patient.source 
-			LEFT JOIN regimen_service_type on regimen_service_type.id = patient.service
-			LEFT JOIN regimen r ON current_regimen = r.id 
-			WHERE patient_number_ccc = '$patient' 
-			AND facility_code='$facility_code'";
+                        patient_number_ccc as art_no,
+                        UPPER(first_name)as first_name,
+                        pss.name as source,
+                        UPPER(other_name)as other_name,
+                        UPPER(last_name)as last_name, 
+                        IF(gender=1,'Male','Female')as gender,
+                        UPPER(physical) as physical,
+                        phone,
+                        alternate,
+                        FLOOR(DATEDIFF('$today',dob)/365) as age,
+                        regimen_service_type.name as service,
+                        r.regimen_desc as last_regimen 
+                        FROM patient 
+                        LEFT JOIN patient_source pss on pss.id=patient.source 
+                        LEFT JOIN regimen_service_type on regimen_service_type.id = patient.service
+                        LEFT JOIN regimen r ON current_regimen = r.id 
+                        WHERE patient_number_ccc = '$patient' 
+                        AND facility_code='$facility_code'";
                 $query = $this->db->query($sql);
                 $results = $query->result_array();
                 if ($results) {
@@ -4852,33 +4851,33 @@ class Report_management extends MY_Controller
 
         //sql to get all appoitnments in period
         $sql = "SELECT 
-	pa.patient,
-	pa.appointment 
-	FROM patient_appointment pa, patient p,patient_status ps
-	WHERE p.current_status  = ps.id
-	AND LOWER(ps.Name) like '%active%'
-	and  pa.patient = p.patient_number_ccc
-	AND pa.appointment >= '$from' 
-	AND pa.appointment <= '$to'
-	AND facility = '$facility_code' 
-	GROUP BY patient, appointment";
+                pa.patient,
+                pa.appointment 
+                FROM patient_appointment pa, patient p,patient_status ps
+                WHERE p.current_status  = ps.id
+                AND LOWER(ps.Name) like '%active%'
+                and  pa.patient = p.patient_number_ccc
+                AND pa.appointment >= '$from' 
+                AND pa.appointment <= '$to'
+                AND facility = '$facility_code' 
+                GROUP BY patient, appointment";
         $query = $this->db->query($sql);
 
         $results = $query->result_array();
         $row_string .= "<table border='1' class='dataTables'>
-	<thead>
-	<tr>
-	<th> ART ID </th>
-	<th> Patient Name</th>
-	<th> Type of Service</th>
-	<th> Sex </th>
-	<th> Age </th>
-	<th> Phone Number</th>
-	<th> Appointment Date </th>
-	<th> Late by (days)</th>
-	<th> Source</th>
-	</tr>
-	</thead>";
+                        <thead>
+                        <tr>
+                        <th> ART ID </th>
+                        <th> Patient Name</th>
+                        <th> Type of Service</th>
+                        <th> Sex </th>
+                        <th> Age </th>
+                        <th> Phone Number</th>
+                        <th> Appointment Date </th>
+                        <th> Late by (days)</th>
+                        <th> Source</th>
+                        </tr>
+                        </thead>";
         if ($results) {
             foreach ($results as $result) {
                 $patient = $result['patient'];
@@ -4962,32 +4961,32 @@ class Report_management extends MY_Controller
         $to = date('Y-m-d', strtotime($to));
 
         $sql = "SELECT p.patient_number_ccc as art_no,UPPER(p.first_name) as first_name,pss.name as source, UPPER(p.last_name) as last_name,UPPER(p.other_name)as other_name,FLOOR(DATEDIFF('$today',p.dob)/365) as age, p.dob, IF(p.gender=1,'Male','Female') as gender, p.weight, r.regimen_desc,r.regimen_code,p.start_regimen_date, t.name AS service_type, s.name AS supported_by 
-	from patient p 
-	LEFT JOIN patient_source pss on pss.id=p.source
-	LEFT JOIN regimen r ON p.start_regimen =r.id
-	LEFT JOIN regimen_service_type t ON t.id = p.service
-	LEFT JOIN supporter s ON s.id = p.supported_by
-	WHERE p.start_regimen_date BETWEEN '$from' and '$to' and p.facility_code='$facility_code' 
-	GROUP BY p.patient_number_ccc";
+                from patient p 
+                LEFT JOIN patient_source pss on pss.id=p.source
+                LEFT JOIN regimen r ON p.start_regimen =r.id
+                LEFT JOIN regimen_service_type t ON t.id = p.service
+                LEFT JOIN supporter s ON s.id = p.supported_by
+                WHERE p.start_regimen_date BETWEEN '$from' and '$to' and p.facility_code='$facility_code' 
+                GROUP BY p.patient_number_ccc";
 
         $query = $this->db->query($sql);
         $results = $query->result_array();
         $row_string = "<table border='1' class='dataTables' width='100%'>
-	<thead>
-	<tr>
-	<th> Patient No </th>
-	<th> Type of Service </th>
-	<th> Client Support </th>
-	<th> Patient Name </th>
-	<th> Sex</th>
-	<th>Age</th>
-	<th> Start Regimen Date </th>
-	<th> Regimen </th>
-	<th> Current Weight (Kg)</th>
-	<th> Source</th>
-	</tr>
-	</thead>
-	<tbody>";
+                        <thead>
+                        <tr>
+                        <th> Patient No </th>
+                        <th> Type of Service </th>
+                        <th> Client Support </th>
+                        <th> Patient Name </th>
+                        <th> Sex</th>
+                        <th>Age</th>
+                        <th> Start Regimen Date </th>
+                        <th> Regimen </th>
+                        <th> Current Weight (Kg)</th>
+                        <th> Source</th>
+                        </tr>
+                        </thead>
+                        <tbody>";
         if ($results) {
             foreach ($results as $result) {
                 $patient_no = $result['art_no'];
@@ -5051,21 +5050,21 @@ class Report_management extends MY_Controller
         $query = $this->db->query($sql);
         $results = $query->result_array();
         $row_string = "<table border='1' class='dataTables' width='100%'>
-	<thead>
-	<tr>
-	<th> Patient No </th>
-	<th> Type of Service </th>
-	<th> Client Support </th>
-	<th> Patient Name </th>
-	<th> Sex</th>
-	<th>Age</th>
-	<th> Current Regimen </th>
-	<th> Current Weight (Kg)</th>
-	<th> Source</th>
-    <th> Current Status </th>
-	</tr>
-	</thead>
-	<tbody>";
+                        <thead>
+                        <tr>
+                        <th> Patient No </th>
+                        <th> Type of Service </th>
+                        <th> Client Support </th>
+                        <th> Patient Name </th>
+                        <th> Sex</th>
+                        <th>Age</th>
+                        <th> Current Regimen </th>
+                        <th> Current Weight (Kg)</th>
+                        <th> Source</th>
+                        <th> Current Status </th>
+                        </tr>
+                        </thead>
+                        <tbody>";
         if ($results) {
             foreach ($results as $result) {
                 $patient_no = $result['art_no'];
@@ -5122,33 +5121,33 @@ class Report_management extends MY_Controller
         $to = date('Y-m-d', strtotime($to));
 
         $sql = "SELECT p.patient_number_ccc as art_no,UPPER(p.first_name) as first_name,pss.name as source, UPPER(p.last_name) as last_name,UPPER(p.other_name)as other_name,FLOOR(DATEDIFF('$today',p.dob)/365) as age, p.dob, IF(p.gender=1,'Male','Female') as gender, p.weight, r.regimen_desc,r.regimen_code,p.start_regimen_date, t.name AS service_type, s.name AS supported_by 
-	from patient p 
-	LEFT JOIN patient_source pss on pss.id=p.source
-	LEFT JOIN regimen r ON p.start_regimen =r.id
-	LEFT JOIN regimen_service_type t ON t.id = p.service
-	LEFT JOIN supporter s ON s.id = p.supported_by
-	WHERE p.start_regimen_date BETWEEN '$from' and '$to' and p.facility_code='$facility_code'
-	and p.differentiated_care = '1' 
-	GROUP BY p.patient_number_ccc";
+                from patient p 
+                LEFT JOIN patient_source pss on pss.id=p.source
+                LEFT JOIN regimen r ON p.start_regimen =r.id
+                LEFT JOIN regimen_service_type t ON t.id = p.service
+                LEFT JOIN supporter s ON s.id = p.supported_by
+                WHERE p.start_regimen_date BETWEEN '$from' and '$to' and p.facility_code='$facility_code'
+                and p.differentiated_care = '1' 
+                GROUP BY p.patient_number_ccc";
 
         $query = $this->db->query($sql);
         $results = $query->result_array();
         $row_string = "<table border='1' class='dataTables' width='100%'>
-	<thead>
-	<tr>
-	<th> Patient No </th>
-	<th> Type of Service </th>
-	<th> Client Support </th>
-	<th> Patient Name </th>
-	<th> Sex</th>
-	<th>Age</th>
-	<th> Start Regimen Date </th>
-	<th> Regimen </th>
-	<th> Current Weight (Kg)</th>
-	<th> Source</th>
-	</tr>
-	</thead>
-	<tbody>";
+                        <thead>
+                        <tr>
+                        <th> Patient No </th>
+                        <th> Type of Service </th>
+                        <th> Client Support </th>
+                        <th> Patient Name </th>
+                        <th> Sex</th>
+                        <th>Age</th>
+                        <th> Start Regimen Date </th>
+                        <th> Regimen </th>
+                        <th> Current Weight (Kg)</th>
+                        <th> Source</th>
+                        </tr>
+                        </thead>
+                        <tbody>";
         if ($results) {
             foreach ($results as $result) {
                 $patient_no = $result['art_no'];
@@ -5799,34 +5798,34 @@ class Report_management extends MY_Controller
         $to = date('Y-m-d', strtotime($to));
 
         $sql = "SELECT pv.patient_number,type_of_service,source,patient_name,current_age,sex,regimen,visit_date,dose,duration,quantity,current_weight,avg(missed_pill_adherence) as missed_pill_adherence,pill_count_adherence,appointment_adherence,differentiated_care FROM vw_routine_refill_visit pv
-    WHERE pv.visit_date 
-    BETWEEN '$from' 
-    AND '$to' group by patient_number,visit_date";
+                WHERE pv.visit_date 
+                BETWEEN '$from' 
+                AND '$to' group by patient_number,visit_date";
         $query = $this->db->query($sql);
         $results = $query->result_array();
         $row_string = "<table border='1'   class='dataTables'>
-    <thead>
-    <tr>
-    <th> Patient No </th>
-    <th> Type of Service </th>
-    <th> Source </th>
-    <th> Patient Name </th>
-    <th> Current Age </th>
-    <th> Sex</th>
-    <th> Regimen </th>
-    <th> Visit Date</th>
-    <th> Dose</th>
-    <th> Duration</th>
-    <th> Quantity</th>
-    <th> Current Weight (Kg) </th>
-    <th> Differentiated Care </th>
-    <th> Missed Pills Adherence (%)</th>
-    <th> Pill Count Adherence (%)</th>
-    <th> Appointment Adherence (%)</th>
-    <th> Average Adherence (%)</th>
-    </tr>
-    </thead>
-    <tbody>";
+                        <thead>
+                        <tr>
+                        <th> Patient No </th>
+                        <th> Type of Service </th>
+                        <th> Source </th>
+                        <th> Patient Name </th>
+                        <th> Current Age </th>
+                        <th> Sex</th>
+                        <th> Regimen </th>
+                        <th> Visit Date</th>
+                        <th> Dose</th>
+                        <th> Duration</th>
+                        <th> Quantity</th>
+                        <th> Current Weight (Kg) </th>
+                        <th> Differentiated Care </th>
+                        <th> Missed Pills Adherence (%)</th>
+                        <th> Pill Count Adherence (%)</th>
+                        <th> Appointment Adherence (%)</th>
+                        <th> Average Adherence (%)</th>
+                        </tr>
+                        </thead>
+                        <tbody>";
         if ($results) {
             foreach ($results as $result) {
                 $patient_no = $result['patient_number'];
@@ -5891,33 +5890,33 @@ class Report_management extends MY_Controller
         $to = date('Y-m-d', strtotime($to));
 
         $sql = "SELECT pv.patient_number,type_of_service,client_support,patient_name,current_age,sex,regimen,visit_date,current_weight,avg(missed_pill_adherence) as missed_pill_adherence,pill_count_adherence,appointment_adherence,pv.source,pv.differentiated_care FROM vw_routine_refill_visit pv , patient p
-	WHERE  p.patient_number_ccc = pv.patient_number
-	and pv.visit_date  BETWEEN '$from' AND '$to' 
-	and p.differentiated_care = '1'
-	group by patient_number,visit_date ";
+                WHERE  p.patient_number_ccc = pv.patient_number
+                and pv.visit_date  BETWEEN '$from' AND '$to' 
+                and p.differentiated_care = '1'
+                group by patient_number,visit_date ";
 
         $query = $this->db->query($sql);
         $results = $query->result_array();
-        $row_string = "<table border='1'   class='dataTables'>
-	<thead>
-	<tr>
-	<th> Patient No </th>
-	<th> Type of Service </th>
-	<th> Client Support </th>
-	<th> Patient Name </th>
-	<th> Current Age </th>
-	<th> Sex</th>
-	<th> Regimen </th>
-	<th> Visit Date</th>
-	<th> Current Weight (Kg) </th>
-	<th> Missed Pills Adherence (%)</th>
-	<th> Pill Count Adherence (%)</th>
-	<th> Appointment Adherence (%)</th>
-	<th> Average Adherence (%)</th>
-	<th> Source </th>
-	</tr>
-	</thead>
-	<tbody>";
+        $row_string = "<table border='1' class='dataTables'>
+                        <thead>
+                        <tr>
+                        <th> Patient No </th>
+                        <th> Type of Service </th>
+                        <th> Client Support </th>
+                        <th> Patient Name </th>
+                        <th> Current Age </th>
+                        <th> Sex</th>
+                        <th> Regimen </th>
+                        <th> Visit Date</th>
+                        <th> Current Weight (Kg) </th>
+                        <th> Missed Pills Adherence (%)</th>
+                        <th> Pill Count Adherence (%)</th>
+                        <th> Appointment Adherence (%)</th>
+                        <th> Average Adherence (%)</th>
+                        <th> Source </th>
+                        </tr>
+                        </thead>
+                        <tbody>";
         if ($results) {
             foreach ($results as $result) {
                 $patient_no = $result['patient_number'];
@@ -5980,63 +5979,63 @@ class Report_management extends MY_Controller
 
 
         $sql = "SELECT 
-	pv.patient_id as art_no,
-	pv.pill_count,
-	pv.missed_pills,
-	pv.dispensing_date, 
-	t.name AS service_type,
-	s.name AS supported_by,
-	UPPER(p.first_name) as first_name ,
-	UPPER(p.other_name) as other_name ,
-	UPPER(p.last_name)as last_name,
-	pss.name as source,
-	FLOOR(DATEDIFF('$today',p.dob)/365) as age,
-	pv.current_weight as weight, 
-	IF(p.gender=1,'Male','Female')as gender,
-	r.regimen_desc,
-	r.regimen_code,
-	DATEDIFF(pv.dispensing_date,pa.appointment) as no_of_days,
-	AVG(pv.adherence) as avg_adherence 
-	FROM patient_visit pv 
-	LEFT JOIN patient p ON p.patient_number_ccc=pv.patient_id
-	LEFT JOIN visit_purpose v ON v.id=pv.visit_purpose
-	LEFT JOIN supporter s ON s.id=p.supported_by
-	LEFT JOIN regimen r ON r.id=p.current_regimen
-	LEFT JOIN regimen_service_type t ON t.id=p.service
-	LEFT JOIN patient_source pss on pss.id=p.source
-	LEFT JOIN patient_status ps ON ps.id=p.current_status
-	LEFT JOIN patient_appointment pa ON p.patient_number_ccc=pa.patient
-	WHERE (pv.dispensing_date 
-	BETWEEN '$from' 
-	AND '$to') 
-	AND v.name like '%routine%' 
-	AND ps.name LIKE '%active%' 
-	AND pv.facility = '$facility_code' 
-	AND (pa.appointment BETWEEN '$from' AND '$to')
-	GROUP BY pv.patient_id,pv.dispensing_date";
+                pv.patient_id as art_no,
+                pv.pill_count,
+                pv.missed_pills,
+                pv.dispensing_date, 
+                t.name AS service_type,
+                s.name AS supported_by,
+                UPPER(p.first_name) as first_name ,
+                UPPER(p.other_name) as other_name ,
+                UPPER(p.last_name)as last_name,
+                pss.name as source,
+                FLOOR(DATEDIFF('$today',p.dob)/365) as age,
+                pv.current_weight as weight, 
+                IF(p.gender=1,'Male','Female')as gender,
+                r.regimen_desc,
+                r.regimen_code,
+                DATEDIFF(pv.dispensing_date,pa.appointment) as no_of_days,
+                AVG(pv.adherence) as avg_adherence 
+                FROM patient_visit pv 
+                LEFT JOIN patient p ON p.patient_number_ccc=pv.patient_id
+                LEFT JOIN visit_purpose v ON v.id=pv.visit_purpose
+                LEFT JOIN supporter s ON s.id=p.supported_by
+                LEFT JOIN regimen r ON r.id=p.current_regimen
+                LEFT JOIN regimen_service_type t ON t.id=p.service
+                LEFT JOIN patient_source pss on pss.id=p.source
+                LEFT JOIN patient_status ps ON ps.id=p.current_status
+                LEFT JOIN patient_appointment pa ON p.patient_number_ccc=pa.patient
+                WHERE (pv.dispensing_date 
+                BETWEEN '$from' 
+                AND '$to') 
+                AND v.name like '%routine%' 
+                AND ps.name LIKE '%active%' 
+                AND pv.facility = '$facility_code' 
+                AND (pa.appointment BETWEEN '$from' AND '$to')
+                GROUP BY pv.patient_id,pv.dispensing_date";
 
         $query = $this->db->query($sql);
         $results = $query->result_array();
         $row_string = "<table border='1'   class='dataTables'>
-	<thead>
-	<tr>
-	<th> Patient No </th>
-	<th> Type of Service </th>
-	<th> Client Support </th>
-	<th> Patient Name </th>
-	<th> Current Age </th>
-	<th> Sex</th>
-	<th> Regimen </th>
-	<th> Visit Date</th>
-	<th> Current Weight (Kg) </th>
-	<th> Missed Pills </th>
-	<th> Pill Count </th>
-	<th> Appointment </th>
-	<th> Average Adherence </th>
-	<th> Source </th>
-	</tr>
-	</thead>
-	<tbody>";
+                        <thead>
+                        <tr>
+                        <th> Patient No </th>
+                        <th> Type of Service </th>
+                        <th> Client Support </th>
+                        <th> Patient Name </th>
+                        <th> Current Age </th>
+                        <th> Sex</th>
+                        <th> Regimen </th>
+                        <th> Visit Date</th>
+                        <th> Current Weight (Kg) </th>
+                        <th> Missed Pills </th>
+                        <th> Pill Count </th>
+                        <th> Appointment </th>
+                        <th> Average Adherence </th>
+                        <th> Source </th>
+                        </tr>
+                        </thead>
+                        <tbody>";
         if ($results) {
             foreach ($results as $result) {
                 $patient_no = $result['art_no'];
@@ -6654,46 +6653,46 @@ class Report_management extends MY_Controller
         $patient_total = $results[0]['total'];
 
         $row_string = "<table border='1' cellpadding='5' id='tblcumulpatients' class='dataTables'>
-	<thead>
-	<tr>
-	<th style='width:15%;'>Current Status</th>
-	<th>Total</th><th>Total</th>
-	<th>Adult</th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th>
-	<th>Children</th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th>
-	</tr>
-	<tr>
-	<th>-</th>
-	<th>No.</th>
-	<th>%</th>
-	<th>Male</th><th></th><th></th><th></th>
-	<th>Female</th><th></th><th></th><th></th><th></th>
-	<th>Male</th><th></th><th></th><th></th><th></th>
-	<th>Female</th><th></th><th></th><th></th><th></th>
-	</tr>
-	<tr>
-	<th></th>
-	<th></th>
-	<th></th>
-	<th>ART</th>
-	<th>PEP</th>
-	<th>OI</th>
-	<th>PREP</th>
-	<th>ART</th>
-	<th>PEP</th>
-	<th>PMTCT</th>
-	<th>OI</th>
-	<th>PREP</th>
-	<th>ART</th>
-	<th>PEP</th>
-	<th>PMTCT</th>
-	<th>OI</th>
-	<th>PREP</th>
-	<th>ART</th>
-	<th>PEP</th>
-	<th>PMTCT</th>
-	<th>OI</th>
-	<th>PREP</th>
-	</tr></thead><tbody>";
+                        <thead>
+                        <tr>
+                        <th style='width:15%;'>Current Status</th>
+                        <th>Total</th><th>Total</th>
+                        <th>Adult</th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th>
+                        <th>Children</th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th>
+                        </tr>
+                        <tr>
+                        <th>-</th>
+                        <th>No.</th>
+                        <th>%</th>
+                        <th>Male</th><th></th><th></th><th></th>
+                        <th>Female</th><th></th><th></th><th></th><th></th>
+                        <th>Male</th><th></th><th></th><th></th><th></th>
+                        <th>Female</th><th></th><th></th><th></th><th></th>
+                        </tr>
+                        <tr>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th>ART</th>
+                        <th>PEP</th>
+                        <th>OI</th>
+                        <th>PREP</th>
+                        <th>ART</th>
+                        <th>PEP</th>
+                        <th>PMTCT</th>
+                        <th>OI</th>
+                        <th>PREP</th>
+                        <th>ART</th>
+                        <th>PEP</th>
+                        <th>PMTCT</th>
+                        <th>OI</th>
+                        <th>PREP</th>
+                        <th>ART</th>
+                        <th>PEP</th>
+                        <th>PMTCT</th>
+                        <th>OI</th>
+                        <th>PREP</th>
+                        </tr></thead><tbody>";
 
         //Get Totals for each Status
         //$sql = "select count(p.id) as total,current_status,ps.name from patient p,patient_status ps where(date_enrolled <= '$from' or date_enrolled='') and facility_code='$facility_code' and ps.id = current_status and current_status!='' and service!='' and gender !='' group by p.current_status";
@@ -8055,7 +8054,6 @@ class Report_management extends MY_Controller
     }
     function downlodadherence($name = "appointment", $start_date = "", $end_date = "", $type = "")
     {
-
         $this->getAdherence($name = "appointment", $start_date, $end_date, $type, TRUE);
     }
 
@@ -11396,7 +11394,7 @@ class Report_management extends MY_Controller
             $app_desc = str_ireplace(array(' ', '(s)'), array('_', ''), $appointment_description);
             $total = $result['total'];
             $overall_total += $total;
-            $action_link = anchor('report_management/getScheduledPatients/' . $result['from_date'] . '/' . $result['to_date'] . '/' . $from . '/' . $to . '/' . $app_desc, 'View Patients', array('target' => '_blank'));
+            $action_link = anchor('/public/report_management/getScheduledPatients/' . $result['from_date'] . '/' . $result['to_date'] . '/' . $from . '/' . $to . '/' . $app_desc, 'View Patients', array('target' => '_blank'));
             $row_string .= '<tr><td>' . $result['patient_ccc_number'] . '</td> <td>' . $result['test_date'] . '</td><td>' . $result['result'] . '</td><td>' . $result['justification'] . '</td></tr>';
         }
         $row_string .= "</tbody></table>";
