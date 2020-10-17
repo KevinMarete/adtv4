@@ -6,7 +6,7 @@
 <div id="wrapperd">
 
 	<div id="patient_enrolled_content" class="full-content">
-		<?php if ($repo_type === 1) {
+		<?php if ($repo_type === '1') {
 			echo view("\Modules\ADT\Views\\reports\\reports_top_menus_v");
 		} ?>
 		<h4 style="text-align: center" id='report_title'>Cumulative Number of Patients by Current Status as of <span id="date_of_appointment"><?php echo $from; ?></span></h4>
