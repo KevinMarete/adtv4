@@ -567,13 +567,13 @@ if ($access_level == "system_administrator") {
                             All Rights Reserved . <strong>Web-ADT version 3.5.0</strong>
                             <?php //if (str_replace('.', '', $update_available->release) + 0 > '3.4.2') { 
                             ?>
-                            <a class="badge badge-warning blinking" href="#adt_update_modal" data-toggle="modal">New Update available</div>
-                        <?php // } 
-                        ?>
+                            <a class="badge badge-warning blinking" href="#adt_update_modal" data-toggle="modal">New Update available</a>
+                            <?php // } 
+                            ?>
+                        </div>
                     </div>
                 </div>
-        </div>
-        </footer>
+            </footer>
         </div>
 
         <!-- Search Modal -->
