@@ -5995,12 +5995,12 @@ class Report_management extends \App\Controllers\BaseController
       /* Server side start */
       $data = array();
       $aColumns = array('drug');
-      $iDisplayStart = $this->request->getGetPost('iDisplayStart', true);
-      $iDisplayLength = $this->request->getGetPost('iDisplayLength', true);
-      $iSortCol_0 = $this->request->getGetPost('iSortCol_0', false);
-      $iSortingCols = $this->request->getGetPost('iSortingCols', true);
-      $sSearch = $this->request->getGetPost('sSearch', true);
-      $sEcho = $this->request->getGetPost('sEcho', true);
+      $iDisplayStart = $this->request->getGetPost('iDisplayStart');
+      $iDisplayLength = $this->request->getGetPost('iDisplayLength');
+      $iSortCol_0 = $this->request->getGetPost('iSortCol_0');
+      $iSortingCols = $this->request->getGetPost('iSortingCols');
+      $sSearch = $this->request->getGetPost('sSearch');
+      $sEcho = $this->request->getGetPost('sEcho');
 
       //Builder
       $builder = $this->db->table('drugcode dc');
@@ -6013,9 +6013,9 @@ class Report_management extends \App\Controllers\BaseController
       // Ordering
       if (isset($iSortCol_0)) {
         for ($i = 0; $i < intval($iSortingCols); $i++) {
-          $iSortCol = $this->request->getGetPost('iSortCol_' . $i, true);
-          $bSortable = $this->request->getGetPost('bSortable_' . intval($iSortCol), true);
-          $sSortDir = $this->request->getGetPost('sSortDir_' . $i, true);
+          $iSortCol = $this->request->getGetPost('iSortCol_' . $i);
+          $bSortable = $this->request->getGetPost('bSortable_' . intval($iSortCol));
+          $sSortDir = $this->request->getGetPost('sSortDir_' . $i);
 
           if ($bSortable == 'true') {
             $builder->orderBy($aColumns[intval($this->db->escapeString($iSortCol))], $this->db->escapeString($sSortDir));
@@ -6030,7 +6030,7 @@ class Report_management extends \App\Controllers\BaseController
            */
       if (isset($sSearch) && !empty($sSearch)) {
         for ($i = 0; $i < count($aColumns); $i++) {
-          $bSearchable = $this->request->getGetPost('bSearchable_' . $i, true);
+          $bSearchable = $this->request->getGetPost('bSearchable_' . $i);
           // Individual column filtering
           if (isset($bSearchable) && $bSearchable == 'true') {
             $builder->orLike($aColumns[$i], $this->db->escapeLikeString($sSearch));
@@ -6051,7 +6051,7 @@ class Report_management extends \App\Controllers\BaseController
 
       // Data set length after filtering
       $builder->select('FOUND_ROWS() AS found_rows');
-      $iFilteredTotal = $builder->get()->getRow()->found_rows;
+      $iFilteredTotal = intval($builder->get()->getRow()->found_rows);
 
       // Total data set length
       $builder->select("dc.*");
@@ -6164,12 +6164,12 @@ class Report_management extends \App\Controllers\BaseController
     $data = array();
     $aColumns = array('drug', 'Unit');
 
-    $iDisplayStart = $this->request->getGetPost('iDisplayStart', true);
-    $iDisplayLength = $this->request->getGetPost('iDisplayLength', true);
-    $iSortCol_0 = $this->request->getGetPost('iSortCol_0', false);
-    $iSortingCols = $this->request->getGetPost('iSortingCols', true);
-    $sSearch = $this->request->getGetPost('sSearch', true);
-    $sEcho = $this->request->getGetPost('sEcho', true);
+    $iDisplayStart = $this->request->getGetPost('iDisplayStart');
+    $iDisplayLength = $this->request->getGetPost('iDisplayLength');
+    $iSortCol_0 = $this->request->getGetPost('iSortCol_0');
+    $iSortingCols = $this->request->getGetPost('iSortingCols');
+    $sSearch = $this->request->getGetPost('sSearch');
+    $sEcho = $this->request->getGetPost('sEcho');
 
     $count = 0;
 
@@ -6184,9 +6184,9 @@ class Report_management extends \App\Controllers\BaseController
     // Ordering
     if (isset($iSortCol_0)) {
       for ($i = 0; $i < intval($iSortingCols); $i++) {
-        $iSortCol = $this->request->getGetPost('iSortCol_' . $i, true);
-        $bSortable = $this->request->getGetPost('bSortable_' . intval($iSortCol), true);
-        $sSortDir = $this->request->getGetPost('sSortDir_' . $i, true);
+        $iSortCol = $this->request->getGetPost('iSortCol_' . $i);
+        $bSortable = $this->request->getGetPost('bSortable_' . intval($iSortCol));
+        $sSortDir = $this->request->getGetPost('sSortDir_' . $i);
 
         if ($bSortable == 'true') {
           $builder->orderBy($aColumns[intval($this->db->escapeString($iSortCol))], $this->db->escapeString($sSortDir));
@@ -6201,7 +6201,7 @@ class Report_management extends \App\Controllers\BaseController
        */
     if (isset($sSearch) && !empty($sSearch)) {
       for ($i = 0; $i < count($aColumns); $i++) {
-        $bSearchable = $this->request->getGetPost('bSearchable_' . $i, true);
+        $bSearchable = $this->request->getGetPost('bSearchable_' . $i);
 
         // Individual column filtering
         if (isset($bSearchable) && $bSearchable == 'true') {
@@ -6219,7 +6219,7 @@ class Report_management extends \App\Controllers\BaseController
     $rResult = $builder->get();
     // Data set length after filtering
     $builder->select('FOUND_ROWS() AS found_rows');
-    $iFilteredTotal = $builder->get()->getRow()->found_rows;
+    $iFilteredTotal = intval($builder->get()->getRow()->found_rows);
 
     // Total data set length
     $builder->select("dc.*");
@@ -6248,18 +6248,18 @@ class Report_management extends \App\Controllers\BaseController
       $y = 0;
 
       $row = array();
-      foreach ($sql_array as $row) {
+      foreach ($sql_array as $row_item) {
         $count++;
-        $drug_name = $row['drug_name'];
-        $unit = $row['unit'];
-        $pack_size = $row['pack_size'];
+        $drug_name = $row_item['drug_name'];
+        $unit = $row_item['unit'];
+        $pack_size = $row_item['pack_size'];
 
-        $month = $row['month'];
+        $month = $row_item['month'];
         //Replace the preceding 0 in months less than october
         if ($month < 10) {
-          $month = str_replace('0', '', $row['month']);
+          $month = str_replace('0', '', $row_item['month']);
         }
-        $drug_consumption[$month] = $row['total_consumed'];
+        $drug_consumption[$month] = $row_item['total_consumed'];
       }
       //Loop untill 12; check if there is a result for each month
       $row[] = $aRow['drug'];
@@ -6305,12 +6305,12 @@ class Report_management extends \App\Controllers\BaseController
        */
     $aColumns = array('drug', 'pack_size');
 
-    $iDisplayStart = $this->request->getPost('iDisplayStart', true);
-    $iDisplayLength = $this->request->getPost('iDisplayLength', true);
-    $iSortCol_0 = $this->request->getPost('iSortCol_0', false);
-    $iSortingCols = $this->request->getPost('iSortingCols', true);
-    $sSearch = $this->request->getPost('sSearch', true);
-    $sEcho = $this->request->getPost('sEcho', true);
+    $iDisplayStart = $this->request->getGetPost('iDisplayStart');
+    $iDisplayLength = $this->request->getGetPost('iDisplayLength');
+    $iSortCol_0 = $this->request->getGetPost('iSortCol_0');
+    $iSortingCols = $this->request->getGetPost('iSortingCols');
+    $sSearch = $this->request->getGetPost('sSearch');
+    $sEcho = $this->request->getGetPost('sEcho');
 
     //Builder
     $builder = $this->db->table('drugcode dc');
@@ -6323,12 +6323,12 @@ class Report_management extends \App\Controllers\BaseController
     // Ordering
     if (isset($iSortCol_0)) {
       for ($i = 0; $i < intval($iSortingCols); $i++) {
-        $iSortCol = $this->request->getPost('iSortCol_' . $i, true);
-        $bSortable = $this->request->getPost('bSortable_' . intval($iSortCol), true);
-        $sSortDir = $this->request->getPost('sSortDir_' . $i, true);
+        $iSortCol = $this->request->getGetPost('iSortCol_' . $i);
+        $bSortable = $this->request->getGetPost('bSortable_' . intval($iSortCol));
+        $sSortDir = $this->request->getGetPost('sSortDir_' . $i);
 
         if ($bSortable == 'true') {
-          $builder->order_by($aColumns[intval($this->db->escapeString($iSortCol))], $this->db->escapeString($sSortDir));
+          $builder->orderBy($aColumns[intval($this->db->escapeString($iSortCol))], $this->db->escapeString($sSortDir));
         }
       }
     }
@@ -6341,11 +6341,11 @@ class Report_management extends \App\Controllers\BaseController
        */
     if (isset($sSearch) && !empty($sSearch)) {
       for ($i = 0; $i < count($aColumns); $i++) {
-        $bSearchable = $this->reuqest->getPost('bSearchable_' . $i, true);
+        $bSearchable = $this->request->getGetPost('bSearchable_' . $i);
 
         // Individual column filtering
         if (isset($bSearchable) && $bSearchable == 'true') {
-          $this->db->orLike($aColumns[$i], $this->db->escapeLikeString($sSearch));
+          $builder->orLike($aColumns[$i], $this->db->escapeLikeString($sSearch));
         }
       }
     }
@@ -6366,7 +6366,7 @@ class Report_management extends \App\Controllers\BaseController
 
     // Data set length after filtering
     $builder->select('FOUND_ROWS() AS found_rows');
-    $iFilteredTotal = $builder->get()->getRow()->found_rows;
+    $iFilteredTotal = intval($builder->get()->getRow()->found_rows);
 
     // Total data set length
     $builder->select("dsb.*");
@@ -6445,9 +6445,6 @@ class Report_management extends \App\Controllers\BaseController
     if ($report_type == "drug_stock_on_hand") {
       $data['report_title'] = "Drug Stock On Hand";
       $data['content_view'] = '\Modules\ADT\Views\\reports\\drugstock_on_hand_v';
-    } else if ($report_type == "expiring_drug") {
-      $data['report_title'] = "Expiring Drugs";
-      $data['content_view'] = '\Modules\ADT\Views\\reports\\expiring_drugs_v';
     } else if ($report_type == "drug_consumption") {
       // run drug_consumption
       // drug_stock_balance_sync/setConsumption
@@ -6459,9 +6456,7 @@ class Report_management extends \App\Controllers\BaseController
       $data['pack_unit'] = $start_date; //Generating packs or units is based on this parameter
       $data['report_title'] = "Drug consumption";
       $data['content_view'] = '\Modules\ADT\Views\\reports\\drugconsumption_v';
-    }
-    //Facility commodity summary
-    else if ($report_type == "commodity_summary") {
+    } else if ($report_type == "commodity_summary") {
       if ($stock_type == 1) {
         $data['stock_type_n'] = 'Main Store';
       } else if ($stock_type == 2) {
