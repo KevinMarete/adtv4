@@ -189,34 +189,57 @@ class Patient extends BaseModel
 		return $query->getResultArray();
 	}
 
-	public function getPregnant($period_end, $indicator)
+	public static function getPregnant($period_end, $indicator)
 	{
 		$adult_age = 15;
 		if ($indicator == "F163") {
-			$condition = "AND p.Parent_Status.Name LIKE '%active%' AND p.PService.Name LIKE '%art%' AND p.PGender.name LIKE 'female' AND round(datediff('$period_end',p.dob)/360)>=$adult_age and p.Active='1'";
+			$condition = "AND ps.Name LIKE '%active%' AND rst.Name LIKE '%art%' AND g.name LIKE 'female' AND round(datediff('$period_end',p.dob)/360)>=$adult_age and p.Active='1'";
 		} else if ($indicator == "D163") {
-			$condition = "AND p.Parent_Status.Name LIKE '%active%' AND p.PService.Name LIKE '%art%' AND p.PGender.name LIKE 'female' AND round(datediff('$period_end',p.dob)/360)<$adult_age and p.Active='1'";
+			$condition = "AND ps.Name LIKE '%active%' AND rst.Name LIKE '%art%' AND g.name LIKE 'female' AND round(datediff('$period_end',p.dob)/360)<$adult_age and p.Active='1'";
 		}
-		$query = Doctrine_Query::create()->select("'$indicator' as status_name,COUNT(*) as total")->from("Patient p")->where("p.Date_Enrolled <='$period_end' AND p.Pregnant='1' $condition")->groupBy("p.Pregnant");
-		$patients = $query->execute(array(), Doctrine::HYDRATE_ARRAY);
-		return $patients;
+
+		$db = \Config\Database::connect();
+		$sql = "
+		SELECT '$indicator' as status_name, COUNT(*) as total
+		FROM Patient p
+		INNER JOIN patient_status ps ON ps.id = p.current_status
+		INNER JOIN regimen_service_type rst ON rst.id = p.service
+		INNER JOIN gender g ON g.id = p.gender
+		WHERE p.Date_Enrolled <='$period_end' AND p.Pregnant='1' 
+		$condition
+		GROUP BY p.Pregnant
+		";
+
+		$query = $db->query($sql);
+		return $query->getResultArray();
 	}
 
-	public function getAllArv($period_end, $indicator)
+	public static function getAllArv($period_end, $indicator)
 	{
 		$adult_age = 15;
 		if ($indicator == "G164") {
-			$condition = "AND p.Parent_Status.Name LIKE '%active%' AND p.PService.Name LIKE '%art%' AND p.PGender.name LIKE 'male' AND round(datediff('$period_end',p.dob)/360)>=$adult_age and p.Active='1'";
+			$condition = "AND ps.Name LIKE '%active%' AND rst.Name LIKE '%art%' AND g.name LIKE 'male' AND round(datediff('$period_end',p.dob)/360)>=$adult_age and p.Active='1'";
 		} else if ($indicator == "F164") {
-			$condition = "AND p.Parent_Status.Name LIKE '%active%' AND p.PService.Name LIKE '%art%' AND p.PGender.name LIKE 'female' AND round(datediff('$period_end',p.dob)/360)>=$adult_age and p.Active='1'";
+			$condition = "AND ps.Name LIKE '%active%' AND rst.Name LIKE '%art%' AND g.name LIKE 'female' AND round(datediff('$period_end',p.dob)/360)>=$adult_age and p.Active='1'";
 		} else if ($indicator == "E164") {
-			$condition = "AND p.Parent_Status.Name LIKE '%active%' AND p.PService.Name LIKE '%art%' AND p.PGender.name LIKE 'male' AND round(datediff('$period_end',p.dob)/360)<$adult_age and p.Active='1'";
+			$condition = "AND ps.Name LIKE '%active%' AND rst.Name LIKE '%art%' AND g.name LIKE 'male' AND round(datediff('$period_end',p.dob)/360)<$adult_age and p.Active='1'";
 		} else if ($indicator == "D164") {
-			$condition = "AND p.Parent_Status.Name LIKE '%active%' AND p.PService.Name LIKE '%art%' AND p.PGender.name LIKE 'female' AND round(datediff('$period_end',p.dob)/360)<$adult_age and p.Active='1'";
+			$condition = "AND ps.Name LIKE '%active%' AND rst.Name LIKE '%art%' AND g.name LIKE 'female' AND round(datediff('$period_end',p.dob)/360)<$adult_age and p.Active='1'";
 		}
-		$query = Doctrine_Query::create()->select("'$indicator' as status_name,COUNT(*) as total")->from("Patient p")->where("p.Date_Enrolled <='$period_end' AND p.Pregnant !='1' $condition");
-		$patients = $query->execute(array(), Doctrine::HYDRATE_ARRAY);
-		return $patients;
+
+		$db = \Config\Database::connect();
+		$sql = "
+		SELECT '$indicator' as status_name, COUNT(*) as total
+		FROM Patient p
+		INNER JOIN patient_status ps ON ps.id = p.current_status
+		INNER JOIN regimen_service_type rst ON rst.id = p.service
+		INNER JOIN gender g ON g.id = p.gender
+		WHERE p.Date_Enrolled <='$period_end' AND p.Pregnant !='1' 
+		$condition
+		";
+
+		$query = $db->query($sql);
+		return $query->getResultArray();
 	}
 
 	public function get_patient($id = NULL, $columns = NULL)
