@@ -1,14 +1,4 @@
 <?php
-<<<<<<< HEAD
-namespace Modules\ADT\Models;
-
-use App\Models\BaseModel;
-
-class District extends BaseModel {
-    protected $table = 'district';
-
-}
-=======
 
 namespace Modules\ADT\Models;
 
@@ -78,4 +68,3 @@ class District extends BaseModel
 		return $query->getRow();
 	}
 }//end class
->>>>>>> origin/reports

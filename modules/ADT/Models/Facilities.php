@@ -71,7 +71,6 @@ class Facilities extends BaseModel
         return $facility;
     }
 
-<<<<<<< HEAD
     public function getAll() {
         $query = DB::table('Facilities')->get();
         return BaseModel::resultSet($query);
@@ -80,20 +79,6 @@ class Facilities extends BaseModel
     public static function getFacilities() {
         $query = DB::table('Facilities')->select('facilitycode','name')->orderBy("name")->get();
         return BaseModel::resultSet($query);
-=======
-    public function getAll()
-    {
-        $query = Doctrine_Query::create()->select("*")->from("Facilities")->orderBy("name");
-        $facility = $query->execute(array(), Doctrine::HYDRATE_ARRAY);
-        return $facility;
-    }
-
-    public function getFacilities()
-    {
-        $query = Doctrine_Query::create()->select("facilitycode,name")->from("Facilities")->orderBy("name");
-        $facility = $query->execute(array(), Doctrine::HYDRATE_ARRAY);
-        return $facility;
->>>>>>> origin/reports
     }
 
     public static function getSatellites($parent)

@@ -119,7 +119,7 @@ class Regimen extends BaseModel {
         return $regimens;
     }
 
-    public static function getServiceRegimens($service) {
+    public function getServiceRegimens($service) {
         $sql = ("SELECT regimen.id, category as Category,enabled as Enabled,line as Line,merged_to as Merged_To,optimality as Optimality,regimen_code as Regimen_Code,regimen_desc as Regimen_Desc,remarks as Remarks,source as Source,type_of_service as Type_Of_Service FROM regimen
 			inner join regimen_service_type on type_of_service = regimen_service_type.id 
 			and regimen_service_type.name like'%$service%' ORDER BY type_of_service");
@@ -146,7 +146,7 @@ class Regimen extends BaseModel {
         return $regimens;
     }
 
-    public static function get_patients_regimen_switched() {
+    public function get_patients_regimen_switched() {
         $sql = ("SELECT CONCAT_WS(  ' | ', r2.regimen_code, r2.regimen_desc ) AS from_regimen, CONCAT_WS(  ' | ', r1.regimen_code, r1.regimen_desc ) AS to_regimen, p.patient_number_ccc AS art_no, CONCAT_WS(  ' ', CONCAT_WS(  ' ', p.first_name, p.other_name ) , p.last_name ) AS full_name, pv.dispensing_date, rst.name AS service_type,IF(rcp.name is not null,rcp.name,pv.regimen_change_reason) as regimen_change_reason 
 				FROM patient p 
 				LEFT JOIN regimen_service_type rst ON rst.id = p.service 

@@ -36,25 +36,15 @@ class User extends BaseModel
     }
 
     //get all users
-<<<<<<< HEAD
-    public static function getAll() {
-        $query = DB::select("SELECT u.id AS id, u.name , u.username , u.email_address , u.phone_number , a.level_name, u2.name AS u2name, u.active AS Active FROM users u LEFT JOIN access_level a ON u.access_level = a.id LEFT JOIN users u2 ON u.created_by = u2.id");
-        return $query;
-    }
-
-    public function getSpecific($user_id) {
-        $query = DB::select("SELECT u.id, u.name, u.username, u.email_address, u.phone_number, a.level_name, u2.name AS u2name, u.active AS Active FROM users u LEFT JOIN access_level a ON u.access_level = a.id LEFT JOIN users u2 ON u.created_by = u2.id WHERE u.id = '$user_id'");
-=======
     public static function getAll()
     {
-        $query = DB::select("SELECT u.id AS id, u.name , u.username , u.email_address , u.phone_number , a.level_name, u2.name AS u2name, u.active AS uactive FROM users u LEFT JOIN access_level a ON u.access_level = a.id LEFT JOIN users u2 ON u.created_by = u2.id");
+        $query = DB::select("SELECT u.id AS id, u.name , u.username , u.email_address , u.phone_number , a.level_name, u2.name AS u2name, u.active AS Active FROM users u LEFT JOIN access_level a ON u.access_level = a.id LEFT JOIN users u2 ON u.created_by = u2.id");
         return $query;
     }
 
     public function getSpecific($user_id)
     {
-        $query = DB::select("SELECT u.id, u.name, u.username, u.email_address, u.phone_number, a.level_name, u2.name AS u2name, u.active AS uactive FROM users u LEFT JOIN access_level a ON u.access_level = a.id LEFT JOIN users u2 ON u.created_by = u2.id WHERE u.id = '$user_id'");
->>>>>>> origin/reports
+        $query = DB::select("SELECT u.id, u.name, u.username, u.email_address, u.phone_number, a.level_name, u2.name AS u2name, u.active AS Active FROM users u LEFT JOIN access_level a ON u.access_level = a.id LEFT JOIN users u2 ON u.created_by = u2.id WHERE u.id = '$user_id'");
         return $query;
     }
 
@@ -100,18 +90,14 @@ class User extends BaseModel
         return $query[0]['id'];
     }
 
-<<<<<<< HEAD
-    public static function getUsersFacility($q = '1') {
+    public static function getUsersFacility($q = '1')
+    {
         $query = DB::select("SELECT u.id , u.name Name, u.username, u.email_address Email_Address , u.phone_number Phone_Number, a.level_name Access, a.indicator Indicator, u2.name AS Creator, u.active AS Active FROM users u LEFT JOIN access_level a ON u.access_level = a.id LEFT JOIN users u2 ON u.created_by = u2.id WHERE $q");
         return $query;
     }
-    public static function getUsersFacilityBack($q = '1') {
-        $query = DB::select("SELECT u.id , u.name, u.username, u.email_address , u.phone_number, a.level_name Access, a.indicator, u2.name AS Creator, u.active AS Active FROM users u LEFT JOIN access_level a ON u.access_level = a.id LEFT JOIN users u2 ON u.created_by = u2.id WHERE $q");
-=======
-    public function getUsersFacility($q = '1')
+    public static function getUsersFacilityBack($q = '1')
     {
-        $query = DB::select("SELECT u.id , u.name e, u.username, u.email_address , u.phone_number, a.level_name, a.indicator, u2.name AS u2naME, u.active AS uactive FROM users u LEFT JOIN access_level a ON u.access_level = a.id LEFT JOIN users u2 ON u.created_by = u2.id WHERE $q");
->>>>>>> origin/reports
+        $query = DB::select("SELECT u.id , u.name, u.username, u.email_address , u.phone_number, a.level_name Access, a.indicator, u2.name AS Creator, u.active AS Active FROM users u LEFT JOIN access_level a ON u.access_level = a.id LEFT JOIN users u2 ON u.created_by = u2.id WHERE $q");
         return $query;
     }
 

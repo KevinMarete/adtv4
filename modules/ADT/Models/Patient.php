@@ -1,14 +1,9 @@
 <?php
-<<<<<<< HEAD
-=======
-
->>>>>>> origin/reports
 namespace Modules\ADT\Models;
 
 use App\Models\BaseModel;
 use Illuminate\Database\Capsule\Manager as DB;
 
-<<<<<<< HEAD
 class Patient extends BaseModel {
     protected $table = 'patient';
     protected $appends = ['name','full_name','phone_number'];
@@ -80,10 +75,6 @@ class Patient extends BaseModel {
         else $number = $this->phone;
         return $number;
     }
-
-=======
-class Patient extends BaseModel
-{
 
 	public function setTableDefinition()
 	{
@@ -520,5 +511,4 @@ class Patient extends BaseModel
 		}
 		return $appointment;
 	}
->>>>>>> origin/reports
 }

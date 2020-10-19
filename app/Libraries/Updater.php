@@ -88,18 +88,12 @@ class Updater
         $rs = (json_decode($rs));
         $returnable = true;
 
-<<<<<<< HEAD
-        //if (@md5_file(FCPATH . $this->ADT_file) == $rs->releaseChecksum && filesize(FCPATH . $this->ADT_file) == $rs->releaseSize) {
-          //  $returnable = true;
-        //}
-=======
         if (empty($rs)) {
             return $returnable;
         }
         if (@md5_file(FCPATH . $this->ADT_file) == $rs->releaseChecksum && filesize(FCPATH . $this->ADT_file) == $rs->releaseSize) {
             $returnable = true;
         }
->>>>>>> origin/reports
         return $returnable;
     }
 

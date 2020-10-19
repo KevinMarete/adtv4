@@ -239,38 +239,6 @@ if ($access_level == "system_administrator") {
             99% {
                 color: transparent;
             }
-<<<<<<< HEAD
-            /*thead tr th:first-child,
-            tbody tr td:first-child {
-            width: 50px;
-            min-width: 50px;
-            max-width: 50px;
-            word-break: break-all;*/
-            }
-        </style>
-    </head>
-
-    <body>
-        <div id="top-panel" class="navbar navbar-fixed-top">
-            <div class="navbar-inner" style="background:white">
-                <div class="container-fluid" style="padding-bottom:1.2em;">
-                    <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <div class="top_logo" style="background: url(<?php echo base_url() . '/public/assets/images/top_logo.png'; ?>) no-repeat">
-                        <div id="system_title">
-                            <?php
-                            echo view('\Modules\ADT\Views\sections\\banner');
-                            ?>
-                            <div id="facility_name">
-                                <span><?php echo $session->get('facility_name'); ?></span>
-                            </div>
-                            <div class="banner_text">
-                                <?php echo $banner_text; ?>
-                            </div>
-=======
 
             100% {
                 color: #000;
@@ -306,7 +274,6 @@ if ($access_level == "system_administrator") {
                         </div>
                         <div class="banner_text">
                             <?php echo $banner_text; ?>
->>>>>>> origin/reports
                         </div>
                     </div>
                 </div>
@@ -325,15 +292,6 @@ if ($access_level == "system_administrator") {
                                         $update_link = base_url() . 'github/index/' . $facility;
                                         $update_link = str_replace("ADT", "UPDATE", $update_link);
                                         ?>
-<<<<<<< HEAD
-                                        <li> <a href = "<?php echo base_url('/public/' . $menu['url']); ?>" class="top_menu_link <?php
-                                            if ($current == $menu['url'] || $menu['url'] == $link) {
-                                                echo " top_menu_active ";
-                                            }
-                                            ?>">
-                                                <?php echo strtoupper($menu['text']); ?></a></li>
-                                        <?php
-=======
                                     <li><a href="<?php echo $update_link; ?>" target="_blank" class="top_menu_link"><?php echo strtoupper($menu['text']); ?></a></li>
                                 <?php
                                         } else {
@@ -345,7 +303,6 @@ if ($access_level == "system_administrator") {
                                                                                                                                         ?>">
                                             <?php echo strtoupper($menu['text']); ?></a></li>
                             <?php
->>>>>>> origin/reports
                                         $counter++;
                                     }
                                 }
@@ -376,75 +333,9 @@ if ($access_level == "system_administrator") {
     </div>
 
 
-<<<<<<< HEAD
-        <?php
-//Load validation settings for reports
-        if (isset($reports) || isset($report_title)) {
-            ?>
-            <style type="text/css">
-                .full-content{
-                font-size:1.2em;
-                }
-                select{
-                font-size:0.9em;
-                }
-                table.dataTable {
-                zoom:1;
-                letter-spacing: 2px;
-                font-weight:bold;
-                }
-            </style>
-            <script type="text/javascript">
-            $(document).ready(function () {
-                $("select,input").css("font-weight", "bold");
-                $("select").css("width", "auto");
-                $("select").css("height", "30px");
-                $("input").css("height", "30px");
-
-                window.addEventListener("load", function () {
-
-                    // does the actual opening
-                    function openWindow(event) {
-                        event = event || window.event;
-
-                        // find the url and title to set
-                        var href = this.getAttribute("href");
-                        var newTitle = this.getAttribute("data-title");
-                        // or if you work the title out some other way...
-                        // var newTitle = "Some constant string";
-
-                        // open the window
-                        var newWin = window.open(href, "_blank");
-
-                        // add a load listener to the window so that the title gets changed on page load
-                        newWin.addEventListener("load", function () {
-                            newWin.document.title = newTitle;
-                        });
-
-                        // stop the default `a` link or you will get 2 new windows!
-                        event.returnValue = false;
-                    }
-
-                    // find all a tags opening in a new window
-                    var links = document.querySelectorAll("a[target=_blank][data-title]");
-                    // or this if you don't want to store custom titles with each link
-                    //var links = document.querySelectorAll("a[target=_blank]");
-
-                    // add a click event for each so we can do our own thing
-                    for (var i = 0; i < links.length; i++) {
-                        links[i].addEventListener("click", openWindow.bind(links[i]));
-                    }
-
-                });
-            });
-            </script>
-            <?php
-        }
-=======
     <?php
     //Load validation settings for reports
     if (isset($reports) || isset($report_title)) {
->>>>>>> origin/reports
         ?>
         <style type="text/css">
             .full-content {
@@ -674,22 +565,15 @@ if ($access_level == "system_administrator") {
                         <div id="footer_text2" class="span12" style="text-align:center">
                             Government of Kenya &copy; <?php echo date('Y'); ?>.
                             All Rights Reserved . <strong>Web-ADT version 3.5.0</strong>
-<<<<<<< HEAD
-                            <?php //if (str_replace('.', '', $update_available->release) + 0 > '3.4.2') { ?>
-                            <a class="badge badge-warning blinking" href="#adt_update_modal" data-toggle="modal">New Update available</div>
-                        <?php // } ?>
-                    </div>  
-=======
-                            <?php //if (str_replace('.', '', $update_available->release) + 0 > '3.4.2') { 
-                            ?>
-                            <a class="badge badge-warning blinking" href="#adt_update_modal" data-toggle="modal">New Update available</a>
-                            <?php // } 
-                            ?>
-                        </div>
-                    </div>
->>>>>>> origin/reports
+                    <?php //if (str_replace('.', '', $update_available->release) + 0 > '3.4.2') { 
+                    ?>
+                    <a class="badge badge-warning blinking" href="#adt_update_modal" data-toggle="modal">New Update available</a>
+                    <?php // } 
+                    ?>
                 </div>
-            </footer>
+        </div>
+        </div>
+        </footer>
         </div>
 
         <!-- Search Modal -->

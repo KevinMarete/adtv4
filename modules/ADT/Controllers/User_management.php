@@ -32,16 +32,8 @@ class User_management extends \App\Controllers\BaseController
         $this->endpoint = "https://hiskenya.org/api/";
     }
 
-<<<<<<< HEAD
-    function sendToLgin() {
-         return redirect()->to(base_url('public/login'));
-    }
-
-    public function index() {
-=======
     public function index()
     {
->>>>>>> origin/reports
         $table = new \CodeIgniter\View\Table();
         $access_level = session()->get('user_indicator');
         $user_type = "1";
