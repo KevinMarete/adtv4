@@ -16,12 +16,14 @@ use \Modules\ADT\Models\Sync_facility;
 use \Modules\ADT\Models\CCC_store_service_point;
 use Illuminate\Database\Capsule\Manager as DB;
 
-class User_management extends \App\Controllers\BaseController {
+class User_management extends \App\Controllers\BaseController
+{
 
     var $endpoint;
     var $table_generator;
 
-    function __construct() {
+    function __construct()
+    {
 
         session()->set("link_id", "index");
         session()->set("linkSub", "user_management");
@@ -30,11 +32,16 @@ class User_management extends \App\Controllers\BaseController {
         $this->endpoint = "https://hiskenya.org/api/";
     }
 
+<<<<<<< HEAD
     function sendToLgin() {
          return redirect()->to(base_url('public/login'));
     }
 
     public function index() {
+=======
+    public function index()
+    {
+>>>>>>> origin/reports
         $table = new \CodeIgniter\View\Table();
         $access_level = session()->get('user_indicator');
         $user_type = "1";
@@ -78,8 +85,7 @@ class User_management extends \App\Controllers\BaseController {
             $table->addRow($user['id'], $user['Name'], $user['Email_Address'], $user['Phone_Number'], $level_access, $user['Creator'], $links);
         }
 
-        $data['users'] = $table->generate();
-        ;
+        $data['users'] = $table->generate();;
         $data['user_types'] = $user_types;
         $data['facilities'] = $facilities;
         $data['order_sites'] = Sync_Facility::get_active();
@@ -91,7 +97,8 @@ class User_management extends \App\Controllers\BaseController {
         echo view("\Modules\ADT\Views\users_v", $data);
     }
 
-    function login() {
+    function login()
+    {
 
         $session = session();
         helper(['cookie', 'url']);
@@ -122,7 +129,8 @@ class User_management extends \App\Controllers\BaseController {
         }
     }
 
-    public static function loginUser($username, $password) {
+    public static function loginUser($username, $password)
+    {
 
         $query = DB::select("SELECT * FROM users where username = '" . $username . "'");
 
@@ -145,7 +153,8 @@ class User_management extends \App\Controllers\BaseController {
         }
     }
 
-    public function authenticate() {
+    public function authenticate()
+    {
         helper(['form', 'url']);
         $db = \Config\Database::connect();
         $data = array();
@@ -291,11 +300,11 @@ class User_management extends \App\Controllers\BaseController {
                         'county' => $facility_details[0]['county'],
                         'facility_phone' => $facility_details[0]['phone'],
                         'facility_sms_consent' => $facility_details[0]['map'],
-                        'lost_to_follow_up' => ((@$facility_details[0]['lost_to_follow_up'] ) !== null) ? @$facility_details[0]['lost_to_follow_up'] : 90,
-                        'pill_count' => ((@$facility_details[0]['pill_count'] ) !== null) ? @$facility_details[0]['pill_count'] : 0,
-                        'medical_number' => ((@$facility_details[0]['medical_number'] ) !== null) ? 1 : 0,
-                        'facility_dhis' => ((@$facility_details[0]['facility_dhis'] ) !== "0") ? 1 : 0,
-                        'autobackup' => ((@$facility_details[0]['autobackup'] ) !== null) ? @$facility_details[0]['autobackup'] : 0
+                        'lost_to_follow_up' => ((@$facility_details[0]['lost_to_follow_up']) !== null) ? @$facility_details[0]['lost_to_follow_up'] : 90,
+                        'pill_count' => ((@$facility_details[0]['pill_count']) !== null) ? @$facility_details[0]['pill_count'] : 0,
+                        'medical_number' => ((@$facility_details[0]['medical_number']) !== null) ? 1 : 0,
+                        'facility_dhis' => ((@$facility_details[0]['facility_dhis']) !== "0") ? 1 : 0,
+                        'autobackup' => ((@$facility_details[0]['autobackup']) !== null) ? @$facility_details[0]['autobackup'] : 0
                     );
 
                     $session->set($session_data);
@@ -316,7 +325,7 @@ class User_management extends \App\Controllers\BaseController {
                     return redirect()->to(base_url('public/home'));
                 }
             }
-        } else {//Not validated
+        } else { //Not validated
             $data = array();
             $data['title'] = "System Login";
             $data['validation'] = $this->validator;
@@ -325,7 +334,8 @@ class User_management extends \App\Controllers\BaseController {
         }
     }
 
-    public function getFacilityDetails($facility_code) {
+    public function getFacilityDetails($facility_code)
+    {
         $db = \Config\Database::connect();
         $sql = "SELECT f.county county_id,f.district district_id,f.*, c.county county_, d.name subcounty_ 
                 FROM facilities f 
@@ -335,7 +345,8 @@ class User_management extends \App\Controllers\BaseController {
         return $db->query($sql, array($facility_code))->getResultArray();
     }
 
-    public function logout($param = "1") {
+    public function logout($param = "1")
+    {
         helper('cookie');
         $db = \Config\Database::connect();
         $session = session();
@@ -351,11 +362,17 @@ class User_management extends \App\Controllers\BaseController {
         return redirect()->to(base_url() . '/public/login');
     }
 
-    public function template($data) {
+    public function template($data)
+    {
         $data['show_menu'] = 0;
         $data['show_sidemenu'] = 0;
         $template = new Template();
         $template->index($data);
     }
 
+    public function get_stores()
+    {
+        $store_results = CCC_store_service_point::getAllActive();
+        echo json_encode($store_results);
+    }
 }

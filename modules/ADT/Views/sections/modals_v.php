@@ -2,17 +2,16 @@
     .ui-multiselect-menu {
         display: none;
         margin-left: 15px;
-        position: static; 
+        position: static;
         text-align: left;
         zoom: 0.8;
     }
 
-    .ui-multiselect-header{
-        zoom:0.9;
+    .ui-multiselect-header {
+        zoom: 0.9;
     }
-
 </style>
-<?php $session=session();?>
+<?php $session = session(); ?>
 <!-- ADT UPDATE Modal-->
 <div id="adt_update_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <form action="<?php echo base_url() . 'user_management/profile_update' ?>" method="post" id="ADT_update_frm">
@@ -24,26 +23,26 @@
 
             <p>A newer version of ADT is available. <br />You are currently using <?= '3.5.0' ?></p>
             <?php if (!empty($download_status) || !$session->get('download_status')) { ?>
-                <div id="downloading" style="display: none;"><img src="<?= base_url() ?>/public/assets/images/loading_spin.gif" style="width: 19px;"> Downloading ADT Release.  This may take up to 3 minutes</div>
+                <div id="downloading" style="display: none;"><img src="<?= base_url() ?>/public/assets/images/loading_spin.gif" style="width: 19px;"> Downloading ADT Release. This may take up to 3 minutes</div>
 
-                <div id='download_status'><span style="color:red;">ADT Release Not Downloaded</span>. 
-                    <a href="javascript:;;" id="download-ADT-release"  onclick="download_ADT()">Download Now</a>
+                <div id='download_status'><span style="color:red;">ADT Release Not Downloaded</span>.
+                    <a href="javascript:;;" id="download-ADT-release" onclick="download_ADT()">Download Now</a>
                 </div>
             <?php } else { ?>
                 ADT Version 3.4.2--new is already downloaded. Click below button to update
-            </div><?php } ?>
-        <div id="update_ADT" style="display: none;">
-            <a href="javascript:;;" id="download-ADT-release" class="btn btn-warning"  onclick="update_ADT()">Update</a>
-        </div>
+        </div><?php } ?>
+    <div id="update_ADT" style="display: none;">
+        <a href="javascript:;;" id="download-ADT-release" class="btn btn-warning" onclick="update_ADT()">Update</a>
+    </div>
 
-        <div id="updating" style="display: none;"><img src="<?= base_url() ?>/public/assets/images/loading_spin.gif" style="width: 19px;"> Updating ADT Release. May take a few minutes.</div>
+    <div id="updating" style="display: none;"><img src="<?= base_url() ?>/public/assets/images/loading_spin.gif" style="width: 19px;"> Updating ADT Release. May take a few minutes.</div>
 
-        <table>
-            <tr>
-                <td></td>
-            </tr>
+    <table>
+        <tr>
+            <td></td>
+        </tr>
 
-        </table>
+    </table>
 
 </div>
 
@@ -65,32 +64,40 @@
             <table>
                 <tr>
 
-                    <td><label >Full Name</label></td><td>
+                    <td><label>Full Name</label></td>
+                    <td>
                         <div class="input-prepend">
                             <span class="add-on"><i class="icon-user"></i></span>
                             <input style='height:2.1em' type="text" class="input-xlarge" name="u_fullname" id="u_fullname" required="" value="<?php echo $session->get('full_name') ?>" />
-                        </div></td>
+                        </div>
+                    </td>
                 </tr>
                 <tr>
-                    <td><label >Username</label></td><td>
+                    <td><label>Username</label></td>
+                    <td>
                         <div class="input-prepend">
                             <span class="add-on"><i class="icon-user"></i></span>
                             <input style='height:2.1em' type="text" class="input-xlarge" name="u_username" id="u_username" required="" value="<?php echo $session->get('username') ?>" />
-                        </div></td>
+                        </div>
+                    </td>
                 </tr>
                 <tr>
-                    <td><label>Email Address</label></td><td>
+                    <td><label>Email Address</label></td>
+                    <td>
                         <div class="input-prepend">
                             <span class="add-on"><i class="icon-envelope"></i></span>
                             <input style='height:2.1em' type="email" class="input-xlarge" name="u_email" id="u_email" value="<?php echo $session->get('Email_Address') ?>" />
-                        </div></td>
+                        </div>
+                    </td>
                 </tr>
                 <tr>
-                    <td><label>Phone Number</label></td><td>
+                    <td><label>Phone Number</label></td>
+                    <td>
                         <div class="input-prepend">
                             <span class="add-on"><i class="icon-plus"></i>254</span>
-                            <input style='height:2.1em' type="tel" class="input-large" name="u_phone" id="u_phone" value="<?php echo $session->get('Phone_Number') ?>"/>
-                        </div></td>
+                            <input style='height:2.1em' type="tel" class="input-large" name="u_phone" id="u_phone" value="<?php echo $session->get('Phone_Number') ?>" />
+                        </div>
+                    </td>
                 </tr>
                 <tr>
                     <td>
@@ -110,7 +117,7 @@
                     </td>
                     <td>
                         <span class="add-on"><i class=" icon-chevron-down icon-black"></i></span>
-                        <select name="user_store" id="profile_user_store" class="input-xlarge"  required="">
+                        <select name="user_store" id="profile_user_store" class="input-xlarge" required="">
                         </select>
                     </td>
                 </tr>
@@ -142,13 +149,16 @@
                 <br>
                 <table>
                     <tr>
-                        <td><label >Old Password</label></td><td><input type="password" name="old_password" id="old_password" required=""></td>
+                        <td><label>Old Password</label></td>
+                        <td><input type="password" name="old_password" id="old_password" required=""></td>
                     </tr>
                     <tr>
-                        <td><label >New Password</label></td><td><input type="password" name="new_password" id="new_password" required=""><span id="result"></span></td>
+                        <td><label>New Password</label></td>
+                        <td><input type="password" name="new_password" id="new_password" required=""><span id="result"></span></td>
                     </tr>
                     <tr>
-                        <td><label >Confirm New Password</label></td><td>
+                        <td><label>Confirm New Password</label></td>
+                        <td>
                             <input type="password" name="new_password_confirm" id="new_password_confirm" required="">
                         </td>
                     </tr>
@@ -167,12 +177,12 @@
 <!-- Modal edit change password end-->
 
 <!-- Modal for synchronizing balances -->
-<div id="drug_stock_balance_synch" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">  
+<div id="drug_stock_balance_synch" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
         <h3 id="myModalLabel">Synchronization - Stock Balances</h3>
     </div>
-    <div class="modal-body">  
+    <div class="modal-body">
         <span class="alert-info ">Please wait until the process is complete!</span>
         <div class="span5">
             <!-- 
@@ -181,37 +191,37 @@
             </div> 
             -->
             <p>
-            <div class="progress progress_pharmacy_dsm progress-striped active">  
-                <div class="bar bar_dcb" style="width: 0%;">Drug Consumption</div> 
-            </div>
+                <div class="progress progress_pharmacy_dsm progress-striped active">
+                    <div class="bar bar_dcb" style="width: 0%;">Drug Consumption</div>
+                </div>
             </p>
-            <p> 
-            <div class="progress progress_store progress-striped active">  
-                <div class="bar bar_dsb bar_store" style="width: 0%;">Main Store - Stock balance</div> 
-            </div>  
-            </p> 
             <p>
-            <div class="progress progress_pharmacy progress-striped active">  
-                <div class="bar bar_dsb bar_pharmacy" style="width: 0%;">Pharmacy - Stock balance</div> 
-            </div>
+                <div class="progress progress_store progress-striped active">
+                    <div class="bar bar_dsb bar_store" style="width: 0%;">Main Store - Stock balance</div>
+                </div>
             </p>
-            <p> 
-            <div class="progress progress_store_dsm progress-striped active">  
-                <div class="bar bar_dsm bar_store_dsm" style="width: 0%;">Main Store - Stock transactions</div> 
-            </div>  
-            </p> 
             <p>
-            <div class="progress progress_pharmacy_dsm progress-striped active">  
-                <div class="bar bar_dsm bar_pharmacy_dsm" style="width: 0%;">Pharmacy - Stock transactions</div> 
-            </div>
+                <div class="progress progress_pharmacy progress-striped active">
+                    <div class="bar bar_dsb bar_pharmacy" style="width: 0%;">Pharmacy - Stock balance</div>
+                </div>
+            </p>
+            <p>
+                <div class="progress progress_store_dsm progress-striped active">
+                    <div class="bar bar_dsm bar_store_dsm" style="width: 0%;">Main Store - Stock transactions</div>
+                </div>
+            </p>
+            <p>
+                <div class="progress progress_pharmacy_dsm progress-striped active">
+                    <div class="bar bar_dsm bar_pharmacy_dsm" style="width: 0%;">Pharmacy - Stock transactions</div>
+                </div>
             </p>
 
             <a class="sync_complete" href="#"></a>
-        </div>  
+        </div>
         <div class="modal-footer">
             <button class="btn" data-dismiss="modal" aria-hidden="true">Done</button>
         </div>
-    </div>  
+    </div>
 </div>
 <!--  Modal for synchronizing balances end  -->
 
@@ -224,7 +234,7 @@
         <h3 id="myModalLabel">Confirm before proceed</h3>
     </div>
     <div class="modal-body">
-        <p id="confirmMessage" >
+        <p id="confirmMessage">
             Please make sure you synchronize the <i><strong>stock balance</strong></i> before proceeding.
         </p>
     </div>
@@ -259,22 +269,22 @@
 <!-- Login for escm -->
 
 <script type="text/javascript">
-    var sitesURL = "<?php echo base_url() . 'order_settings/fetch/sync_facility'; ?>"
-    var storesURL = "<?php echo base_url() . 'user_management/get_stores'; ?>"
-    var userSitesURL = "<?php echo base_url() . 'user_management/get_sites/' . $session->get('user_id'); ?>"
+    var sitesURL = "<?php echo base_url('public/order_settings/fetch/sync_facility'); ?>"
+    var storesURL = "<?php echo base_url('public/user_management/get_stores'); ?>"
+    var userSitesURL = "<?php echo base_url('public/user_management/get_sites/' . $session->get('user_id')); ?>"
     var profileDiv = '#profile_user_facilities'
     var storesDiv = '#profile_user_store'
     var ccc_store = <?= $session->get('ccc_store_id') ?>;
 
-    $(function () {
+    $(function() {
 
 
-        $.get(storesURL, function (data) {
+        $.get(storesURL, function(data) {
             //Parse json to array
             data = $.parseJSON(data);
 
             //Append results to selectbox
-            $.each(data, function (i, item) {
+            $.each(data, function(i, item) {
                 $(storesDiv).append($("<option></option>").attr("value", item.id).text(item.Name));
             });
 
@@ -283,12 +293,12 @@
         });
 
 
-        $.get(sitesURL, function (data) {
+        $.get(sitesURL, function(data) {
             //Parse json to array
             data = $.parseJSON(data);
 
             //Append results to selectbox
-            $.each(data, function (i, item) {
+            $.each(data, function(i, item) {
                 $(profileDiv).append($("<option></option>").attr("value", item.id).text(item.name));
             });
 
@@ -296,13 +306,13 @@
             $(profileDiv).multiselect().multiselectfilter();
 
             //Get user ordering sites
-            $.get(userSitesURL, function (data) {
+            $.get(userSitesURL, function(data) {
                 //Parse json to array
                 data = $.parseJSON(data);
 
                 //Select user sites
-                $.each(data, function (i, item) {
-                    $("select" + profileDiv).multiselect("widget").find(":checkbox[value='" + item + "']").each(function () {
+                $.each(data, function(i, item) {
+                    $("select" + profileDiv).multiselect("widget").find(":checkbox[value='" + item + "']").each(function() {
                         $(this).click();
                     });
                 });
@@ -310,10 +320,10 @@
         });
 
 
-        $("#btn_save_profile_frm").live('click', function (event) {
+        $("#btn_save_profile_frm").live('click', function(event) {
             event.preventDefault();
             //Order sites
-            var profile_user_facilities = $("select#profile_user_facilities").multiselect("getChecked").map(function () {
+            var profile_user_facilities = $("select#profile_user_facilities").multiselect("getChecked").map(function() {
                 return this.value;
             }).get();
             $("#profile_user_facilities_holder").val(profile_user_facilities);
@@ -336,7 +346,7 @@
         $.ajax({
             url: "<?= base_url() ?>home_controller/updater/download",
             context: document.body
-        }).done(function (results) {
+        }).done(function(results) {
             $('#download_status').html(results);
             $('#downloading').hide();
             $('#download_status').show();
@@ -354,7 +364,7 @@
         $.ajax({
             url: "<?= base_url() ?>home_controller/updater/update",
             context: document.body
-        }).done(function (results) {
+        }).done(function(results) {
             $('#download_status').html(results);
             $('#updating').hide();
             window.location.replace('<?= base_url() ?>user_management/logout/2')
@@ -363,6 +373,4 @@
             // $( this ).addClass( "done" );
         });
     }
-
-
 </script>

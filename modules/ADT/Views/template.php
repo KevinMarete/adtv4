@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Using Session Data
  */
@@ -81,160 +82,164 @@ if ($access_level == "system_administrator") {
 
 <!DOCTYPE html">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <title><?php echo $title; ?></title>
 
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title><?php echo $title; ?></title>
 
-        <?php
-        echo view('\Modules\ADT\Views\sections\\head');
-        if ($user_is_pharmacist || $user_is_facility_administrator || $user_is_administrator) {
-            //echo "<script src=\"" . base_url() . "Scripts/offline_database.js\" type=\"text/javascript\"></script>";
-        }
-
-        /**
-         * Load View with Head Section
-         */
-        if (isset($script_urls)) {
-            foreach ($script_urls as $script_url) {
-                echo "<script src=\"" . $script_url . "\" type=\"text/javascript\"></script>";
-            }
-        }
-        ?>
-
-        <?php
-        if (isset($scripts)) {
-            foreach ($scripts as $script) {
-                echo "<script src=\"" . base_url() . "Scripts/" . $script . "\" type=\"text/javascript\"></script>";
-            }
-        }
-
-        if (isset($styles)) {
-            foreach ($styles as $style) {
-                echo "<link href=\"" . base_url() . "CSS/" . $style . "\" type=\"text/css\" rel=\"stylesheet\"/>";
-            }
-        }
-        ?> 
-        <script type="text/javascript" src="<?= base_url(); ?>/public/assets/scripts/parsely.js"></script>
-        <script>
-
-            $(document).ready(function () {
-
-                setTimeout(function () {
-                    $(".message").fadeOut("2000");
-                }, 5000)
-
-                setTimeout(function () {
-                    $(".message").fadeOut("2000");
-                }, 5000)
-
-<?php
-$message = $session->getFlashdata('message');
-$user_id = $session->get("user_id");
-echo $message;
-if ($message == 0) {
-    ?><?php
-    $message = 1;
-}
-if ($user_is_pharmacist || $user_is_facility_administrator) {
-    ?>
-                    $('#span1').load('<?php echo base_url() . '/public/error_notification'; ?>');
-                    $('#span2').load('<?php echo base_url() . '/public/reporting_notification'; ?>');
-                    $('#span3').load('<?php echo base_url() . '/public/defaulter_notification'; ?>');
-                    $('#span4').load('<?php echo base_url() . '/public/missed_appointments_notification'; ?>');
-                    $('#span5').load('<?php echo base_url() . '/public/followup_notification'; ?>');
-                    $('#span6').load('<?php echo base_url() . '/public/prescriptions_notification_view'; ?>');
-                    $('#span7').load('<?php echo base_url() . '/public/update_notification'; ?>');
-
-                    $('#span3').load('<?php echo base_url() . '/public/ontime_notification'; ?>');
-                    $('#span4').load('<?php echo base_url() . '/public/missed_appointments_notification'; ?>');
-                    $('#span6').load('<?php echo base_url() . '/public/followup_notification'; ?>');
-                    $('#span7').load('<?php echo base_url() . '/public/prescriptions_notification_view'; ?>');
-                    $('#span8').load('<?php echo base_url() . '/public/update_notification'; ?>');
 
     <?php
-}
-if ($user_is_administrator) {
+    echo view('\Modules\ADT\Views\sections\\head');
+    if ($user_is_pharmacist || $user_is_facility_administrator || $user_is_administrator) {
+        //echo "<script src=\"" . base_url() . "Scripts/offline_database.js\" type=\"text/javascript\"></script>";
+    }
+
+    /**
+     * Load View with Head Section
+     */
+    if (isset($script_urls)) {
+        foreach ($script_urls as $script_url) {
+            echo "<script src=\"" . $script_url . "\" type=\"text/javascript\"></script>";
+        }
+    }
     ?>
-                    $('#span1').load('<?php echo base_url() . 'admin_management/inactive_users'; ?>');
-                    $('#span2').load('<?php echo base_url() . 'admin_management/online_users'; ?>');
+
     <?php
-}
-?>
-                /*Perform auto update when online*/
-                var status = navigator.onLine;
-                if (status) {
-                    autoUpdate();
-                }
-                //Load scripts for system search
-                jQuery.getScript("<?php echo base_url(); ?>/public/assets/scripts/settings.js")
-            });
-        </script>
-        <script>
-            $(document).ready(function () {
-                $(".error").css("display", "block");
+    if (isset($scripts)) {
+        foreach ($scripts as $script) {
+            echo "<script src=\"" . base_url() . "Scripts/" . $script . "\" type=\"text/javascript\"></script>";
+        }
+    }
 
-                //If screen resolution is less than 1280, change css
-                width = screen.width,
-                        height = screen.height;
-                if (height < 700) {
-                    $(".welcome_msg").css("margin-top", "3.6%");
-                    $("#row_container").css("padding-top", "14%");
-                    $("#row_container").css("padding-bottom", "8%");
-                } else {
-                    $("#row_container").css("padding-top", "8.8%");
-                    if (width > 1024) {
-                        if (width == 1366 && height == 768) {
-                            $(".welcome_msg").css("margin-top", "3.9%");
-                        } else if (height == 900) {
-                            $(".welcome_msg").css("margin-top", "4%")
-                        } else if (height >= 1080) {
-                            $(".welcome_msg").css("margin-top", "2.5%");
-                        } else {
-                            $(".welcome_msg").css("margin-top", "3%");
-                        }
-                    } else {
-                        $(".welcome_msg").css("margin-top", "4%")
-                    }
+    if (isset($styles)) {
+        foreach ($styles as $style) {
+            echo "<link href=\"" . base_url() . "CSS/" . $style . "\" type=\"text/css\" rel=\"stylesheet\"/>";
+        }
+    }
+    ?>
+    <script type="text/javascript" src="<?= base_url(); ?>/public/assets/scripts/parsely.js"></script>
+    <script>
+        $(document).ready(function() {
 
-                }
-            });
+            setTimeout(function() {
+                $(".message").fadeOut("2000");
+            }, 5000)
 
-        </script>
-        <?php
-//Load tableTools for datatables printing and exporting
-        if (isset($report_title)) {
-            ?>
-            <style type="text/css" title="currentStyle">
-                @import "<?php echo base_url() . '/public/assets/styles/datatable/demo_page.css'; ?>";
-                @import "<?php echo base_url() . '/public/assets/styles/datatable/demo_table.css'; ?>";
-                @import "<?php echo base_url() . '/public/assets/styles/datatable/TableTools.css' ?>";
-                ";
-            </style>
-            <script type="text/javascript" charset="utf-8" src="<?php echo base_url() . '/public/assets/Scripts/datatable/ZeroClipboard.js' ?>"></script>
-            <script type="text/javascript" charset="utf-8"  src="<?php echo base_url() . '/public/assets/Scripts/datatable/TableTools.js' ?>"></script>
+            setTimeout(function() {
+                $(".message").fadeOut("2000");
+            }, 5000)
 
             <?php
+            $message = $session->getFlashdata('message');
+            $user_id = $session->get("user_id");
+            echo $message;
+            if ($message == 0) {
+                ?><?php
+                        $message = 1;
+                    }
+                    if ($user_is_pharmacist || $user_is_facility_administrator) {
+                        ?>
+            $('#span1').load('<?php echo base_url() . '/public/error_notification'; ?>');
+            $('#span2').load('<?php echo base_url() . '/public/reporting_notification'; ?>');
+            $('#span3').load('<?php echo base_url() . '/public/defaulter_notification'; ?>');
+            $('#span4').load('<?php echo base_url() . '/public/missed_appointments_notification'; ?>');
+            $('#span5').load('<?php echo base_url() . '/public/followup_notification'; ?>');
+            $('#span6').load('<?php echo base_url() . '/public/prescriptions_notification_view'; ?>');
+            $('#span7').load('<?php echo base_url() . '/public/update_notification'; ?>');
+
+            $('#span3').load('<?php echo base_url() . '/public/ontime_notification'; ?>');
+            $('#span4').load('<?php echo base_url() . '/public/missed_appointments_notification'; ?>');
+            $('#span6').load('<?php echo base_url() . '/public/followup_notification'; ?>');
+            $('#span7').load('<?php echo base_url() . '/public/prescriptions_notification_view'; ?>');
+            $('#span8').load('<?php echo base_url() . '/public/update_notification'; ?>');
+
+        <?php
         }
-        ?>      
-        <style>
-            .blinking{
+        if ($user_is_administrator) {
+            ?>
+            $('#span1').load('<?php echo base_url() . 'admin_management/inactive_users'; ?>');
+            $('#span2').load('<?php echo base_url() . 'admin_management/online_users'; ?>');
+        <?php
+        }
+        ?>
+        /*Perform auto update when online*/
+        var status = navigator.onLine;
+        if (status) {
+            autoUpdate();
+        }
+        //Load scripts for system search
+        jQuery.getScript("<?php echo base_url(); ?>/public/assets/scripts/settings.js")
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            $(".error").css("display", "block");
+
+            //If screen resolution is less than 1280, change css
+            width = screen.width,
+                height = screen.height;
+            if (height < 700) {
+                $(".welcome_msg").css("margin-top", "3.6%");
+                $("#row_container").css("padding-top", "14%");
+                $("#row_container").css("padding-bottom", "8%");
+            } else {
+                $("#row_container").css("padding-top", "8.8%");
+                if (width > 1024) {
+                    if (width == 1366 && height == 768) {
+                        $(".welcome_msg").css("margin-top", "3.9%");
+                    } else if (height == 900) {
+                        $(".welcome_msg").css("margin-top", "4%")
+                    } else if (height >= 1080) {
+                        $(".welcome_msg").css("margin-top", "2.5%");
+                    } else {
+                        $(".welcome_msg").css("margin-top", "3%");
+                    }
+                } else {
+                    $(".welcome_msg").css("margin-top", "4%")
+                }
+
+            }
+        });
+    </script>
+    <?php
+    //Load tableTools for datatables printing and exporting
+    if (isset($report_title)) {
+        ?>
+        <style type="text/css" title="currentStyle">
+            @import "<?php echo base_url() . '/public/assets/styles/datatable/demo_page.css'; ?>";
+            @import "<?php echo base_url() . '/public/assets/styles/datatable/demo_table.css'; ?>";
+            @import "<?php echo base_url() . '/public/assets/styles/datatable/TableTools.css' ?>";
+            ";
+        </style>
+        <script type="text/javascript" charset="utf-8" src="<?php echo base_url() . '/public/assets/scripts/datatable/ZeroClipboard.js' ?>"></script>
+        <script type="text/javascript" charset="utf-8" src="<?php echo base_url() . '/public/assets/scripts/datatable/TableTools.js' ?>"></script>
+
+    <?php
+    }
+    ?>
+    <style>
+        .blinking {
             background: #ffc107a1 !important;
-            animation:blinkingText 0.8s infinite;
+            animation: blinkingText 0.8s infinite;
+        }
+
+        @keyframes blinkingText {
+            0% {
+                color: #000;
             }
-            @keyframes blinkingText{
-            0%{     color: #000;    }
-            49%{    color: transparent; }
-            50%{    color: transparent; }
-            99%{    color:transparent;  }
-            100%{   color: #000;    }
+
+            49% {
+                color: transparent;
             }
-            .setting_table {
-            font-size: 0.8em;
+
+            50% {
+                color: transparent;
             }
-            .input-append .btn{
-            margin:0px;
+
+            99% {
+                color: transparent;
             }
+<<<<<<< HEAD
             /*thead tr th:first-child,
             tbody tr td:first-child {
             width: 50px;
@@ -265,27 +270,62 @@ if ($user_is_administrator) {
                             <div class="banner_text">
                                 <?php echo $banner_text; ?>
                             </div>
+=======
+
+            100% {
+                color: #000;
+            }
+        }
+
+        .setting_table {
+            font-size: 0.8em;
+        }
+
+        .input-append .btn {
+            margin: 0px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="top-panel" class="navbar navbar-fixed-top">
+        <div class="navbar-inner" style="background:white">
+            <div class="container-fluid" style="padding-bottom:1.2em;">
+                <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <div class="top_logo" style="background: url(<?php echo base_url() . '/public/assets/images/top_logo.png'; ?>) no-repeat">
+                    <div id="system_title">
+                        <?php
+                        echo view('\Modules\ADT\Views\sections\\banner');
+                        ?>
+                        <div id="facility_name">
+                            <span><?php echo $session->get('facility_name'); ?></span>
+                        </div>
+                        <div class="banner_text">
+                            <?php echo $banner_text; ?>
+>>>>>>> origin/reports
                         </div>
                     </div>
-                    <div class="nav-collapse collapse" style="float: right">
-                        <?php if ($menus) { ?>
-                            <ul class="nav nav_header" style="margin: 0 !important;">
-                                <li><a href="<?php echo base_url('/public/home'); ?>" class="top_menu_link  first_link <?php
-                                    if ($current == "public/home") {
-                                        echo " top_menu_active ";
-                                    }
-                                    ?>"><i class="icon-home"></i> HOME </a></li>
-                                       <?php
-                                       foreach ($menus as $menu) {
-                                           if (strtoupper($menu['text']) == "UPDATE") {
-                                               $facility = $session->get("facility");
-                                               $update_link = base_url() . 'github/index/' . $facility;
-                                               $update_link = str_replace("ADT", "UPDATE", $update_link);
-                                               ?>
-                                        <li><a href ="<?php echo $update_link; ?>" target="_blank" class="top_menu_link"><?php echo strtoupper($menu['text']); ?></a></li>
-                                        <?php
-                                    } else {
+                </div>
+                <div class="nav-collapse collapse" style="float: right">
+                    <?php if ($menus) { ?>
+                        <ul class="nav nav_header" style="margin: 0 !important;">
+                            <li><a href="<?php echo base_url('/public/home'); ?>" class="top_menu_link  first_link <?php
+                                                                                                                        if ($current == "public/home") {
+                                                                                                                            echo " top_menu_active ";
+                                                                                                                        }
+                                                                                                                        ?>"><i class="icon-home"></i> HOME </a></li>
+                            <?php
+                                foreach ($menus as $menu) {
+                                    if (strtoupper($menu['text']) == "UPDATE") {
+                                        $facility = $session->get("facility");
+                                        $update_link = base_url() . 'github/index/' . $facility;
+                                        $update_link = str_replace("ADT", "UPDATE", $update_link);
                                         ?>
+<<<<<<< HEAD
                                         <li> <a href = "<?php echo base_url('/public/' . $menu['url']); ?>" class="top_menu_link <?php
                                             if ($current == $menu['url'] || $menu['url'] == $link) {
                                                 echo " top_menu_active ";
@@ -293,35 +333,50 @@ if ($user_is_administrator) {
                                             ?>">
                                                 <?php echo strtoupper($menu['text']); ?></a></li>
                                         <?php
+=======
+                                    <li><a href="<?php echo $update_link; ?>" target="_blank" class="top_menu_link"><?php echo strtoupper($menu['text']); ?></a></li>
+                                <?php
+                                        } else {
+                                            ?>
+                                    <li> <a href="<?php echo base_url('/public/' . $menu['url']); ?>" class="top_menu_link <?php
+                                                                                                                                        if ($current == $menu['url'] || $menu['url'] == $link) {
+                                                                                                                                            echo " top_menu_active ";
+                                                                                                                                        }
+                                                                                                                                        ?>">
+                                            <?php echo strtoupper($menu['text']); ?></a></li>
+                            <?php
+>>>>>>> origin/reports
                                         $counter++;
                                     }
                                 }
                                 ?>
-                                <li class="dropdown" id="div_profile" >
-                                    <a href="#" class="dropdown-toggle top_menu_link" data-toggle="dropdown"><i class="icon-user icon-black"></i> PROFILE   <span class="caret"></span></a>
-                                    <ul class="dropdown-menu" id="profile_list" role="menu">
-                                        <li><a href="#edit_user_profile" data-toggle="modal"><i class="icon-edit"></i> Edit Profile</a></li>
-                                        <li id="change_password_link"><a href="#user_change_pass" data-toggle="modal"><i class=" icon-asterisk"></i> Change Password</a></li>
-                                    </ul>
-                                </li>
-                            <?php } ?>
-                        </ul>
-                    </div><!--/.nav-collapse -->
-                    <div class="welcome_msg">
-                        <?php if ($session->get('update_available')) { ?>
-                            <a class="badge blinking pull-left" style="background-color: #ff0905b1 !important;" href="#adt_update_modal" data-toggle="modal">New Update available</a>
+                            <li class="dropdown" id="div_profile">
+                                <a href="#" class="dropdown-toggle top_menu_link" data-toggle="dropdown"><i class="icon-user icon-black"></i> PROFILE <span class="caret"></span></a>
+                                <ul class="dropdown-menu" id="profile_list" role="menu">
+                                    <li><a href="#edit_user_profile" data-toggle="modal"><i class="icon-edit"></i> Edit Profile</a></li>
+                                    <li id="change_password_link"><a href="#user_change_pass" data-toggle="modal"><i class=" icon-asterisk"></i> Change Password</a></li>
+                                </ul>
+                            </li>
                         <?php } ?>
-                        <span><span style="color:#B8B8B8; text-transform: uppercase; font-weight: bold;" >username: </span><b style="font-weight: bold;font-size: 15px;text-transform: uppercase;"><?php echo $session->get('full_name'); ?> | </b><a id="logout_btn" href="<?php echo base_url() . '/public/logout/2' ?>"><i class="icon-off"></i> Logout</a></span>
-                        <br>
-                            <span class="date"><?php echo date('l, jS F Y') ?></span>
-                            <input type="hidden" id="facility_hidden" />
-                            <input type="hidden" id="base_url" value="<?php echo base_url(); ?>"/>
-                    </div>
+                        </ul>
+                </div>
+                <!--/.nav-collapse -->
+                <div class="welcome_msg">
+                    <?php if ($session->get('update_available')) { ?>
+                        <a class="badge blinking pull-left" style="background-color: #ff0905b1 !important;" href="#adt_update_modal" data-toggle="modal">New Update available</a>
+                    <?php } ?>
+                    <span><span style="color:#B8B8B8; text-transform: uppercase; font-weight: bold;">username: </span><b style="font-weight: bold;font-size: 15px;text-transform: uppercase;"><?php echo $session->get('full_name'); ?> | </b><a id="logout_btn" href="<?php echo base_url() . '/public/logout/2' ?>"><i class="icon-off"></i> Logout</a></span>
+                    <br>
+                    <span class="date"><?php echo date('l, jS F Y') ?></span>
+                    <input type="hidden" id="facility_hidden" />
+                    <input type="hidden" id="base_url" value="<?php echo base_url(); ?>" />
                 </div>
             </div>
         </div>
+    </div>
 
 
+<<<<<<< HEAD
         <?php
 //Load validation settings for reports
         if (isset($reports) || isset($report_title)) {
@@ -385,164 +440,230 @@ if ($user_is_administrator) {
             </script>
             <?php
         }
+=======
+    <?php
+    //Load validation settings for reports
+    if (isset($reports) || isset($report_title)) {
+>>>>>>> origin/reports
         ?>
+        <style type="text/css">
+            .full-content {
+                font-size: 1.2em;
+            }
+
+            select {
+                font-size: 0.9em;
+            }
+
+            table.dataTable {
+                zoom: 1;
+                letter-spacing: 2px;
+                font-weight: bold;
+            }
+        </style>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $("select,input").css("font-weight", "bold");
+                $("select").css("width", "auto");
+                $("select").css("height", "30px");
+                $("input").css("height", "30px");
+
+                window.addEventListener("load", function() {
+                    // does the actual opening
+                    function openWindow(event) {
+                        event = event || window.event;
+
+                        // find the url and title to set
+                        var href = this.getAttribute("href");
+                        var newTitle = this.getAttribute("data-title");
+                        // or if you work the title out some other way...
+                        // var newTitle = "Some constant string";
+
+                        // open the window
+                        var newWin = window.open(href, "_blank");
+
+                        // add a load listener to the window so that the title gets changed on page load
+                        newWin.addEventListener("load", function() {
+                            newWin.document.title = newTitle;
+                        });
+
+                        // stop the default `a` link or you will get 2 new windows!
+                        event.returnValue = false;
+                    }
+
+                    // find all a tags opening in a new window
+                    var links = document.querySelectorAll("a[target=_blank][data-title]");
+                    // or this if you don't want to store custom titles with each link
+                    //var links = document.querySelectorAll("a[target=_blank]");
+
+                    // add a click event for each so we can do our own thing
+                    for (var i = 0; i < links.length; i++) {
+                        links[i].addEventListener("click", openWindow.bind(links[i]));
+                    }
+
+                });
+            });
+        </script>
+    <?php
+    }
+    ?>
 
 
-        <?php
-        if ($session->get("message_user_update_success")) {
-            ?>
-            <script type="text/javascript">
-                setTimeout(function () {
-                    $("#msg_user_update").fadeOut("2000");
-                }, 6000)
+    <?php
+    if ($session->get("message_user_update_success")) {
+        ?>
+        <script type="text/javascript">
+            setTimeout(function() {
+                $("#msg_user_update").fadeOut("2000");
+            }, 6000)
+        </script>
+        <div id="msg_user_update"><?php echo $session->get("message_user_update_success"); ?></div>
+    <?php
+        session()->desroy('message_user_update_success');
+    }
+    if (!isset($hide_side_menu)) {
+        ?>
+        <div class="container-fluid">
+            <div class="row-fluid" id="row_container" style="padding-top:10.5%">
+                <div class="span3">
+                    <div class="left-content">
 
-            </script>
-            <div id="msg_user_update"><?php echo $session->get("message_user_update_success"); ?></div>
-            <?php
-            session()->desroy('message_user_update_success');
-        }
-        if (!isset($hide_side_menu)) {
-            ?>
-            <div class="container-fluid">
-                <div class="row-fluid" id="row_container" style="padding-top:10.5%">
-                    <div class="span3">
-                        <div class="left-content">
-
-                            <h3>Quick Links</h3>
-                            <ul class="nav nav-list well">
-                                <?php
+                        <h3>Quick Links</h3>
+                        <ul class="nav nav-list well">
+                            <?php
                                 if ($user_is_pharmacist || $user_is_facility_administrator) {
                                     ?>
-                                    <li><a href="<?php echo base_url() . '/public/addpatient_show' ?>"><i class="icon-user"></i>Add Patients</a></li>
+                                <li><a href="<?php echo base_url() . '/public/addpatient_show' ?>"><i class="icon-user"></i>Add Patients</a></li>
 
-                                    <?php
-                                    $count_ccc = count($ccc_stores);
-                                    if ($count_ccc > 0) {
-                                        ?>
-                                        <li class="dropdown-submenu">
-                                            <a tabindex="-1" href="#"><i class="icon-plus"></i>Stock Transactions</a>
-                                            <ul class="dropdown-menu">
-                                                <?php
-                                                foreach ($ccc_stores as $ccc_store) {
-                                                    ?>
-                                                    <li><a href="<?php echo base_url() . '/public/stock_transaction/' . $ccc_store->id; ?>"><i class="icon-inbox"></i>Receive/Issue - <?php echo $ccc_store->name; ?></a></li>
-                                                    <?php
-                                                }
-                                                ?>
-                                            </ul>
-                                        </li>
-                                        <li><a href="<?php echo base_url() . '/public/pqmp/' ?>"><i class="icon-flag"></i>Pharmacovigilance</a></li>
-
-                                        <li>
-                                            <a href="<?php echo base_url() . 'home_controller/get_faq'; ?>" target="_blank"><i class="icon-question-sign"></i>FAQ</a>
-                                        </li>
-                                        <?php
-                                    } else {//If no Extra pharmacies, load main store and Main Pharmacy Only
-                                        ?>
-                                        <li><a href="<?php echo base_url() . '/public/stock_transaction/1' ?>"><i class="icon-inbox"></i>Receive/Issue - Main Store</a></li>
-                                        <li><a href="<?php echo base_url() . '/public/stock_transaction/2' ?>"><i class="icon-inbox"></i>Receive/Issue - Pharmacy</a></li>
-                                        <?php
-                                    }
-                                    ?>
-
-                                    <li class="divider"></li>
-                                    <li><a href="<?php echo base_url() . 'facilitydashboard_management/getPatientMasterList' ?>"  id="ReportGenerator"> <i class="icon-book"></i>Patient Master list</a></li>           
-                                    <li><a href="<?php echo base_url() . 'assets/manuals/user_manual.pdf' ?>" target="_blank"><i class="icon-book"></i>User Manual</a></li> 
-
-
-                                    <?php
-                                }if ($user_is_administrator) {
-                                    ?>
-                                    <li>
-                                        <a  id="addCounty" class="admin_link"><i class="icon-eye-open icon-black"></i>View Counties</a>
-                                    </li>
-                                    <li>
-                                        <a  id="addSatellite" class="admin_link"><i class="icon-eye-open icon-black"></i>View Satellites</a>
-                                    </li>
-                                    <li>
-                                        <a  id="addFacility" class="admin_link"><i class="icon-eye-open icon-black"></i>View Facilities</a>
-                                    </li>
-                                    <li>
-                                        <a  id="addDistrict" class="admin_link"><i class="icon-eye-open icon-black"></i>View Districts</a>
-                                    </li>
-                                    <li>
-                                        <a  id="addMenu" class="admin_link"><i class="icon-eye-open icon-black"></i>View Menus</a>
-                                    </li>
-                                    <li>
-                                        <a id="addFAQ" class="admin_link"><i class="icon-eye-open icon-black"></i>View FAQ</a>
-                                    </li>
-                                    <li>
-                                        <a  id="addAccessLevel" class="admin_link"><i class="icon-eye-open icon-black"></i>View Access Levels</a>
-                                    </li> 
-                                    <li>
-                                        <a  id="addUsers" class="admin_link"><i class="icon-user"></i>View Users</a>
-                                    </li> 
-                                    <li class="divider"></li>
-                                    <li>
-                                        <a  id="assignRights" class="admin_link"><i class="icon-cog"></i>Assign User Rights</a>
-                                    </li>
-                                    <li>
-                                        <a  id="getAccessLogs" class="admin_link"><i class="icon-book"></i>Access Logs</a>
-                                    </li>
-                                    <li>
-                                        <a  id="getDeniedLogs" class="admin_link"><i class="icon-book"></i>Denied Logs</a>
-                                    </li>
-                                    <li>
-                                        <a href="<?php echo base_url() . '/public/assets/manuals/user_manual.pdf' ?>"><i class="icon-book"></i>User Manual</a>
-                                    </li>   
-                                    <?php
-                                }
-                                ?>
-
-
-                            </ul>
-                            <h3>Notifications</h3>
-                            <ul id="notification1" class="nav nav-list well">
                                 <?php
+                                        $count_ccc = count($ccc_stores);
+                                        if ($count_ccc > 0) {
+                                            ?>
+                                    <li class="dropdown-submenu">
+                                        <a tabindex="-1" href="#"><i class="icon-plus"></i>Stock Transactions</a>
+                                        <ul class="dropdown-menu">
+                                            <?php
+                                                        foreach ($ccc_stores as $ccc_store) {
+                                                            ?>
+                                                <li><a href="<?php echo base_url() . '/public/stock_transaction/' . $ccc_store->id; ?>"><i class="icon-inbox"></i>Receive/Issue - <?php echo $ccc_store->name; ?></a></li>
+                                            <?php
+                                                        }
+                                                        ?>
+                                        </ul>
+                                    </li>
+                                    <li><a href="<?php echo base_url() . '/public/pqmp/' ?>"><i class="icon-flag"></i>Pharmacovigilance</a></li>
+
+                                    <li>
+                                        <a href="<?php echo base_url() . 'home_controller/get_faq'; ?>" target="_blank"><i class="icon-question-sign"></i>FAQ</a>
+                                    </li>
+                                <?php
+                                        } else { //If no Extra pharmacies, load main store and Main Pharmacy Only
+                                            ?>
+                                    <li><a href="<?php echo base_url() . '/public/stock_transaction/1' ?>"><i class="icon-inbox"></i>Receive/Issue - Main Store</a></li>
+                                    <li><a href="<?php echo base_url() . '/public/stock_transaction/2' ?>"><i class="icon-inbox"></i>Receive/Issue - Pharmacy</a></li>
+                                <?php
+                                        }
+                                        ?>
+
+                                <li class="divider"></li>
+                                <li><a href="<?php echo base_url() . 'facilitydashboard_management/getPatientMasterList' ?>" id="ReportGenerator"> <i class="icon-book"></i>Patient Master list</a></li>
+                                <li><a href="<?php echo base_url() . 'assets/manuals/user_manual.pdf' ?>" target="_blank"><i class="icon-book"></i>User Manual</a></li>
+
+
+                            <?php
+                                }
                                 if ($user_is_administrator) {
                                     ?>
-                                    <li><a id='online' class='admin_link'><i class='icon-signal'></i>Online Users <div id="span2" class='badge badge-important'></div></a></li>
-                                    <li><a id='inactive' class='admin_link'><i class='icon-th'></i>Deactivated Users <div id="span1" class='badge badge-important'></div></a></li>
-                                    <li id="span3"></li>
-                                    <?php
-                                } else {
-                                    ?>
-                                    <li id="span1"></li>                                    
-                                    <li id="span2"></li>
-                                    <li id="span3"></li>
-                                    <li id="span4"></li>
-                                    <li id="span5"></li>
-                                    <li id="span6"></li>
-                                    <li id="span7"></li>
-                                    <li id="span8"></li>
-
-                                    <?php
+                                <li>
+                                    <a id="addCounty" class="admin_link"><i class="icon-eye-open icon-black"></i>View Counties</a>
+                                </li>
+                                <li>
+                                    <a id="addSatellite" class="admin_link"><i class="icon-eye-open icon-black"></i>View Satellites</a>
+                                </li>
+                                <li>
+                                    <a id="addFacility" class="admin_link"><i class="icon-eye-open icon-black"></i>View Facilities</a>
+                                </li>
+                                <li>
+                                    <a id="addDistrict" class="admin_link"><i class="icon-eye-open icon-black"></i>View Districts</a>
+                                </li>
+                                <li>
+                                    <a id="addMenu" class="admin_link"><i class="icon-eye-open icon-black"></i>View Menus</a>
+                                </li>
+                                <li>
+                                    <a id="addFAQ" class="admin_link"><i class="icon-eye-open icon-black"></i>View FAQ</a>
+                                </li>
+                                <li>
+                                    <a id="addAccessLevel" class="admin_link"><i class="icon-eye-open icon-black"></i>View Access Levels</a>
+                                </li>
+                                <li>
+                                    <a id="addUsers" class="admin_link"><i class="icon-user"></i>View Users</a>
+                                </li>
+                                <li class="divider"></li>
+                                <li>
+                                    <a id="assignRights" class="admin_link"><i class="icon-cog"></i>Assign User Rights</a>
+                                </li>
+                                <li>
+                                    <a id="getAccessLogs" class="admin_link"><i class="icon-book"></i>Access Logs</a>
+                                </li>
+                                <li>
+                                    <a id="getDeniedLogs" class="admin_link"><i class="icon-book"></i>Denied Logs</a>
+                                </li>
+                                <li>
+                                    <a href="<?php echo base_url() . '/public/assets/manuals/user_manual.pdf' ?>"><i class="icon-book"></i>User Manual</a>
+                                </li>
+                            <?php
                                 }
                                 ?>
-                            </ul>   
-                        </div>
+
+
+                        </ul>
+                        <h3>Notifications</h3>
+                        <ul id="notification1" class="nav nav-list well">
+                            <?php
+                                if ($user_is_administrator) {
+                                    ?>
+                                <li><a id='online' class='admin_link'><i class='icon-signal'></i>Online Users <div id="span2" class='badge badge-important'></div></a></li>
+                                <li><a id='inactive' class='admin_link'><i class='icon-th'></i>Deactivated Users <div id="span1" class='badge badge-important'></div></a></li>
+                                <li id="span3"></li>
+                            <?php
+                                } else {
+                                    ?>
+                                <li id="span1"></li>
+                                <li id="span2"></li>
+                                <li id="span3"></li>
+                                <li id="span4"></li>
+                                <li id="span5"></li>
+                                <li id="span6"></li>
+                                <li id="span7"></li>
+                                <li id="span8"></li>
+
+                            <?php
+                                }
+                                ?>
+                        </ul>
                     </div>
-                    <div class="span9">
-                        <?php
-                    }
-                    echo view($content_view);
-//Load modals view
-                    echo view('\Modules\ADT\Views\sections\\modals_v');
-//Load modals view end
-                    ?>
+                </div>
+                <div class="span9">
+                <?php
+                }
+                echo view($content_view);
+                //Load modals view
+                echo view('\Modules\ADT\Views\sections\\modals_v');
+                //Load modals view end
+                ?>
                 </div>
             </div>
         </div>
 
         <!-- This sets css for display length in reports -->
         <script type="text/javascript">
-            $(document).ready(function () {
+            $(document).ready(function() {
                 $("div.dataTables_length select").css("width", "13%");
 
 
 
             })
-        </script>   
+        </script>
         <div class="row-fluid">
             <footer id="bottom_ribbon">
                 <script>
@@ -553,13 +674,22 @@ if ($user_is_administrator) {
                         <div id="footer_text2" class="span12" style="text-align:center">
                             Government of Kenya &copy; <?php echo date('Y'); ?>.
                             All Rights Reserved . <strong>Web-ADT version 3.5.0</strong>
+<<<<<<< HEAD
                             <?php //if (str_replace('.', '', $update_available->release) + 0 > '3.4.2') { ?>
                             <a class="badge badge-warning blinking" href="#adt_update_modal" data-toggle="modal">New Update available</div>
                         <?php // } ?>
                     </div>  
+=======
+                            <?php //if (str_replace('.', '', $update_available->release) + 0 > '3.4.2') { 
+                            ?>
+                            <a class="badge badge-warning blinking" href="#adt_update_modal" data-toggle="modal">New Update available</a>
+                            <?php // } 
+                            ?>
+                        </div>
+                    </div>
+>>>>>>> origin/reports
                 </div>
-        </div>
-        </footer>
+            </footer>
         </div>
 
         <!-- Search Modal -->
@@ -572,7 +702,7 @@ if ($user_is_administrator) {
                 <div class="modal-body">
                     <div class="control-group">
                         <div class="controls">
-                            <select id="search_criteria" name="search_criteria" required  class="span3">
+                            <select id="search_criteria" name="search_criteria" required class="span3">
                                 <option data-cat='patient' value="0" data-dest="patient_management/load_view/details/">Search Patients</option>
                                 <?php
                                 foreach ($ccc_stores as $ccc_store) {
@@ -582,7 +712,7 @@ if ($user_is_administrator) {
                             </select>
                         </div>
                         <p></p>
-                        <input type="text" id="search_option" name="search_option" class="form-control span6 validate"  style="width:90%; margin-top:2%" placeholder="Enter your search text" required="" />
+                        <input type="text" id="search_option" name="search_option" class="form-control span6 validate" style="width:90%; margin-top:2%" placeholder="Enter your search text" required="" />
 
                     </div>
                 </div>
@@ -592,5 +722,6 @@ if ($user_is_administrator) {
             </form>
         </div>
         <!--end Search modal-->
-    </body>
+</body>
+
 </html>

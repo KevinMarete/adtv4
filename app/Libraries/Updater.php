@@ -9,7 +9,8 @@
  * @license
  * @version     1.0.0
  */
-class Updater {
+class Updater
+{
 
     private $ADT_file = 'ADT.zip';
 
@@ -22,7 +23,8 @@ class Updater {
      * @param     string
      * @return    none
      */
-    function __construct() {
+    function __construct()
+    {
         // log_message('debug', '');
     }
 
@@ -32,7 +34,8 @@ class Updater {
     /*
       Function for checking if connection to the internet exists
      */
-    function check_connection() {
+    function check_connection()
+    {
         $connected = fopen("http://www.google.com:80/", "r");
         if ($connected) {
             return true;
@@ -45,7 +48,8 @@ class Updater {
       Function for reading latest ADT release details
      */
 
-    function check_ADTrelease() {
+    function check_ADTrelease()
+    {
         // if new release exists then download release file first then keep checking locally
         // if release already installed delete release file 
 
@@ -53,9 +57,10 @@ class Updater {
         curl_setopt($ch, CURLOPT_URL, "http://adt.nascop.org/updateinfo.txt");
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5); //timeout in seconds
 
         if (curl_exec($ch) === FALSE) {
-            // echo "Error: " . curl_error($ch);
             $response = false;
         } else {
             $response = curl_exec($ch);
@@ -65,7 +70,8 @@ class Updater {
         return $response;
     }
 
-    function download_ADTRelease() {
+    function download_ADTRelease()
+    {
         $rs = $this->check_ADTrelease();
         $rs = (json_decode($rs));
         $returnable = false;
@@ -76,18 +82,29 @@ class Updater {
         return $returnable;
     }
 
-    function check_ADTRelease_downloaded() {
+    function check_ADTRelease_downloaded()
+    {
         $rs = $this->check_ADTrelease();
         $rs = (json_decode($rs));
         $returnable = true;
 
+<<<<<<< HEAD
         //if (@md5_file(FCPATH . $this->ADT_file) == $rs->releaseChecksum && filesize(FCPATH . $this->ADT_file) == $rs->releaseSize) {
           //  $returnable = true;
         //}
+=======
+        if (empty($rs)) {
+            return $returnable;
+        }
+        if (@md5_file(FCPATH . $this->ADT_file) == $rs->releaseChecksum && filesize(FCPATH . $this->ADT_file) == $rs->releaseSize) {
+            $returnable = true;
+        }
+>>>>>>> origin/reports
         return $returnable;
     }
 
-    function update_ADT() {
+    function update_ADT()
+    {
         $path = pathinfo(realpath($this->ADT_file), PATHINFO_DIRNAME);
 
 
@@ -103,7 +120,7 @@ class Updater {
         }
     }
 
-// function to inform remote site of new update activity
+    // function to inform remote site of new update activity
 }
 
 /* End of file Updater.php */
