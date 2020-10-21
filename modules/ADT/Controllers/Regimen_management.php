@@ -3,6 +3,7 @@ namespace Modules\ADT\Controllers;
 
 use App\Controllers\BaseController;
 use Modules\ADT\Models\Regimen;
+use Illuminate\Database\Capsule\Manager as DB;
 
 class Regimen_management extends BaseController {
 	protected $session;
@@ -314,18 +315,14 @@ class Regimen_management extends BaseController {
 
 	public function getAllDrugs($regimen = null) {
 
-		$cond = ($regimen == null) ? "UNION SELECT id as drug_id,drug as drug_name FROM drugcode" : "  WHERE (rd.regimen='$regimen' or r.regimen_code LIKE '%oi%') 
-		AND (d.drug !='NULL') GROUP BY d.id ORDER BY d.drug ASC" ;
-		$sql = "SELECT 
-		rd.drugcode as drug_id,
-		d.drug as drug_name 
-		FROM regimen_drug rd  
-		LEFT JOIN regimen r ON r.id=rd.regimen 
-		LEFT JOIN drugcode d ON d.id=rd.drugcode
-		$cond";
+		$cond = ($regimen == null) ? "UNION SELECT id as drug_id,drug as drug_name FROM drugcode" : "  WHERE (rd.regimen='$regimen' or r.regimen_code LIKE '%oi%') ".
+		"AND (d.drug !='NULL') GROUP BY d.id ORDER BY d.drug ASC" ;
+		$sql = "SELECT rd.drugcode as drug_id, d.drug as drug_name ". 
+		"FROM regimen_drug rd ".
+		"LEFT JOIN regimen r ON r.id=rd.regimen ".
+		"LEFT JOIN drugcode d ON d.id=rd.drugcode ".$cond;
 
-		$query = $this -> db -> query($sql);
-		$results = $query -> result_array();
+		$results = DB::select($sql);
 		if ($results) {
 			echo json_encode($results);
 		}

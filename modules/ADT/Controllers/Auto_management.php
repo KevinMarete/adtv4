@@ -13,6 +13,7 @@ use \Modules\ADT\Models\User;
 use \Modules\ADT\Models\User_right;
 use \Modules\ADT\Models\Patient_appointment;
 use \Modules\ADT\Models\CCC_store_service_point;
+use \Modules\ADT\Models\Migration_log;
 use Modules\ADT\Models\PatientViralLoad;
 
 class Auto_management extends \App\Controllers\BaseController {
@@ -34,9 +35,9 @@ class Auto_management extends \App\Controllers\BaseController {
         $retry_seconds = 3600; //1 hour (60*60)
         $today = date('YmdHis');
         //get last update time of log file for auto_update
-        $log = Migration_Log::getLog('auto_update');
-        $last_update = $log['last_index'];
-        $status = (int) $log['count'];
+        $log = Migration_log::where('source', 'auto_update')->get();
+        $last_update = $log->last_index;
+        $status = (int) $log->count;
 
         $last_update = strtotime($last_update);
         $time_diff = time() - $last_update;
@@ -86,10 +87,9 @@ class Auto_management extends \App\Controllers\BaseController {
             $message .= $this->updateViralLoad();
 
             //finally update the log file for auto_update 
-            if ($this->session->userdata("curl_error") == '') {
-                $sql = "UPDATE migration_log SET  count = 1 WHERE source='auto_update'";
-                $this->db->query($sql);
-                $this->session->set_userdata("curl_error", "");
+            if ($this->session->get("curl_error") == '') {
+                Migration_log::where('source', 'auto_update')->update(['count' => 1]);
+                $this->session->set("curl_error", "");
             }
         }
         if ($manual == TRUE) {

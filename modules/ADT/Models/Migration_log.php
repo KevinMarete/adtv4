@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\BaseModel;
+use Illuminate\Database\Capsule\Manager as DB;
 
 class Migration_log extends BaseModel {
 

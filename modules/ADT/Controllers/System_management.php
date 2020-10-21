@@ -9,6 +9,7 @@ use App\Libraries\Encrypt;
 use App\Libraries\Updater;
 use App\Libraries\Curl;
 use App\Libraries\Zip;
+use Carabiner;
 use \Modules\ADT\Models\User;
 use \Modules\ADT\Models\User_right;
 use \Modules\ADT\Models\Patient_appointment;
@@ -16,6 +17,7 @@ use \Modules\ADT\Models\CCC_store_service_point;
 
 
 class System_management extends \App\Controllers\BaseController {
+    var $carabiner;
 
     function __construct() {
    
@@ -25,12 +27,13 @@ class System_management extends \App\Controllers\BaseController {
         //$this->load->library('Unzip');
         //$this->load->library('Curl');
         //date_default_timezone_set('Africa/Nairobi');
+        $this->carabiner = new Carabiner();
     }
 
     public function index() {
         echo '1';
-        //$this->load_assets();
-        //redirect('user_management/login');
+        $this->load_assets();
+        return redirect()->to('login');
     }
 
     public function load_assets() {
@@ -45,7 +48,7 @@ class System_management extends \App\Controllers\BaseController {
 
         // Clear cache Details
 
-        $this->load->library('carabiner');
+        // $this->load->library('carabiner');
 
         $date_past = date('o-m-d H:i:s', time() - 1 * 60);
         $jsArray = array(array('jquery-1.11.1.min.js'), array('jquery-1.7.2.min.js'), array('jquery-migrate-1.2.1-min.js'), array('jquery.form.js'), array('jquery.gritter.js'), array('jquery-ui.js'), array('sorttable.js'), array('datatable/jquery.dataTables.min.js'), array('datatable/columnFilter.js'), array('bootstrap/bootstrap.min.js'), array('bootstrap/paging.js'), array('jquery.multiselect.js'), array('jquery.multiselect.filter.js'), array('validator.js'), array('validationEngine-en.js'), array('menus.js'), array('jquery.blockUI.js'), array('amcharts/amcharts.js'), array('toastr.js'), array('select2-3.4.8/select2.min.js'), array('bootbox.min.js'), array('Merged_JS.js'), array('autoprefixer.js'));
@@ -56,8 +59,8 @@ class System_management extends \App\Controllers\BaseController {
         $this->carabiner->js($jsArray);
 
         $assets = $this->carabiner->display_string();
-        $this->load->helper('file');
-        if (!write_file('application/views/sections/link.php', $assets)) {
+        helper('file');
+        if (!write_file('app/modules/ADT/Views/sections/link.php', $assets)) {
             echo 'Unable to write the file';
         } else {
             echo 'File written!';
@@ -66,7 +69,7 @@ class System_management extends \App\Controllers\BaseController {
 
     public function search_system($search_type, $stock_type = '2') {
         $search = $_GET['q'];
-        $answer = array();
+        $answer = [];
         //Patient Search
         if ($search_type == 'patient') {
             $sql = "SELECT p.id,p.patient_number_ccc,p.First_Name,p.other_name,p.Last_Name,p.phone 

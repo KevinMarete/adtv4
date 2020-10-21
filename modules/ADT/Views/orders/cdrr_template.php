@@ -1,8 +1,9 @@
+<?php $session = session(); ?>
 <div class="full-content" style="width:98%;">
 	<div>
 		<ul class="breadcrumb">
 			<li>
-				<a href="<?php echo site_url().'order' ?>">CDRR</a><span class="divider">/</span>
+				<a href="<?php echo base_url().'/public/order' ?>">CDRR</a><span class="divider">/</span>
 			</li>
 			<li class="active" id="actual_page">
 				<?php echo $page_title;?>
@@ -12,20 +13,20 @@
 	<?php 
 	if($options=="update" || $options=="view"){
 	?>
-	<form id="fmPostCdrr" name="fmPostCdrr" method="post" action="<?php echo site_url('order/save/cdrr/prepared/'.$cdrr_id)?>">	
+	<form id="fmPostCdrr" name="fmPostCdrr" method="post" action="<?php echo base_url('/public/order/save/cdrr/prepared/'.$cdrr_id)?>">	
 	<?php	
 	}else{
 	?>
-	<form id="fmPostCdrr" name="fmPostCdrr" method="post" action="<?php echo site_url('order/save/cdrr/prepared')?>">
+	<form id="fmPostCdrr" name="fmPostCdrr" method="post" action="<?php echo base_url('/public/order/save/cdrr/prepared')?>">
 	<?php
 	}
 	?>
 	<?php 
-	if($this->session->flashdata('order_delete')){
-		echo '<p class="message error">'.$this->session->flashdata('order_delete').'</p>';
+	if($session->getFlashdata('order_delete')){
+		echo '<p class="message error">'.$session->getFlashdata('order_delete').'</p>';
 	}
-	else if ($this->session->flashdata('order_message')){
-		echo '<p class="message info">'.$this->session->flashdata('order_message').'</p>';
+	else if ($session->getFlashdata('order_message')){
+		echo '<p class="message info">'.$session->getFlashdata('order_message').'</p>';
 	}	
 	?>
 		<?php 
@@ -34,13 +35,13 @@
 		<ul class="nav nav-tabs">
          <?php echo $option_links; ?>
         </ul>
-		<label><h2><b><?php echo $cdrr_array[0]['cdrr_label']." ".$cdrr_array[0]['status_name'];?></b></h2></label><br/>
-		<a href='<?php echo site_url("order/download_order/cdrr/".$cdrr_id);?>'><?php echo $cdrr_array[0]['cdrr_label']." ".$cdrr_array[0]['facility_name']." ".$cdrr_array[0]['period_begin']." to ".$cdrr_array[0]['period_end'].".xls";?></a>
+		<label><h2><b><?php echo $cdrr_array[0]->cdrr_label." ".$cdrr_array[0]->status_name;?></b></h2></label><br/>
+		<a href='<?php echo base_url("/public/order/download_order/cdrr/".$cdrr_id);?>'><?php echo $cdrr_array[0]->cdrr_label." ".$cdrr_array[0]->facility_name." ".$cdrr_array[0]->period_begin." to ".$cdrr_array[0]->period_end.".xls";?></a>
 		<p></p>
-		<input type="hidden"  id="status" name="status" value="<?php echo strtolower($cdrr_array[0]['status_name']);?>"/>
-		<input type="hidden"  id="created" name="created" value="<?php echo $cdrr_array[0]['created'];?>"/>
+		<input type="hidden"  id="status" name="status" value="<?php echo strtolower($cdrr_array[0]->status_name);?>"/>
+		<input type="hidden"  id="created" name="created" value="<?php echo $cdrr_array[0]->created;?>"/>
 		<?php 
-		   $access_level = $this -> session -> userdata("user_indicator");
+		   $access_level = $session->get("user_indicator");
 		      if($access_level=="facility_administrator"){
 		      	if($status_name=="prepared"){
 		?>
@@ -48,7 +49,7 @@
 				<input type="hidden" name="cdrr_type" value="<?php echo $cdrr_type;?>"/>
 				<input type='submit' name='save' class='btn btn-info state_change' value='Approve'/>
 		<?php
-		      } else if($status_name == "approved" && $cdrr_array[0]['status'] == "F-CDRR_units" && $is_central_site == TRUE){
+		      } else if($status_name == "approved" && $cdrr_array[0]->status == "F-CDRR_units" && $is_central_site == TRUE){
 		 ?>
 		        <input type="hidden" name="status_change" value="archived"/> 
 		 		<input type='submit' name='save' class='btn btn-info state_change' value='Archive'/>
@@ -61,9 +62,9 @@
 		<?php	
 		 }else if($options=="update"){
 		 ?>
-		<label><h2><b>Update <?php echo $cdrr_array[0]['cdrr_label']." ".$cdrr_array[0]['status_name'];?></b></h2></label>
-					<input type="hidden"  id="status" name="status" value="<?php echo strtolower($cdrr_array[0]['status_name']);?>"/>
-					<input type="hidden"  id="created" name="created" value="<?php echo $cdrr_array[0]['created'];?>"/>
+		<label><h2><b>Update <?php echo $cdrr_array[0]->cdrr_label." ".$cdrr_array[0]->status_name;?></b></h2></label>
+					<input type="hidden"  id="status" name="status" value="<?php echo strtolower($cdrr_array[0]->status_name);?>"/>
+					<input type="hidden"  id="created" name="created" value="<?php echo $cdrr_array[0]->created;?>"/>
 		 <?php	
 		 }
 		?>
@@ -89,21 +90,21 @@
 				</thead>
 				<tbody>
 					<tr>
-						<td style="width:50%;"><b>Facility Name: &nbsp;</b><?php echo $facility_object -> name;?></td>
-						<td><b>Facility code: &nbsp;</b><?php echo $facility_object -> facilitycode;?>
-							<input type="hidden" name="facility_code" id="facility_code" value="<?php echo $facility_object ->facilitycode; ?>"/>
+						<td style="width:50%;"><b>Facility Name: &nbsp;</b><?php echo $facility_object->name;?></td>
+						<td><b>Facility code: &nbsp;</b><?php echo $facility_object->facilitycode;?>
+							<input type="hidden" name="facility_code" id="facility_code" value="<?php echo $facility_object->facilitycode; ?>"/>
 							<input type="hidden" name="facility_id" id="facility_id" value="<?php echo $facility_id; ?>"/>
-							<input type="hidden" name="sponsor" value="<?php echo $facility_object -> support -> Name; ?>"/>
+							<input type="hidden" name="sponsor" value="<?php echo $facility_object->support->name ?? ''; ?>"/>
 							<input type="hidden" name="non_arv" id="non_arv" value="0"/>
 							<?php
 								$type_of_service = array();
-								if ($facility_object -> service_art == "1") {
+								if ($facility_object->service_art == "1") {
 									$type_of_service[] = "ART";
 								}
-								if ($facility_object -> service_pmtct == "1") {
+								if ($facility_object->service_pmtct == "1") {
 									$type_of_service[] = "PMTCT";
 								}
-								if ($facility_object -> service_pep == "1") {
+								if ($facility_object->service_pep == "1") {
 									$type_of_service[] = "PEP";
 								}
 							?>
@@ -111,8 +112,8 @@
 						</td>
 					</tr>
 					<tr>
-						<td><b>County: &nbsp;</b><?php echo ucwords($facility_object -> County -> county);?></td>
-						<td><b>Sub-County: &nbsp;</b><?php echo $facility_object -> Parent_District -> Name;?></td>
+						<td><b>County: &nbsp;</b><?php echo ucwords($facility_object->facility_county->county);?></td>
+						<td><b>Sub-County: &nbsp;</b><?php echo $facility_object->parent_district->name;?></td>
 					</tr>
 					<tr>
 						<?php
@@ -128,10 +129,10 @@
 						<?php }else{?>
 						<td colspan='2'><b>Period of Reporting: &nbsp;</b>
 						<select readonly="readonly" name="period_start" id="period_start">
-							<option selected="selected" value="<?php echo date('Y-m-01', strtotime($cdrr_array[0]['period_begin'])); ?>"><?php echo date('F', strtotime($cdrr_array[0]['period_end']));?></option>
+							<option selected="selected" value="<?php echo date('Y-m-01', strtotime($cdrr_array[0]->period_begin)); ?>"><?php echo date('F', strtotime($cdrr_array[0]->period_end));?></option>
 						</select>
 						<select readonly="readonly" name="period_end" id="period_end">
-							<option selected="selected" value="<?php echo date('Y-m-t', strtotime($cdrr_array[0]['period_end'])); ?>"><?php echo date('Y', strtotime($cdrr_array[0]['period_end']));?></option>
+							<option selected="selected" value="<?php echo date('Y-m-t', strtotime($cdrr_array[0]->period_end)); ?>"><?php echo date('Y', strtotime($cdrr_array[0]->period_end));?></option>
 						</select>			
 						<?php
 						  } 
@@ -286,7 +287,7 @@
 					$count_three=0;
 					$count_four=0;
 					foreach($commodities as $commodity){
-				         if($commodity -> Drug !=NULL){
+				         if($commodity->Drug !=NULL){
 				         	$counter++;
 			                   if($counter ==10){
 			                   echo $header_text;
@@ -330,12 +331,12 @@
 						  }
 						  }
 					?>
-					<tr class="ordered_drugs" drug_id="<?php echo $commodity -> id;?>">
-						<td class="col_drug"><?php echo $commodity -> Drug;?>
+					<tr class="ordered_drugs" drug_id="<?php echo $commodity->id;?>">
+						<td class="col_drug"><?php echo $commodity->Drug;?>
 							<?php 
 							if($options=="update" || $options=="view"){
 							?>
-							<input type="hidden" name="item_id[]" id="item_id_<?php echo $commodity -> id;?>" value=""/>
+							<input type="hidden" name="item_id[]" id="item_id_<?php echo $commodity->id;?>" value=""/>
 							<?php
 							}
 							?>
@@ -346,7 +347,7 @@
 	                    ?>
 <!-- showing the input of the column unit pack size -->
 						<td class="number calc_count">
-							<input type="text"  class="pack_size" name="pack_size[]" id="pack_size_<?php echo $commodity -> id;?>" value="<?php echo $commodity ->Pack_Size;?>" style="color: blue; font-weight: bold; text-align:center;"/>
+							<input type="text"  class="pack_size" name="pack_size[]" id="pack_size_<?php echo $commodity->id;?>" value="<?php echo $commodity ->Pack_Size;?>" style="color: blue; font-weight: bold; text-align:center;"/>
 						</td>
 						<?php
 
@@ -355,13 +356,13 @@
 <!-- showing the input of the column unit pack size -->
 
 <!-- Devide the displayed output by the number of packsize -->
-						<td class="number calc_count"><input type="text"  class="pack_size" name="pack_size[]" id="pack_size_<?php echo $commodity -> id;?>" value="<?php echo $commodity ->Pack_Size;?>" style="color: blue; font-weight: bold; text-align:center;"/></td>
+						<td class="number calc_count"><input type="text"  class="pack_size" name="pack_size[]" id="pack_size_<?php echo $commodity->id;?>" value="<?php echo $commodity ->Pack_Size;?>" style="color: blue; font-weight: bold; text-align:center;"/></td>
 						<?php	
 						}
 						?>
 						<td> <input name="opening_balance[]" id="opening_balance_<?php echo $commodity->id;?>" type="text" class="opening_balance" style="width:100%; text-align:center;"/></td>
-						<td> <input name="quantity_received[]" id="received_in_period_<?php echo $commodity -> id;?>" type="text" class="quantity_received" style="width:100%; text-align:center;"/></td>
-						<td> <input name="quantity_dispensed[]" id="dispensed_in_period_<?php echo $commodity -> id;?>" type="text" class="quantity_dispensed" style="width:100%; text-align:center;"/></td>
+						<td> <input name="quantity_received[]" id="received_in_period_<?php echo $commodity->id;?>" type="text" class="quantity_received" style="width:100%; text-align:center;"/></td>
+						<td> <input name="quantity_dispensed[]" id="dispensed_in_period_<?php echo $commodity->id;?>" type="text" class="quantity_dispensed" style="width:100%; text-align:center;"/></td>
 						<td> <input name="losses[]" id="losses_in_period_<?php echo $commodity->id;?>" type="text" class="losses" style="width:100%; text-align:center;"/></td>
 						<!-- added column to the new cdrr templates ... Positive Adjustments -->
 						<td> <input name="adjustments[]" id="positive_adjustment_<?php echo $commodity->id;?>" type="text" class="adjustments" style="width:100%; text-align:center;"/></td>
@@ -376,11 +377,11 @@
 						<?php
 						}
 						?>
-						<td> <input tabindex="-1" name="expire_qty[]" id="expire_qty_<?php echo $commodity -> id;?>" type="text" class="expire_qty" style="width:100%; text-align:center;"/></td>
-						<td> <input tabindex="-1" name="expire_period[]" id="expire_period_<?php echo $commodity -> id;?>" type="text" class="expire_period" style="width:100%; text-align:center;"/></td>	
-						<td> <input tabindex="-1" name="out_of_stock[]" id="out_of_stock_<?php echo $commodity -> id;?>" type="text" class="out_of_stock" style="width:100%; text-align:center;"/></td>
-						<td> <input tabindex="-1" name="resupply[]" id="resupply_<?php echo $commodity -> id;?>" type="text" class="resupply" style="width:100%; text-align:center;"/></td>	
-						<input type="hidden" name="commodity[]" value="<?php echo $commodity -> id;?>"/>					
+						<td> <input tabindex="-1" name="expire_qty[]" id="expire_qty_<?php echo $commodity->id;?>" type="text" class="expire_qty" style="width:100%; text-align:center;"/></td>
+						<td> <input tabindex="-1" name="expire_period[]" id="expire_period_<?php echo $commodity->id;?>" type="text" class="expire_period" style="width:100%; text-align:center;"/></td>	
+						<td> <input tabindex="-1" name="out_of_stock[]" id="out_of_stock_<?php echo $commodity->id;?>" type="text" class="out_of_stock" style="width:100%; text-align:center;"/></td>
+						<td> <input tabindex="-1" name="resupply[]" id="resupply_<?php echo $commodity->id;?>" type="text" class="resupply" style="width:100%; text-align:center;"/></td>	
+						<input type="hidden" name="commodity[]" value="<?php echo $commodity->id;?>"/>					
 					</tr>					
 					<?php 
 						  }
@@ -392,7 +393,7 @@
 		<div>
 			<span style="vertical-align:bottom;font-size:1.2em;">Comments (Explain ALL Losses and Adjustments):</span>
 			<textarea style="width:100%;font-size:18px;" rows="8" name="comments" id="comments"><?php 
-				if($options=="update" || $options=="view") echo @$cdrr_array[0]['comments'];
+				if($options=="update" || $options=="view") echo @$cdrr_array[0]->comments;
 			?></textarea>
 			<?php
 	           if($hide_generate==2){
@@ -411,15 +412,15 @@
 		    ?>
 		    <table style="width:100%;" class="table table-bordered">
 		    	<?php 
-					error_reporting(0); 
+					// error_reporting(0); 
 		    	    foreach($logs as $log){?>
 				<tr>
 					<td><b>Report <?php echo $log->description;?> by:</b> 
-					<input type="hidden" name="log_id[]" id="log_id_<?php echo $log -> id;?>" value="<?php echo $log -> id;?>"/>	
+					<input type="hidden" name="log_id[]" id="log_id_<?php echo $log->id;?>" value="<?php echo $log->id;?>"/>	
 					</td>
 					<td><?php echo $log->user->Name; ?></td>
 					<td><b>Designation:</b></td>
-					<td><?php echo $log->user->Access->Level_Name; ?></td>
+					<td><?php echo $log->user->access->level_name; ?></td>
 				</tr>
 				<tr>
 					<td><b>Contact Telephone:</b></td>
@@ -447,7 +448,7 @@
 	$(document).ready(function(){
 
 		//Check if report is a duplicate
-		var duplicate = "<?=$duplicate?>";
+		var duplicate = "<?=isset($duplicate) ? $duplicate : false;?>";
 		if(duplicate == true)
 		{ 
 		   bootbox.alert("<h4>Duplicate</h4>\n\<hr/><center>This Report already exists!</center>");
@@ -550,56 +551,56 @@
 		
 		<?php
 		if (!empty($cdrr_array)) {
-			if($cdrr_array[0]['code']=='D-CDRR'){
+			if($cdrr_array[0]->code=='D-CDRR'){
 		?>
-		$("#central_rate").val("<?php echo $cdrr_array[0]['reports_expected']; ?>");
-		$("#actual_report").val("<?php echo $cdrr_array[0]['reports_actual']; ?>");
+		$("#central_rate").val("<?php echo $cdrr_array[0]->reports_expected; ?>");
+		$("#actual_report").val("<?php echo $cdrr_array[0]->reports_actual; ?>");
 		<?php	
 		    }
 		  foreach($cdrr_array as $cdrr){
-		  	if($cdrr['non_arv']==1){
+		  	if($cdrr->non_arv==1){
 	    ?>
-	    $("#non_arv").val("<?php echo $cdrr['non_arv']; ?>");
+	    $("#non_arv").val("<?php echo $cdrr->non_arv; ?>");
 	    $("#non_arv").attr("checked",true);
 	    <?php
 			}
 	    ?>
-		  $("#period_start").val("<?php echo $cdrr['period_begin']; ?>");
-		  $("#period_end").val("<?php echo $cdrr['period_end']; ?>");
-		  $("#item_id_<?php echo $cdrr['drug_id']; ?>").val("<?php echo $cdrr['item_id']; ?>");
-		  $("#opening_balance_<?php echo $cdrr['drug_id']; ?>").val("<?php echo $cdrr['balance']; ?>");
-		  $("#received_in_period_<?php echo $cdrr['drug_id']; ?>").val("<?php echo $cdrr['received']; ?>");
-		  $("#dispensed_in_period_<?php echo $cdrr['drug_id']; ?>").val("<?php echo $cdrr['dispensed_packs']; ?>"); 
+		  $("#period_start").val("<?php echo $cdrr->period_begin; ?>");
+		  $("#period_end").val("<?php echo $cdrr->period_end; ?>");
+		  $("#item_id_<?php echo $cdrr->drug_id; ?>").val("<?php echo $cdrr->item_id; ?>");
+		  $("#opening_balance_<?php echo $cdrr->drug_id; ?>").val("<?php echo $cdrr->balance; ?>");
+		  $("#received_in_period_<?php echo $cdrr->drug_id; ?>").val("<?php echo $cdrr->received; ?>");
+		  $("#dispensed_in_period_<?php echo $cdrr->drug_id; ?>").val("<?php echo $cdrr->dispensed_packs; ?>"); 
 		<?php	
-		if($cdrr_array[0]['code']=="D-CDRR"){
+		if($cdrr_array[0]->code=="D-CDRR"){
 		?>
- 		  $("#dispensed_in_period_<?php echo $cdrr['drug_id']; ?>").val("<?php echo $cdrr['dispensed_packs']; ?>"); 
+ 		  $("#dispensed_in_period_<?php echo $cdrr->drug_id; ?>").val("<?php echo $cdrr->dispensed_packs; ?>"); 
 		<?php	
 		}
 		?>
 		<?php  
-		if($cdrr_array[0]['code']=="F-CDRR_packs"){
+		if($cdrr_array[0]->code=="F-CDRR_packs"){
 		?>
-		  $("#dispensed_in_period_packs_<?php echo $cdrr['drug_id']; ?>").val("<?php echo $cdrr['dispensed_packs']; ?>"); 	
+		  $("#dispensed_in_period_packs_<?php echo $cdrr->drug_id; ?>").val("<?php echo $cdrr->dispensed_packs; ?>"); 	
 		<?php	
 		}
 		?>
-          $("#positive_adjustment_<?php echo $cdrr['drug_id']; ?>").val("<?php echo $cdrr['adjustments']; ?>");
-		  $("#losses_in_period_<?php echo $cdrr['drug_id']; ?>").val("<?php echo $cdrr['losses']; ?>");
-		  $("#adjustments_in_period_<?php echo $cdrr['drug_id']; ?>").val("<?php echo $cdrr['adjustments_neg']; ?>");
-		  $("#physical_in_period_<?php echo $cdrr['drug_id']; ?>").val("<?php echo $cdrr['count']; ?>");
+          $("#positive_adjustment_<?php echo $cdrr->drug_id; ?>").val("<?php echo $cdrr->adjustments; ?>");
+		  $("#losses_in_period_<?php echo $cdrr->drug_id; ?>").val("<?php echo $cdrr->losses; ?>");
+		  $("#adjustments_in_period_<?php echo $cdrr->drug_id; ?>").val("<?php echo $cdrr->adjustments_neg; ?>");
+		  $("#physical_in_period_<?php echo $cdrr->drug_id; ?>").val("<?php echo $cdrr->count; ?>");
 		  <?php
-		  if($cdrr_array[0]['code']=='D-CDRR'){
+		  if($cdrr_array[0]->code=='D-CDRR'){
 		  ?>
-		  $("#aggregated_qty_<?php echo $cdrr['drug_id']; ?>").val("<?php echo $cdrr['aggr_consumed']; ?>");
-		  $("#aggregated_physical_qty_<?php echo $cdrr['drug_id']; ?>").val("<?php echo $cdrr['aggr_on_hand']; ?>");
+		  $("#aggregated_qty_<?php echo $cdrr->drug_id; ?>").val("<?php echo $cdrr->aggr_consumed; ?>");
+		  $("#aggregated_physical_qty_<?php echo $cdrr->drug_id; ?>").val("<?php echo $cdrr->aggr_on_hand; ?>");
 		  <?php
 		  }
 		  ?>
-		  $("#expire_qty_<?php echo $cdrr['drug_id']; ?>").val("<?php echo $cdrr['expiry_quant']; ?>");
-		  $("#expire_period_<?php echo $cdrr['drug_id']; ?>").val("<?php echo $cdrr['expiry_date']; ?>");
-		  $("#out_of_stock_<?php echo $cdrr['drug_id']; ?>").val("<?php echo $cdrr['out_of_stock']; ?>");
-		  $("#resupply_<?php echo $cdrr['drug_id']; ?>").val("<?php echo @$cdrr['resupply']; ?>");
+		  $("#expire_qty_<?php echo $cdrr->drug_id; ?>").val("<?php echo $cdrr->expiry_quant; ?>");
+		  $("#expire_period_<?php echo $cdrr->drug_id; ?>").val("<?php echo $cdrr->expiry_date; ?>");
+		  $("#out_of_stock_<?php echo $cdrr->drug_id; ?>").val("<?php echo $cdrr->out_of_stock; ?>");
+		  $("#resupply_<?php echo $cdrr->drug_id; ?>").val("<?php echo @$cdrr->resupply; ?>");
 		<?php	
 		   }
 		}
@@ -788,4 +789,4 @@
 	}
 </style>
 <!--scripts-->
-<script src="<?php echo base_url();?>assets/scripts/bootstrap/bootstrap-multiselect.js"></script>
+<script src="<?php echo base_url();?>/public/assets/scripts/bootstrap/bootstrap-multiselect.js"></script>

@@ -11,6 +11,10 @@ class User extends BaseModel {
     protected function _encrypt_password($value) {
         $this->_set('Password', md5($value));
     }
+    
+    public function access(){
+        return $this->belongsTo(AccessLevel::class, 'Access_Level', 'id');
+    }
 
     //added by dave
     public function getAccessLevels() {

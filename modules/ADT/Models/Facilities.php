@@ -6,6 +6,30 @@ use App\Models\BaseModel;
 use Illuminate\Database\Capsule\Manager as DB;
 
 class Facilities extends BaseModel {
+        
+    public function facility_county(){
+        return $this->belongsTo(County::class, 'county', 'id');
+    }
+        
+    public function parent_district(){
+        return $this->belongsTo(District::class, 'district', 'id');
+    }
+        
+    public function type(){
+        return $this->belongsTo(FacilityType::class, 'facilitytype', 'id');
+    }
+        
+    public function supplier(){
+        return $this->belongsTo(FacilityType::class, 'supplied_by', 'id');
+    }
+        
+    public function support(){
+        return $this->belongsTo(Supporter::class, 'supported_by', 'id');
+    }
+        
+    public function sync_facility(){
+        return $this->belongsTo(Sync_facility::class, 'map', 'id');
+    }
 
     public function getDistrictFacilities($district) {
         $query = Doctrine_Query::create()->select("facilitycode,name")->from("Facilities")->where("District = '" . $district . "'");
@@ -114,7 +138,7 @@ class Facilities extends BaseModel {
         $query = $db->query("SELECT count(*) as count FROM sync_facility s1
 					right join sync_facility s2 on s1.id = s2.parent_id
 					WHERE s1.code ='$facility_code'");
-        return $query->getResultArray()[0]['count'] + 0;
+        return (int) $query->getResultArray()[0]['count'];
     }
 
     public function getId($facility_code) {

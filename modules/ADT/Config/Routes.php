@@ -1,5 +1,6 @@
 <?php
 /*Authentication Routes*/
+// $routes->get('/', '\Modules\ADT\Controllers\System_management::index');
 $routes->get('login', '\Modules\ADT\Controllers\User_management::login');
 $routes->post('user_management/authenticate', '\Modules\ADT\Controllers\User_management::authenticate');
 $routes->get('home', '\Modules\ADT\Controllers\Home_controller::home');
@@ -41,12 +42,17 @@ $routes->get('stock_listing/(:any)', '\Modules\ADT\Controllers\Inventory_managem
 $routes->get('getDrugBinCard/(:any)/(:any)', '\Modules\ADT\Controllers\Inventory_management::getDrugBinCard');
 $routes->get('getDrugTransactions/(:any)/(:any)', '\Modules\ADT\Controllers\Inventory_management::getDrugTransactions');
 $routes->get('inventory_management/getIsoniazid/(:any)', '\Modules\ADT\Controllers\Inventory_management::getIsoniazid');
+$routes->post('inventory_management/getAllDrugsBatches/(:any)', '\Modules\ADT\Controllers\Inventory_management::getAllDrugsBatches/(:any)');
+$routes->post('inventory_management/getAllBacthDetails', '\Modules\ADT\Controllers\Inventory_management::getAllBacthDetails');
 
 
 
 /* Settings Management */
 $routes->get('settings_management', '\Modules\ADT\Controllers\Settings_management::index');
 $routes->get('regimen_management/', '\Modules\ADT\Controllers\Settings_management::index');
+
+/* Auto Management */
+$routes->get('auto_management', '\Modules\ADT\Controllers\Auto_management::index');
 $routes->get('auto_management/get_viral_load/(:any)', '\Modules\ADT\Controllers\Auto_management::get_viral_load');
 
 
@@ -99,9 +105,33 @@ $routes->post('dispensement_management/getFacililtyAge', '\Modules\ADT\Controlle
 $routes->post('dispensement_management/getInstructions/(:any)', '\Modules\ADT\Controllers\Dispensement_management::getInstructions');
 $routes->post('dispensement_management/print_test', '\Modules\ADT\Controllers\Dispensement_management::print_test');
 $routes->post('dispensement_management/getPreviouslyDispensedDrugs', '\Modules\ADT\Controllers\Dispensement_management::getPreviouslyDispensedDrugs');
+$routes->post('dispensement_management/getDoses', '\Modules\ADT\Controllers\Dispensement_management::getDoses');
 
 /* Regimens */
 $routes->match(['get', 'post'], 'regimen_management/getRegimenLine/(:any)', '\Modules\ADT\Controllers\Regimen_management::getRegimenLine');
 $routes->post('regimen_management/getRegimenLine/(:any)/(:any)', '\Modules\ADT\Controllers\Regimen_management::getRegimenLine');
 $routes->match(['get', 'post'], 'regimen_management/getFilteredRegiments', '\Modules\ADT\Controllers\Regimen_management::getFilteredRegiments');
+$routes->match(['get', 'post'], 'regimen_management/getAllDrugs', '\Modules\ADT\Controllers\Regimen_management::getAllDrugs');
 
+/* Order */
+$routes->get('order', '\Modules\ADT\Controllers\Order::index');
+$routes->post('order/authenticate_user', '\Modules\ADT\Controllers\Order::authenticate_user');
+$routes->get('order/logout', '\Modules\ADT\Controllers\Order::logout');
+$routes->get('order/view_order/(:any)/(:any)', '\Modules\ADT\Controllers\Order::view_order');
+$routes->get('order/read_order/(:any)/(:any)', '\Modules\ADT\Controllers\Order::read_order');
+$routes->match(['get', 'post'], 'order/update_order/(:any)/(:any)', '\Modules\ADT\Controllers\Order::update_order');
+$routes->post('order/save/(:any)/(:any)/(:any)', '\Modules\ADT\Controllers\Order::save');
+$routes->post('order/save/(:any)/(:any)', '\Modules\ADT\Controllers\Order::save');
+$routes->match(['get', 'post'], 'order/create_order/(:any)/(:any)', '\Modules\ADT\Controllers\Order::create_order');
+$routes->match(['get', 'post'], 'order/get_aggregated_fmaps/(:any)/(:any)', '\Modules\ADT\Controllers\Order::get_aggregated_fmaps');
+$routes->post('order/getExpectedActualReport', '\Modules\ADT\Controllers\Order::getExpectedActualReport');
+$routes->post('order/getPeriodRegimenPatients/(:any)/(:any)', '\Modules\ADT\Controllers\Order::getPeriodRegimenPatients');
+$routes->post('order/getNotMappedRegimenPatients/(:any)/(:any)', '\Modules\ADT\Controllers\Order::getNotMappedRegimenPatients');
+$routes->match(['get', 'post'], 'order/getoiPatients', '\Modules\ADT\Controllers\Order::getoiPatients');
+$routes->match(['get', 'post'], 'order/getItems', '\Modules\ADT\Controllers\Order::getItems');
+$routes->post('order/getCentralDataMaps/(:any)/(:any)/(:any)', '\Modules\ADT\Controllers\Order::getCentralDataMaps');
+$routes->get('order/download_order/(:any)/(:any)', '\Modules\ADT\Controllers\Order::download_order');
+$routes->get('order/get_dhis_data/(:any)', '\Modules\ADT\Controllers\Order::get_dhis_data/(:any)');
+
+/** Order Settings */
+$routes->get('order_settings/fetch/(:any)', '\Modules\ADT\Controllers\Order_settings::fetch');

@@ -259,9 +259,9 @@
 <!-- Login for escm -->
 
 <script type="text/javascript">
-    var sitesURL = "<?php echo base_url() . 'order_settings/fetch/sync_facility'; ?>"
-    var storesURL = "<?php echo base_url() . 'user_management/get_stores'; ?>"
-    var userSitesURL = "<?php echo base_url() . 'user_management/get_sites/' . $session->get('user_id'); ?>"
+    var sitesURL = "<?php echo base_url() . '/public/order_settings/fetch/sync_facility'; ?>"
+    var storesURL = "<?php echo base_url() . '/public/user_management/get_stores'; ?>"
+    var userSitesURL = "<?php echo base_url() . '/public/user_management/get_sites/' . $session->get('user_id'); ?>"
     var profileDiv = '#profile_user_facilities'
     var storesDiv = '#profile_user_store'
     var ccc_store = <?= $session->get('ccc_store_id') ?>;
