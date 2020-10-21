@@ -98,8 +98,8 @@ class Patient_management extends BaseController {
 
     public function get_Last_vl_result($patient_no) {
         //Validate patient_no when use of / to separate mflcode and ccc_no
-        $mflcode = $this->uri->segment(3);
-        $ccc_no = $this->uri->segment(4);
+        $mflcode = $this->uri->getSegment(3);
+        $ccc_no = $this->uri->getSegment(4);
         if ($ccc_no) {
             $patient_no = $mflcode . '/' . $ccc_no;
         }

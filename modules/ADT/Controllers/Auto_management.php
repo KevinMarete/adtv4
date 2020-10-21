@@ -15,6 +15,7 @@ use \Modules\ADT\Models\User;
 use \Modules\ADT\Models\User_right;
 use \Modules\ADT\Models\Patient_appointment;
 use \Modules\ADT\Models\CCC_store_service_point;
+use \Modules\ADT\Models\Migration_log;
 use Modules\ADT\Models\PatientViralLoad;
 
 class Auto_management extends \App\Controllers\BaseController {
@@ -38,10 +39,9 @@ class Auto_management extends \App\Controllers\BaseController {
         $retry_seconds = 3600; //1 hour (60*60)
         $today = date('YmdHis');
         //get last update time of log file for auto_update
-        $log = Migration_log::getLog('auto_update');
-        //dd($log);
-        $last_update = $log['last_index'];
-        $status = (int) $log['count'];
+        $log = Migration_log::where('source', 'auto_update')->get();
+        $last_update = $log->last_index;
+        $status = (int) $log->count;
 
         $last_update = strtotime($last_update);
         $time_diff = time() - $last_update;

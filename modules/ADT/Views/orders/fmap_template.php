@@ -1,26 +1,27 @@
 <?php
-if ($facility_object -> supported_by == "1") {
+$session = session();
+if ($facility_object->supported_by == "1") {
 	$supporter = "GOK";
 }
-if ($facility_object -> supported_by == "2") {
+if ($facility_object->supported_by == "2") {
 	$supporter = "PEPFAR";
 }
-if ($facility_object -> supported_by == "3") {
+if ($facility_object->supported_by == "3") {
 	$supporter = "MSF";
 }
 $p = 0; 
-if ($facility_object -> service_art == "1") {
+if ($facility_object->service_art == "1") {
 	$p = 1;
 	$type_of_service = "ART";
 }
-if ($facility_object -> service_pmtct == "1") {
+if ($facility_object->service_pmtct == "1") {
 	if ($p == 1) {$type_of_service .= ",PMTCT";
 	} else {$type_of_service .= "PMTCT";
 		$p = 1;
 	}
 
 }
-if ($facility_object -> service_pep == "1") {
+if ($facility_object->service_pep == "1") {
 	if ($p == 1) {
 		$type_of_service .= ",PEP";
 	} else {$type_of_service .= "PEP";
@@ -66,11 +67,11 @@ if ($facility_object -> service_pep == "1") {
 		var start_date = reporting_period + "-" + $("#period_start_date").attr("value");
 		var end_date = reporting_period + "-" + $("#period_end_date").attr("value");
 		<?php }else{?>
-		var report_period="<?php echo date('F-Y', strtotime($fmaps_array[0]['period_begin'])); ?>";
+		var report_period="<?php echo date('F-Y', strtotime($fmaps_array[0]->period_begin)); ?>";
 		$("#reporting_period").val(report_period);	
 		$("#reporting_period_end").val(report_period);	
-		var month=parseInt("<?php echo date('m', strtotime($fmaps_array[0]['period_begin'])); ?>");
-		var year=parseInt("<?php echo date('Y', strtotime($fmaps_array[0]['period_begin'])); ?>");
+		var month=parseInt("<?php echo date('m', strtotime($fmaps_array[0]->period_begin)); ?>");
+		var year=parseInt("<?php echo date('Y', strtotime($fmaps_array[0]->period_begin)); ?>");
         var last_day_month=LastDayOfMonth(year,month);
         $("#period_start").val("01");
         $("#period_end").val(last_day_month);
@@ -111,16 +112,16 @@ if ($facility_object -> service_pep == "1") {
 
 	<div class="center-content" >
 		<?php
-		 	if ($this->session->flashdata('order_message')){
-				echo '<p class="message info">'.$this->session->flashdata('order_message').'</p>';
+		 	if ($session->getFlashdata('order_message')){
+				echo '<p class="message info">'.$session->getFlashdata('order_message').'</p>';
 			}	
 		 ?>
-		<form id="fmPostMaps" action="<?php echo base_url() . 'order/save/maps/prepared';?>" method="post" name="fmPostMaps" style="margin-bottom:8%;">
+		<form id="fmPostMaps" action="<?php echo base_url() . '/public/order/save/maps/prepared';?>" method="post" name="fmPostMaps" style="margin-bottom:8%;">
 			<input type="hidden"  id="report_type" name="report_type" value="<?php echo $report_type;?>"/>
 			<div>
 				<ul class="breadcrumb">
 					<li>
-						<a href="<?php echo site_url().'order' ?>">MAPS</a><span class="divider">/</span>
+						<a href="<?php echo base_url().'/public/order' ?>">MAPS</a><span class="divider">/</span>
 					</li>
 					<li class="active" id="actual_page">
 						<?php echo $page_title;?>
@@ -132,8 +133,8 @@ if ($facility_object -> service_pep == "1") {
 					<?php
 				if($options=='view'){
 						echo "<h4>".@$maps_id.' '.@ucfirst($status)."</h4>";
-						echo "<a href='".site_url("order/download_order/maps/".$map_id)."'>".$maps_id." ".$fmaps_array[0]['facility_name']." ".$fmaps_array[0]['period_begin']." to ".$fmaps_array[0]['period_end'].".xls</a><p>";
-						$access_level = $this -> session -> userdata("user_indicator");
+						echo "<a href='".base_url("/public/order/download_order/maps/".$map_id)."'>".$maps_id." ".$fmaps_array[0]->facility_name." ".$fmaps_array[0]->period_begin." to ".$fmaps_array[0]->period_end.".xls</a><p>";
+						$access_level = $session->get("user_indicator");
 				      	if($access_level=="facility_administrator"){
 					      	if($status=="prepared"){
 							?> <input type="hidden" name="status_change" value="approved"/>
@@ -166,26 +167,26 @@ if ($facility_object -> service_pep == "1") {
 				?>
 				</div>
 				<div  class="facility_info" style="width:100%;">
-				<table class="table"  border="1"  style="border:1px solid #DDD; font-size: 1em;">
+				<table class="table" style="border:1px solid #DDD; font-size: 1em;">
 					<tbody>
 						<tr>
 							<input type="hidden" id="reports_expected" name="reports_expected" value="" />
 							<input type="hidden" id="reports_actual" name="reports_actual" value="" />
 							<input type="hidden" name="facility_id" value="<?php echo @$facility_id;?>" />
-							<input type="hidden" name="central_facility" value="<?php echo @$facility_object -> parent;?>" />
+							<input type="hidden" name="central_facility" value="<?php echo @$facility_object->parent;?>" />
 							<input type="hidden" name="order_type" value="0"/>
 							<input type="hidden" name="sponsor" value="<?php echo @$supporter;?>" />
 							<input type="hidden" name="services" value="<?php echo @$type_of_service;?>" />
 							<th width="180px">Facility code:</th>
-							<td><span class="_green"><?php echo @$facility_object -> facilitycode;?></span></td>
+							<td><span class="_green"><?php echo @$facility_object->facilitycode;?></span></td>
 							<th width="160px">Facility Name:</th>
-							<td><span class="_green"><?php echo @$facility_object -> name;?></span></td>
+							<td><span class="_green"><?php echo @$facility_object->name;?></span></td>
 						</tr>
 						<tr>
 							<th>County:</th>
-							<td><span class="_green"><?php echo ucwords(@$facility_object -> County -> county);?></span></td>
+							<td><span class="_green"><?php echo ucwords(@$facility_object->County->county);?></span></td>
 							<th>Sub-County:</th>
-							<td><span class="_green"><?php echo @$facility_object -> Parent_District -> Name;?></span></td>
+							<td><span class="_green"><?php echo @$facility_object->Parent_District->Name;?></span></td>
 						</tr>
 						<!--
 						<tr>
@@ -264,23 +265,23 @@ if ($facility_object -> service_pep == "1") {
 							echo '<tr class="accordion"><th colspan="5" id="'.$cat.'"  >'.$category.'</th></tr>';
 							
 							$regimen_list=array_filter($regimen_array,function($item) use ($category){
-								return $item['name']==$category;
+								return $item->name==$category;
 							});
 						   	foreach($regimen_list as $regimen){
-								   $ids[] = $regimen['reg_id'];
+								   $ids[] = $regimen->reg_id;
 						   	?>
 								<tr>
-								<td style="border-right:2px solid #DDD;"><?php echo $regimen['code'];?></td>
-								<td regimen_id="<?php echo $regimen['reg_id'];?>" class="regimen_desc col_drug"><?php echo $regimen['description'];?></td>
-								<td regimen_id="<?php echo $regimen['reg_id'];?>" class="regimen_males">
-									<input type="number" class="f_right patient_number_male" name="patient_numbers_male[]" id="patient_numbers_male<?php echo $regimen['reg_id'];?>" style="text-align: center; color: blue; font-weight: bold;" value="<?php echo $regimen['male'];?>" >
+								<td style="border-right:2px solid #DDD;"><?php echo $regimen->code;?></td>
+								<td regimen_id="<?php echo $regimen->reg_id;?>" class="regimen_desc col_drug"><?php echo $regimen->description;?></td>
+								<td regimen_id="<?php echo $regimen->reg_id;?>" class="regimen_males">
+									<input type="number" class="f_right patient_number_male" name="patient_numbers_male[]" id="patient_numbers_male<?php echo $regimen->reg_id;?>" style="text-align: center; color: blue; font-weight: bold;" value="<?php echo $regimen->male;?>" >
 								</td>
-								<td regimen_id="<?php echo $regimen['reg_id'];?>" class="regimen_females">
-									<input type="number" class="f_right patient_number_female" name="patient_numbers_female[]" id="patient_numbers_female<?php echo $regimen['reg_id'];?>" style="text-align: center; color: blue; font-weight: bold;" value="<?php echo $regimen['female'];?>" >
+								<td regimen_id="<?php echo $regimen->reg_id;?>" class="regimen_females">
+									<input type="number" class="f_right patient_number_female" name="patient_numbers_female[]" id="patient_numbers_female<?php echo $regimen->reg_id;?>" style="text-align: center; color: blue; font-weight: bold;" value="<?php echo $regimen->female;?>" >
 								</td>
-								<td regimen_id="<?php echo $regimen['reg_id'];?>" class="regimen_numbers">
-								<input type="number" class="f_right patient_number" name="patient_numbers[]" id="patient_numbers_<?php echo $regimen['reg_id'];?>" style="text-align: center; color: blue; font-weight: bold;" value="<?php echo $regimen['total'];?>" >
-								<input name="patient_regimens[]"class="regimen_list" style="text-align: center; color: blue; font-weight: bold;" value="<?php echo $regimen['reg_id'];?>" type="hidden">
+								<td regimen_id="<?php echo $regimen->reg_id;?>" class="regimen_numbers">
+								<input type="number" class="f_right patient_number" name="patient_numbers[]" id="patient_numbers_<?php echo $regimen->reg_id;?>" style="text-align: center; color: blue; font-weight: bold;" value="<?php echo $regimen->total;?>" >
+								<input name="patient_regimens[]"class="regimen_list" style="text-align: center; color: blue; font-weight: bold;" value="<?php echo $regimen->reg_id;?>" type="hidden">
 								<input type="hidden" name="item_id[]" class="item_id"/>
 								</td>
 							</tr>
@@ -289,34 +290,35 @@ if ($facility_object -> service_pep == "1") {
 						}
 						else{
 							//Don't display OI regimens
-							if(strtoupper($category -> Name) == 'OI REGIMEN'){
+							if(strtoupper($category->Name) == 'OI REGIMEN'){
 							 continue;
 							}
-							$regimens = $category -> Regimens;
-							$cat = str_replace(' ', '_',$category -> Name);
-						?><tr class="accordion"><th colspan="5" class="reg_cat_name" id="<?php echo $cat; ?>" ><?php echo $category -> Name;?></th></tr><?php
-							foreach($regimens as $regimen){
+							
+							$regimens = $category->regimens;
+							$cat = str_replace(' ', '_',$category->Name);
+						?><tr class="accordion"><th colspan="5" class="reg_cat_name" id="<?php echo $cat; ?>" ><?php echo $category->Name;?></th></tr><?php
+						foreach($regimens as $regimen){
 								$ids[] = $regimen->id;
-								if($regimen['Active'] == '1'){
+								if($regimen->enabled == '1'){
 								//Checking if the regimens are OI and assigning them the corresponding classes (that is the class that the input field is in, to enable easier calling from js - GT)
-								$regimen_io_code = $regimen['code'];							
+								$regimen_io_code = $regimen->code;							
 								if($regimen_io_code=='OI1AM'||$regimen_io_code=='OI1AF'||$regimen_io_code=='OI1A'||$regimen_io_code=='OI1CM'||$regimen_io_code=='OI1CF'||$regimen_io_code=='OI1C'||$regimen_io_code=='OI2AM'||$regimen_io_code=='OI2AF'||$regimen_io_code=='OI2A'||$regimen_io_code=='OI2CM'||$regimen_io_code=='OI2CF'||$regimen_io_code=='OI2C'||$regimen_io_code=='OI5AM'||$regimen_io_code='OI5AF'||$regimen_io_code=='OI5A'||$regimen_io_code=='OI5CM'||$regimen_io_code=='OI5CF'||$regimen_io_code=='OI5C'||$regimen_io_code=='ATPT1AM'||$regimen_io_code=='ATPT1AF'||$regimen_io_code=='ATPT1A'||$regimen_io_code=='CTPT1AM'||$regimen_io_code=='CTPT1AF'||$regimen_io_code=='CTPT1A'){?>
 						   		<tr>
-								<td style="border-right:2px solid #DDD;"><?php echo $regimen -> code;?>
-									<!--<input type="hidden" name="item_id[]" class="item_id" id="item_id_<?php echo $regimen -> id;?>" value=""/>-->
+								<td style="border-right:2px solid #DDD;"><?php echo $regimen->code;?>
+									<!--<input type="hidden" name="item_id[]" class="item_id" id="item_id_<?php echo $regimen->id;?>" value=""/>-->
 								</td>
-								<td regimen_id="<?php echo $regimen -> id;?>" class="regimen_desc col_drug"><?php echo $regimen -> name;?></td>
-								<td regimen_id="<?php echo $regimen -> id;?>" class="regimen_males">
-									<input type="text" style="text-align: center; color: blue; font-weight: bold;" class="f_right patient_number_male <?php echo $regimen['code'].'M';?>" data-cat="<?php echo $cat; ?>" name="patient_numbers_male[]" id="patient_numbers_male<?php echo $regimen -> id;?>" value="0">
+								<td regimen_id="<?php echo $regimen->id;?>" class="regimen_desc col_drug"><?php echo $regimen->name;?></td>
+								<td regimen_id="<?php echo $regimen->id;?>" class="regimen_males">
+									<input type="text" style="text-align: center; color: blue; font-weight: bold;" class="f_right patient_number_male <?php echo $regimen->code.'M';?>" data-cat="<?php echo $cat; ?>" name="patient_numbers_male[]" id="patient_numbers_male<?php echo $regimen->id;?>" value="0">
 								</td>
-								<td regimen_id="<?php echo $regimen -> id;?>" class="regimen_females">
-									<input type="text" style="text-align: center; color: blue; font-weight: bold;" class="f_right patient_number_female <?php echo $regimen['code'].'F';?>" data-cat="<?php echo $cat; ?>" name="patient_numbers_female[]" id="patient_numbers_female<?php echo $regimen -> id;?>" value="0">
+								<td regimen_id="<?php echo $regimen->id;?>" class="regimen_females">
+									<input type="text" style="text-align: center; color: blue; font-weight: bold;" class="f_right patient_number_female <?php echo $regimen->code.'F';?>" data-cat="<?php echo $cat; ?>" name="patient_numbers_female[]" id="patient_numbers_female<?php echo $regimen->id;?>" value="0">
 								</td>
-								<td regimen_id="<?php echo $regimen -> id;?>" class="regimen_numbers">
+								<td regimen_id="<?php echo $regimen->id;?>" class="regimen_numbers">
 
 								<!--  Adding the clas to the input field. The class name is called by the php variable $regimen_io_code  -->
-								<input type="text" style="text-align: center; color: blue; font-weight: bold;" class="f_right patient_number <?php echo $regimen['code'];?>" data-cat="<?php echo $cat; ?>" name="patient_numbers[]" id="patient_numbers_<?php echo $regimen -> id;?>" value="0">
-								<input name="patient_regimens[]" style="text-align: center; color: blue; font-weight: bold;" class="regimen_list" value="<?php echo $regimen -> id;?>" type="hidden">
+								<input type="text" style="text-align: center; color: blue; font-weight: bold;" class="f_right patient_number <?php echo $regimen->code;?>" data-cat="<?php echo $cat; ?>" name="patient_numbers[]" id="patient_numbers_<?php echo $regimen->id;?>" value="0">
+								<input name="patient_regimens[]" style="text-align: center; color: blue; font-weight: bold;" class="regimen_list" value="<?php echo $regimen->id;?>" type="hidden">
 								<input type="hidden" style="text-align: center; color: blue; font-weight: bold;" name="item_id[]" class="item_id"/>
 								
 								</td>
@@ -324,19 +326,19 @@ if ($facility_object -> service_pep == "1") {
 						   	<?php }else{
 								?>
 							<tr>
-								<td style="border-right:2px solid #DDD;"><?php echo $regimen -> code;?>
-									<!--<input type="hidden" name="item_id[]" class="item_id" id="item_id_<?php echo $regimen -> id;?>" value=""/>-->
+								<td style="border-right:2px solid #DDD;"><?php echo $regimen->code;?>
+									<!--<input type="hidden" name="item_id[]" class="item_id" id="item_id_<?php echo $regimen->id;?>" value=""/>-->
 								</td>
-								<td regimen_id="<?php echo $regimen -> id;?>" class="regimen_desc col_drug"><?php echo $regimen -> name;?></td>
-								<td regimen_id="<?php echo $regimen -> id;?>" class="regimen_males">
-									<input type="number" style="text-align: center; color: blue; font-weight: bold;" class="f_right patient_number_male" data-cat="<?php echo $cat; ?>" name="patient_numbers_male[]" id="patient_numbers_male<?php echo $regimen -> id;?>" value="0">
+								<td regimen_id="<?php echo $regimen->id;?>" class="regimen_desc col_drug"><?php echo $regimen->name;?></td>
+								<td regimen_id="<?php echo $regimen->id;?>" class="regimen_males">
+									<input type="number" style="text-align: center; color: blue; font-weight: bold;" class="f_right patient_number_male" data-cat="<?php echo $cat; ?>" name="patient_numbers_male[]" id="patient_numbers_male<?php echo $regimen->id;?>" value="0">
 								</td>
-									<td regimen_id="<?php echo $regimen -> id;?>" class="regimen_females">
-								<input type="number" style="text-align: center; color: blue; font-weight: bold;" class="f_right patient_number_female" data-cat="<?php echo $cat; ?>" name="patient_numbers_female[]" id="patient_numbers_female<?php echo $regimen -> id;?>" value="0">
+									<td regimen_id="<?php echo $regimen->id;?>" class="regimen_females">
+								<input type="number" style="text-align: center; color: blue; font-weight: bold;" class="f_right patient_number_female" data-cat="<?php echo $cat; ?>" name="patient_numbers_female[]" id="patient_numbers_female<?php echo $regimen->id;?>" value="0">
 								</td>
-								<td regimen_id="<?php echo $regimen -> id;?>" class="regimen_numbers">
-								<input type="text" style="text-align: center; color: blue; font-weight: bold;" class="f_right patient_number" data-cat="<?php echo $cat; ?>" name="patient_numbers[]" id="patient_numbers_<?php echo $regimen -> id;?>" value="0">
-								<input name="patient_regimens[]" style="text-align: center; color: blue; font-weight: bold;" class="regimen_list" value="<?php echo $regimen -> id;?>" type="hidden">
+								<td regimen_id="<?php echo $regimen->id;?>" class="regimen_numbers">
+								<input type="text" style="text-align: center; color: blue; font-weight: bold;" class="f_right patient_number" data-cat="<?php echo $cat; ?>" name="patient_numbers[]" id="patient_numbers_<?php echo $regimen->id;?>" value="0">
+								<input name="patient_regimens[]" style="text-align: center; color: blue; font-weight: bold;" class="regimen_list" value="<?php echo $regimen->id;?>" type="hidden">
 								<input type="hidden" style="text-align: center; color: blue; font-weight: bold;" name="item_id[]" class="item_id"/>
 								
 								</td>
@@ -361,11 +363,11 @@ if ($facility_object -> service_pep == "1") {
 			    	    foreach($logs as $log){?>
 					<tr>
 						<td><b>Report <?php echo $log->description;?> by:</b>
-							<input type="hidden" name="log_id[]" id="log_id_<?php echo $log -> id;?>" value="<?php echo $log -> id;?>"/>
+							<input type="hidden" name="log_id[]" id="log_id_<?php echo $log->id;?>" value="<?php echo $log->id;?>"/>
 						</td>
 						<td><?php echo $log->user->Name; ?></td>
 						<td><b>Designation:</b></td>
-						<td><?php echo $log->user->Access->Level_Name; ?></td>
+						<td><?php echo $log->user->Access->level_name; ?></td>
 					</tr>
 					<tr>
 						<td><b>Contact Telephone:</b></td>
@@ -432,11 +434,11 @@ if ($facility_object -> service_pep == "1") {
 		
 		if(is_update==1){//If form is open for updating data
 			getFacilityData(fmaps_id);
-			$("#fmPostMaps").attr("action","<?php echo base_url() . 'order/save/maps/prepared/'.@$map_id;?>");//Change action to be posted to update function 
+			$("#fmPostMaps").attr("action","<?php echo base_url() . '/public/order/save/maps/prepared/'.@$map_id;?>");//Change action to be posted to update function 
 		}
 		if(is_view==1){//When viewing maps details
 			getFacilityData(fmaps_id);
-			$("#fmPostMaps").attr("action","<?php echo base_url() . 'order/save/maps/prepared/'.@$map_id;?>");//Change action to be posted to update function 
+			$("#fmPostMaps").attr("action","<?php echo base_url() . '/public/order/save/maps/prepared/'.@$map_id;?>");//Change action to be posted to update function 
 			$(":input").attr('readonly',true);
 			$(".state_change").attr("readonly",false);
 			if($('#report_type').val()=='2'){//If reporting for satellite, enable art total
@@ -534,8 +536,8 @@ if ($facility_object -> service_pep == "1") {
 	});
 	
 	function getNonMappedRegimen(start_date, end_date){//Get regimens that are not mapped(Not in the Escm or Nascop and list them as others)
-		var base_url = getbaseurl();
-		var link = base_url + 'order/getNotMappedRegimenPatients/' + start_date + '/' + end_date;
+		var base_url = "<?php echo base_url(); ?>";
+		var link = base_url + '/public/order/getNotMappedRegimenPatients/' + start_date + '/' + end_date;
 		$("#other_regimen").text("");
 		$.ajax({
 			url : link,
@@ -562,9 +564,9 @@ if ($facility_object -> service_pep == "1") {
 
 	//Generate the function to get the OI patients
 	function getoiPatients(){
-		var base_url = getbaseurl();
+		var base_url = "<?php echo base_url(); ?>";
 		//Get the data from the controller
-		var link = base_url + 'order/getoiPatients/';
+		var link = base_url + '/public/order/getoiPatients/';
 		$.ajax({
 			url : link,
 			type : 'POST',
@@ -637,8 +639,8 @@ if ($facility_object -> service_pep == "1") {
 	}
 	function getCentralData(period_start,period_end,data_type){
 		
-		var base_url = getbaseurl();
-	  	var link = base_url + 'order/getCentralDataMaps/' + period_start + '/' + period_end + '/'+data_type;
+		var base_url = "<?php echo base_url(); ?>";
+	  	var link = base_url + '/public/order/getCentralDataMaps/' + period_start + '/' + period_end + '/'+data_type;
 	  	
 	  	$.ajax({
 				url : link,

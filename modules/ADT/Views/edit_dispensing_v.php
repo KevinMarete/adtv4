@@ -38,7 +38,7 @@ foreach ($expiries as $expiry) {
 					} else {
 						$(".clinical_appointment_input").hide();
 			            // show diff care exit reason
-			            if($result->differentiated_care == 1){
+			            if(<?= $result->differentiated_care;?> == 1){
 		            	$("#dcm_exit_reason_container").show();
 		            }
 		        }
@@ -187,7 +187,7 @@ foreach ($expiries as $expiry) {
 		   function getRegimenDrugs(regimen){
 		   	  var base_url="<?php echo base_url();?>";
 		   	  // var link=base_url+"regimen_management/getAllDrugs/"+regimen;
-		   	  var link=base_url+"regimen_management/getAllDrugs/";
+		   	  var link=base_url+"/public/regimen_management/getAllDrugs";
 				$.ajax({
 				    url: link,
 				    type: 'POST',

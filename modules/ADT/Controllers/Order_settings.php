@@ -13,12 +13,12 @@ class Order_settings extends \App\Controllers\BaseController {
     var $db;
     var $table;
 
-    function __construct() {
-        session()->set("link_id", "listing/sync_drug");
-        session()->set("linkSub", "order_settings/listing/sync_drug");
-        session()->set("linkTitle", "Settings Management");
-        $this->db = \Config\Database::connect();
+	function __construct() {
+		$this->session->set("link_id", "/public/listing/sync_drug");
+		$this->session->set("linkSub", "/public/order_settings/listing/sync_drug");
+        $this->session->set("linkTitle", "Settings Management");
         $this->table = new \CodeIgniter\View\Table();
+        $this->db = \Config\Database::connect();
         ini_set("max_execution_time", "1000000");
     }
 
@@ -26,38 +26,38 @@ class Order_settings extends \App\Controllers\BaseController {
         //Setup parameters
         $access_level = session()->get('user_indicator');
         $seperator = ' | ';
-        $exclude_columns = array('Active');
-        $params = array(
-            'sync_drug' => array(
-                'columns' => array('ID', 'Name', 'Abbreviation', 'Strength', 'Packsize', 'Formulation', 'Options'),
-                'query' => 'SELECT id, name, abbreviation, strength, packsize, formulation, Active FROM sync_drug'
-            ),
-            'sync_regimen' => array(
-                'columns' => array('ID', 'Code', 'Name', 'Options'),
-                'query' => 'SELECT id, code, name, Active FROM sync_regimen'
-            ),
-            'sync_regimen_category' => array(
-                'columns' => array('ID', 'Name', 'Active'),
-                'query' => 'SELECT id, name, Active FROM sync_regimen_category'
-            ),
-            'sync_facility' => array(
-                'columns' => array('ID', 'Name', 'Code', 'Category', 'Keph Level', 'Active'),
-                'query' => 'SELECT id, name, code, category, keph_level, Active FROM sync_facility'
-            )
-        );
+		$exclude_columns = ['Active'];
+		$params = [
+			'sync_drug' => [
+				'columns' => ['ID', 'Name', 'Abbreviation', 'Strength', 'Packsize', 'Formulation', 'Options'],
+				'query' => 'SELECT id, name, abbreviation, strength, packsize, formulation, Active FROM sync_drug'
+            ],
+			'sync_regimen' => [
+				'columns' => ['ID','Code', 'Name', 'Options'],
+				'query' => 'SELECT id, code, name, Active FROM sync_regimen'
+            ],
+			'sync_regimen_category' => [
+				'columns' => ['ID', 'Name', 'Active'],
+				'query' => 'SELECT id, name, Active FROM sync_regimen_category'
+            ],
+			'sync_facility' => [
+				'columns' => ['ID', 'Name', 'Code', 'Category', 'Keph Level', 'Active'],
+				'query' => 'SELECT id, name, code, category, keph_level, Active FROM sync_facility'
+            ]
+        ];
 
-        //Initialize table library
-        $tmpl = array('table_open' => '<table class="setting_table table table-bordered table-striped">');
-        $this->table->setTemplate($tmpl);
-        $this->table->setHeading($params[$table]['columns']);
+		//Initialize table library
+		$tmpl = ['table_open' => '<table class="setting_table table table-bordered table-striped">'];
+		$this->table->setTemplate($tmpl);
+		$this->table->setHeading($params[$table]['columns']);
 
-        //Load table data
+		//Load table data
         $query = $this->db->query($params[$table]['query']);
         $results = $query->getResultArray();
 
         //Append data to table
         foreach ($results as $result) {
-            $row = array();
+			$row = [];
             foreach ($result as $index => $value) {
                 if ($index == 'Active') {
                     $edit_link = anchor('#' . $table . '_form', 'Edit', array('id' => $result['id'], 'table' => $table, 'role' => 'button', 'class' => 'edit_setting', 'data-toggle' => 'modal'));
@@ -164,35 +164,38 @@ class Order_settings extends \App\Controllers\BaseController {
         redirect('settings_management');
     }
 
-    public function fetch($table = '') {
-        //Set parameters
-        $params = array(
-            'sync_regimen_category' => array(
-                'name_column' => 'Name AS name',
-                'active_column' => 'Active'),
-            'sync_regimen' => array(
-                'name_column' => 'CONCAT_WS(" | ",code,name) AS name',
-                'active_column' => 'Active'),
-            'sync_facility' => array(
-                'name_column' => 'name',
-                'active_column' => 'Active'),
-            'counties' => array(
-                'name_column' => 'county AS name',
-                'active_column' => 'active'),
-            'district' => array(
-                'name_column' => 'name',
-                'active_column' => 'active')
-        );
-        //Fetch resources
-        $this->db->select(array('id', $params[$table]['name_column']));
-        $data = $this->db->order_by('name', 'ASC')->get_where($table, array($params[$table]['active_column'] => 1))->result_array();
-        echo json_encode($data);
-    }
+	public function fetch($table = ''){
+        $table = $this->uri->getSegment(3);
+		//Set parameters
+		$params = [
+			'sync_regimen_category' => [
+				'name_column' => 'Name AS name',
+				'active_column' => 'Active'],
+			'sync_regimen' => [
+				'name_column' => 'CONCAT_WS(" | ",code,name) AS name',
+				'active_column' => 'Active'],
+			'sync_facility' => [
+				'name_column' => 'name',
+				'active_column' => 'Active'],
+			'counties' => [
+				'name_column' => 'county AS name',
+				'active_column' => 'active'],
+			'district' => [
+				'name_column' => 'name',
+				'active_column' => 'active']
+        ];
+		//Fetch resources
+        // $this->db->select(array('id', $params[$table]['name_column']));
+        $data = DB::table($table)->select('id', $params[$table]['name_column'])
+                ->where([$params[$table]['active_column'] => 1])->get()->toArray();
+		// $data = $this->db->order_by('name', 'ASC')->get_where($table, array($params[$table]['active_column'] => 1))->result_array();
+		echo json_encode($data);
+	}
 
-    public function get_details($table = '', $id = '') {
-        $data = $this->db->get_where($table, array('id' => $id))->row_array();
-        echo json_encode($data);
-    }
+	public function get_details($table = '', $id = ''){
+		$data = $this->db->get_where($table, array('id' => $id))->row_array();
+		echo json_encode($data);
+	}
 
     public function base_params($data) {
         $data['quick_link'] = "settings";

@@ -323,26 +323,22 @@ class Regimen_management extends \App\Controllers\BaseController {
 
     public function getAllDrugs($regimen = null) {
 
-        $cond = ($regimen == null) ? "UNION SELECT id as drug_id,drug as drug_name FROM drugcode" : "  WHERE (rd.regimen='$regimen' or r.regimen_code LIKE '%oi%') 
-		AND (d.drug !='NULL') GROUP BY d.id ORDER BY d.drug ASC";
-        $sql = "SELECT 
-		rd.drugcode as drug_id,
-		d.drug as drug_name 
-		FROM regimen_drug rd  
-		LEFT JOIN regimen r ON r.id=rd.regimen 
-		LEFT JOIN drugcode d ON d.id=rd.drugcode
-		$cond";
+		$cond = ($regimen == null) ? "UNION SELECT id as drug_id,drug as drug_name FROM drugcode" : "  WHERE (rd.regimen='$regimen' or r.regimen_code LIKE '%oi%') ".
+		"AND (d.drug !='NULL') GROUP BY d.id ORDER BY d.drug ASC" ;
+		$sql = "SELECT rd.drugcode as drug_id, d.drug as drug_name ". 
+		"FROM regimen_drug rd ".
+		"LEFT JOIN regimen r ON r.id=rd.regimen ".
+		"LEFT JOIN drugcode d ON d.id=rd.drugcode ".$cond;
 
-        $query = $this->db->query($sql);
-        $results = $query->result_array();
-        if ($results) {
-            echo json_encode($results);
-        }
-    }
-
-    public function getNonMappedRegimens($param = '0') {
-        $data = array();
-        $query = $this->db->query("SELECT s.id,s.code,s.name,sr.Name as category_name,s.category_id
+		$results = DB::select($sql);
+		if ($results) {
+			echo json_encode($results);
+		}
+	}
+	
+	public function getNonMappedRegimens($param='0'){
+		$data = array();
+		$query = $this->db->query("SELECT s.id,s.code,s.name,sr.Name as category_name,s.category_id
 			FROM sync_regimen s 
 			LEFT JOIN sync_regimen_category sr ON sr.id = s.category_id
 			WHERE s.Active = '1'

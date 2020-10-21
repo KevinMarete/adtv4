@@ -1,5 +1,4 @@
 <?php
-
 namespace Modules\ADT\Models;
 
 use App\Models\BaseModel;
@@ -8,7 +7,7 @@ use Illuminate\Database\Capsule\Manager as DB;
 class Sync_drug extends BaseModel {
 
     protected $table = 'sync_drug';
-    protected $fillable = array('name', 'abbreviation', 'strength', 'packsize', 'formulation', 'unit', 'note', 'weight', 'category_id', 'regimen_id');
+    protected $guarded = ['id'];
 
     public function getAll() {
         $query = DB::table('sync_drug')->get();
@@ -45,4 +44,3 @@ class Sync_drug extends BaseModel {
     }
 
 }
-

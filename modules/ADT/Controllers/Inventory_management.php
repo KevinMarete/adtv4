@@ -1175,21 +1175,17 @@ class Inventory_management extends \App\Controllers\BaseController {
 
     public function getAllBacthDetails() {
         $facility_code = session()->get('facility');
-        $stock_type = $this->input->post("stock_type");
-        $selected_drug = $this->input->post("selected_drug");
-        $batch_selected = $this->input->post("batch_selected");
-        $sql = "SELECT 
-		dsb.balance, 
-		dsb.expiry_date 
-		FROM drug_stock_balance dsb  
-		WHERE dsb.facility_code='$facility_code' 
-		AND dsb.stock_type='$stock_type' 
-		AND dsb.drug_id='$selected_drug' 
-		AND dsb.batch_number='$batch_selected'  
-		ORDER BY last_update DESC,dsb.expiry_date ASC 
-		LIMIT 1";
-        $batch_sql = $this->db->query($sql);
-        $batches_array = $batch_sql->result_array();
+        $stock_type = $this->post("stock_type");
+        $selected_drug = $this->post("selected_drug");
+        $batch_selected = $this->post("batch_selected");
+        $sql = "SELECT dsb.balance, dsb.expiry_date FROM drug_stock_balance dsb ". 
+		"WHERE dsb.facility_code='".$facility_code."' ". 
+		"AND dsb.stock_type='".$stock_type."' ". 
+		"AND dsb.drug_id='".$selected_drug."' ". 
+		"AND dsb.batch_number='".$batch_selected."' ". 
+		"ORDER BY last_update DESC,dsb.expiry_date ASC ".
+		"LIMIT 1";
+        $batches_array = DB::select($sql);
         echo json_encode($batches_array);
     }
 
@@ -1854,13 +1850,13 @@ class Inventory_management extends \App\Controllers\BaseController {
     }
 
     public function getAllDrugsBatches($drug) {
+        $drug = $this->uri->getSegment(3);
         $today = date('Y-m-d');
-        $sql = "select drug_stock_balance.batch_number,drug_unit.Name as unit,dose.Name as dose,drugcode.quantity,drugcode.duration from drug_stock_balance inner join drugcode on drugcode.id=drug_stock_balance.drug_id
-		left join drug_unit on drug_unit.id=drugcode.unit 
-		left join dose on dose.id= drugcode.dose 
-		where drug_id='$drug' group by batch_number order by drug_stock_balance.expiry_date asc";
-        $query = $this->db->query($sql);
-        $results = $query->result_array();
+        $sql = "select drug_stock_balance.batch_number,drug_unit.Name as unit,dose.Name as dose,drugcode.quantity,drugcode.duration from drug_stock_balance inner join drugcode on drugcode.id=drug_stock_balance.drug_id ".
+		"left join drug_unit on drug_unit.id=drugcode.unit ".
+		"left join dose on dose.id= drugcode.dose ".
+		"where drug_id='".$drug."' group by batch_number order by drug_stock_balance.expiry_date asc";
+        $results = DB::select($sql);
         if ($results) {
             echo json_encode($results);
         }
