@@ -20,7 +20,7 @@ class Dose extends BaseModel {
         return $query;
     }
 
-    public function getAllActive() {
+    public static function getAllActive() {
         $query = DB::table('Dose')->where('active', '1')->orderBy('name', 'asc')->get();
         return BaseModel::resultSet($query);
     }

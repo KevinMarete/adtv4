@@ -11,6 +11,7 @@ class Indication_management extends \App\Controllers\BaseController {
 
     var $db;
     var $table;
+    var $session;
 
     function __construct() {
         session()->set("link_id", "index");
@@ -18,6 +19,7 @@ class Indication_management extends \App\Controllers\BaseController {
         session()->set("linkTitle", "Drug Indication Management");
         $this->db = \Config\Database::connect();
         $this->table = new \CodeIgniter\View\Table();
+        $this->session = \Config\Services::session();
     }
 
     public function index() {
@@ -51,9 +53,9 @@ class Indication_management extends \App\Controllers\BaseController {
 
                 if ($infection->active == 1) {
                     $links .= " | ";
-                    $links .= anchor('indication_management/disable/' . $infection->id, 'Disable', array('class' => 'disable_user'));
+                    $links .= anchor(base_url().'/public/indication_management/disable/' . $infection->id, 'Disable', array('class' => 'disable_user'));
                 } else {
-                    $links .= anchor('indication_management/enable/' . $infection->id, 'Enable', array('class' => 'enable_user'));
+                    $links .= anchor(base_url().'/public/indication_management/enable/' . $infection->id, 'Enable', array('class' => 'enable_user'));
                 }
             }
             $infection_temp = "";
@@ -73,19 +75,19 @@ class Indication_management extends \App\Controllers\BaseController {
     }
 
     public function save() {
-        $creator_id = $this->session->userdata('user_id');
-        $source = $this->session->userdata('facility');
+        $creator_id = $this->session->get('user_id');
+        $source = $this->session->get('facility');
 
         $indication = new Opportunistic_Infection();
-        $indication->Name = $this->input->post('indication_name');
-        $indication->Indication = $this->input->post('indication_code');
+        $indication->Name = $this->request->getPost('indication_name');
+        $indication->Indication = $this->request->getPost('indication_code');
         $indication->Active = "1";
         $indication->save();
 
-        //$this -> session -> set_userdata('message_counter','1');
-        $this->session->set_userdata('msg_success', $this->input->post('indication_code') . ' was Added');
-        $this->session->set_flashdata('filter_datatable', $this->input->post('indication_code')); //Filter datatable
-        redirect('settings_management');
+        //$this -> session -> set('message_counter','1');
+        $this->session->set('msg_success', $this->request->getPost('indication_code') . ' was Added');
+        $this->session->setFlashdata('filter_datatable', $this->request->getPost('indication_code')); //Filter datatable
+        return redirect()->to(base_url() . '/public/settings_management');
     }
 
     public function edit($indication_id) {
@@ -98,37 +100,37 @@ class Indication_management extends \App\Controllers\BaseController {
     }
 
     public function update() {
-        $indication_id = $this->input->post('indication_id');
-        $indication_name = $this->input->post('indication_name');
-        $indication_code = $this->input->post('indication_code');
+        $indication_id = $this->request->getPost('indication_id');
+        $indication_name = $this->request->getPost('indication_name');
+        $indication_code = $this->request->getPost('indication_code');
 
 
-        $this->load->database();
+        //$this->load->database();
         $query = $this->db->query("UPDATE opportunistic_infection SET Name='$indication_name',Indication='$indication_code' WHERE id='$indication_id'");
-        //$this -> session -> set_userdata('message_counter','1');
-        $this->session->set_userdata('msg_success', $this->input->post('indication_code') . ' was Updated');
-        $this->session->set_flashdata('filter_datatable', $this->input->post('indication_code')); //Filter datatable
-        redirect('settings_management');
+        //$this -> session -> set('message_counter','1');
+        $this->session->set('msg_success', $this->request->getPost('indication_code') . ' was Updated');
+        $this->session->setFlashdata('filter_datatable', $this->request->getPost('indication_code')); //Filter datatable
+        return redirect()->to(base_url() . '/public/settings_management');
     }
 
     public function enable($indication_id) {
-        $this->load->database();
+       // $this->load->database();
         $query = $this->db->query("UPDATE opportunistic_infection SET Active='1'WHERE id='$indication_id'");
         $results = Opportunistic_Infection::getIndication($indication_id);
-        //$this -> session -> set_userdata('message_counter','1');
-        $this->session->set_userdata('msg_success', $results->Indication . ' was enabled');
-        $this->session->set_flashdata('filter_datatable', $results->Indication); //Filter datatable
-        redirect('settings_management');
+        //$this -> session -> set('message_counter','1');
+        $this->session->set('msg_success', $results->indication . ' was enabled');
+        $this->session->setFlashdata('filter_datatable', $results->indication); //Filter datatable
+        return redirect()->to(base_url() . '/public/settings_management');
     }
 
     public function disable($indication_id) {
-        $this->load->database();
+        //$this->load->database();
         $query = $this->db->query("UPDATE opportunistic_infection SET Active='0'WHERE id='$indication_id'");
         $results = Opportunistic_Infection::getIndication($indication_id);
-        //$this -> session -> set_userdata('message_counter','2');
-        $this->session->set_userdata('msg_error', $results->Indication . ' was disabled');
-        $this->session->set_flashdata('filter_datatable', $results->Indication); //Filter datatable
-        redirect('settings_management');
+        //$this -> session -> set('message_counter','2');
+        $this->session->set('msg_error', $results->indication . ' was disabled');
+        $this->session->setFlashdata('filter_datatable', $results->indication); //Filter datatable
+        return redirect()->to(base_url() . '/public/settings_management');
     }
 
     public function base_params($data) {

@@ -1661,7 +1661,7 @@ class Patient_management extends BaseController {
     }
 
     function post($val) {
-        return $_GET[$val];
+        return @$_GET[$val];
     }
 
     public function getPatientMergeList() {
@@ -1705,17 +1705,18 @@ class Patient_management extends BaseController {
         }
 
         //data
-        $this->db->select('SQL_CALC_FOUND_ROWS ' . str_replace(' , ', ' ', implode(', ', $aColumns)), false);
-        $this->db->from("patient p");
-        $this->db->where("p.facility_code", $facility_code);
+        $query = DB::table("patient")->select(DB::raw('SQL_CALC_FOUND_ROWS ' . str_replace(' , ', ' ', implode(', ', $aColumns)), false))
+                    ->where("facility_code", $facility_code);
+//        $this->db->from("patient p");
+//        $this->db->where("p.facility_code", $facility_code);
         //search sql clause
         if ($where != "") {
             $where .= ")";
-            $this->db->where($where);
+            $query = $query->where(DB::raw($where));
         }
 
         if (isset($iDisplayStart) && $iDisplayLength != '-1') {
-            $this->db->limit($this->db->escape_str($iDisplayLength), $this->db->escape_str($iDisplayStart));
+            $query = $query->limit($iDisplayLength, $iDisplayStart);
         }
 
         // Paging
@@ -1727,23 +1728,23 @@ class Patient_management extends BaseController {
                 $sSortDir = $this->post('sSortDir_' . $i, true);
 
                 if ($bSortable == 'true') {
-                    $this->db->order_by($aColumns [intval($this->db->escape_str($iSortCol))], $this->db->escape_str($sSortDir));
+                    $query = $query->orderBy($aColumns [intval($iSortCol)], $sSortDir);
                 }
             }
         }
 
-        $rResult = $this->db->get();
+        $rResult = $query->get();
 
 // Data set length after filtering
-        $this->db->select('FOUND_ROWS() AS found_rows');
-        $iFilteredTotal = $this->db->get()->row()->found_rows;
+//        $this->db->select('FOUND_ROWS() AS found_rows');
+        $iFilteredTotal = $query->count();
 
 // Total data set length
-        $this->db->select("p.*");
-        $this->db->from("patient p");
-        $this->db->where("p.facility_code", $facility_code);
-        $total = $this->db->get();
-        $iTotal = count($total->result_array());
+//        $this->db->select("p.*");
+//        $this->db->from("patient p");
+//        $this->db->where("p.facility_code", $facility_code);
+        $total = Patient::where("facility_code", $facility_code)->get()->toArray();
+        $iTotal = count($total);
 
         // Output
         $msg = array('sEcho' => intval($sEcho),
@@ -1752,7 +1753,7 @@ class Patient_management extends BaseController {
             'aaData' => array());
 
 //loop through data to parse to josn array
-        foreach ($rResult->result() as $patient) {
+        foreach ($rResult as $patient) {
             $row = array();
             //options
             $links = "<a href='#' class='btn btn-danger btn-mini unmerge_patient' id='" . $patient->id . "'>unmerge</a>";

@@ -19,7 +19,7 @@ class User extends BaseModel {
         return $levelquery;
     }
 
-    public  static function getRights($access_level) {
+    public static function getRights($access_level) {
         $query = DB::select("SELECT u.id , u.access_level, u.menu , u.access_typee, u.active FROM user_right u WHERE (u.access_level = '$access_level' AND u.active = '1')'");
         return $query;
     }
@@ -36,38 +36,41 @@ class User extends BaseModel {
         return $query;
     }
 
-    public function getSpecific($user_id) {
+    public static function getSpecific($user_id) {
         $query = DB::select("SELECT u.id, u.name, u.username, u.email_address, u.phone_number, a.level_name, u2.name AS u2name, u.active AS Active FROM users u LEFT JOIN access_level a ON u.access_level = a.id LEFT JOIN users u2 ON u.created_by = u2.id WHERE u.id = '$user_id'");
-        return $query;
+        return BaseModel::resultSet($query);
     }
 
-    public function getThem() {
+    public static function getThem() {
         $query = DB::select("SELECT u.id, u.name, u.username, u.email_address, u.phone_number, a.level_name, u2.name AS u2name, u.active AS uactive FROM users u LEFT JOIN access_level a ON u.access_level = a.id LEFT JOIN users u2 ON u.created_by = u2.id WHERE  a.level_name != 'Pharmacist'");
-        echo $query;
+        return BaseModel::resultSet($query);
     }
 
-    public function getInactive($facility_code) {
-        $query = DB::select("SELECT u.id, u.name, u.username, u.email_address, u.phone_number, a.level_name, u2.name AS u2name, u.active AS uactive FROM users u LEFT JOIN access_level a ON u.access_level = a.id LEFT JOIN users u2 ON u.created_by = u2.id WHERE  a.level_name !='Pharmacist' and facility_fode=" . $facility_code . " and u.active='0'");
-        return $query;
+    public static function getInactive($facility_code) {
+        $query = DB::select("SELECT u.id, u.name, u.username, u.email_address, u.phone_number, a.level_name, u2.name AS u2name, u.active AS uactive FROM users u LEFT JOIN access_level a ON u.access_level = a.id LEFT JOIN users u2 ON u.created_by = u2.id WHERE  a.level_name !='Pharmacist' and u.facility_code=" . $facility_code . " and u.active='0'");
+        return BaseModel::resultSet($query);
     }
 
     public function getOnline($facility_code) {
-        $query = DB::select("SELECT u.id, u.name, u.username, u.email_address, u.phone_number, a.level_name, u2.name AS u2name, u.active AS uactive FROM users u LEFT JOIN access_level a ON u.access_level = a.id LEFT JOIN users u2 ON u.created_by = u2.id WHERE  a.level_name !='Pharmacist' and facility_fode=" . $facility_code . " and u.active='0'");
+        $query = DB::select("SELECT u.id, u.name, u.username, u.email_address, u.phone_number, a.level_name, u2.name AS u2name, u.active AS uactive FROM users u LEFT JOIN access_level a ON u.access_level = a.id LEFT JOIN users u2 ON u.created_by = u2.id WHERE  a.level_name !='Pharmacist' and facility_fode=" . $facility_code . " and u.active='1'");
         return $query;
     }
 
     public static function getUser($id) {
-        $query = Users::find($id)->first();
+        // $query = Users::find($id)->first();
+        $query = DB::table('users')->where('id', $id)->get();
         return $query;
     }
 
     public static function getUserAdmin($id) {
-        $query = Users::find($id)->first();
+        $query = DB::table('users')->where('id', $id)->get();
+        //$query = Users::find($id)->first();
         return $query;
     }
 
     public static function getUserDetail($id) {
-        $query = Users::find($id) - first();
+        $query = DB::table('users')->where('id', $id)->get();
+        // $query = Users::find($id) - first();
         return $query;
     }
 
@@ -80,6 +83,7 @@ class User extends BaseModel {
         $query = DB::select("SELECT u.id , u.name Name, u.username, u.email_address Email_Address , u.phone_number Phone_Number, a.level_name Access, a.indicator Indicator, u2.name AS Creator, u.active AS Active FROM users u LEFT JOIN access_level a ON u.access_level = a.id LEFT JOIN users u2 ON u.created_by = u2.id WHERE $q");
         return $query;
     }
+
     public static function getUsersFacilityBack($q = '1') {
         $query = DB::select("SELECT u.id , u.name, u.username, u.email_address , u.phone_number, a.level_name Access, a.indicator, u2.name AS Creator, u.active AS Active FROM users u LEFT JOIN access_level a ON u.access_level = a.id LEFT JOIN users u2 ON u.created_by = u2.id WHERE $q");
         return $query;

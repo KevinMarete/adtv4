@@ -88,6 +88,8 @@
 </style>
 <script type="text/javascript">
     $(document).ready(function () {
+        base_url = "<?php echo base_url(); ?>/" + "public/"
+
         $('entry_form').submit(function () {
             $(this).find(':submit').attr('disabled', 'disabled');
         });
@@ -118,10 +120,11 @@
 
         //When clicked dialog form for new indication pops up
         $("#btn_new_drugcode").click(function (event) {
+
             $("#add_drug_mapping").val("0");
             event.preventDefault();
             var request = $.ajax({
-                url: "drugcode_management/add",
+                url: base_url + "drugcode_management/add",
                 type: 'POST',
                 dataType: "json"
             });
@@ -143,7 +146,7 @@
                             $("#add_genericname").append("<option value='0'>--Select One--</option>");
                             for (var y in msg[key]) {
                                 if (msg[key].hasOwnProperty(y)) {
-                                    $("#add_genericname").append("<option value=" + msg[key][y].id + ">" + msg[key][y].Name + "</option>");
+                                    $("#add_genericname").append("<option value=" + msg[key][y].id + ">" + msg[key][y].name + "</option>");
                                 }
                             }
                         }
@@ -171,7 +174,7 @@
             var drugcode_id = this.id;
 
             var request = $.ajax({
-                url: "drugcode_management/edit",
+                url: base_url + "drugcode_management/edit",
                 type: 'POST',
                 data: {"drugcode_id": drugcode_id},
                 dataType: "json",
@@ -195,7 +198,7 @@
                             $("#genericname").append("<option value='0'>--Select One--</option>");
                             for (var y in msg[key]) {
                                 if (msg[key].hasOwnProperty(y)) {
-                                    $("#genericname").append("<option value=" + msg[key][y].id + ">" + msg[key][y].Name + "</option>");
+                                    $("#genericname").append("<option value=" + msg[key][y].id + ">" + msg[key][y].name + "</option>");
                                 }
                             }
                         }
@@ -214,24 +217,24 @@
                             for (var y in msg[key]) {
                                 if (msg[key].hasOwnProperty(y)) {
                                     $("#drugcode_id").val(msg[key][y].id);
-                                    $("#drugname").val(msg[key][y].Drug);
-                                    $("#drugunit").attr("value", msg[key][y].Unit);
-                                    $("#packsize").attr("value", msg[key][y].Pack_Size);
-                                    $("#safety_quantity").attr("value", msg[key][y].Safety_Quantity);
-                                    $("#genericname").attr("value", msg[key][y].Generic_Name);
-                                    $("#supplied_by").attr("value", msg[key][y].Supported_By);
+                                    $("#drugname").val(msg[key][y].drug);
+                                    $("#drugunit").attr("value", msg[key][y].unit);
+                                    $("#packsize").attr("value", msg[key][y].pack_size);
+                                    $("#safety_quantity").attr("value", msg[key][y].safety_qantity);
+                                    $("#genericname").attr("value", msg[key][y].generic_name);
+                                    $("#supplied_by").attr("value", msg[key][y].supported_by);
                                     $("#classification").attr("value", msg[key][y].classification);
                                     if (msg[key][y].none_arv == "1") {
                                         $("#none_arv").attr("checked", true);
                                     } else {
                                         $("#none_arv").attr("checked", false);
                                     }
-                                    if (msg[key][y].Tb_Drug == "1") {
+                                    if (msg[key][y].tb_drug == "1") {
                                         $("#tb_drug").attr("checked", true);
                                     } else {
                                         $("#tb_drug").attr("checked", false);
                                     }
-                                    if (msg[key][y].Drug_In_Use == "1") {
+                                    if (msg[key][y].drug_in_use == "1") {
                                         $("#drug_in_use").attr("checked", true);
                                     } else {
                                         $("#drug_in_use").attr("checked", false);
@@ -249,11 +252,11 @@
                                         }
                                     }
 
-                                    $("#comments").attr("value", msg[key][y].Comment);
-                                    $("#dose_frequency").attr("value", msg[key][y].Dose);
-                                    $("#duration").attr("value", msg[key][y].Duration);
-                                    $("#quantity").attr("value", msg[key][y].Quantity);
-                                    $("#dose_strength").attr("value", msg[key][y].Strength);
+                                    $("#comments").attr("value", msg[key][y].comment);
+                                    $("#dose_frequency").attr("value", msg[key][y].dose);
+                                    $("#duration").attr("value", msg[key][y].duration);
+                                    $("#quantity").attr("value", msg[key][y].quantity);
+                                    $("#dose_strength").attr("value", msg[key][y].strength);
                                     $("#edit_drug_mapping").attr("value", msg[key][y].map);
                                     if (msg[key][y].map == 0) {
                                         $(".all_mappings").show();
@@ -316,7 +319,6 @@
                         if (res === true) {
                             var counter = 0;
                             var primary_drug_merge_id = $(_this).attr("id");
-                            var base_url = '<?php echo base_url(); ?>';
                             counter = arr.length;
                             if (counter > 0) {
                                 $.ajax({
@@ -349,7 +351,6 @@
                 var test = confirm("Are You Sure?");
                 if (test) {//User clicks yes
                     var drug_codes = new Array();
-                    var base_url = '<?php echo base_url(); ?>';
                     $("input:checkbox[name='drugcodes']:checked").each(function () {
                         drug_codes.push($(this).val());
                     });
@@ -386,7 +387,6 @@
                 var test = confirm("Are You Sure?");
                 if (test) {//User clicks yes
                     var drug_codes = new Array();
-                    var base_url = '<?php echo base_url(); ?>';
                     $("input:checkbox[name='drugcodes']:checked").each(function () {
                         drug_codes.push($(this).val());
                     });
@@ -433,7 +433,15 @@
         $("#edit_instructions_holder").val(instructions);
     }
 
+
+
 </script>
+<style>
+    .setting_table td:nth-child(1) { display: none;}
+    .setting_table th:nth-child(1) { display: none;}
+    .setting_table td:nth-child(2) { width: 400px;}
+    .setting_table th:nth-child(2) { width: 400px;}
+</style>
 <?php helper('form'); ?>
 <div id="view_content">
     <div class="passmessage"></div>
@@ -467,7 +475,7 @@
         $attributes = array(
             'id' => 'entry_form',
             'onsubmit' => 'return processNewInstructions()');
-        echo form_open('drugcode_management/save', $attributes);
+        echo form_open(base_url() . '/public/drugcode_management/save', $attributes);
         ?>
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -609,7 +617,7 @@
         $attributes = array(
             'id' => 'entry_form',
             'onsubmit' => 'return processEditInstructions()');
-        echo form_open('drugcode_management/update', $attributes);
+        echo form_open(base_url() . '/public/drugcode_management/update', $attributes);
         ?>
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -809,11 +817,11 @@
                     }
                     for (var i = 0; i < total_drugs; i++) {
                         var c = i + 1;
-                        var name = data.non_mapped_drugs[i]['Drug'];
+                        var name = data.non_mapped_drugs[i]['drug'];
                         var unit = data.non_mapped_drugs[i]['drug_unit'];
-                        var dose = data.non_mapped_drugs[i]['Dose'];
-                        var strength = data.non_mapped_drugs[i]['Strength'];
-                        var packsize = data.non_mapped_drugs[i]['Pack_Size'];
+                        var dose = data.non_mapped_drugs[i]['dose'];
+                        var strength = data.non_mapped_drugs[i]['strength'];
+                        var packsize = data.non_mapped_drugs[i]['pack_size'];
                         var id = data.non_mapped_drugs[i]['id'];
                         $("#tbl_bulk_mapping tbody").append("<tr id='" + id + "' map_id=''><td>" + c + "</td><td class='truncate'>" + name + "[" + unit + "] - " + strength + " ( " + packsize + " ) </td><td></td></tr>");
                     }

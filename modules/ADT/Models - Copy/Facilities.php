@@ -69,14 +69,13 @@ class Facilities extends BaseModel {
     }
 
     public static function getFacilities() {
-        $query = DB::table('Facilities')->select('facilitycode','name')->orderBy("name")->get();
+        $query = DB::table('Facilities')->select('facilitycode', 'name')->orderBy("name")->get();
         return BaseModel::resultSet($query);
     }
 
     public static function getSatellites($parent) {
-        $query = Doctrine_Query::create()->select("id,facilitycode,name")->from("Facilities")->where("parent = '$parent' AND facilitycode !='$parent' ")->orderBy("name asc");
-        $facility = $query->execute(array(), Doctrine::HYDRATE_ARRAY);
-        return $facility;
+        $query = DB::select("SELECT id,facilitycode,name Facilities  where parent = '$parent' AND facilitycode !='$parent' order By  name asc");
+        return BaseModel::resultSet($query);
     }
 
     public static function getCodeFacility($id) {

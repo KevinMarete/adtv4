@@ -11,6 +11,7 @@ class Nonadherence_management extends \App\Controllers\BaseController {
 
     var $db;
     var $table;
+    var $session;
 
     function __construct() {
         session()->set("link_id", "index");
@@ -18,6 +19,7 @@ class Nonadherence_management extends \App\Controllers\BaseController {
         session()->set("linkTitle", "Non Adherence Reason Management");
         $this->db = \Config\Database::connect();
         $this->table = new \CodeIgniter\View\Table();
+        $this->session = \Config\Services::session();
     }
 
     public function index() {
@@ -49,9 +51,9 @@ class Nonadherence_management extends \App\Controllers\BaseController {
 
                 if ($source->active == 1) {
                     $links .= " | ";
-                    $links .= anchor('Nonadherence_Management/disable/' . $source->id, 'Disable', array('class' => 'disable_user'));
+                    $links .= anchor(base_url().'/public/Nonadherence_Management/disable/' . $source->id, 'Disable', array('class' => 'disable_user'));
                 } else {
-                    $links .= anchor('Nonadherence_Management/enable/' . $source->id, 'Enable', array('class' => 'enable_user'));
+                    $links .= anchor(base_url().'/public/Nonadherence_Management/enable/' . $source->id, 'Enable', array('class' => 'enable_user'));
                 }
             }
             $this->table->addRow($source->id, $source->name, $links);
@@ -68,18 +70,18 @@ class Nonadherence_management extends \App\Controllers\BaseController {
     }
 
     public function save() {
-        $creator_id = $this->session->userdata('user_id');
-        $source = $this->session->userdata('facility');
+        $creator_id = $this->session->get('user_id');
+        $source = $this->session->get('facility');
 
         $source = new Non_Adherence_Reasons();
-        $source->Name = $this->input->post('nonadherence_name');
+        $source->Name = $this->request->getPost('nonadherence_name');
         $source->Active = "1";
         $source->save();
 
-        //$this -> session -> set_userdata('message_counter','1');
-        $this->session->set_userdata('msg_success', $this->input->post('nonadherence_name') . ' was successfully Added!');
-        $this->session->set_flashdata('filter_datatable', $this->input->post('nonadherence_name')); //Filter datatable
-        redirect('settings_management');
+        //$this -> session -> set('message_counter','1');
+        $this->session->set('msg_success', $this->request->getPost('nonadherence_name') . ' was successfully Added!');
+        $this->session->setFlashdata('filter_datatable', $this->request->getPost('nonadherence_name')); //Filter datatable
+      return redirect()->to(base_url() . '/public/settings_management');
     }
 
     public function edit($source_id) {
@@ -92,36 +94,36 @@ class Nonadherence_management extends \App\Controllers\BaseController {
     }
 
     public function update() {
-        $nonadherence_id = $this->input->post('nonadherence_id');
-        $nonadherence_name = $this->input->post('nonadherence_name');
+        $nonadherence_id = $this->request->getPost('nonadherence_id');
+        $nonadherence_name = $this->request->getPost('nonadherence_name');
 
 
-        $this->load->database();
+     
         $query = $this->db->query("UPDATE Non_Adherence_Reasons SET Name='$nonadherence_name' WHERE id='$nonadherence_id'");
-        //$this -> session -> set_userdata('message_counter','1');
-        $this->session->set_userdata('msg_success', $this->input->post('nonadherence_name') . ' was Updated!');
-        $this->session->set_flashdata('filter_datatable', $this->input->post('nonadherence_name')); //Filter datatable
-        redirect('settings_management');
+        //$this -> session -> set('message_counter','1');
+        $this->session->set('msg_success', $this->request->getPost('nonadherence_name') . ' was Updated!');
+        $this->session->setFlashdata('filter_datatable', $this->request->getPost('nonadherence_name')); //Filter datatable
+      return redirect()->to(base_url() . '/public/settings_management');
     }
 
     public function enable($nonadherence_id) {
-        $this->load->database();
+     
         $query = $this->db->query("UPDATE Non_Adherence_Reasons SET Active='1'WHERE id='$nonadherence_id'");
         $results = Non_Adherence_Reasons::getSource($nonadherence_id);
-        //$this -> session -> set_userdata('message_counter','1');
-        $this->session->set_userdata('msg_success', $results->Name . ' was enabled!');
-        $this->session->set_flashdata('filter_datatable', $results->Name); //Filter datatable
-        redirect('settings_management');
+        //$this -> session -> set('message_counter','1');
+        $this->session->set('msg_success', $results->name . ' was enabled!');
+        $this->session->setFlashdata('filter_datatable', $results->name); //Filter datatable
+      return redirect()->to(base_url() . '/public/settings_management');
     }
 
     public function disable($nonadherence_id) {
-        $this->load->database();
+     
         $query = $this->db->query("UPDATE Non_Adherence_Reasons SET Active='0'WHERE id='$nonadherence_id'");
         $results = Non_Adherence_Reasons::getSource($nonadherence_id);
-        //$this -> session -> set_userdata('message_counter','2');
-        $this->session->set_userdata('msg_error', $results->Name . ' was disabled!');
-        $this->session->set_flashdata('filter_datatable', $results->Name); //Filter datatable
-        redirect('settings_management');
+        //$this -> session -> set('message_counter','2');
+        $this->session->set('msg_error', $results->name . ' was disabled!');
+        $this->session->setFlashdata('filter_datatable', $results->name); //Filter datatable
+      return redirect()->to(base_url() . '/public/settings_management');
     }
 
     public function base_params($data) {

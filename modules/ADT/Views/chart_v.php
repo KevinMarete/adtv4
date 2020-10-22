@@ -127,32 +127,32 @@ if ($resultArraySize > 25) {
                                 myStorage.setItem("period", period);
                                 if (this.category === 'System Administrator') {
                                     myStorage.setItem("role", this.category);
-                                    $.post("<?php echo base_url() . '/public/admin_management/drillAccessLevel/'; ?>", {level: this.category, period: period}, function (resp) {
+                                    $.post("<?php echo base_url() . '/public/admin_management/drillAccessLevel'; ?>", {level: this.category, period: period}, function (resp) {
                                         $('#chart_area77').append(resp);
                                         counter = 1;
                                     });
                                 } else
                                 if (this.category === 'Pharmacist') {
                                     myStorage.setItem("role", this.category);
-                                    $.post("<?php echo base_url() . '/public/admin_management/drillAccessLevel/'; ?>", {level: this.category, period: period}, function (resp) {
+                                    $.post("<?php echo base_url() . '/public/admin_management/drillAccessLevel'; ?>", {level: this.category, period: period}, function (resp) {
                                         $('#chart_area77').append(resp);
                                         counter = 1;
                                     });
                                 } else
                                 if (this.category === 'Facility Administrator') {
                                     myStorage.setItem("role", this.category);
-                                    $.post("<?php echo base_url() . '/public/admin_management/drillAccessLevel/'; ?>", {level: this.category, period: period}, function (resp) {
+                                    $.post("<?php echo base_url() . '/public/admin_management/drillAccessLevel'; ?>", {level: this.category, period: period}, function (resp) {
                                         $('#chart_area77').append(resp);
                                         counter = 1;
                                     });
                                 } else if (this.category === 'Dispensment') {
-                                    window.location.href = "<?php echo base_url(); ?>/public/home_controller/dispensement/" + $('#uservalue').val() + '/' + period;
+                                    window.location.href = "<?php echo base_url(); ?>/public/home_controller/dispensement" + $('#uservalue').val() + '/' + period;
                                 } else if (this.category === 'Inventory') {
-                                    window.location.href = "<?php echo base_url(); ?>/public/home_controller/inventory/" + $('#uservalue').val() + '/' + period;
+                                    window.location.href = "<?php echo base_url(); ?>/public/home_controller/inventory" + $('#uservalue').val() + '/' + period;
 
                                 } else {
                                     $('#uservalue').val(this.category);
-                                    $.post("<?php echo base_url() . '/public/admin_management/getdataByUser/'; ?>", {user: this.category, period: period}, function (resp) {
+                                    $.post("<?php echo base_url() . '/public/admin_management/getdataByUser'; ?>", {user: this.category, period: period}, function (resp) {
                                         $('#chart_area77').append(resp);
                                         counter = 2;
                                     });

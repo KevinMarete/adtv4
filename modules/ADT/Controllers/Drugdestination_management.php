@@ -11,6 +11,7 @@ class Drugdestination_management extends \App\Controllers\BaseController {
 
     var $db;
     var $table;
+    var $session;
 
     function __construct() {
         session()->set("link_id", "index");
@@ -18,6 +19,7 @@ class Drugdestination_management extends \App\Controllers\BaseController {
         session()->set("linkTitle", "Drug Destination Management");
         $this->db = \Config\Database::connect();
         $this->table = new \CodeIgniter\View\Table();
+        $this->session = \Config\Services::session();
     }
 
     public function index() {
@@ -48,9 +50,9 @@ class Drugdestination_management extends \App\Controllers\BaseController {
 
                 if ($source->active == 1) {
                     $links .= " | ";
-                    $links .= anchor('drugdestination_management/disable/' . $source->id, 'Disable', array('class' => 'disable_user'));
+                    $links .= anchor(base_url() . '/public/drugdestination_management/disable/' . $source->id, 'Disable', array('class' => 'disable_user'));
                 } else {
-                    $links .= anchor('drugdestination_management/enable/' . $source->id, 'Enable', array('class' => 'enable_user'));
+                    $links .= anchor(base_url() . '/public/drugdestination_management/enable/' . $source->id, 'Enable', array('class' => 'enable_user'));
                 }
             }
             $this->table->addRow($source->id, $source->name, $links);
@@ -66,11 +68,11 @@ class Drugdestination_management extends \App\Controllers\BaseController {
     }
 
     public function save() {
-        $creator_id = $this->session->userdata('user_id');
-        $source = $this->session->userdata('facility');
+        $creator_id = $this->session->get('user_id');
+        $source = $this->session->get('facility');
 
-        $is_mainpharmacy = $this->input->post('pharmacy_check');
-        $destination = $this->input->post('source_name');
+        $is_mainpharmacy = $this->request->getPost('pharmacy_check');
+        $destination = $this->request->getPost('source_name');
         if ($is_mainpharmacy == 1) {
             $destination .= ' (Main Pharmacy)';
         }
@@ -80,10 +82,10 @@ class Drugdestination_management extends \App\Controllers\BaseController {
         $source->Active = "1";
         $source->save();
 
-        //$this -> session -> set_userdata('message_counter','1');
-        $this->session->set_userdata('msg_success', $this->input->post('source_name') . ' was successfully Added!');
-        $this->session->set_flashdata('filter_datatable', $this->input->post('source_name')); //Filter datatable
-        redirect('settings_management');
+        //$this -> session -> set('message_counter','1');
+        $this->session->set('msg_success', $this->request->getPost('source_name') . ' was successfully Added!');
+        $this->session->setFlashdata('filter_datatable', $this->request->getPost('source_name')); //Filter datatable
+        return redirect()->to(base_url() . '/public/settings_management');
     }
 
     public function edit($source_id) {
@@ -96,10 +98,10 @@ class Drugdestination_management extends \App\Controllers\BaseController {
     }
 
     public function update() {
-        $source_id = $this->input->post('source_id');
+        $source_id = $this->request->getPost('source_id');
 
-        $is_mainpharmacy = $this->input->post('pharmacy_check');
-        $destination = $this->input->post('source_name');
+        $is_mainpharmacy = $this->request->getPost('pharmacy_check');
+        $destination = $this->request->getPost('source_name');
         $pos = stripos($destination, 'main pharmacy');
 
 
@@ -110,32 +112,32 @@ class Drugdestination_management extends \App\Controllers\BaseController {
             }
         }
 
-        $this->load->database();
+
         $query = $this->db->query("UPDATE drug_destination SET Name='$destination' WHERE id='$source_id'");
-        //$this -> session -> set_userdata('message_counter','1');
-        $this->session->set_userdata('msg_success', $this->input->post('source_name') . ' was Updated!');
-        $this->session->set_flashdata('filter_datatable', $this->input->post('source_name')); //Filter datatable
-        redirect('settings_management');
+        //$this -> session -> set('message_counter','1');
+        $this->session->set('msg_success', $this->request->getPost('source_name') . ' was Updated!');
+        $this->session->setFlashdata('filter_datatable', $this->request->getPost('source_name')); //Filter datatable
+        return redirect()->to(base_url() . '/public/settings_management');
     }
 
     public function enable($source_id) {
-        $this->load->database();
+
         $query = $this->db->query("UPDATE drug_destination SET Active='1'WHERE id='$source_id'");
         $results = Drug_Destination::getSource($source_id);
-        //$this -> session -> set_userdata('message_counter','1');
-        $this->session->set_userdata('msg_success', $results->Name . ' was enabled');
-        $this->session->set_flashdata('filter_datatable', $results->Name); //Filter datatable
-        redirect('settings_management');
+        //$this -> session -> set('message_counter','1');
+        $this->session->set('msg_success', $results->name . ' was enabled');
+        $this->session->setFlashdata('filter_datatable', $results->name); //Filter datatable
+        return redirect()->to(base_url() . '/public/settings_management');
     }
 
     public function disable($source_id) {
-        $this->load->database();
+
         $query = $this->db->query("UPDATE drug_destination SET Active='0'WHERE id='$source_id'");
         $results = Drug_Destination::getSource($source_id);
-        //$this -> session -> set_userdata('message_counter','2');
-        $this->session->set_userdata('msg_error', $results->Name . ' was disabled!');
-        $this->session->set_flashdata('filter_datatable', $results->Name); //Filter datatable
-        redirect('settings_management');
+        //$this -> session -> set('message_counter','2');
+        $this->session->set('msg_error', $results->name . ' was disabled!');
+        $this->session->setFlashdata('filter_datatable', $results->name); //Filter datatable
+        return redirect()->to(base_url() . '/public/settings_management');
     }
 
     public function base_params($data) {

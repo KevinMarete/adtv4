@@ -6,7 +6,7 @@
             $("#regimen_edit_tbl").css("display", "none");
             var _id = this.id;
             var request = $.ajax({
-                url: "regimen_management/edit",
+                url: "<?php echo base_url();?>/public/regimen_management/edit",
                 type: 'POST',
                 data: {"id": _id},
                 dataType: "json",
@@ -20,11 +20,11 @@
                             for (var y in msg[key]) {
                                 if (msg[key].hasOwnProperty(y)) {
                                     $("#edit_regimen_id").val(msg[key][y].id);
-                                    $("#edit_regimen_code").val(msg[key][y].Regimen_Code);
-                                    $("#edit_regimen_desc").val(msg[key][y].Regimen_Desc);
-                                    $("#edit_category").attr("value", msg[key][y].Category);
-                                    $("#edit_line").val(msg[key][y].Line);
-                                    $("#edit_type_of_service").attr("value", msg[key][y].Type_Of_Service);
+                                    $("#edit_regimen_code").val(msg[key][y].regimen_code);
+                                    $("#edit_regimen_desc").val(msg[key][y].regimen_desc);
+                                    $("#edit_category").attr("value", msg[key][y].category);
+                                    $("#edit_line").val(msg[key][y].line);
+                                    $("#edit_type_of_service").attr("value", msg[key][y].type_of_service);
                                     $("#edit_remarks").val(msg[key][y].Remarks);
                                     $("#edit_regimen_mapping").attr("value", msg[key][y].map);
                                     if (msg[key][y].map == 0) {
@@ -88,7 +88,7 @@
                             counter = arr.length;
                             if (counter > 0) {
                                 $.ajax({
-                                    url: base_url + 'regimen_management/merge/' + primary_drug_merge_id,
+                                    url: base_url + '/public/regimen_management/merge/' + primary_drug_merge_id,
                                     type: 'POST',
                                     data: {'drug_codes': arr},
                                     success: function (data) {
@@ -124,7 +124,7 @@
                                     drug_codes.push($(this).val());
                                 });
                                 $.ajax({
-                                    url: base_url + 'regimen_management/disable',
+                                    url: base_url + '/public/regimen_management/disable',
                                     type: 'POST',
                                     data: {'drug_codes': drug_codes, 'multiple': '1'},
                                     success: function (data) {
@@ -163,7 +163,7 @@
                                     drug_codes.push($(this).val());
                                 });
                                 $.ajax({
-                                    url: base_url + 'regimen_management/enable',
+                                    url: base_url + '/public/regimen_management/enable',
                                     type: 'POST',
                                     data: {'drug_codes': drug_codes, 'multiple': '1'},
                                     success: function (data) {
@@ -192,10 +192,10 @@
             $("#md_bulk_mapping").css("margin-left", "-30%");
             $("#tbl_bulk_mapping tbody > tr >td >select").remove();
             $("#tbl_bulk_mapping tbody > tr").remove();
-
+            var base_url = '<?php echo base_url(); ?>';
             //get Non mapped regimens
             $.ajax({
-                url: base_url + 'regimen_management/getNonMappedRegimens',
+                url: base_url + '/public/regimen_management/getNonMappedRegimens',
                 type: 'GET',
                 dataType: 'json',
                 data: {'param': '0'},
@@ -241,8 +241,8 @@
         });
 
         //count to check which message to display
-        var count = '<?php echo @$this->session->userdata['message_counter'] ?>';
-        var message = '<?php echo @$this->session->userdata['message'] ?>';
+        var count = '<?php echo @session()->get('message_counter') ?>';
+        var message = '<?php echo @session()->get('message') ?>';
 
         if (count == 1) {
             $(".passmessage").slideDown('slow', function () {
@@ -323,7 +323,7 @@ session()->set('message', " ");
     }
 </style>
 
-<?php helper('form');?>
+<?php helper('form'); ?>
 
 <div id="view_content">
 
@@ -350,7 +350,7 @@ session()->set('message', " ");
     <div id="entry_form" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="NewRegimen" aria-hidden="true">
         <?php
         $attributes = array('class' => 'input_form');
-        echo form_open('regimen_management/save', $attributes);
+        echo form_open(base_url() . '/public/regimen_management/save', $attributes);
         ?>
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><font color="white">close</font></button>
@@ -460,7 +460,7 @@ session()->set('message', " ");
     <div id="edit_form" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="EditRegimen" aria-hidden="true">
         <?php
         $attributes = array('class' => 'input_form');
-        echo form_open('regimen_management/update', $attributes);
+        echo form_open(base_url().'/public/regimen_management/update', $attributes);
         //echo validation_errors('<p class="error">', '</p>');
         ?>
         <!-- Modal for adding a new regimen to the database -->
@@ -652,8 +652,8 @@ session()->set('message', " ");
 
 // function to create the map regimens table in the moodle
     function appendRows(counter, total, data) {
-        var name = data[counter]['Regimen_Desc'];
-        var code = data[counter]['Regimen_Code'];
+        var name = data[counter]['regimen_desc'];
+        var code = data[counter]['regimen_code'];
         var id = data[counter]['id'];
         if (counter < total) {
             var c = counter + 1;
@@ -667,13 +667,14 @@ session()->set('message', " ");
 
     }
     function mappRegimens(counter, total, data) {
+      var base_url = '<?php echo base_url(); ?>';
         var map_id = $(data[counter]).attr("map_id");
         var id = $(data[counter]).attr('id');
         if (counter < (total - 1)) {
             var c = counter + 1;
             if (map_id != "") {//if regimen mapped, update regimens details
                 $.ajax({
-                    url: base_url + 'regimen_management/updateBulkMapping',
+                    url: base_url + '/public/regimen_management/updateBulkMapping',
                     type: 'POST',
                     dataType: 'html',
                     data: {'regimen_id': id, "map_id": map_id},

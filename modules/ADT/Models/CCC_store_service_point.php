@@ -20,10 +20,9 @@ class CCC_store_service_point extends BaseModel {
         return $query;
     }
 
-    public function getActive() {
-        $query = Doctrine_Query::create()->select("*")->from("ccc_store_service_point")->where("Active", "1");
-        $stores = $query->execute(array(), Doctrine::HYDRATE_ARRAY);
-        return $stores;
+    public static function getActive() {
+        $query = DB::table('ccc_store_service_point')->where('active', '1')->get();
+        return $query;
     }
 
     public static function getAllBut($ccc_id) {

@@ -126,7 +126,7 @@
         <div id="indication_form" title="New Drug Indication" class="modal hide fade cyan" tabindex="-1" role="dialog" aria-labelledby="NewDrug" aria-hidden="true">
             <?php
             $attributes = array('class' => 'input_form');
-            echo form_open('indication_management/save', $attributes);
+            echo form_open(base_url() . '/public/indication_management/save', $attributes);
             //echo validation_errors('<p class="error">', '</p>');
             ?>
             <div class="modal-header">
@@ -154,7 +154,7 @@
         <div id="edit_form" title="Edit Drug Indication" class="modal hide fade cyan" tabindex="-1" role="dialog" aria-labelledby="NewDrug" aria-hidden="true">
             <?php
             $attributes = array('class' => 'input_form');
-            echo form_open('indication_management/update', $attributes);
+            echo form_open(base_url() . '/public/indication_management/update', $attributes);
             //echo validation_errors('<p class="error">', '</p>');
             ?>
             <div class="modal-header">

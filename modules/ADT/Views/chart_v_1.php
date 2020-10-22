@@ -109,7 +109,7 @@ if ($resultArraySize > 25) {
                             click: function () {
 
                                 if (counter === 0) {
-                                    $.post("<?php echo base_url() . 'admin_management/getWeeklySumaryPerUser/'; ?>", {day: this.category, start: period}, function (resp) {
+                                    $.post("<?php echo base_url() . '/public/admin_management/getWeeklySumaryPerUser'; ?>", {day: this.category, start: period}, function (resp) {
                                         $('#chart_area78').append(resp);
 
                                         counter++;

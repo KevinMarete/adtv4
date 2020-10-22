@@ -44,9 +44,8 @@ class Regimen_change_purpose extends BaseModel {
     }
 
     public static function getSource($id) {
-        $query = Doctrine_Query::create()->select("*")->from("Regimen_Change_Purpose")->where("id = '$id'");
-        $ois = $query->execute();
-        return $ois[0];
+        $query = DB::table('Regimen_Change_Purpose')->where('id', $id)->get();
+        return $query[0];
     }
 
 }

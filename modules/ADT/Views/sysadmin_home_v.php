@@ -83,24 +83,24 @@
         </div>
         <div>
             <?php
-            if ($this->session->userdata("msg_success")) {
+            if (session()->get("msg_success")) {
                 ?>
                 <div class="alert alert-block alert-success">
                     <button type="button" class="close" data-dismiss="alert">&times;</button>
                     <h4>Saved!</h4>
-                    <?php echo $this->session->userdata("msg_success"); ?>
+                    <?php echo session()->get("msg_success"); ?>
                 </div>
                 <?php
-                $this->session->unset_userdata("msg_success");
-            } else if ($this->session->userdata("msg_error")) {
+                session()->remove("msg_success");
+            } else if (session()->get("msg_error")) {
                 ?>
                 <div class="alert alert-block alert-danger">
                     <button type="button" class="close" data-dismiss="alert">&times;</button>
                     <h4>Error!</h4>
-                    <?php echo $this->session->userdata("msg_error"); ?>
+                    <?php echo session()->get("msg_error"); ?>
                 </div>
                 <?php
-                $this->session->unset_userdata("msg_error");
+                session()->remove("msg_error");
             }
             ?>
         </div>
@@ -123,7 +123,7 @@
             </h3>
 
             <div id="chart_area77">
-                <div class="loadingDiv" style="margin:20% 0 20% 0;" ><img style="width: 30px;margin-left:50%" src="<?php echo asset_url() . '/public/images//loading_spin.gif' ?>"></div>
+                <div class="loadingDiv" style="margin:20% 0 20% 0;" ><img style="width: 30px;margin-left:50%" src="<?php echo base_url() . '/public/images//loading_spin.gif' ?>"></div>
             </div>
 
         </div>
@@ -136,7 +136,7 @@
                 <button class="btn btn-danger less" id="enrollment-less">Smaller</button>
             </h3>
             <div id="chart_area78">
-                <div class="loadingDiv" style="margin:20% 0 20% 0;"  ><img style="width: 30px;margin-left:50%" src="<?php echo asset_url() . '/public/images/loading_spin.gif' ?>"></div>
+                <div class="loadingDiv" style="margin:20% 0 20% 0;"  ><img style="width: 30px;margin-left:50%" src="<?php echo base_url() . '/public/images/loading_spin.gif' ?>"></div>
             </div>
         </div>
     </div>		
@@ -168,7 +168,7 @@
     $(document).ready(function () {
         myStorage = window.localStorage;
         myStorage.clear();
-        var base_url = "<?php echo base_url(); ?>";
+        var base_url = "<?php echo base_url().'/public/'; ?>";
         var default_link = "<?php echo session()->get('default_link'); ?>";
 
 
@@ -233,7 +233,7 @@ session()->set('default_link', "");
             $("#display_content").empty();
             $.blockUI({message: '<h3><img width="30" height="30" src="<?php echo base_url() . '/public/images/loading_spin.gif' ?>" /> Working...</h3>'});
             var link = $(this).attr("id");
-            var link = base_url + "public/admin_management/" + link;
+            var link = "<?php echo base_url();?>/public/admin_management/" + link;
             $("#display_content").load(link, function () {
                 $('.dataTables').dataTable({
                     "bJQueryUI": true,

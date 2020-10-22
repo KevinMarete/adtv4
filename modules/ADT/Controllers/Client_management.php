@@ -12,6 +12,7 @@ class Client_management extends \App\Controllers\BaseController {
 
     var $db;
     var $table;
+    var $session;
 
     function __construct() {
         session()->set("link_id", "index");
@@ -19,6 +20,7 @@ class Client_management extends \App\Controllers\BaseController {
         session()->set("linkTitle", "Patient Source Management");
         $this->db = \Config\Database::connect();
         $this->table = new \CodeIgniter\View\Table();
+        $this->session = \Config\Services::session();
         ini_set("max_execution_time", "1000000");
     }
 
@@ -28,7 +30,7 @@ class Client_management extends \App\Controllers\BaseController {
 
     public function listing() {
         $access_level = session()->get('user_indicator');
-        $sources = Patient_Source::getThemAll($access_level);    
+        $sources = Patient_Source::getThemAll($access_level);
         $tmpl = array('table_open' => '<table class="setting_table table table-bordered table-striped">');
         $this->table->setTemplate($tmpl);
         $this->table->setHeading('Id', 'Name', 'Options');
@@ -50,9 +52,9 @@ class Client_management extends \App\Controllers\BaseController {
 
                 if ($source->active == 1) {
                     $links .= " | ";
-                    $links .= anchor('client_management/disable/' . $source->id, 'Disable', array('class' => 'disable_user'));
+                    $links .= anchor(base_url().'/public/client_management/disable/' . $source->id, 'Disable', array('class' => 'disable_user'));
                 } else {
-                    $links .= anchor('client_management/enable/' . $source->id, 'Enable', array('class' => 'enable_user'));
+                    $links .= anchor(base_url().'/public/client_management/enable/' . $source->id, 'Enable', array('class' => 'enable_user'));
                 }
             }
             $this->table->addRow($source->id, $source->name, $links);
@@ -68,18 +70,18 @@ class Client_management extends \App\Controllers\BaseController {
     }
 
     public function save() {
-        $creator_id = $this->session->userdata('user_id');
-        $source = $this->session->userdata('facility');
+        $creator_id = $this->session->get('user_id');
+        $source = $this->session->get('facility');
 
         $source = new Patient_Source();
-        $source->Name = $this->input->post('source_name');
+        $source->Name = $this->request->getPost('source_name');
         $source->Active = "1";
         $source->save();
 
-        //$this -> session -> set_userdata('message_counter','1');
-        $this->session->set_userdata('msg_success', $this->input->post('source_name') . ' was Added');
-        $this->session->set_flashdata('filter_datatable', $this->input->post('source_name')); //Filter datatable
-        redirect('settings_management');
+        //$this -> session -> set('message_counter','1');
+        $this->session->set('msg_success', $this->request->getPost('source_name') . ' was Added');
+        $this->session->setFlashdata('filter_datatable', $this->request->getPost('source_name')); //Filter datatable
+        return redirect()->to(base_url() . '/public/settings_management');
     }
 
     public function edit($source_id) {
@@ -92,36 +94,36 @@ class Client_management extends \App\Controllers\BaseController {
     }
 
     public function update() {
-        $source_id = $this->input->post('source_id');
-        $source_name = $this->input->post('source_name');
+        $source_id = $this->request->getPost('source_id');
+        $source_name = $this->request->getPost('source_name');
 
 
-        $this->load->database();
+        
         $query = $this->db->query("UPDATE patient_source SET Name='$source_name' WHERE id='$source_id'");
-        //$this -> session -> set_userdata('message_counter','1');
-        $this->session->set_userdata('msg_success', $this->input->post('source_name') . ' was Updated');
-        $this->session->set_flashdata('filter_datatable', $this->input->post('source_name')); //Filter datatable
-        redirect('settings_management');
+        //$this -> session -> set('message_counter','1');
+        $this->session->set('msg_success', $this->request->getPost('source_name') . ' was Updated');
+        $this->session->setFlashdata('filter_datatable', $this->request->getPost('source_name')); //Filter datatable
+        return redirect()->to(base_url() . '/public/settings_management');
     }
 
-    public function enable($source_id) {
-        $this->load->database();
+    public function enable($source_id='') {
+        
         $query = $this->db->query("UPDATE patient_source SET Active='1'WHERE id='$source_id'");
         $results = Patient_Source::getSource($source_id);
-        $this->session->set_userdata('message_counter', '1');
-        $this->session->set_userdata('message', $results->Name . ' was enabled');
-        $this->session->set_flashdata('filter_datatable', $results->Name); //Filter datatable
-        redirect('settings_management');
+        $this->session->set('message_counter', '1');
+        $this->session->set('message', $results->name . ' was enabled');
+        $this->session->setFlashdata('filter_datatable', $results->name); //Filter datatable
+        return redirect()->to(base_url() . '/public/settings_management');
     }
 
     public function disable($source_id) {
-        $this->load->database();
+        
         $query = $this->db->query("UPDATE patient_source SET Active='0'WHERE id='$source_id'");
         $results = Patient_Source::getSource($source_id);
-        //$this -> session -> set_userdata('message_counter','2');
-        $this->session->set_userdata('msg_error', $results->Name . ' was disabled');
-        $this->session->set_flashdata('filter_datatable', $results->Name); //Filter datatable
-        redirect('settings_management');
+        //$this -> session -> set('message_counter','2');
+        $this->session->set('msg_error', $results->name . ' was disabled');
+        $this->session->setFlashdata('filter_datatable', $results->name); //Filter datatable
+        return redirect()->to(base_url() . '/public/settings_management');
     }
 
     public function base_params($data) {

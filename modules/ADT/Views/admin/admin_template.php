@@ -1,4 +1,5 @@
 <?php
-    $this -> load -> view('sections/head');
-	$this -> load -> view($content_view);
+
+echo view('\Modules\ADT\Views\\sections/head');
+echo view($content_view);
 ?>

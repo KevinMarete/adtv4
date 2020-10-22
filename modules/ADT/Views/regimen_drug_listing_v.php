@@ -127,8 +127,7 @@
                                                 if ($drug->id != "") {
                                                     $class = ( $drug->active == 1) ? 'enabled' : 'disabled';
                                                     ?>
-                                                    <div class="span8 reg_drug_name_<?= $drug_id . ' ' . $class; ?> f_left"><?php echo '<pre>';
-                                    print_r($drug->Drugcode); ?></div>
+                                                    <div class="span8 reg_drug_name_<?= $drug_id . ' ' . $class; ?> f_left"><?php echo $drug->Drugcode->drug ?? 'N/A'; ?></div>
                                                     <div class="span4 reg_drug_name f_right"><?php
                                     if ($drug->active == 1) {
                                         echo "<input type='checkbox' onClick='toggleDrugRegimen($drug_id)' checked>";

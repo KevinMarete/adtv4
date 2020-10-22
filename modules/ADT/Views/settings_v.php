@@ -60,6 +60,12 @@
         background-color:transparent;
     }
 </style>
+<style>
+   /* .setting_table td:nth-child(1) { display: none;}
+    .setting_table th:nth-child(1) { display: none;}
+    .setting_table td:nth-child(2) { width: 400px;}
+    .setting_table th:nth-child(2) { width: 400px;}*/
+</style>
 <script>
 
     $(document).ready(function () {
@@ -78,14 +84,14 @@ if (session()->get('link_id') and session()->get('linkSub')) {
             $(".settings").css("display", "none");
             $("#loadingDiv").css("display", "block");
             link_id = '#' + '<?php echo session()->get('link_id') ?>';
-         
+
             linkSub = '<?php echo session()->get('linkSub') ?>';
-        
+
             linkIdUrl = link_id.substr(link_id.indexOf('#') + 1, (link_id.indexOf('_li') - 1));
             linkTitle = '<?php echo @session()->get('linkTitle') ?>';
             //Change the page title value
             $("#actual_page").html(linkTitle);
-                
+
             $(".settings").load('<?php echo base_url(); ?>/public/' + linkSub, function () {
                 //$("input[type='text']").attr("required","required");
                 $("#loadingDiv").css("display", "none");
@@ -190,7 +196,7 @@ if (session()->get('link_id') and session()->get('linkSub')) {
                 //Change the page title value
                 $("#actual_page").html(linkTitle);
                 //console.log(linkSub);
-                $(".settings").load('<?php echo base_url(); ?>/public/' + linkSub , function () {
+                $(".settings").load('<?php echo base_url(); ?>/public/' + linkSub, function () {
                     //$("input[type='text']").attr("required","required");
                     $("#loadingDiv").css("display", "none");
                     $(".settings").css("display", "block");

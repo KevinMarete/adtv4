@@ -612,7 +612,7 @@ function syncOrders() {
 }
 
 function autoUpdate() {
-	var base_url = getbaseurl();
+	var base_url = getbaseurl()+'/public/';
 	var link = base_url + "auto_management";
 	$.ajax({
 		url : link,

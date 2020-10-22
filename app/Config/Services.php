@@ -35,5 +35,6 @@ class Services extends CoreServices {
         }
         return new \Config\Eloquent();
     }
+ 
 
 }

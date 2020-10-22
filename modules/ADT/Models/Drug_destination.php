@@ -34,9 +34,8 @@ class Drug_destination extends BaseModel {
     }
 
     public static function getSource($id) {
-        $query = Doctrine_Query::create()->select("*")->from("Drug_Destination")->where("id = '$id'");
-        $ois = $query->execute();
-        return $ois[0];
+        $query = DB::table('Drug_Destination')->where('id', $id)->get();
+        return $query[0];
     }
 
     public static function getThemAll($access_level = "") {

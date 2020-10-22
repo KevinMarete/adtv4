@@ -12,22 +12,28 @@ use App\Libraries\Encrypt;
 use App\Libraries\Zip;
 use \Modules\ADT\Models\Drugcode;
 use \Modules\ADT\Models\Drug_source;
+use \Modules\ADT\Models\Drug_unit;
 use \Modules\ADT\Models\Drug_classification;
 use \Modules\ADT\Models\Sync_drug;
 use \Modules\ADT\Models\Drug_instructions;
+use \Modules\ADT\Models\Generic_name;
+use \Modules\ADT\Models\Supporter;
+use \Modules\ADT\Models\Dose;
 use Illuminate\Database\Capsule\Manager as DB;
 
 class Drugcode_management extends \App\Controllers\BaseController {
 
     var $db;
     var $table;
+    var $session;
 
     function __construct() {
         session()->set("link_id", "index");
-        session()->set("linkSub", "drugcode_classification");
-        session()->set("linkTitle", "Drug Code Classification");
+        session()->set("linkSub", "drugcode_management");
+        session()->set("linkTitle", "Drug Code Management");
         $this->db = \Config\Database::connect();
         $this->table = new \CodeIgniter\View\Table();
+        $this->session = \Config\Services::session();
     }
 
     public function index() {
@@ -36,12 +42,14 @@ class Drugcode_management extends \App\Controllers\BaseController {
 
     public function listing() {
         $access_level = session()->get('user_indicator');
+        //dd($access_level);
         $source = 0;
         if ($access_level == "pharmacist") {
             $source = session()->get('facility');
         }
         $data = array();
         $drugcodes = Drugcode::getAll($source, $access_level);
+        //dd($drugcodes);
         $tmpl = array('table_open' => '<table id="drugcode_setting" class="setting_table table table-bordered table-striped">');
         $this->table->setTemplate($tmpl);
         $this->table->setHeading('id', 'Drug', 'Unit', 'Dose', 'Supplier', 'Options');
@@ -59,17 +67,18 @@ class Drugcode_management extends \App\Controllers\BaseController {
 
             $drug = $drugcode['id'];
             if ($drugcode['Enabled'] == 1 && $access_level == "facility_administrator") {
+
                 $links .= " | ";
-                $links .= anchor('drugcode_management/disable/' . $drugcode['id'], 'Disable', array('class' => 'disable_user'));
+                $links .= anchor(base_url() . '/public/drugcode_management/disable/' . $drugcode['id'], 'Disable', array('class' => 'disable_user'));
                 $links .= " | ";
                 $links .= "<a href='#' class='merge_drug' id='$drug'>Merge</a>";
             } elseif ($access_level == "facility_administrator") {
-                $links .= anchor('drugcode_management/enable/' . $drugcode['id'], 'Enable', array('class' => 'enable_user'));
+                $links .= anchor(base_url() . '/public/drugcode_management/enable/' . $drugcode['id'], 'Enable', array('class' => 'enable_user'));
             }
             if ($drugcode['Merged_to'] != '') {
                 if ($access_level == "facility_administrator") {
                     $links .= " | ";
-                    $links .= anchor('drugcode_management/unmerge/' . $drugcode['id'], 'Unmerge', array('class' => 'unmerge_drug'));
+                    $links .= anchor(base_url() . '/public/drugcode_management/unmerge/' . $drugcode['id'], 'Unmerge', array('class' => 'unmerge_drug'));
                 }
                 $checkbox = "<input type='checkbox' name='drugcodes' id='drugcodes' class='drugcodes' value='$drug' disabled/>";
             } else {
@@ -112,64 +121,64 @@ class Drugcode_management extends \App\Controllers\BaseController {
 
     public function save() {
 
-        $valid = $this->_submit_validate();
-        $access_level = $this->session->userdata('user_indicator');
+        //$valid = $this->_submit_validate();
+        $access_level = $this->session->set('user_indicator');
         $source = 0;
         if ($access_level == "pharmacist") {
-            $source = $this->session->userdata('facility');
+            $source = $this->session->set('facility');
         }
         $non_arv = 0;
         $tb_drug = 0;
         $drug_in_use = 0;
         $supplied = 0;
-        if ($this->input->post('none_arv') == "on") {
+        if ($this->request->getPost('none_arv') == "on") {
             $non_arv = 1;
         }
-        if ($this->input->post('tb_drug') == "on") {
+        if ($this->request->getPost('tb_drug') == "on") {
             $tb_drug = 1;
         }
-        if ($this->input->post('drug_in_use') == "on") {
+        if ($this->request->getPost('drug_in_use') == "on") {
             $drug_in_use = 1;
         }
 
         //get drug instructions
-        $instructions = $this->input->post('instructions_holder', TRUE);
+        $instructions = $this->request->getPost('instructions_holder', TRUE);
         if ($instructions == null) {
             $instructions = "";
         }
 
         $drugcode = new Drugcode();
-        $drugcode->Drug = $this->input->post('drugname');
-        $drugcode->Unit = $this->input->post('drugunit');
-        $drugcode->Pack_Size = $this->input->post('packsize');
-        $drugcode->Safety_Quantity = $this->input->post('safety_quantity');
-        $drugcode->Generic_Name = $this->input->post('genericname');
-        $drugcode->Supported_By = $this->input->post('supplied_by');
-        $drugcode->classification = $this->input->post('classification');
+        $drugcode->Drug = $this->request->getPost('drugname');
+        $drugcode->Unit = $this->request->getPost('drugunit');
+        $drugcode->Pack_Size = $this->request->getPost('packsize');
+        $drugcode->Safety_Quantity = $this->request->getPost('safety_quantity');
+        $drugcode->Generic_Name = $this->request->getPost('genericname');
+        $drugcode->Supported_By = $this->request->getPost('supplied_by');
+        $drugcode->classification = $this->request->getPost('classification');
         $drugcode->none_arv = $non_arv;
         $drugcode->Tb_Drug = $tb_drug;
         $drugcode->Drug_In_Use = $drug_in_use;
-        $drugcode->Comment = $this->input->post('comments');
-        $drugcode->Dose = $this->input->post('dose_frequency');
-        $drugcode->Duration = $this->input->post('duration');
-        $drugcode->Quantity = $this->input->post('quantity');
-        $drugcode->Strength = $this->input->post('dose_strength');
-        $drugcode->map = $this->input->post('drug_mapping');
+        $drugcode->Comment = $this->request->getPost('comments');
+        $drugcode->Dose = $this->request->getPost('dose_frequency');
+        $drugcode->Duration = $this->request->getPost('duration');
+        $drugcode->Quantity = $this->request->getPost('quantity');
+        $drugcode->Strength = $this->request->getPost('dose_strength');
+        $drugcode->map = $this->request->getPost('drug_mapping');
         $drugcode->Source = $source;
         $drugcode->instructions = $instructions;
 
         $drugcode->save();
-        //$this -> session -> set_userdata('message_counter', '1');
-        $this->session->set_userdata('msg_success', $this->input->post('drugname') . ' was successfully Added!');
-        $this->session->set_flashdata('filter_datatable', $this->input->post('drugname'));
+        //$this -> session -> set('message_counter', '1');
+        $this->session->set('msg_success', $this->request->getPost('drugname') . ' was successfully Added!');
+        $this->session->setFlashdata('filter_datatable', $this->request->getPost('drugname'));
         //Filter after saving
-        redirect('settings_management');
+        return redirect()->to(base_url() . '/public/settings_management');
     }
 
     //}
 
     public function edit() {
-        $drugcode_id = $this->input->post('drugcode_id');
+        $drugcode_id = $this->request->getPost('drugcode_id');
         $data['generic_names'] = Generic_Name::getAllActive();
         $data['drug_units'] = Drug_Unit::getThemAll();
         $data['doses'] = Dose::getAllActive();
@@ -184,83 +193,84 @@ class Drugcode_management extends \App\Controllers\BaseController {
         $tb_drug = "0";
         $drug_in_use = "0";
         $supplied = 0;
-        if ($this->input->post('none_arv') == "on") {
+        if ($this->request->getPost('none_arv') == "on") {
             $non_arv = "1";
         }
-        if ($this->input->post('tb_drug') == "on") {
+        if ($this->request->getPost('tb_drug') == "on") {
 
             $tb_drug = "1";
         }
-        if ($this->input->post('drug_in_use') == "on") {
+        if ($this->request->getPost('drug_in_use') == "on") {
             $drug_in_use = "1";
         }
 
-        $source_id = $this->input->post('drugcode_id');
+        $source_id = $this->request->getPost('drugcode_id');
         //get drug instructions
-        $instructions = $this->input->post('instructions_holder', TRUE);
+        $instructions = $this->request->getPost('instructions_holder', TRUE);
         if ($instructions == null) {
             $instructions = "";
         }
 
-        $data = array('Drug' => $this->input->post('drugname'), 'Unit' => $this->input->post('drugunit'), 'Pack_Size' => $this->input->post('packsize'), 'Safety_Quantity' => $this->input->post('safety_quantity'), 'Generic_Name' => $this->input->post('genericname'), 'Supported_By' => $this->input->post('supplied_by'), 'classification' => $this->input->post('classification'), 'none_arv' => $non_arv, 'tb_drug' => $tb_drug, 'Drug_In_Use' => $drug_in_use, 'Comment' => $this->input->post('comments'), 'Dose' => $this->input->post('dose_frequency'), 'Duration' => $this->input->post('duration'), 'Quantity' => $this->input->post('quantity'), 'Strength' => $this->input->post('dose_strength'), 'map' => $this->input->post('drug_mapping'), 'instructions' => $instructions);
+        $data = array('Drug' => $this->request->getPost('drugname'), 'Unit' => $this->request->getPost('drugunit'), 'Pack_Size' => $this->request->getPost('packsize'), 'Safety_Quantity' => $this->request->getPost('safety_quantity'), 'Generic_Name' => $this->request->getPost('genericname'), 'Supported_By' => $this->request->getPost('supplied_by'), 'classification' => $this->request->getPost('classification'), 'none_arv' => $non_arv, 'tb_drug' => $tb_drug, 'Drug_In_Use' => $drug_in_use, 'Comment' => $this->request->getPost('comments'), 'Dose' => $this->request->getPost('dose_frequency'), 'Duration' => $this->request->getPost('duration'), 'Quantity' => $this->request->getPost('quantity'), 'Strength' => $this->request->getPost('dose_strength'), 'map' => $this->request->getPost('drug_mapping'), 'instructions' => $instructions);
 
-        $this->db->where('id', $source_id);
-        $this->db->update('drugcode', $data);
-        //$this -> session -> set_userdata('message_counter', '1');
-        $this->session->set_userdata('msg_success', $this->input->post('drugname') . ' was Updated');
-        $this->session->set_flashdata('filter_datatable', $this->input->post('drugname'));
+        $builder = $this->db->table('drugcode');
+        $builder->where('id', $source_id);
+        $builder->update($data);
+        //$this -> session -> set('message_counter', '1');
+        $this->session->set('msg_success', $this->request->getPost('drugname') . ' was Updated');
+        $this->session->setFlashdata('filter_datatable', $this->request->getPost('drugname'));
         //Filter after saving
-        redirect('settings_management');
+        return redirect()->to(base_url() . '/public/settings_management');
     }
 
-    public function enable($drugcode_id) {
+    public function enable($drugcode_id = '') {
 
-        if ($this->input->post('multiple')) {
+        if ($this->request->getPost('multiple')) {
             //Handle the array with all drugcodes that are to be merged
-            $drugcodes = $this->input->post('drug_codes');
+            $drugcodes = $this->request->getPost('drug_codes');
             $drugcodes_to_disable = implode(",", $drugcodes);
             $the_query = "UPDATE drugcode SET enabled='1' WHERE id IN($drugcodes_to_disable);";
             if ($this->db->query($the_query)) {
-                $this->session->set_userdata('msg_success', 'The selected drugs were successfully enabled!');
+                $this->session->set('msg_success', 'The selected drugs were successfully enabled!');
             } else {
-                $this->session->set_userdata('msg_error', 'One or more of the selected drugs were not enabled!');
+                $this->session->set('msg_error', 'One or more of the selected drugs were not enabled!');
             }
         } else {
             $query = $this->db->query("UPDATE drugcode SET Enabled='1'WHERE id='$drugcode_id'");
             $results = Drugcode::getDrugCode($drugcode_id);
-            //$this -> session -> set_userdata('message_counter', '1');
-            $this->session->set_userdata('msg_success', $results['Drug'] . ' was enabled!');
-            $this->session->set_flashdata('filter_datatable', $results['Drug']);
+            //$this -> session -> set('message_counter', '1');
+            $this->session->set('msg_success', $results->drug . ' was enabled!');
+            $this->session->setFlashdata('filter_datatable', $results->drug);
             //Filter
-            redirect('settings_management');
+            return redirect()->to(base_url() . '/public/settings_management');
         }
     }
 
-    public function disable($drugcode_id) {
-        if ($this->input->post('multiple')) {
+    public function disable($drugcode_id = '') {
+        if ($this->request->getPost('multiple')) {
             //Handle the array with all drugcodes that are to be merged
-            $drugcodes = $this->input->post('drug_codes');
+            $drugcodes = $this->request->getPost('drug_codes');
             $drugcodes_to_disable = implode(",", $drugcodes);
             $the_query = "UPDATE drugcode SET enabled='0' WHERE id IN($drugcodes_to_disable);";
             if ($this->db->query($the_query)) {
-                $this->session->set_userdata('msg_success', 'The selected drugs were successfully disabled!');
+                $this->session->set('msg_success', 'The selected drugs were successfully disabled!');
             } else {
-                $this->session->set_userdata('msg_error', 'One or more of the selected drugs were not disabled!');
+                $this->session->set('msg_error', 'One or more of the selected drugs were not disabled!');
             }
         } else {
             $query = $this->db->query("UPDATE drugcode SET Enabled='0'WHERE id='$drugcode_id'");
             $results = Drugcode::getDrugCode($drugcode_id);
-            $this->session->set_userdata('message_counter', '2');
-            $this->session->set_userdata('msg_success', $results['Drug'] . ' was disabled!');
-            $this->session->set_flashdata('filter_datatable', $results['Drug']);
+            $this->session->set('message_counter', '2');
+            $this->session->set('msg_success', $results->drug . ' was disabled!');
+            $this->session->setFlashdata('filter_datatable', $results->drug);
             //Filter
-            redirect('settings_management');
+            return redirect()->to(base_url() . '/public/settings_management');
         }
     }
 
     public function merge($primary_drugcode_id) {
         //Handle the array with all drugcodes that are to be merged
-        $drugcodes = $this->input->post('drug_codes');
+        $drugcodes = $this->request->getPost('drug_codes');
         $drugcodes = array_diff($drugcodes, array($primary_drugcode_id));
         $drugcodes_to_remove = implode(",", $drugcodes);
 
@@ -277,12 +287,12 @@ class Drugcode_management extends \App\Controllers\BaseController {
         $the_query = "UPDATE regimen_drug SET merged_from=drugcode,drugcode='$primary_drugcode_id' WHERE drugcode IN($drugcodes_to_remove);";
         $this->db->query($the_query);
         $results = Drugcode::getDrugCode($primary_drugcode_id);
-        $this->session->set_userdata('message_counter', '1');
-        $this->session->set_userdata('msg_success', $results->Drug . ' was Merged!');
+        $this->session->set('message_counter', '1');
+        $this->session->set('msg_success', $results->drug . ' was Merged!');
     }
 
     public function unmerge($drugcode) {
-        $this->load->database();
+        //$this->load->database();
         //First Query that umerges the drug_code
         $the_query = "UPDATE drugcode SET merged_to='' WHERE id='$drugcode';";
         $this->db->query($the_query);
@@ -297,9 +307,9 @@ class Drugcode_management extends \App\Controllers\BaseController {
         $this->db->query($the_query);
 
         $results = Drugcode::getDrugCode($drugcode);
-        $this->session->set_userdata('message_counter', '1');
-        $this->session->set_userdata('msg_error', $results->Drug . ' was unmerged!');
-        redirect('settings_management');
+        $this->session->set('message_counter', '1');
+        $this->session->set('msg_error', $results->drug . ' was unmerged!');
+        return redirect()->to(base_url() . '/public/settings_management');
     }
 
     private function _submit_validate() {
@@ -320,7 +330,7 @@ class Drugcode_management extends \App\Controllers\BaseController {
                                        AND (s.category_id='1' or s.category_id='2' or s.category_id='3' or s.category_id='4')
                                        AND s.active = '1'
                                        ORDER BY name asc");
-        $data['sync_drugs'] = $query->result_array();
+        $data['sync_drugs'] = $query->getResultArray();
         if ($param == 1) {
             echo json_encode($data['sync_drugs']);
             die();
@@ -331,11 +341,11 @@ class Drugcode_management extends \App\Controllers\BaseController {
     }
 
     public function updateBulkMapping() {
-        $drug_id = $this->input->post("drug_id");
-        $map_id = $this->input->post("map_id");
+        $drug_id = $this->request->getPost("drug_id");
+        $map_id = $this->request->getPost("map_id");
 
         $query = $this->db->query("UPDATE drugcode SET map = '$map_id' WHERE id = '$drug_id'");
-        $aff = $this->db->affected_rows();
+        $aff = $this->db->affectedRows();
         echo $aff;
     }
 

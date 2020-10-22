@@ -597,7 +597,7 @@ class Auto_management extends \App\Controllers\BaseController {
 
             //Get migration files
             foreach ($files as $file_name) {
-               // echo $file_name;
+                // echo $file_name;
                 $error_status = 0;
                 $ext = pathinfo($file_name, PATHINFO_EXTENSION);
                 if ($file_name != '.' && $file_name != '..' && in_array($ext, $accepted_files) && !in_array($file_name, $migrations)) {
@@ -609,6 +609,9 @@ class Auto_management extends \App\Controllers\BaseController {
                     foreach ($statements as $statement) {
                         $statement = trim($statement);
                         if ($statement) {
+                            //dd($statements);
+                            $db = \Config\Database::connect();
+                            $db->DBDebug = false;
                             if (!$this->db->query($statement)) {
                                 $error_code = $this->db->getErrorCode();
                                 $error_status = 1;
@@ -622,7 +625,8 @@ class Auto_management extends \App\Controllers\BaseController {
                         $data = array(
                             'migration' => $file_name
                         );
-                        $this->db->insert('migrations', $data);
+                        $db = \Config\Database::connect();
+                        $db->insertID('migrations', $data);
                     }
                 }
             }
@@ -636,12 +640,12 @@ class Auto_management extends \App\Controllers\BaseController {
 
         if ($autobackup == 1) {
             // check if auto backup is set
-            $backup_result = file_get_contents(base_url() . 'tools/backup/run_backup');
+            $backup_result = file_get_contents(base_url() . '/public/run_backup');
             if (strpos($backup_result, 'Error') !== false) {
                 $returnable .= 'Backup:Failed, Upload:Failed';
             } else {
 
-                $upload_result = file_get_contents(base_url() . 'tools/backup/upload_backup/' . str_replace(" ", "", explode('-', $backup_result)[1]));
+                $upload_result = file_get_contents(base_url() . '/public/upload_backup/' . str_replace(" ", "", explode('-', $backup_result)[1]));
                 $returnable .= 'Backup:Success, ';
                 $returnable .= $upload_result . '<br />';
             }

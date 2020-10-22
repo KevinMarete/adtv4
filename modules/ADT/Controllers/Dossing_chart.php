@@ -11,6 +11,7 @@ class Dossing_chart extends \App\Controllers\BaseController {
 
     var $db;
     var $table;
+    var $session;
 
     function __construct() {
         session()->set("link_id", "index");
@@ -18,6 +19,7 @@ class Dossing_chart extends \App\Controllers\BaseController {
         session()->set("linkTitle", "Pediatrics Dossing Chart");
         $this->db = \Config\Database::connect();
         $this->table = new \CodeIgniter\View\Table();
+        $this->session = \Config\Services::session();
         ini_set("max_execution_time", "1000000");
     }
 
@@ -51,9 +53,9 @@ class Dossing_chart extends \App\Controllers\BaseController {
 
                 if ($classification['is_active'] == 1) {
                     $links .= " | ";
-                    $links .= anchor('dossing_chart/disable/' . $classification['id'], 'Disable', array('class' => 'disable_user'));
+                    $links .= anchor(base_url().'/public/dossing_chart/disable/' . $classification['id'], 'Disable', array('class' => 'disable_user'));
                 } else {
-                    $links .= anchor('dossing_chart/enable/' . $classification['id'], 'Enable', array('class' => 'enable_user'));
+                    $links .= anchor(base_url().'/public/dossing_chart/enable/' . $classification['id'], 'Enable', array('class' => 'enable_user'));
                 }
             }
 
@@ -82,7 +84,7 @@ class Dossing_chart extends \App\Controllers\BaseController {
 			  AND rd.active = '1'
 			  GROUP BY d.id";
         $query = $this->db->query($sql);
-        $data = $query->result_array();
+        $data = $query->getResultArray();
         echo json_encode($data);
     }
 
@@ -92,57 +94,59 @@ class Dossing_chart extends \App\Controllers\BaseController {
 			  from dose
 			  where Active = '1'";
         $query = $this->db->query($sql);
-        $data = $query->result_array();
+        $data = $query->getResultArray();
         echo json_encode($data);
     }
 
     //save dossing infotmation to dossing chart database 
     public function save() {
         //call validation function
-        $valid = $this->_submit_validate();
+        //$valid = $this->_submit_validate();
+        $valid = true;
         if ($valid == false) {
             $data['settings_view'] = "dossing_chart_v";
             $this->base_params($data);
         } else {
-            $drugs = $this->input->post("drug");
+            $drugs = $this->request->getPost("drug");
             foreach ($drugs as $drug) {
                 $data = array(
-                    'min_weight' => $this->input->post("min_weight"),
-                    'max_weight' => $this->input->post("max_weight"),
+                    'min_weight' => $this->request->getPost("min_weight"),
+                    'max_weight' => $this->request->getPost("max_weight"),
                     'drug_id' => $drug,
-                    'dose_id' => $this->input->post("dose")
+                    'dose_id' => $this->request->getPost("dose")
                 );
-                $result = $this->db->insert('dossing_chart', $data);
+                $builder = $this->db->table('dossing_chart');
+                $result = $builder->insert($data);
             }
             if ($result) {
-                $this->session->set_userdata('msg_success', ' Item was Added');
+                $this->session->set('msg_success', ' Item was Added');
             } else {
-                $this->session->set_userdata('msg_success', ' Item was not Added');
+                $this->session->set('msg_success', ' Item was not Added');
             }
 
-            redirect("settings_management");
+          return redirect()->to(base_url() . '/public/settings_management');
         }
     }
 
     //function to get data for edit view
     public function edit() {
-        $id = $this->input->post('id');
+        $id = $this->request->getPost('id');
         $sql = "select d.id,min_weight,max_weight,do.Name,dc.drug from dossing_chart d
 			  inner join drugcode dc on dc.id=d.drug_id
 			  inner join dose do on do.id=d.dose_id
 			  where d.id='$id'";
         $query = $this->db->query($sql);
-        $data = $query->result_array();
+        $data = $query->getResultArray();
         echo json_encode($data);
     }
 
     //update records
     public function update() {
-        $id = $this->input->post('idno');
-        $min_weight = $this->input->post('min_weights');
-        $max_weight = $this->input->post('max_weights');
-        $drug_id = $this->input->post('drugs');
-        $dose_id = $this->input->post('doses');
+        $id = $this->request->getPost('idno');
+        $min_weight = $this->request->getPost('min_weights');
+        $max_weight = $this->request->getPost('max_weights');
+        $drug_id = $this->request->getPost('drugs');
+        $dose_id = $this->request->getPost('doses');
         $query = $this->db->query("UPDATE dossing_chart SET 
 									    min_weight='$min_weight',
 									    max_weight='$max_weight',
@@ -150,23 +154,23 @@ class Dossing_chart extends \App\Controllers\BaseController {
 									    dose_id='$dose_id'
 									    WHERE id='$id'");
 
-        $this->session->set_userdata('msg_success', 'Update Was Successfull');
+        $this->session->set('msg_success', 'Update Was Successfull');
         //Filter datatable
-        redirect("settings_management");
+      return redirect()->to(base_url() . '/public/settings_management');
     }
 
     public function enable($classification_id) {
         $query = $this->db->query("UPDATE dossing_chart SET is_active='1' WHERE id='$classification_id'");
-        $this->session->set_userdata('msg_success', 'Item was enabled');
+        $this->session->set('msg_success', 'Item was enabled');
         //Filter datatable
-        redirect("settings_management");
+      return redirect()->to(base_url() . '/public/settings_management');
     }
 
     public function disable($classification_id) {
         $query = $this->db->query("UPDATE dossing_chart SET is_active='0' WHERE id='$classification_id'");
-        $this->session->set_userdata('msg_error', 'Item was disabled');
+        $this->session->set('msg_error', 'Item was disabled');
         //Filter datatable
-        redirect("settings_management");
+      return redirect()->to(base_url() . '/public/settings_management');
     }
 
     private function _submit_validate() {
@@ -178,7 +182,7 @@ class Dossing_chart extends \App\Controllers\BaseController {
     }
 
     public function base_params($data) {
-       echo view('\Modules\ADT\Views\\dossing_chart_v', $data);
+        echo view('\Modules\ADT\Views\\dossing_chart_v', $data);
     }
 
 }

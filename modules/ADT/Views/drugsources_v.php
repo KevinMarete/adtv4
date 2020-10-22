@@ -13,6 +13,7 @@
 </style>
 <script type="text/javascript">
     $(document).ready(function () {
+        base_url = "<?php echo base_url() ?>'/public/";
         /*Prevent Double Click*/
         $('input_form').submit(function () {
             $(this).find(':submit').attr('disabled', 'disabled');
@@ -89,7 +90,7 @@
     <div id="client_form" title="New Drug Source" class="modal hide fade cyan" tabindex="-1" role="dialog" aria-labelledby="NewDrug" aria-hidden="true">
         <?php
         $attributes = array('class' => 'input_form');
-        echo form_open('drugsource_management/save', $attributes);
+        echo form_open(base_url() . '/public/drugsource_management/save', $attributes);
         //echo validation_errors('<p class="error">', '</p>');
         ?>
         <div class="modal-header">
@@ -112,7 +113,7 @@
     <div id="edit_form" title="Edit Drug Source" class="modal hide fade cyan" tabindex="-1" role="dialog" aria-labelledby="NewDrug" aria-hidden="true">
         <?php
         $attributes = array('class' => 'input_form');
-        echo form_open('drugsource_management/update', $attributes);
+        echo form_open(base_url() . '/public/drugsource_management/update', $attributes);
         //echo validation_errors('<p class="error">', '</p>');
         ?>
         <div class="modal-header">

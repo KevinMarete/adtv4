@@ -156,8 +156,8 @@ if ($user_is_pharmacist || $user_is_facility_administrator) {
 }
 if ($user_is_administrator) {
     ?>
-                    $('#span1').load('<?php echo base_url() . 'admin_management/inactive_users'; ?>');
-                    $('#span2').load('<?php echo base_url() . 'admin_management/online_users'; ?>');
+                    $('#span1').load('<?php echo base_url() . '/public/admin_management/inactive_users'; ?>');
+                    $('#span2').load('<?php echo base_url() . '/public/admin_management/online_users'; ?>');
     <?php
 }
 ?>
@@ -339,6 +339,7 @@ if ($user_is_administrator) {
                 font-weight:bold;
                 }
             </style>
+
             <script type="text/javascript">
             $(document).ready(function () {
                 $("select,input").css("font-weight", "bold");
@@ -397,6 +398,7 @@ if ($user_is_administrator) {
                 }, 6000)
 
             </script>
+        
             <div id="msg_user_update"><?php echo $session->get("message_user_update_success"); ?></div>
             <?php
             session()->desroy('message_user_update_success');
@@ -434,7 +436,7 @@ if ($user_is_administrator) {
                                         <li><a href="<?php echo base_url() . '/public/pqmp/' ?>"><i class="icon-flag"></i>Pharmacovigilance</a></li>
 
                                         <li>
-                                            <a href="<?php echo base_url() . 'home_controller/get_faq'; ?>" target="_blank"><i class="icon-question-sign"></i>FAQ</a>
+                                            <a href="<?php echo base_url() . '/public/get_faq'; ?>" target="_blank"><i class="icon-question-sign"></i>FAQ</a>
                                         </li>
                                         <?php
                                     } else {//If no Extra pharmacies, load main store and Main Pharmacy Only
@@ -446,8 +448,8 @@ if ($user_is_administrator) {
                                     ?>
 
                                     <li class="divider"></li>
-                                    <li><a href="<?php echo base_url() . 'facilitydashboard_management/getPatientMasterList' ?>"  id="ReportGenerator"> <i class="icon-book"></i>Patient Master list</a></li>           
-                                    <li><a href="<?php echo base_url() . 'assets/manuals/user_manual.pdf' ?>" target="_blank"><i class="icon-book"></i>User Manual</a></li> 
+                                    <li><a href="<?php echo base_url() . '/public/getPatientMasterList' ?>"  id="ReportGenerator"> <i class="icon-book"></i>Patient Master list</a></li>           
+                                    <li><a href="<?php echo base_url() . '/public/assets/manuals/user_manual.pdf' ?>" target="_blank"><i class="icon-book"></i>User Manual</a></li> 
 
 
                                     <?php

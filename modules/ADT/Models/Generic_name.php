@@ -8,9 +8,9 @@ use Illuminate\Database\Capsule\Manager as DB;
 class Generic_name extends BaseModel {
 
     protected $table = 'generic_name';
-    protected $fillable = array('name', 'active');
+    protected $fillable = array('Name', 'Active');
 
-    public function getAll() {
+    public static function getAll() {
         return DB::table("generic_name")->where("active", "1")->get();
     }
 
@@ -31,7 +31,7 @@ class Generic_name extends BaseModel {
         return DB::table("generic_name")->where("name", $name)->get()[0];
     }
 
-    public function getAllActive() {
+    public static function getAllActive() {
         return BaseModel::resultSet(DB::table("generic_name")->where("active", "1")->get());
     }
 

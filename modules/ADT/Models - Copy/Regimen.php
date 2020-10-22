@@ -84,9 +84,8 @@ class Regimen extends BaseModel {
     }
 
     public static function getRegimen($id) {
-        $query = Doctrine_Query::create()->select("*")->from("Regimen")->where("id = '$id'");
-        $regimens = $query->execute();
-        return $regimens[0];
+        $query = DB::table('Regimen')->where("*")->where('id', $id)->get();
+        return $query[0];
     }
 
     public static function getHydratedRegimen($id) {

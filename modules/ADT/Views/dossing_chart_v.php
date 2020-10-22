@@ -1,6 +1,7 @@
 <script>
 //load pediatric drugs and dose when the add button is clicked 
     $(document).ready(function () {
+        base_url = "<?php echo base_url() . '/public/'; ?>"
         /*Prevent Double Click*/
         $('input_form').submit(function () {
             $(this).find(':submit').attr('disabled', 'disabled');
@@ -11,7 +12,7 @@
 
         //GET DRUGS
         var request = $.ajax({
-            url: "dossing_chart_drugs/get_drugs",
+            url: base_url + "dossing_chart_drugs/get_drugs",
             type: 'POST',
             dataType: "json",
             success: function (datas) {
@@ -28,7 +29,7 @@
         });
         //GET DOSE
         var request = $.ajax({
-            url: "dossing_chart_dose/get_dose",
+            url: base_url + "dossing_chart_dose/get_dose",
             type: 'POST',
             dataType: "json",
             success: function (datas) {
@@ -50,7 +51,7 @@
             var id = this.id;
 
             var request = $.ajax({
-                url: "dossing_chart/edit",
+                url: base_url + "dossing_chart/edit",
                 type: 'POST',
                 data: {"id": id},
                 dataType: "json",
@@ -72,6 +73,7 @@
                                 value: id,
                                 text: drug
                             }));
+                    $('#drugs').trigger('change.select2');
                     //GET OTHER DRUGS
                     var request = $.ajax({
                         url: "dossing_chart_drugs/get_drugs",
@@ -99,7 +101,7 @@
                             }));
                     //GET OTHER DOSES
                     var request1 = $.ajax({
-                        url: "dossing_chart_dose/get_dose",
+                        url: base_url + "dossing_chart_dose/get_dose",
                         type: 'POST',
                         dataType: "json",
                         success: function (datas) {
@@ -126,7 +128,7 @@
     });
 
 </script>
-<?php helper('form');?>
+<?php helper('form'); ?>
 <style type="text/css">
 
     .enable_user{
@@ -177,7 +179,7 @@
     <div id="client_form1" title="New Dossing Chart" class="modal hide fade cyan" tabindex="-1" role="dialog" aria-labelledby="label" aria-hidden="true">
         <?php
         $attributes = array('class' => 'input_form');
-        echo form_open('dossing_chart/save', $attributes);
+        echo form_open(base_url() . '/public/dossing_chart/save', $attributes);
         ?>
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -212,7 +214,7 @@
     <div id="edit_form" title="Edit Drug Classification" class="modal hide fade cyan" tabindex="-1" role="dialog" aria-labelledby="label" aria-hidden="true">
         <?php
         $attributes = array('class' => 'input_form');
-        echo form_open('dossing_chart/update', $attributes);
+        echo form_open(base_url() . '/public/dossing_chart/update', $attributes);
         ?>
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>

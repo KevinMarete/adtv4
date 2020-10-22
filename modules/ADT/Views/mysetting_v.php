@@ -12,6 +12,7 @@
     }
 
 </style>
+
 <script type="text/javascript">
     $(document).ready(function () {
         $(".setting_table").find("tr :first").css("min-width", "300px");
@@ -83,7 +84,7 @@
     <div id="client_form" title="New Drug Source" class="modal hide fade cyan" tabindex="-1" role="dialog" aria-labelledby="NewDrug" aria-hidden="true">
         <?php
         $attributes = array('class' => 'input_form');
-        echo form_open('settings/save/' . $table, $attributes);
+        echo form_open(base_url() . '/public/settings/save/' . $table, $attributes);
         //echo validation_errors('<p class="error">', '</p>');
         ?>
         <div class="modal-header">
@@ -128,7 +129,7 @@
     <div id="edit_form" title="Edit Drug Source" class="modal hide fade cyan" tabindex="-1" role="dialog" aria-labelledby="NewDrug" aria-hidden="true">
         <?php
         $attributes = array('class' => 'input_form');
-        echo form_open('settings/update/' . $table, $attributes);
+        echo form_open(base_url() . '/public/settings/update/' . $table, $attributes);
         //echo validation_errors('<p class="error">', '</p>');
         ?>
         <div class="modal-header">

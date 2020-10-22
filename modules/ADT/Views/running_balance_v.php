@@ -69,7 +69,7 @@
     function getRunningBalance(drugs, total, counter) {
         var drug = drugs[counter];
         var count = counter + 1;
-        link = '<?php echo base_url(); ?>drug_stock_balance_sync/getRunningBalance';
+        link = '<?php echo base_url(); ?>/public/drug_stock_balance_sync/getRunningBalance';
         $.ajax({
             url: link,
             type: 'post',

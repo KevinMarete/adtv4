@@ -5,12 +5,12 @@ namespace Modules\ADT\Models;
 use App\Models\BaseModel;
 use Illuminate\Database\Capsule\Manager as DB;
 
-class VisitPurpose extends BaseModel {
+class Visit_purpose extends BaseModel {
 
     protected $table = 'visit_purpose';
     protected $fillable = array('Name', 'Active');
 
-    public static function getAll($service = 'null') {
+    public function getAll($service = 'null') {
         $query = DB::table('Visit_Purpose')->where("Active", "1")->get()->toArray();
         if ($service == 'prep') {
             $prep_purposes = [];
@@ -24,12 +24,12 @@ class VisitPurpose extends BaseModel {
         return $purposes;
     }
 
-    public static function getActive() {
+    public function getActive() {
         $query = DB::table('Visit_Purpose')->where("Active", "1")->get()->toArray();
         return $query;
     }
 
-    public static function getFiltered($enrollment_check, $start_art_check) {
+    public function getFiltered($enrollment_check, $start_art_check) {
         $filter = "";
         if ($enrollment_check == 1) {
             $filter .= " AND Name NOT LIKE '%enroll%'";
@@ -42,25 +42,25 @@ class VisitPurpose extends BaseModel {
         return $query;
     }
 
-    public static function getThemAll() {
+    public function getThemAll() {
         $query = DB::table('Visit_Purpose')->orderBy("Name", "asc")->get();
         return $query;
     }
 
-    public static function getTotalNumber() {
+    public function getTotalNumber() {
         $query = DB::select(" SELECT count(*) as Total_Purposes FROM Visit_Purpose");
         return $query[0]->Total_Purposes;
     }
 
-    public static function getPagedPurposes($offset, $items) {
+    public function getPagedPurposes($offset, $items) {
         $query = Doctrine_Query::create()->select("Name")->from("Visit_Purpose")->offset($offset)->limit($items);
         $purposes = $query->execute();
         return $purposes;
     }
 
-    public static  function getSource($id) {
+    public static function getSource($id) {
         $query = DB::table('Visit_Purpose')->where("id", $id)->get();
-        return $query[0];
+        return $ois[0];
     }
 
 }

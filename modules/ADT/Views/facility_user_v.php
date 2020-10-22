@@ -51,7 +51,7 @@ foreach ($facilities as $facility) {
         $("#district").attr("value", "<?php echo @$facility['district']; ?>");
         $("#central_site").attr("value", "<?php echo @$facility['parent']; ?>");
         $("#county").attr("value", "<?php echo @$facility['county']; ?>");
-        $("#sms_map").val("<?php echo $facility['map']; ?>");
+        $("#sms_map").val("<?php echo @$facility['map']; ?>");
         $("#autobackup").val("<?php echo $facility['autobackup']; ?>");
         $("#pill_count").val("<?php echo $facility['pill_count']; ?>");
         $("#medical_number").val("<?php echo $facility['medical_number']; ?>");
@@ -77,7 +77,7 @@ foreach ($facilities as $facility) {
 
                 <?php
                 $attributes = array('class' => 'input_form');
-                echo form_open('facility_management/update', $attributes);
+                echo form_open(base_url() . '/public/facility_management/update', $attributes);
                 // echo validation_errors('<p class="error">', '</p>');
                 ?>
                 <div id="facility_form" title="Facility Information" style="zoom:0.8">
@@ -217,10 +217,10 @@ foreach ($facilities as $facility) {
                                         
                         <?php foreach ($supporter as $support) {
                             ?>
-                                                                        <label class="radio">
-                                                                                <input type="radio" name="supported_by" value="<?php echo $support->id ?>" id="<?php echo $support->id ?>" <?php if ($supported_by == $support->id) { ?> checked="checked"<?php } ?>>
+                                                                            <label class="radio">
+                                                                                    <input type="radio" name="supported_by" value="<?php echo $support->id ?>" id="<?php echo $support->id ?>" <?php if ($supported_by == $support->id) { ?> checked="checked"<?php } ?>>
                             <?php echo $support->Name ?> Sponsorship
-                                                                          </label> 
+                                                                              </label> 
                             <?php
                         }
                         ?>

@@ -41,12 +41,12 @@ class User extends BaseModel {
         return $query;
     }
 
-    public function getThem() {
+    public static function getThem() {
         $query = DB::select("SELECT u.id, u.name, u.username, u.email_address, u.phone_number, a.level_name, u2.name AS u2name, u.active AS uactive FROM users u LEFT JOIN access_level a ON u.access_level = a.id LEFT JOIN users u2 ON u.created_by = u2.id WHERE  a.level_name != 'Pharmacist'");
-        echo $query;
+       return BaseModel::resultSet($query);
     }
 
-    public function getInactive($facility_code) {
+    public static function getInactive($facility_code) {
         $query = DB::select("SELECT u.id, u.name, u.username, u.email_address, u.phone_number, a.level_name, u2.name AS u2name, u.active AS uactive FROM users u LEFT JOIN access_level a ON u.access_level = a.id LEFT JOIN users u2 ON u.created_by = u2.id WHERE  a.level_name !='Pharmacist' and facility_fode=" . $facility_code . " and u.active='0'");
         return $query;
     }

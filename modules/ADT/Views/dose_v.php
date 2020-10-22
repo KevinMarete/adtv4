@@ -15,6 +15,7 @@
 </style>
 <script type="text/javascript">
     $(document).ready(function () {
+        base_url = "<?php echo base_url(); ?>/" + "public/"
         /*Prevent Double Click*/
         $('input_form').submit(function () {
             $(this).find(':submit').attr('disabled', 'disabled');
@@ -63,7 +64,7 @@
             event.preventDefault();
             var id = this.id;
             var request = $.ajax({
-                url: "dose_management/edit",
+                url: base_url + "dose_management/edit",
                 type: 'POST',
                 data: {"id": id},
                 dataType: "json"
@@ -77,8 +78,8 @@
                                 if (msg[key].hasOwnProperty(y)) {
                                     $('#edit_dose_id').val(msg[key][y].id);
                                     $('#edit_dose_name').val(msg[key][y].Name);
-                                    $('#edit_dose_value').val(msg[key][y].Value);
-                                    $('#edit_dose_frequency').val(msg[key][y].Frequency);
+                                    $('#edit_dose_value').val(msg[key][y].value);
+                                    $('#edit_dose_frequency').val(msg[key][y].frequency);
                                 }
                             }
                             //$("#edit_form").dialog("open");
@@ -92,6 +93,12 @@
     });
 
 </script>
+<style>
+    .setting_table td:nth-child(1) { display: none;}
+    .setting_table th:nth-child(1) { display: none;}
+    .setting_table td:nth-child(2) { width: 400px;}
+    .setting_table th:nth-child(2) { width: 400px;}
+</style>
 <?php helper('form'); ?>
 
 <div id="view_content">
@@ -113,7 +120,7 @@
     <div id="client_form" title="New Drug Dose" class="modal hide fade cyan" tabindex="-1" role="dialog" aria-labelledby="NewDrug" aria-hidden="true">
         <?php
         $attributes = array('class' => 'input_form');
-        echo form_open('dose_management/save', $attributes);
+        echo form_open(base_url().'/public/dose_management/save', $attributes);
         //echo validation_errors('<p class="error">', '</p>');
         ?>
         <div class="modal-header">
@@ -160,7 +167,7 @@
     <div id="edit_dose" title="Edit Drug Dose" class="modal hide fade cyan" tabindex="-1" role="dialog" aria-labelledby="NewDrug" aria-hidden="true">
         <?php
         $attributes = array('class' => 'input_form');
-        echo form_open('dose_management/update', $attributes);
+        echo form_open(base_url().'/public/dose_management/update', $attributes);
         //echo validation_errors('<p class="error">', '</p>');
         ?>
         <div class="modal-header">

@@ -26,9 +26,8 @@ class Drug_classification extends BaseModel {
     }
 
     public static function getClassification($id) {
-        $query = Doctrine_Query::create()->select("*")->from("drug_classification")->where("id = '$id'");
-        $drugcodes = $query->execute();
-        return $drugcodes[0];
+        $query = DB::table('drug_classification')->where('id', $id)->get();
+        return $query[0];
     }
 
     public function getAllActive() {

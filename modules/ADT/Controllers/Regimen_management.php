@@ -78,22 +78,22 @@ class Regimen_management extends \App\Controllers\BaseController {
 
             if ($regimen['Enabled'] == 1 && @$regimen['Merged_To']) {
                 $links .= " | ";
-                $links .= anchor('regimen_management/disable/' . $regimen['id'], 'Disable', array('class' => 'disable_user actual'));
+                $links .= anchor(base_url() . '/public/regimen_management/disable/' . $regimen['id'], 'Disable', array('class' => 'disable_user actual'));
             }
 
             if ($regimen['Enabled'] == 1 && @$regimen['Merged_To'] == "" && $access_level == "facility_administrator") {
                 $links .= " | ";
-                $links .= anchor('regimen_management/disable/' . $regimen['id'], 'Disable', array('class' => 'disable_user actual'));
+                $links .= anchor(base_url() . '/public/regimen_management/disable/' . $regimen['id'], 'Disable', array('class' => 'disable_user actual'));
                 $links .= " | ";
                 $links .= "<a href='#' class='merge_drug' id='$drug'>Merge</a>";
             }
             if ($regimen['Enabled'] == 0 && $access_level == "facility_administrator") {
-                $links .= anchor('regimen_management/enable/' . $regimen['id'], 'Enable', array('class' => 'enable_user actual'));
+                $links .= anchor(base_url() . '/public/regimen_management/enable/' . $regimen['id'], 'Enable', array('class' => 'enable_user actual'));
             }
             if ($regimen['Merged_To'] != '') {
                 if ($access_level == "facility_administrator") {
                     $links .= " | ";
-                    $links .= anchor('regimen_management/unmerge/' . $regimen['id'], 'Unmerge', array('class' => 'unmerge_drug'));
+                    $links .= anchor(base_url() . '/public/regimen_management/unmerge/' . $regimen['id'], 'Unmerge', array('class' => 'unmerge_drug'));
                 }
                 $checkbox = "<input type='checkbox' name='drugcodes' id='drugcodes' class='drugcodes' value='$drug' disabled/>";
             } else {
@@ -140,15 +140,16 @@ class Regimen_management extends \App\Controllers\BaseController {
     }
 
     public function save() {
-        $regimencode = $this->input->post('regimen_code');
+        $regimencode = $this->request->getPost('regimen_code');
         // if (!strripos($regimencode, "X")){
         // check for duplicate code before 
         $query = $this->db->query("SELECT * FROM regimen WHERE regimen_code = '$regimencode'");
-        if (count($query->result()) > 0) {
+
+        if (count($query->getResult()) > 0) {
 
             session()->set('msg_error', 'Regimen Code already exists!');
-            $this->session->set_flashdata('filter_datatable', $results->Regimen_Code);
-            redirect('settings_management');
+            $this->session->setFlashdata('filter_datatable', $query->getResult()[0]->regimen_code);
+            return redirect(base_url() . '/public/settings_management');
         } else {
 
 
@@ -158,54 +159,54 @@ class Regimen_management extends \App\Controllers\BaseController {
                 $source = session()->get('facility');
             }
             $regimen = new Regimen();
-            $regimen->Regimen_Code = $this->input->post('regimen_code');
-            $regimen->Regimen_Desc = $this->input->post('regimen_desc');
-            $regimen->Category = $this->input->post('category');
-            $regimen->Line = $this->input->post('line');
-            $regimen->Type_Of_Service = $this->input->post('type_of_service');
-            $regimen->Remarks = $this->input->post('remarks');
+            $regimen->Regimen_Code = $this->request->getPost('regimen_code');
+            $regimen->Regimen_Desc = $this->request->getPost('regimen_desc');
+            $regimen->Category = $this->request->getPost('category');
+            $regimen->Line = $this->request->getPost('line');
+            $regimen->Type_Of_Service = $this->request->getPost('type_of_service');
+            $regimen->Remarks = $this->request->getPost('remarks');
             $regimen->Enabled = "1";
             $regimen->Source = $source;
-            $regimen->map = $this->input->post('regimen_mapping');
+            $regimen->map = $this->request->getPost('regimen_mapping');
 
             $regimen->save();
             session()->set('message_counter', '1');
-            session()->set('msg_success', $this->input->post('regimen_code') . ' was added.');
-            $this->session->set_flashdata('filter_datatable', $this->input->post('regimen_code'));
+            session()->set('msg_success', $this->request->getPost('regimen_code') . ' was added.');
+            $this->session->setFlashdata('filter_datatable', $this->request->getPost('regimen_code'));
             //Filter after saving
-            redirect('settings_management');
+            return redirect()->to(base_url() . '/public/settings_management');
         }
         // }
     }
 
     public function edit() {
-        $regimen_id = $this->input->post('id');
+        $regimen_id = $this->request->getPost('id');
         $data['regimens'] = Regimen::getHydratedRegimen($regimen_id);
         echo json_encode($data);
     }
 
     public function update() {
-        $regimen_id = $this->input->post('regimen_id');
-        $regimen_Code = $this->input->post('regimen_code');
-        $regimen_Desc = $this->input->post('regimen_desc');
-        $category = $this->input->post('category');
-        $line = $this->input->post('line');
-        $type_Of_Service = $this->input->post('type_of_service');
-        $remarks = str_replace("'", "\'", $this->input->post('remarks'));
-        $map = $this->input->post('regimen_mapping');
+        $regimen_id = $this->request->getPost('regimen_id');
+        $regimen_Code = $this->request->getPost('regimen_code');
+        $regimen_Desc = $this->request->getPost('regimen_desc');
+        $category = $this->request->getPost('category');
+        $line = $this->request->getPost('line');
+        $type_Of_Service = $this->request->getPost('type_of_service');
+        $remarks = str_replace("'", "\'", $this->request->getPost('remarks'));
+        $map = $this->request->getPost('regimen_mapping');
 
         $query = $this->db->query("UPDATE regimen SET regimen_code='$regimen_Code',regimen_desc='$regimen_Desc',category='$category',line='$line',type_of_service='$type_Of_Service',remarks='$remarks',map='$map' WHERE id='$regimen_id'");
         session()->set('message_counter', '1');
-        session()->set('msg_success', $this->input->post('regimen_code') . ' was Updated');
-        $this->session->set_flashdata('filter_datatable', $this->input->post('regimen_code'));
+        session()->set('msg_success', $this->request->getPost('regimen_code') . ' was Updated');
+        $this->session->setFlashdata('filter_datatable', $this->request->getPost('regimen_code'));
         //Filter after updating
-        redirect("settings_management");
+        return redirect()->to(base_url() . '/public/settings_management');
     }
 
-    public function enable($regimen_id) {
-        if ($this->input->post('multiple')) {
+    public function enable($regimen_id = '') {
+        if ($this->request->getPost('multiple')) {
             //Handle the array with all drugcodes that are to be merged
-            $regimens = $this->input->post('drug_codes');
+            $regimens = $this->request->getPost('drug_codes');
             $regimens_to_disable = implode(",", $regimens);
             $the_query = "UPDATE regimen SET enabled='1' WHERE id IN($regimens_to_disable);";
             if ($this->db->query($the_query)) {
@@ -217,18 +218,18 @@ class Regimen_management extends \App\Controllers\BaseController {
             $query = $this->db->query("UPDATE regimen SET enabled='1'WHERE id='$regimen_id'");
             $results = Regimen::getRegimen($regimen_id);
             session()->set('message_counter', '1');
-            session()->set('msg_success', $results->Regimen_Code . ' was enabled');
-            $this->session->set_flashdata('filter_datatable', $results->Regimen_Code);
+            session()->set('msg_success', $results->regimen_code . ' was enabled');
+            $this->session->setFlashdata('filter_datatable', $results->regimen_code);
             //Filter
 
-            redirect('settings_management');
+            return redirect()->to(base_url() . '/public/settings_management');
         }
     }
 
-    public function disable($regimen_id) {
-        if ($this->input->post('multiple')) {
+    public function disable($regimen_id = '') {
+        if ($this->request->getPost('multiple')) {
             //Handle the array with all drugcodes that are to be merged
-            $regimens = $this->input->post('drug_codes');
+            $regimens = $this->request->getPost('drug_codes');
             $regimens_to_disable = implode(",", $regimens);
             $the_query = "UPDATE regimen SET enabled='0' WHERE id IN($regimens_to_disable);";
             if ($this->db->query($the_query)) {
@@ -240,10 +241,10 @@ class Regimen_management extends \App\Controllers\BaseController {
             $query = $this->db->query("UPDATE regimen SET enabled='0'WHERE id='$regimen_id'");
             $results = Regimen::getRegimen($regimen_id);
             //$this -> session -> set_userdata('message_counter', '2');
-            session()->set('msg_error', $results->Regimen_Code . ' was disabled');
-            $this->session->set_flashdata('filter_datatable', $results->Regimen_Code);
+            session()->set('msg_error', $results->regimen_code . ' was disabled');
+            $this->session->setFlashdata('filter_datatable', $results->regimen_code);
             //Filter
-            redirect('settings_management');
+            return redirect()->to(base_url() . '/public/settings_management');
         }
     }
 
@@ -273,11 +274,11 @@ class Regimen_management extends \App\Controllers\BaseController {
         $this->db->query($the_query);
         $results = Regimen::getRegimen($primary_drugcode_id);
         session()->set('message_counter', '1');
-        session()->set('msg_success', $results->Regimen_Code . ' was Merged');
+        session()->set('msg_success', $results->regimen_code . ' was Merged');
     }
 
     public function unmerge($drugcode) {
-        $this->load->database();
+       // $this->load->database();
         //First Query that umerges the regimen
         $the_query = "UPDATE regimen SET merged_to='' WHERE id='$drugcode';";
         $this->db->query($the_query);
@@ -299,8 +300,8 @@ class Regimen_management extends \App\Controllers\BaseController {
 
         $results = Regimen::getRegimen($drugcode);
         session()->set('message_counter', '1');
-        session()->set('msg_error', $results->Regimen_Code . ' was Unmerged');
-        redirect('settings_management');
+        session()->set('msg_error', $results->regimen_code . ' was Unmerged');
+         return redirect()->to(base_url() . '/public/settings_management');
     }
 
     public function getRegimenLine($service, $pmtct_oi = FALSE) {
@@ -352,7 +353,7 @@ class Regimen_management extends \App\Controllers\BaseController {
 			WHERE r.map !='0')
 			OR s.name LIKE '%other%'
 			ORDER BY s.category_id,s.code asc");
-        $data['sync_regimen'] = $query->result_array();
+        $data['sync_regimen'] = $query->getResultArray();
         if ($param == 1) {
             echo json_encode($data['sync_regimen']);
             die();
@@ -364,17 +365,17 @@ class Regimen_management extends \App\Controllers\BaseController {
     }
 
     public function updateBulkMapping() {
-        $regimen_id = $this->input->post("regimen_id");
-        $map_id = $this->input->post("map_id");
+        $regimen_id = $this->request->getPost("regimen_id");
+        $map_id = $this->request->getPost("map_id");
 
         $query = $this->db->query("UPDATE regimen SET map = '$map_id' WHERE id = '$regimen_id'");
-        $aff = $this->db->affected_rows();
+        $aff = $this->db->affectedRows();
         echo $aff;
     }
 
     public function getFilteredRegiments() {
-        $age = $this->input->post("age") + 0;
-        $service = $this->input->post("service");
+        $age = $this->request->getPost("age") + 0;
+        $service = $this->request->getPost("service");
         $regimens = "";
         if ($service == 'prep' || $service == 'pep') {
             $regimens = Regimen::getServiceRegimens($service);

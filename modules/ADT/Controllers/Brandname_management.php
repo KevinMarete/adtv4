@@ -4,6 +4,7 @@ namespace Modules\ADT\Controllers;
 
 ob_start();
 
+use \Modules\ADT\Models\Brand;
 use \Modules\ADT\Models\Drugcode;
 use Illuminate\Database\Capsule\Manager as DB;
 
@@ -11,6 +12,7 @@ class Brandname_management extends \App\Controllers\BaseController {
 
     var $db;
     var $table;
+    var $session;
 
     function __construct() {
         session()->set("link_id", "index");
@@ -18,6 +20,7 @@ class Brandname_management extends \App\Controllers\BaseController {
         session()->set("linkTitle", "Brand Name Management");
         $this->db = \Config\Database::connect();
         $this->table = new \CodeIgniter\View\Table();
+        $this->session = \Config\Services::session();
     }
 
     public function index() {
@@ -51,34 +54,35 @@ class Brandname_management extends \App\Controllers\BaseController {
         $rowdelete = Drugcode::deleteBrand($id);
         //If query succeeds
         if ($rowdelete > 0) {
-            //$this -> session -> set_userdata('message_counter', '1');
-            $this->session->set_userdata('msg_error', $brand['Brand'] . ' was deleted !');
+            //$this -> session -> set('message_counter', '1');
+            $this->session->set('msg_error', $brand->brand . ' was deleted !');
         } else {
-            //$this -> session -> set_userdata('message_counter', '2');
-            $this->session->set_userdata('msg_error', 'An error occured while deleting the brand. Try again !');
+            //$this -> session -> set('message_counter', '2');
+            $this->session->set('msg_error', 'An error occured while deleting the brand. Try again !');
         }
-        redirect("settings_management");
+        return redirect()->to(base_url() . '/public/settings_management');
     }
 
     public function save() {
         //validation call
-        $valid = $this->_validate_submission();
+        //$valid = $this->_validate_submission();
+        $valid = true;
         if ($valid == false) {
             $data['content_view'] = "brandname_add_v";
             $this->base_params($data);
         } else {
-            $drugid = $this->input->post("drugid");
-            $brandname = $this->input->post("brandname");
+            $drugid = $this->request->getPost("drugid");
+            $brandname = $this->request->getPost("brandname");
 
             $brand = new Brand();
             $brand->Drug_Id = $drugid;
             $brand->Brand = $brandname;
 
             $brand->save();
-            //$this -> session -> set_userdata('message_counter', '1');
-            $this->session->set_userdata('msg_success', $this->input->post('brandname') . ' was Added');
-            $this->session->set_flashdata('filter_datatable', $this->input->post('brandname')); //Filter datatable
-            redirect("settings_management");
+            //$this -> session -> set('message_counter', '1');
+            $this->session->set('msg_success', $this->request->getPost('brandname') . ' was Added');
+            $this->session->setFlashdata('filter_datatable', $this->request->getPost('brandname')); //Filter datatable
+            return redirect()->to(base_url() . '/public/settings_management');
         }
     }
 

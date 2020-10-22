@@ -17,6 +17,7 @@ class Drugcode_classification extends \App\Controllers\BaseController {
 
     var $db;
     var $table;
+    var $session;
 
     function __construct() {
         session()->set("link_id", "index");
@@ -24,6 +25,7 @@ class Drugcode_classification extends \App\Controllers\BaseController {
         session()->set("linkTitle", "Drug Code Classification");
         $this->db = \Config\Database::connect();
         $this->table = new \CodeIgniter\View\Table();
+        $this->session = \Config\Services::session();
     }
 
     public function index() {
@@ -48,9 +50,9 @@ class Drugcode_classification extends \App\Controllers\BaseController {
 
                 if ($classification['active'] == 1) {
                     $links .= " | ";
-                    $links .= anchor('drugcode_classification/disable/' . $classification['id'], 'Disable', array('class' => 'disable_user'));
+                    $links .= anchor(base_url() . '/public/drugcode_classification/disable/' . $classification['id'], 'Disable', array('class' => 'disable_user'));
                 } else {
-                    $links .= anchor('drugcode_classification/enable/' . $classification['id'], 'Enable', array('class' => 'enable_user'));
+                    $links .= anchor(base_url() . '/public/drugcode_classification/enable/' . $classification['id'], 'Enable', array('class' => 'enable_user'));
                 }
             }
 
@@ -63,49 +65,50 @@ class Drugcode_classification extends \App\Controllers\BaseController {
     public function save() {
 
         //call validation function
-        $valid = $this->_submit_validate();
+        //$valid = $this->_submit_validate();
+        $valid = true;
         if ($valid == false) {
             $data['settings_view'] = "classification_v";
             $this->base_params($data);
         } else {
-            $drugname = $this->input->post("classification_name");
+            $drugname = $this->request->getPost("classification_name");
             $generic_name = new Drug_classification();
             $generic_name->Name = $drugname;
             $generic_name->Active = "1";
             $generic_name->save();
-            $this->session->set_userdata('msg_success', $this->input->post('classification_name') . ' was Added');
-            $this->session->set_flashdata('filter_datatable', $this->input->post('classification_name'));
+            $this->session->set('msg_success', $this->request->getPost('classification_name') . ' was Added');
+            $this->session->setFlashdata('filter_datatable', $this->request->getPost('classification_name'));
             //Filter datatable
-            redirect("settings_management");
+            return redirect()->to(base_url() . '/public/settings_management');
         }
     }
 
     public function update() {
-        $classification_id = $this->input->post('classification_id');
-        $classification_name = $this->input->post("edit_classification_name");
+        $classification_id = $this->request->getPost('classification_id');
+        $classification_name = $this->request->getPost("edit_classification_name");
         $query = $this->db->query("UPDATE drug_classification SET name='$classification_name' WHERE id='$classification_id'");
-        $this->session->set_userdata('msg_success', $this->input->post('edit_classification_name') . ' was Updated');
-        $this->session->set_flashdata('filter_datatable', $this->input->post('edit_classification_name'));
+        $this->session->set('msg_success', $this->request->getPost('edit_classification_name') . ' was Updated');
+        $this->session->setFlashdata('filter_datatable', $this->request->getPost('edit_classification_name'));
         //Filter datatable
-        redirect("settings_management");
+        return redirect()->to(base_url() . '/public/settings_management');
     }
 
     public function enable($classification_id) {
         $query = $this->db->query("UPDATE drug_classification SET Active='1'WHERE id='$classification_id'");
         $results = Drug_Classification::getClassification($classification_id);
-        $this->session->set_userdata('msg_success', $results->Name . ' was enabled');
-        $this->session->set_flashdata('filter_datatable', $results->Name);
+        $this->session->set('msg_success', $results->name . ' was enabled');
+        $this->session->setFlashdata('filter_datatable', $results->name);
         //Filter datatable
-        redirect("settings_management");
+        return redirect()->to(base_url() . '/public/settings_management');
     }
 
     public function disable($classification_id) {
         $query = $this->db->query("UPDATE drug_classification SET Active='0'WHERE id='$classification_id'");
         $results = Drug_Classification::getClassification($classification_id);
-        $this->session->set_userdata('msg_error', $results->Name . ' was disabled');
-        $this->session->set_flashdata('filter_datatable', $results->Name);
+        $this->session->set('msg_error', $results->name . ' was disabled');
+        $this->session->setFlashdata('filter_datatable', $results->name);
         //Filter datatable
-        redirect("settings_management");
+        return redirect()->to(base_url() . '/public/settings_management');
     }
 
     private function _submit_validate() {

@@ -36,7 +36,7 @@
     }
 
 </style>
-<?php helper('form');?>
+<?php helper('form'); ?>
 <div id="view_content">
 
     <div class="container-fluid">
@@ -48,7 +48,7 @@
                 <div class="hero-unit">
 
                     <?php
-                   // echo validation_errors('<p class="error">', '</p>');
+                    // echo validation_errors('<p class="error">', '</p>');
                     ?>
                     <a href="#client_form" role="button" id="new_client" class="btn" data-toggle="modal"><i class="icon-plus icon-black"></i>New Generic Name</a>
                     <?php
@@ -66,7 +66,7 @@
     <div id="client_form" title="New Generic Name" class="modal hide fade cyan" tabindex="-1" role="dialog" aria-labelledby="label" aria-hidden="true">
         <?php
         $attributes = array('class' => 'input_form');
-        echo form_open('genericname_management/save', $attributes);
+        echo form_open(base_url() . '/public/genericname_management/save', $attributes);
         ?>
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -88,7 +88,7 @@
     <div id="edit_form" title="Edit Generic Name" class="modal hide fade cyan" tabindex="-1" role="dialog" aria-labelledby="label" aria-hidden="true">
         <?php
         $attributes = array('class' => 'input_form');
-        echo form_open('genericname_management/update', $attributes);
+        echo form_open(base_url() . '/public/genericname_management/update', $attributes);
         ?>
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>

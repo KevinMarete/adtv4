@@ -12,6 +12,7 @@ class Facility_Management extends \App\Controllers\BaseController {
 
     var $db;
     var $table;
+    var $session;
 
     function __construct() {
         session()->set("link_id", "index");
@@ -19,6 +20,7 @@ class Facility_Management extends \App\Controllers\BaseController {
         session()->set("linkTitle", "Facility Details Management");
         $this->db = \Config\Database::connect();
         $this->table = new \CodeIgniter\View\Table();
+        $this->session = \Config\Services::session();
         ini_set("max_execution_time", "1000000");
     }
 
@@ -30,7 +32,7 @@ class Facility_Management extends \App\Controllers\BaseController {
         $access_level = session()->get('user_indicator');
         $data['access_level'] = $access_level;
         $data['sites'] = Facilities::getFacilities();
-       // dd( $data['sites']);
+        // dd( $data['sites']);
         $data['supporter'] = Supporter::getAll();
         //get satellites
         //$data['satellites'] = Facilities::getSatellites($this -> session -> userdata("facility"));
@@ -49,8 +51,8 @@ class Facility_Management extends \App\Controllers\BaseController {
     }
 
     public function view() {
-        $access_level = $this->session->userdata('user_indicator');
-        $source = $this->input->post('id');
+        $access_level = $this->session->get('user_indicator');
+        $source = $this->request->getPost('id');
         $data['facilities'] = Facilities::getCurrentFacility($source);
         echo json_encode($data);
     }
@@ -67,7 +69,7 @@ class Facility_Management extends \App\Controllers\BaseController {
     }
 
     public function getCurrent() {
-        $source = $this->session->userdata('facility');
+        $source = $this->session->get('facility');
         $facilities = Facilities::getCurrentFacility($source);
         echo json_encode($facilities);
     }
@@ -79,65 +81,66 @@ class Facility_Management extends \App\Controllers\BaseController {
         $prep_service = 0;
         $service_hep = 0;
 
-        if ($this->input->post('art_service') == "on") {
+        if ($this->request->getPost('art_service') == "on") {
             $art_service = 1;
         }
-        if ($this->input->post('pmtct_service') == "on") {
+        if ($this->request->getPost('pmtct_service') == "on") {
             $pmtct_service = 1;
         }
-        if ($this->input->post('pep_service') == "on") {
+        if ($this->request->getPost('pep_service') == "on") {
             $pep_service = 1;
         }
 
-        if ($this->input->post('prep_service') == "on") {
+        if ($this->request->getPost('prep_service') == "on") {
             $prep_service = 1;
         }
 
-        if ($this->input->post('hep_service') == "on") {
+        if ($this->request->getPost('hep_service') == "on") {
             $service_hep = 1;
         }
 
 
-        $facility_id = $this->input->post('facility_id');
+        $facility_id = $this->request->getPost('facility_id');
         if ($facility_id) {
             $data = array(
-                'facilitycode' => $this->input->post('facility_cod'),
-                'name' => $this->input->post('facility_name'),
-                'ccc_separator' => $this->input->post('ccc_separator'),
-                'adult_age' => $this->input->post('adult_age'),
-                'facilitytype' => $this->input->post('facility_type'),
-                'district' => $this->input->post('district'),
-                'county' => $this->input->post('county'),
-                'weekday_max' => $this->input->post('weekday_max'),
-                'weekend_max' => $this->input->post('weekend_max'),
-                'lost_to_follow_up' => $this->input->post('lost_to_follow_up'),
-                'supported_by' => $this->input->post('supported_by'),
-                'phone' => $this->input->post('phone_number'),
+                'facilitycode' => $this->request->getPost('facility_cod'),
+                'name' => $this->request->getPost('facility_name'),
+                'ccc_separator' => $this->request->getPost('ccc_separator'),
+                'adult_age' => $this->request->getPost('adult_age'),
+                'facilitytype' => $this->request->getPost('facility_type'),
+                'district' => $this->request->getPost('district'),
+                'county' => $this->request->getPost('county'),
+                'weekday_max' => $this->request->getPost('weekday_max'),
+                'weekend_max' => $this->request->getPost('weekend_max'),
+                'lost_to_follow_up' => $this->request->getPost('lost_to_follow_up'),
+                'supported_by' => $this->request->getPost('supported_by'),
+                'phone' => $this->request->getPost('phone_number'),
                 'service_art' => $art_service,
                 'service_pmtct' => $pmtct_service,
                 'service_pep' => $pep_service,
                 'service_prep' => 1,
                 'service_hep' => $service_hep,
-                'supplied_by' => $this->input->post('supplied_by'),
-                'parent' => $this->input->post('central_site'),
-                'map' => $this->input->post("sms_map", TRUE),
-                'pill_count' => $this->input->post('pill_count'),
-                'medical_number' => $this->input->post('medical_number'),
-                'facility_dhis' => $this->input->post('facility_dhis'),
-                'autobackup' => $this->input->post('autobackup')
+                'supplied_by' => $this->request->getPost('supplied_by'),
+                'parent' => $this->request->getPost('central_site'),
+                'map' => $this->request->getPost("sms_map", TRUE),
+                'pill_count' => $this->request->getPost('pill_count'),
+                'medical_number' => $this->request->getPost('medical_number'),
+                'facility_dhis' => $this->request->getPost('facility_dhis'),
+                'autobackup' => $this->request->getPost('autobackup')
             );
 
-            $this->db->where('id', $facility_id);
-            $this->db->update('facilities', $data);
-            $this->session->set_userdata("facility_sms_consent", $this->input->post("sms_map", TRUE));
-            $this->session->set_userdata("lost_to_follow_up", $this->input->post('lost_to_follow_up'));
-            $this->session->set_userdata("autobackup", $this->input->post("autobackup", TRUE));
-            $this->session->set_userdata("facility_dhis", $this->input->post("facility_dhis", TRUE));
-            $this->session->set_userdata('msg_success', $this->input->post('facility_name') . ' \'s details were successfully Updated!');
+            $builder = $this->db->table('facilities');
+            $builder->where('id', $facility_id);
+            $builder->update($data);
+            $this->session->set("facility_sms_consent", $this->request->getPost("sms_map", TRUE));
+            $this->session->set("lost_to_follow_up", $this->request->getPost('lost_to_follow_up'));
+            $this->session->set("autobackup", $this->request->getPost("autobackup", TRUE));
+            $this->session->set("facility_dhis", $this->request->getPost("facility_dhis", TRUE));
+            $this->session->set('msg_success', $this->request->getPost('facility_name') . ' \'s details were successfully Updated!');
         } else {
-            $this->session->set_userdata('msg_error', 'Facility details could not be updated!');
+            $this->session->set('msg_error', 'Facility details could not be updated!');
         }
-        redirect('settings_management');
+        return redirect()->to(base_url() . '/public/settings_management');
     }
 
     public function base_params($data) {

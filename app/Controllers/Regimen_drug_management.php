@@ -22,7 +22,8 @@ class Regimen_drug_management extends MY_Controller {
 		$data = array();
 		$data['styles'] = array("jquery-ui.css");
 		$data['scripts'] = array("jquery-ui.js");
-		$data['regimens'] = Regimen::getAll($source);
+		$data['regimens'] = Regimen::with('Regimen_Drug.Drugcode')->where('source', $source)->orWhere('source', '0')->orderBy('regimen_desc')->get();
+              //  dd($data['regimens'] );
 		$data['regimens_enabled'] = Regimen::getAllEnabled($source);
 		$data['regimen_categories'] = Regimen_Category::getAll();
 		$data['regimen_service_types'] = Regimen_Service_Type::getAll();

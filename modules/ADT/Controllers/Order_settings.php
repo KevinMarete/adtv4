@@ -12,6 +12,7 @@ class Order_settings extends \App\Controllers\BaseController {
 
     var $db;
     var $table;
+    var $session;
 
     function __construct() {
         session()->set("link_id", "listing/sync_drug");
@@ -19,6 +20,7 @@ class Order_settings extends \App\Controllers\BaseController {
         session()->set("linkTitle", "Settings Management");
         $this->db = \Config\Database::connect();
         $this->table = new \CodeIgniter\View\Table();
+        $this->session = \Config\Services::session();
         ini_set("max_execution_time", "1000000");
     }
 
@@ -61,8 +63,8 @@ class Order_settings extends \App\Controllers\BaseController {
             foreach ($result as $index => $value) {
                 if ($index == 'Active') {
                     $edit_link = anchor('#' . $table . '_form', 'Edit', array('id' => $result['id'], 'table' => $table, 'role' => 'button', 'class' => 'edit_setting', 'data-toggle' => 'modal'));
-                    $disable_link = anchor('order_settings/disable/' . $table . '/' . $result['id'], 'Disable', array('class' => 'disable_user'));
-                    $enable_link = anchor('order_settings/enable/' . $table . '/' . $result['id'], 'Enable', array('class' => 'enable_user'));
+                    $disable_link = anchor(base_url() . '/public/order_settings/disable/' . $table . '/' . $result['id'], 'Disable', array('class' => 'disable_user'));
+                    $enable_link = anchor(base_url() . '/public/order_settings/enable/' . $table . '/' . $result['id'], 'Enable', array('class' => 'enable_user'));
                     ;
                     $links = $edit_link;
                     if ($access_level == "facility_administrator") {
@@ -98,18 +100,22 @@ class Order_settings extends \App\Controllers\BaseController {
         if ($table == 'sync_regimen_category')
             $name_column = 'Name';
         //Update status
-        $this->db->where('id', $id);
-        $this->db->update($table, array('Active' => 1));
+        $builder = $this->db->table($table);
+        $builder->where('id', $id);
+        $builder->update(array('Active' => 1));
 
         //Get details
-        $result = $this->db->get_where($table, array('id' => $id))->row_array();
+        $builder2 = $this->db->table($table);
+        $builder2->where('id', $id);
+        $result = $builder2->get()->getRowArray();
+        //$result = $this->db->get_where($table, array('id' => $id))->row_array();
 
-        $this->session->set_userdata('msg_success', $result[$name_column] . ' was enabled!');
-        $this->session->set_flashdata('filter_datatable', $result[$name_column]);
-        $this->session->set_userdata("link_id", "listing/" . $table);
-        $this->session->set_userdata("linkSub", "order_settings/listing/" . $table);
+        $this->session->set('msg_success', $result[$name_column] . ' was enabled!');
+        $this->session->setFlashdata('filter_datatable', $result[$name_column]);
+        $this->session->set("link_id", "listing/" . $table);
+        $this->session->set("linkSub", "order_settings/listing/" . $table);
         //Filter datatable
-        redirect('settings_management');
+        return redirect()->to(base_url() . '/public/settings_management');
     }
 
     public function disable($table = '', $id) {
@@ -117,51 +123,58 @@ class Order_settings extends \App\Controllers\BaseController {
         if ($table == 'sync_regimen_category')
             $name_column = 'Name';
         //Update status
-        $this->db->where('id', $id);
-        $this->db->update($table, array('Active' => 0));
+        $builder = $this->db->table($table);
+        $builder->where('id', $id);
+        $builder->update(array('Active' => 0));
 
         //Get details
-        $result = $this->db->get_where($table, array('id' => $id))->row_array();
+        $builder2 = $this->db->table($table);
+        $builder2->where('id', $id);
+        $result = $builder2->get()->getRowArray();
 
-        $this->session->set_userdata('msg_error', $result[$name_column] . ' was disabled!');
-        $this->session->set_flashdata('filter_datatable', $result[$name_column]);
-        $this->session->set_userdata("link_id", "listing/" . $table);
-        $this->session->set_userdata("linkSub", "order_settings/listing/" . $table);
+        // $result = $this->db->get_where($table, array('id' => $id))->row_array();
+
+        $this->session->set('msg_error', $result[$name_column] . ' was disabled!');
+        $this->session->setFlashdata('filter_datatable', $result[$name_column]);
+        $this->session->set("link_id", "listing/" . $table);
+        $this->session->set("linkSub", "order_settings/listing/" . $table);
         //Filter datatable
-        redirect('settings_management');
+        return redirect()->to(base_url() . '/public/settings_management');
     }
 
     public function save($table = '') {
-        $this->db->insert($table, $this->input->post());
+        $builder = $this->db->table($table);
+        $builder->insert($this->request->getPost());
 
-        if ($this->db->affected_rows() > 0) {
-            $this->session->set_userdata('msg_success', $this->input->post('name') . ' was successfully Added!');
+        if ($this->db->affectedRows() > 0) {
+            $this->session->set('msg_success', $this->request->getPost('name') . ' was successfully Added!');
         } else {
-            $this->session->set_userdata('msg_error', $this->input->post('name') . ' was not Added!');
+            $this->session->set('msg_error', $this->request->getPost('name') . ' was not Added!');
         }
-        $this->session->set_userdata('message_counter', '1');
-        $this->session->set_flashdata('filter_datatable', $this->input->post('name'));
-        $this->session->set_userdata("link_id", "listing/" . $table);
-        $this->session->set_userdata("linkSub", "order_settings/listing/" . $table);
+        $this->session->set('message_counter', '1');
+        $this->session->setFlashdata('filter_datatable', $this->request->getPost('name'));
+        $this->session->set("link_id", "listing/" . $table);
+        $this->session->set("linkSub", "order_settings/listing/" . $table);
 
-        redirect('settings_management');
+        return redirect()->to(base_url() . '/public/settings_management');
     }
 
     public function update($table = '', $id = '') {
-        $this->db->where('id', $id);
-        $this->db->update($table, $this->input->post());
+        $builder = $this->db->table($table);
+        $builder->where('id', $id);
+        $builder->update($this->request->getPost());
 
-        if ($this->db->affected_rows() > 0) {
-            $this->session->set_userdata('msg_success', $this->input->post('name') . ' was successfully Updated!');
+        if ($this->db->affectedRows() > 0) {
+            $this->session->set('msg_success', $this->request->getPost('name') . ' was successfully Updated!');
         } else {
-            $this->session->set_userdata('msg_error', $this->input->post('name') . ' was not Updated!');
+            $this->session->set('msg_error', $this->request->getPost('name') . ' was not Updated!');
         }
-        $this->session->set_userdata('message_counter', '1');
-        $this->session->set_flashdata('filter_datatable', $this->input->post('name'));
-        $this->session->set_userdata("link_id", "listing/" . $table);
-        $this->session->set_userdata("linkSub", "order_settings/listing/" . $table);
+        $this->session->set('message_counter', '1');
+        $this->session->setFlashdata('filter_datatable', $this->request->getPost('name'));
+        $this->session->set("link_id", "listing/" . $table);
+        $this->session->set("linkSub", "order_settings/listing/" . $table);
 
-        redirect('settings_management');
+        return redirect()->to(base_url() . '/public/settings_management');
     }
 
     public function fetch($table = '') {
@@ -184,14 +197,21 @@ class Order_settings extends \App\Controllers\BaseController {
                 'active_column' => 'active')
         );
         //Fetch resources
-        $this->db->select(array('id', $params[$table]['name_column']));
-        $data = $this->db->order_by('name', 'ASC')->get_where($table, array($params[$table]['active_column'] => 1))->result_array();
-        echo json_encode($data);
+        $column = str_replace('`', '', $params[$table]['name_column']);
+
+        $query = DB::table($table)->select('id', DB::raw($column))->where($params[$table]['active_column'], 1)->orderBy('name', 'asc')->get()->toArray();
+
+
+        //$this->db->select(array('id', $params[$table]['name_column']));
+        //$data = $this->db->order_by('name', 'ASC')->get_where($table, array($params[$table]['active_column'] => 1))->getResultArray();
+        echo json_encode($query);
     }
 
     public function get_details($table = '', $id = '') {
-        $data = $this->db->get_where($table, array('id' => $id))->row_array();
-        echo json_encode($data);
+        $builder = $this->db->table($table);
+        $result = $builder->where('id', $id)->get()->getRowArray();
+        //$data = $this->db->($table, array('id' => $id))->row_array();
+        echo json_encode($result);
     }
 
     public function base_params($data) {

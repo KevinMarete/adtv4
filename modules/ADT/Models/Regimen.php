@@ -84,15 +84,13 @@ class Regimen extends BaseModel {
     }
 
     public static function getRegimen($id) {
-        $query = Doctrine_Query::create()->select("*")->from("Regimen")->where("id = '$id'");
-        $regimens = $query->execute();
-        return $regimens[0];
+        $query = DB::table('Regimen')->where('id', $id)->get();
+        return $query[0];
     }
 
     public static function getHydratedRegimen($id) {
-        $query = Doctrine_Query::create()->select("*")->from("Regimen")->where("id = '$id'");
-        $regimens = $query->execute(array(), Doctrine::HYDRATE_ARRAY);
-        return $regimens;
+         return BaseModel::resultSet(DB::table('Regimen')->where('id', $id)->get());
+      
     }
 
     public static function getRegimens() {
@@ -102,9 +100,8 @@ class Regimen extends BaseModel {
     }
 
     public static function getNonMappedRegimens() {
-        $query = Doctrine_Query::create()->select("*")->from("Regimen")->where("Enabled = '1' AND (map='' OR map='0')")->orderBy("Regimen_Code asc");
-        $regimens = $query->execute(array(), Doctrine::HYDRATE_ARRAY);
-        return $regimens;
+        $query = DB::select(" SELECT *  from Regimen where Enabled = '1' AND map='' OR map='0' order By Regimen_Code asc");
+        return $query;
     }
 
     public static function getLineRegimens($service) {

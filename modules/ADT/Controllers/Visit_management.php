@@ -4,10 +4,12 @@ namespace Modules\ADT\Controllers;
 
 ob_start();
 
-use \Modules\ADT\Models\Drug_Source;
+use \Modules\ADT\Models\Brand;
+use \Modules\ADT\Models\PatientSource;
+use \Modules\ADT\Models\VisitPurpose;
 use Illuminate\Database\Capsule\Manager as DB;
 
-class Drugsource_management extends \App\Controllers\BaseController {
+class Visit_management extends \App\Controllers\BaseController {
 
     var $db;
     var $table;
@@ -15,8 +17,8 @@ class Drugsource_management extends \App\Controllers\BaseController {
 
     function __construct() {
         session()->set("link_id", "index");
-        session()->set("linkSub", "drugsource_management");
-        session()->set("linkTitle", "Drug Source Management");
+        session()->set("linkSub", "visit_management");
+        session()->set("linkTitle", "Visit Purpose Management");
         $this->db = \Config\Database::connect();
         $this->table = new \CodeIgniter\View\Table();
         $this->session = \Config\Services::session();
@@ -27,8 +29,8 @@ class Drugsource_management extends \App\Controllers\BaseController {
     }
 
     public function listing() {
-        $access_level = session()->get('user_indicator');
-        $sources = Drug_Source::getThemAll($access_level);
+        $access_level = $this->session->get('user_indicator');
+        $sources = VisitPurpose::getThemAll();
         $tmpl = array('table_open' => '<table class="setting_table table table-bordered table-striped">');
         $this->table->setTemplate($tmpl);
         $this->table->setHeading('Id', 'Name', 'Options');
@@ -42,26 +44,25 @@ class Drugsource_management extends \App\Controllers\BaseController {
                 'name' => $source->name
             );
             $links = "";
-            if ($source->active == 1) {
-                //$links = anchor('drugsource_management/edit/' .$source->id, 'Edit',array('class' => 'edit_user','id'=>$source->id,'name'=>$source->Name));
+            if ($source->Active == 1) {
                 $links .= anchor('#edit_form', 'Edit', $array_param);
             }
             if ($access_level == "facility_administrator") {
 
-                if ($source->active == 1) {
+                if ($source->Active == 1) {
                     $links .= " | ";
-                    $links .= anchor(base_url().'/public/drugsource_management/disable/' . $source->id, 'Disable', array('class' => 'disable_user'));
+                    $links .= anchor(base_url() . '/public/visit_management/disable/' . $source->id, 'Disable', array('class' => 'disable_user'));
                 } else {
-                    $links .= anchor(base_url().'/public/drugsource_management/enable/' . $source->id, 'Enable', array('class' => 'enable_user'));
+                    $links .= anchor(base_url() . '/public/visit_management/enable/' . $source->id, 'Enable', array('class' => 'enable_user'));
                 }
             }
             $this->table->addRow($source->id, $source->name, $links);
         }
 
         $data['sources'] = $this->table->generate();
-        $data['title'] = "Drug Sources";
-        $data['banner_text'] = "Drug Sources";
-        $data['link'] = "drugsources";
+        $data['title'] = "Visit Purposes";
+        $data['banner_text'] = "Visit Purposes";
+        $data['link'] = "visit";
         $actions = array(0 => array('Edit', 'edit'), 1 => array('Disable', 'disable'));
         $data['actions'] = $actions;
         $this->base_params($data);
@@ -71,62 +72,57 @@ class Drugsource_management extends \App\Controllers\BaseController {
         $creator_id = $this->session->get('user_id');
         $source = $this->session->get('facility');
 
-        $source = new Drug_Source();
+        $source = new VisitPurpose();
         $source->Name = $this->request->getPost('source_name');
         $source->Active = "1";
         $source->save();
-
-        $this->session->set('message_counter', '1');
-        $this->session->set('msg_success', $this->request->getPost('source_name') . ' was successfully Added!');
+        $this->session->set('msg_success', $this->request->getPost('source_name') . ' was Added');
         $this->session->setFlashdata('filter_datatable', $this->request->getPost('source_name')); //Filter datatable
         return redirect()->to(base_url() . '/public/settings_management');
     }
 
     public function edit($source_id) {
-        $data['title'] = "Edit Drug Sources";
-        $data['settings_view'] = "editdrugsources_v";
-        $data['banner_text'] = "Edit Drug Sources";
-        $data['link'] = "drugsources";
-        $data['sources'] = Drug_Source::getSource($source_id);
+        $data['title'] = "Edit Client Sources";
+        $data['settings_view'] = "\Modules\ADT\View\\editclient_v";
+        $data['banner_text'] = "Edit Client Sources";
+        $data['link'] = "indications";
+        $data['sources'] = Patient_Source::getSource($source_id);
         $this->base_params($data);
     }
 
     public function update() {
         $source_id = $this->request->getPost('source_id');
         $source_name = $this->request->getPost('source_name');
-
-
-      
-        $query = $this->db->query("UPDATE drug_source SET Name='$source_name' WHERE id='$source_id'");
+        $query = $this->db->query("UPDATE visit_purpose SET Name='$source_name' WHERE id='$source_id'");
         //$this -> session -> set('message_counter','1');
-        $this->session->set('msg_success', $this->request->getPost('source_name') . ' was Updated!');
+        $this->session->set('msg_success', $this->request->getPost('source_name') . ' was Updated');
         $this->session->setFlashdata('filter_datatable', $this->request->getPost('source_name')); //Filter datatable
         return redirect()->to(base_url() . '/public/settings_management');
     }
 
     public function enable($source_id) {
-      
-        $query = $this->db->query("UPDATE drug_source SET Active='1' WHERE id='$source_id'");
-        $results = Drug_Source::getSource($source_id);
-        //$this -> session -> set('message_counter','1');
-        $this->session->set('msg_success', $results->name . ' was enabled!');
+     
+        $query = $this->db->query("UPDATE visit_purpose SET Active='1'WHERE id='$source_id'");
+        $results = VisitPurpose::getSource($source_id);
+        $this->session->set('message_counter', '1');
+        $this->session->set('msg_success', $results->name . ' was enabled');
         $this->session->setFlashdata('filter_datatable', $results->name); //Filter datatable
         return redirect()->to(base_url() . '/public/settings_management');
     }
 
     public function disable($source_id) {
-      
-        $query = $this->db->query("UPDATE drug_source SET Active='0' WHERE id='$source_id'");
-        $results = Drug_Source::getSource($source_id);
+     
+        $query = $this->db->query("UPDATE visit_purpose SET Active='0'WHERE id='$source_id'");
+        $results = VisitPurpose::getSource($source_id);
         //$this -> session -> set('message_counter','2');
-        $this->session->set('msg_error', $results->name . ' was disabled!');
+        $this->session->set('msg_error', $results->name . ' was disabled');
         $this->session->setFlashdata('filter_datatable', $results->name); //Filter datatable
         return redirect()->to(base_url() . '/public/settings_management');
     }
 
     public function base_params($data) {
-        $data['quick_link'] = "drug_sources";
-        echo view("\Modules\ADT\Views\\drugsources_v", $data);
+        $data['quick_link'] = "client_sources";
+        echo view("\Modules\ADT\Views\\visit_v", $data);
     }
 
 }

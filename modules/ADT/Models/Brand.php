@@ -16,12 +16,12 @@ class Brand extends BaseModel {
        
     }
 
-    public function getAll() {
+    public static function getAll() {
         $query = DB::table('brand')->orderBy('Drug_Id', 'desc')->get();
         return $query;
     }
 
-    public function getBrandName($id) {
+    public static function getBrandName($id) {
         $query = DB::table('brand')->where('id', $id)->get();
         return $query[0];
     }

@@ -64,12 +64,12 @@ class Inventory_management extends \App\Controllers\BaseController {
          * you want to insert a non-database field (for example a counter or static image)
          */
         $aColumns = array('drug', 'generic_name', 'stock_level', 'drug_unit', 'pack_size', 'supported_by', 'dose');
-        $iDisplayStart = $_GET['iDisplayStart'];
-        $iDisplayLength = $_GET['iDisplayLength'];
-        $iSortCol_0 = $_GET['iSortCol_0'];
-        $iSortingCols = $_GET['iSortingCols'];
-        $sSearch = $_GET['sSearch'];
-        $sEcho = $_GET['sEcho'];
+        $iDisplayStart = @$_GET['iDisplayStart'];
+        $iDisplayLength = @$_GET['iDisplayLength'];
+        $iSortCol_0 = @$_GET['iSortCol_0'];
+        $iSortingCols = @$_GET['iSortingCols'];
+        $sSearch = @$_GET['sSearch'];
+        $sEcho = @$_GET['sEcho'];
         /*
          * Paging
          * */
@@ -83,9 +83,9 @@ class Inventory_management extends \App\Controllers\BaseController {
         $sOrder = "";
         if (isset($_GET['iSortCol_0'])) {
             $sOrder = "ORDER BY  ";
-            for ($i = 0; $i < intval($_GET['iSortingCols']); $i++) {
-                if ($_GET['bSortable_' . intval($_GET['iSortCol_' . $i])] == "true") {
-                    $sOrder .= "`" . $aColumns[intval($_GET['iSortCol_' . $i])] . "` " . ($_GET['sSortDir_' . $i] === 'asc' ? 'asc' : 'desc') . ", ";
+            for ($i = 0; $i < intval(@$_GET['iSortingCols']); $i++) {
+                if (@$_GET['bSortable_' . intval(@$_GET['iSortCol_' . $i])] == "true") {
+                    $sOrder .= "`" . $aColumns[intval(@$_GET['iSortCol_' . $i])] . "` " . (@$_GET['sSortDir_' . $i] === 'asc' ? 'asc' : 'desc') . ", ";
                 }
             }
 
@@ -106,7 +106,7 @@ class Inventory_management extends \App\Controllers\BaseController {
         if (isset($sSearch) && !empty($sSearch)) {
             $sFilter = "AND ( ";
             for ($i = 0; $i < count($aColumns); $i++) {
-                $bSearchable = $_GET['bSearchable_' . $i];
+                $bSearchable = @$_GET['bSearchable_' . $i];
 
                 // Individual column filtering
                 if (isset($bSearchable) && $bSearchable == 'true') {
@@ -255,15 +255,15 @@ class Inventory_management extends \App\Controllers\BaseController {
         $ccc_id = $uri->getSegments(3);
         /* Added Limit as there are issues */
         ini_set("memory_limit", -1);
-        $iDisplayStart = $_GET['iDisplayStart'];
-        $iDisplayLength = $_GET['iDisplayLength'];
-        $iSortCol_0 = @$_GET['iSortCol_0'];
-        $iSortingCols = $_GET['iSortingCols'];
-        $sSearch = $_GET['sSearch'];
-        $sEcho = $_GET['sEcho'];
+        $iDisplayStart = @@$_GET['iDisplayStart'];
+        $iDisplayLength = @@$_GET['iDisplayLength'];
+        $iSortCol_0 = @@$_GET['iSortCol_0'];
+        $iSortingCols = @@$_GET['iSortingCols'];
+        $sSearch = @@$_GET['sSearch'];
+        $sEcho = @@$_GET['sEcho'];
 
         $where = "";
-        $builder;
+        $builder=DB::table("drug_stock_movement as ds");
 
         //columns
         $aColumns = array('Order_Number',
@@ -287,18 +287,18 @@ class Inventory_management extends \App\Controllers\BaseController {
 
         // Paging
         if (isset($iDisplayStart) && $iDisplayLength != '-1') {
-            $builder = $this->db->limit($this->db->escapeString($iDisplayLength), $this->db->escapeString($iDisplayStart));
+            $builder->limit($iDisplayLength, $iDisplayStart);
         }
 
         // Ordering
         if (isset($iSortCol_0)) {
             for ($i = 0; $i < intval($iSortingCols); $i++) {
-                $iSortCol = $_GET['iSortCol_' . $i];
-                $bSortable = $_GET['bSortable_' . intval($iSortCol)];
-                $sSortDir = $_GET['sSortDir_' . $i];
+                $iSortCol = @$_GET['iSortCol_' . $i];
+                $bSortable = @$_GET['bSortable_' . intval($iSortCol)];
+                $sSortDir = @$_GET['sSortDir_' . $i];
 
                 if ($bSortable == 'true') {
-                    $builder = $this->db->orderBy($aColumns[intval($this->db->escapeString($iSortCol))], $this->db->escapeString($sSortDir));
+                    $builder = $builder->orderBy($aColumns[intval($iSortCol)], $sSortDir);
                 }
             }
         }
@@ -323,7 +323,7 @@ class Inventory_management extends \App\Controllers\BaseController {
                 'Unit_Cost',
                 'Amount');
             for ($i = 0; $i < count($newColumns); $i++) {
-                $bSearchable = $_GET['bSearchable_' . $i];
+                $bSearchable = @$_GET['bSearchable_' . $i];
 
                 // Individual column filtering
                 if (isset($bSearchable) && $bSearchable == 'true') {
@@ -332,54 +332,56 @@ class Inventory_management extends \App\Controllers\BaseController {
                     } else {
                         $where .= " OR ";
                     }
-                    $where .= $newColumns[$i] . " LIKE '%" . $builder->escapeLikeString($sSearch) . "%'";
+                    $where .= $newColumns[$i] . " LIKE '%$sSearch%'";
                     $column_count++;
                 }
             }
         }
 
         //data
-        $builder->select('SQL_CALC_FOUND_ROWS ' . str_replace(' , ', ' ', implode(', ', $aColumns)), false);
-        $builder->select('t.effect');
-        $builder->from("drug_stock_movement ds");
-        $builder->join("drugcode dc", "dc.id=ds.drug", "left");
-        $builder->join("transaction_type t", "t.id=ds.transaction_type", "left");
-        $builder->join("drug_source s", "s.id=ds.source_destination", "left");
-        $builder->join("drug_destination d", "d.id=ds.source_destination", "left");
+//        $builder->table("drug_stock_movement ds");
+        $builder->select(DB::raw('SQL_CALC_FOUND_ROWS ' . str_replace(' , ', ' ', implode(', ', $aColumns)), false));
+        $builder->select('effect');
+        $builder->leftJoin("drugcode as dc", "dc.id", "=", "ds.drug");
+        $builder->leftJoin("transaction_type as t", "t.id", "=", "ds.transaction_type");
+        $builder->leftJoin("drug_source as s", "s.id", "=", "ds.source_destination");
+        $builder->leftJoin("drug_destination as d", "d.id", "=", "ds.source_destination");
         $builder->where("ds.drug", $drug_id);
         $builder->where("ds.ccc_store_sp", $ccc_id);
         //search sql clause
         if ($where != "") {
             $where .= ")";
-            $builder->where($where);
+            $builder->where(DB::ra($where));
         }
         $builder->orderBy('ds.id', 'desc');
         $rResult = $builder->get();
 
         // Data set length after filtering
-        $res = $this->db->query('SELECT FOUND_ROWS() AS found_rows')->getResult();
-        $iFilteredTotal = count($res);
+//        $res = $this->db->query('SELECT FOUND_ROWS() AS found_rows')->getResult();
+        $iFilteredTotal = count($rResult);
 
         // Total data set length
-        $this->db->select("ds.*");
-        $this->db->from("drug_stock_movement ds");
-        $this->db->join("drugcode dc", "dc.id=ds.drug", "left");
-        $this->db->join("transaction_type t", "t.id=ds.transaction_type", "left");
-        $this->db->join("drug_source s", "s.id=ds.source_destination", "left");
-        $this->db->join("drug_destination d", "d.id=ds.source_destination", "left");
-        $this->db->where("ds.drug", $drug_id);
-        $this->db->where("ds.ccc_store_sp", $ccc_id);
-        $total = $this->db->getResult();
-        $iTotal = count($total->getResultArray());
+        $qb = DB::table("drug_stock_movement as ds");
+        $qb->select("ds.*");
+//        $qb->table("drug_stock_movement ds");
+        $qb->leftJoin("drugcode as dc", "dc.id", "=", "ds.drug");
+        $qb->leftJoin("transaction_type as t", "t.id", "=", "ds.transaction_type");
+        $qb->leftJoin("drug_source as s", "s.id", "=", "ds.source_destination");
+        $qb->leftJoin("drug_destination as d", "d.id", "=", "ds.source_destination");
+        $qb->where("ds.drug", $drug_id);
+        $qb->where("ds.ccc_store_sp", $ccc_id);
+//        $total = $this->db->getResult();
+        $iTotal = $qb->count();
+        $rResult = $qb->get();
         // Output
         $output = array('sEcho' => intval($sEcho),
             'iTotalRecords' => $iTotal,
             'iTotalDisplayRecords' => $iFilteredTotal,
-            'aaData' => array());
+            'aaData' => []);
 
         //loop through data to change transaction type
-        foreach ($rResult->getResult() as $drug_transaction) {
-            $row = array();
+        foreach ($rResult as $drug_transaction) {
+            $row = [];
             if ($drug_transaction->effect == 1) {
                 //quantity_out & source (means adds stock to system)
                 $transaction_type = $drug_transaction->Transaction_Type;

@@ -72,6 +72,7 @@
                     <table class="setting_table table table-bordered table-striped" id="brand_name_table">
                         <thead>
                             <tr>
+                               
                                 <th>Drug Codes</th>
                                 <th>Drug Codes - Brand Names</th>
                                 <th>Options</th>
@@ -82,9 +83,10 @@
                             
                             foreach ($drug_codes as $drug_code) {
                                 foreach ($drug_code->Brand as $brand) {
-                                    ?>
-                                    <tr><td><?php echo $drug_code->drug; ?></td><td><?php echo $brand->brand; ?></td>
-                                        <td><?php echo anchor('brandname_management/delete/' . $brand->id, 'Delete'); ?></td></tr>
+                                                                     ?>  
+
+                            <tr><td><?php echo $drug_code->drug; ?></td><td><?php echo $brand->brand; ?></td>
+                                        <td><?php echo anchor(base_url().'/public/brandname_management/delete/' . $brand->id, 'Delete'); ?></td></tr>
                                     <?php
                                 }
                             }
@@ -100,7 +102,7 @@
     <div id="client_form" title="New Brandname" class="modal hide fade cyan" tabindex="-1" role="dialog" aria-labelledby="label" aria-hidden="true">
         <?php
         $attributes = array('class' => 'input_form');
-        echo form_open('brandname_management/save', $attributes);
+        echo form_open(base_url().'/public/brandname_management/save', $attributes);
         ?>
 
         <div class="modal-header">

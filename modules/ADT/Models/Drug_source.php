@@ -40,9 +40,8 @@ class Drug_source extends BaseModel {
     }
 
     public static function getSource($id) {
-        $query = Doctrine_Query::create()->select("*")->from("Drug_Source")->where("id = '$id'");
-        $ois = $query->execute();
-        return $ois[0];
+        $query = DB::table("drug_source")->where("id", $id)->get();
+        return $query[0];
     }
 
     public static function getThemAll($access_level = "") {

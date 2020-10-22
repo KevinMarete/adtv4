@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\ADT\Controllers;
+namespace App\Controllers;
 
 ob_start();
 

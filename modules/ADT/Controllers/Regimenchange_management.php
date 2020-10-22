@@ -54,10 +54,10 @@ class Regimenchange_management extends \App\Controllers\BaseController {
 
                 if ($source->active == 1) {
                     $links .= " | ";
-                    $links .= anchor('regimenchange_management/disable/' . $source->id, 'Disable', array('class' => 'disable_user'));
+                    $links .= anchor(base_url() . '/public/regimenchange_management/disable/' . $source->id, 'Disable', array('class' => 'disable_user'));
                 } else {
 
-                    $links .= anchor('regimenchange_management/enable/' . $source->id, 'Enable', array('class' => 'enable_user'));
+                    $links .= anchor(base_url() . '/public/regimenchange_management/enable/' . $source->id, 'Enable', array('class' => 'enable_user'));
                 }
             }
             $this->table->addRow($source->id, $source->name, $links);
@@ -74,18 +74,18 @@ class Regimenchange_management extends \App\Controllers\BaseController {
     }
 
     public function save() {
-        $creator_id = $this->session->userdata('user_id');
-        $source = $this->session->userdata('facility');
+        $creator_id = session()->get('user_id');
+        $source = session()->get('facility');
 
         $source = new Regimen_change_purpose();
-        $source->Name = $this->input->post('regimenchange_name');
+        $source->Name = $_POST['regimenchange_name'];
         $source->Active = "1";
         $source->save();
 
         //$this -> session -> set_userdata('message_counter','1');
-        $this->session()->set('msg_success', $this->input->post('regimenchange_name') . ' was Added');
-        $this->session->setFlashdata('filter_datatable', $this->input->post('regimenchange_name')); //Filter after saving
-        redirect('settings_management');
+        session()->set('msg_success', $_POST['regimenchange_name'] . ' was Added');
+        session()->setFlashdata('filter_datatable', $_POST['regimenchange_name']); //Filter after saving
+        return redirect()->to(base_url() . '/public/settings_management');
     }
 
     public function edit($source_id) {
@@ -98,35 +98,32 @@ class Regimenchange_management extends \App\Controllers\BaseController {
     }
 
     public function update() {
-        $regimenchange_id = $this->input->post('regimenchange_id');
-        $regimenchange_name = $this->input->post('regimenchange_name');
+        $regimenchange_id = $this->request->getPost('regimenchange_id');
+        $regimenchange_name = $this->request->getPost('regimenchange_name');
 
-        $this->load->database();
         $query = $this->db->query("UPDATE Regimen_Change_Purpose SET Name='$regimenchange_name' WHERE id='$regimenchange_id'");
         //$this -> session -> set_userdata('message_counter','1');
-        $this->session->set_userdata('msg_success', $this->input->post('regimenchange_name') . ' was Updated');
-        $this->session->set_flashdata('filter_datatable', $this->input->post('regimenchange_name')); //Filter after saving
-        redirect('settings_management');
+        session()->set('msg_success', $this->request->getPost('regimenchange_name') . ' was Updated');
+        session()->set('filter_datatable', $this->request->getPost('regimenchange_name')); //Filter after saving
+        return redirect()->to(base_url() . '/public/settings_management');
     }
 
     public function enable($regimenchange_id) {
-        $this->load->database();
         $query = $this->db->query("UPDATE Regimen_Change_Purpose SET Active='1'WHERE id='$regimenchange_id'");
         $results = Regimen_change_purpose::getSource($regimenchange_id);
         //$this -> session -> set_userdata('message_counter','1');
-        $this->session->set_userdata('msg_success', $results->Name . ' was enabled');
-        $this->session->set_flashdata('filter_datatable', $results->Name); //Filter
-        redirect('settings_management');
+        session()->set('msg_success', $results->name . ' was enabled');
+        session()->set('filter_datatable', $results->name); //Filter
+        return redirect()->to(base_url() . '/public/settings_management');
     }
 
     public function disable($regimenchange_id) {
-        $this->load->database();
         $query = $this->db->query("UPDATE Regimen_Change_Purpose SET Active='0'WHERE id='$regimenchange_id'");
         $results = Regimen_change_purpose::getSource($regimenchange_id);
-        $this->session->set_userdata('message_counter', '2');
-        $this->session->set_userdata('msg_error', $results->Name . ' was disabled');
-        $this->session->set_flashdata('filter_datatable', $results->Name); //Filter
-        redirect('settings_management');
+        session()->set('message_counter', '2');
+        session()->set('msg_error', $results->name . ' was disabled');
+        session()->set('filter_datatable', $results->name); //Filter
+        return redirect()->to(base_url() . '/public/settings_management');
     }
 
     public function base_params($data) {

@@ -5,12 +5,14 @@ namespace Modules\ADT\Controllers;
 ob_start();
 
 use \Modules\ADT\Models\Drugcode;
+use \Modules\ADT\Models\CCC_store_service_point;
 use Illuminate\Database\Capsule\Manager as DB;
 
 class Drug_stock_balance_sync extends \App\Controllers\BaseController {
 
     var $db;
     var $table;
+    var $session;
 
     function __construct() {
         session()->set("link_id", "index");
@@ -18,6 +20,7 @@ class Drug_stock_balance_sync extends \App\Controllers\BaseController {
         session()->set("linkTitle", "Brand Name Management");
         $this->db = \Config\Database::connect();
         $this->table = new \CodeIgniter\View\Table();
+        $this->session = \Config\Services::session();
         ini_set("max_execution_time", "1000000");
     }
 
@@ -40,11 +43,11 @@ class Drug_stock_balance_sync extends \App\Controllers\BaseController {
     }
 
     public function synch_balance($stock_type = "2") {
-        $stock_type = $this->input->post("stock_type");
-        //$drug_id=$this->input->post("drug_id");
+        $stock_type = $this->request->getPost("stock_type");
+        //$drug_id=$this->request->getPost("drug_id");
         $drug_id = 102;
         $not_saved = 0;
-        $facility_code = $this->session->userdata('facility');
+        $facility_code = $this->session->set('facility');
         $stock_param = "";
 
         //CCC Store Name
@@ -67,7 +70,7 @@ class Drug_stock_balance_sync extends \App\Controllers\BaseController {
 
 
         $bacthes = $this->db->query($get_batches_sql);
-        $batch_results = $bacthes->result_array();
+        $batch_results = $bacthes->getResultArray();
         foreach ($batch_results as $key => $batch_row) {
 
             //echo $count_it."<br>";
@@ -89,7 +92,7 @@ class Drug_stock_balance_sync extends \App\Controllers\BaseController {
 
             //$initial_stock_sql = "SELECT SUM( d.quantity ) AS Initial_stock, d.transaction_date AS transaction_date, '" .$batch_no. "' AS batch,t.name as trans_name FROM drug_stock_movement d LEFT JOIN transaction_type t ON t.id=d.transaction_type WHERE d.drug =  '" .$drug_id. "' AND (t.name LIKE '%physical count%' OR t.name LIKE '%stock count%') AND facility='" .$facility_code. "' ".$stock_param." AND d.batch_number =  '" .$batch_no. "'";
             $bacthes_initial_stock = $this->db->query($initial_stock_sql);
-            $batch_initial_stock = $bacthes_initial_stock->result_array();
+            $batch_initial_stock = $bacthes_initial_stock->getResultArray();
             $x = count($batch_initial_stock);
             //echo $x.'<br>';
             foreach ($batch_initial_stock as $key => $value2) {
@@ -101,7 +104,7 @@ class Drug_stock_balance_sync extends \App\Controllers\BaseController {
                     $batch_stock_balance_sql = "SELECT ds.quantity AS stock_levels, ds.batch_number FROM drug_stock_movement ds WHERE ds.transaction_date BETWEEN  '" . $value2['transaction_date'] . "' AND curdate() AND facility='" . $facility_code . "' " . $stock_param . " AND ds.drug ='" . $drug_id . "'  AND ds.batch_number ='" . $value2['batch'] . "' ORDER BY ds.id DESC LIMIT 1";
 
                     $bacthes_balance = $this->db->query($batch_stock_balance_sql);
-                    $batch_balance_array = $bacthes_balance->result_array();
+                    $batch_balance_array = $bacthes_balance->getResultArray();
                     foreach ($batch_balance_array as $key => $value3) {
                         //Save balance in drug_stock_balance table
                         if ($value3['stock_levels'] > 0) {
@@ -124,7 +127,7 @@ class Drug_stock_balance_sync extends \App\Controllers\BaseController {
 
                     //echo $batch_stock_balance_sql;die();
                     $bacthes_balance = $this->db->query($batch_stock_balance_sql);
-                    $batch_balance_array = $bacthes_balance->result_array();
+                    $batch_balance_array = $bacthes_balance->getResultArray();
                     foreach ($batch_balance_array as $key => $value3) {
                         //Store balance in drug_stock_balance table
                         $batch_balance_save = $value3['stock_levels'];
@@ -151,9 +154,9 @@ class Drug_stock_balance_sync extends \App\Controllers\BaseController {
 
     //Synchronizes drug stock moment balance
     public function drug_stock_movement_balance() {
-        $stock_type = $this->input->post("stock_type");
-        $drug_id = $this->input->post("drug_id");
-        $facility_code = $this->session->userdata('facility');
+        $stock_type = $this->request->getPost("stock_type");
+        $drug_id = $this->request->getPost("drug_id");
+        $facility_code = $this->session->set('facility');
         $stock_param = "";
         //Store
         if ($stock_type == '1') {
@@ -168,13 +171,13 @@ class Drug_stock_balance_sync extends \App\Controllers\BaseController {
         //Get all the batches
         $get_batches_sql = "SELECT DISTINCT d.batch_number AS batch,expiry_date FROM drug_stock_movement d WHERE d.drug =  '" . $drug_id . "' AND facility='" . $facility_code . "' " . $stock_param . " GROUP BY d.batch_number";
         $batches = $this->db->query($get_batches_sql);
-        $batch_results = $batches->result_array();
+        $batch_results = $batches->getResultArray();
         foreach ($batch_results as $key => $batch_row) {
             $batch_number = $batch_row['batch'];
             //get drug balances
             $get_balances_sql = "SELECT dsm.ID,dsm.TRANSACTION_DATE,dsm.TRANSACTION_TYPE,dsm.QUANTITY,dsm.QUANTITY_OUT,t.name as transaction_name,IF((t.name LIKE '%physical count%' OR t.name LIKE '%starting stock%') ,@BALANCE:=@BALANCE-@BALANCE+QUANTITY,@BALANCE:=@BALANCE+QUANTITY-QUANTITY_OUT) as balance FROM drug_stock_movement dsm LEFT JOIN transaction_type t ON t.id=dsm.TRANSACTION_TYPE ,(SELECT @BALANCE:=0) as DUMMY WHERE drug='" . $drug_id . "' AND batch_number='" . $batch_number . "' AND facility='" . $facility_code . "' " . $stock_param . " ORDER BY ID ASC";
             $balances = $this->db->query($get_balances_sql);
-            $balance_results = $balances->result_array();
+            $balance_results = $balances->getResultArray();
             //Loop through the array to get the actual values
             foreach ($balance_results as $key => $balance) {
                 $bal = $balance['balance'];
@@ -184,13 +187,13 @@ class Drug_stock_balance_sync extends \App\Controllers\BaseController {
                 //Update the balance column 
                 $update_balance_sql = "UPDATE drug_stock_movement SET balance='" . $bal . "' WHERE id=" . $balance['ID'];
                 $balances = $this->db->query($update_balance_sql);
-                //$balance_results=$balances -> result_array();
+                //$balance_results=$balances -> getResultArray();
             }
         }
     }
 
     public function setConsumption() {
-        $facility_code = $this->session->userdata("facility");
+        $facility_code = $this->session->set("facility");
         //truncate drug_consumption_balance
         $sql = "TRUNCATE drug_cons_balance";
         $this->db->query($sql);
@@ -199,7 +202,7 @@ class Drug_stock_balance_sync extends \App\Controllers\BaseController {
         //new using drug_stock_movement
         $sql = "INSERT INTO drug_cons_balance(drug_id,stock_type,period,facility,amount)SELECT dsm.drug,dsm.ccc_store_sp,DATE_FORMAT(dsm.transaction_date,'%Y-%m-01') as period, $facility_code facility_code,SUM(dsm.quantity_out) AS total FROM  drug_stock_movement dsm LEFT JOIN transaction_type t ON t.id=dsm.transaction_type WHERE dsm.drug > 0 AND t.name LIKE '%dispense%' GROUP BY dsm.drug,dsm.ccc_store_sp,period ORDER BY  dsm.drug";
         $this->db->query($sql);
-        echo "<div class='alert alert-info'><button type='button' class='close' data-dismiss='alert'>&times;</button><strong>(" . $this->db->affected_rows() . ")</strong> rows updated for drug consumption</div>";
+        echo "<div class='alert alert-info'><button type='button' class='close' data-dismiss='alert'>&times;</button><strong>(" . $this->db->affectedRows() . ")</strong> rows updated for drug consumption</div>";
     }
 
     public function view_balance() {
@@ -212,15 +215,17 @@ class Drug_stock_balance_sync extends \App\Controllers\BaseController {
     }
 
     public function getRunningBalance() {
+        error_reporting(0);
         ini_set("max_execution_time", "100000");
         ini_set("memory_limit", '2048M');
 
-        $drug_id = $this->input->post("drug_id");
+        $drug_id = $this->request->getPost("drug_id");
         $stores = CCC_store_service_point::getActive();
-        $facility_code = $this->session->userdata("facility");
+
+        $facility_code = $this->session->set("facility");
 
         foreach ($stores as $store) {
-            $store_id = $store['id'];
+            $store_id = $store->id;
             $sql = "SELECT d.id AS trans_id, 
                         c.name AS trans_store, 
                         t.name AS trans_type, 
@@ -234,7 +239,7 @@ class Drug_stock_balance_sync extends \App\Controllers\BaseController {
 					AND d.ccc_store_sp ='$store_id'
 					ORDER BY d.id ASC";
             $query = $this->db->query($sql);
-            $transactions = $query->result_array();
+            $transactions = $query->getResultArray();
             $balance_before = 0;
             $balance_after = 0;
             $total = 0;
@@ -301,7 +306,7 @@ class Drug_stock_balance_sync extends \App\Controllers\BaseController {
 				  AND dsb.expiry_date > CURDATE()
 				  AND dsb.balance >0";
             $query = $this->db->query($sql);
-            $balances = $query->result_array();
+            $balances = $query->getResultArray();
             $drug_balance = 0;
             if ($balances) {
                 $drug_balance = $balances[0]['total'];
@@ -325,7 +330,7 @@ class Drug_stock_balance_sync extends \App\Controllers\BaseController {
 
                 //get transaction_type_id
                 $query = $this->db->query($sql);
-                $results = $query->result_array();
+                $results = $query->getResultArray();
                 $transaction_type_id = $results[0]['id'];
 
                 //make difference absolute(positive)
@@ -345,21 +350,21 @@ class Drug_stock_balance_sync extends \App\Controllers\BaseController {
                 $insert_data = array(
                     'drug' => $drug_id,
                     'transaction_date' => date("Y-m-d"),
-                    'batch_number' => $batch_no,
-                    'expiry_date' => $expiry_date,
+                    'batch_number' => $batch_no ? $batch_no : 'N/A',
+                    'expiry_date' => $expiry_date ? $expiry_date : '0000-00-00',
                     'transaction_type' => $transaction_type_id,
-                    'source' => $source,
-                    'destination' => $destination,
+                    'source' => $source ? $source : 'N/A',
+                    'destination' => $destination ? $destination : 'N/A',
                     $column => $difference,
-                    'facility' => $facility_code,
+                    'facility' => $facility_code ? $facility_code : 'N/A',
                     'ccc_store_sp' => $store_id
                 );
-
-                $this->db->insert('drug_stock_movement', $insert_data);
-                $last_insert_id = $this->db->insert_id();
+                $builder = $this->db->table('drug_stock_movement');
+                $builder->insert($insert_data);
+                //$last_insert_id = $builder->getInsertID();
 
                 //update running_balance in machine code column
-                $sql = "UPDATE drug_stock_movement SET machine_code='$drug_balance' WHERE id='$last_insert_id'";
+                $sql = "UPDATE drug_stock_movement SET machine_code='$drug_balance' WHERE id=(SELECT MAX(id) FROM drug_stock_movement)";
                 $this->db->query($sql);
             }
         }

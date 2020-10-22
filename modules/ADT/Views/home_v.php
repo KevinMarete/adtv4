@@ -273,9 +273,9 @@ if ($session->get("changed_password")) {
                 </div>
             </div>
         </div>
-    <?php
+        <?php
     }if ($user_is_administrator) {
-        $this->load->view("sysadmin_home_v");
+        echo view("\Modules\ADT\Views\\sysadmin_home_v");
     }
     ?>
 </div>
