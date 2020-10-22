@@ -74,686 +74,686 @@ if(isset($results)){
 ?>
 
 <script type="text/javascript">
-		$(document).ready(function(){
-			
-			
-			//Check if patient has dependant/spouse who are lost to follow up
-			var dependant_msg = '<?php echo $dependant_msg; ?>';
-			if(dependant_msg!=''){
-				bootbox.alert("<h4>Dependant/Spouse Message </h4>\n\<hr/><span>"+dependant_msg+"</span>");
-			}
-			
-            $("#history_table").find("tr :first").css("width","120px");
-			var base_url="<?php echo base_url();?>";
-			var record_id="<?php echo @$result['id'];?>";
-			
-			<?php if($this->session->userdata("print_labels") !=""){ ?>
-				window.location=base_url+"dispensement_management/print_labels/"+record_id;
-		    <?php }?>
-			
-			//Function to Check Patient Numner exists
-			var patient_identification="<?php echo @$result['patient_number_ccc'];?>";
-
-		    $("#patient_number").change(function(){
-				var patient_no=$("#patient_number").val();
-				var link=base_url+"/public/patient/checkpatient_no/"+patient_no;
-				$.ajax({
-				    url: link,
-				    type: 'POST',
-				    success: function(data) {
-				        if(data==1){
-				          bootbox.alert("<h4>Duplicate Entry</h4>\n\<hr/><center>Patient Number Matches an existing record</center>");
-				        }
-				    }
-				});
-	        });
-	        
-	        //Attach date picker for date of birth
-	        $("#dob").datepicker({
-					yearRange : "-120:+0",
-					maxDate : "0D",
-					dateFormat : $.datepicker.ATOM,
-					changeMonth : true,
-					changeYear : true
-			});
-			
-			$("#medical_record_number").val("<?php echo $result['medical_record_number'];?>");
-			$("#patient_number").val("<?php echo $result['patient_number_ccc'];?>");
-			$("#last_name").val("<?php echo $result['last_name'];?>");
-			$("#first_name").val("<?php echo $result['first_name'];?>");
-			$("#other_name").val("<?php echo $result['other_name'];?>");
-			$("#dob").val("<?php echo $result['dob'];?>");
-			$("#pob").val("<?php echo $result['pob'];?>");
-			$("#match_parent").val("<?php echo $result['child'];?>");
-			$("#gender").val("<?php echo $result['gender'];?>");
-			
-			//Display Gender Tab
-			if($("#gender").val()==2){
-				$("#pregnant_view").show();
-			}
-			$("#pregnant").val("<?php echo $result['pregnant'];?>");
-			
-			
-			$('#start_age').val(getStartAge("<?php echo $result['dob'];?>","<?php echo $result['date_enrolled'];?>"));
-			$('#age').val(getAge("<?php echo $result['dob'];?>"));
-
-			current_age=getAge("<?php echo $result['dob'];?>");
-			if(current_age < 15 ){
-			   //if patient is less than 15 years old hide all family planning data
-               $(".plan_hidden").css("display","none");
-			}else{
-			   //if patient is more than 15 years old hide all parent/dependant data
-			   $('.match_hidden').css("display","none");
-			}
+	$(document).ready(function(){
 		
-			$("#info_age").text($('#age').val());
-	        $('#start_weight').val("<?php echo $result['start_weight'];?>");
-	        $('#start_height').val("<?php echo $result['start_height'];?>");
-	        $('#start_bsa').val("<?php echo $result['start_bsa'];?>");
-	        $('#current_weight').val("<?php echo $result['weight'];?>");
-	        $('#current_height').val("<?php echo $result['height'];?>");
-	        $('#current_bsa').val("<?php echo $result['sa'];?>");
-	        $('#phone').val("<?php echo $result['phone'];?>");
-	        
-	        //To Check Sms Consent
-			var sms_consent="<?php echo $result['sms_consent'];?>";
-			if(sms_consent==1){
-			$("#sms_yes").attr("checked", "true");	
-			}else if(sms_consent==0){
-			$("#sms_no").attr("checked", "true");	
-			}
-	        
-	        
-	        $('#physical').val("<?php echo $result['physical'];?>");
-	        $('#alternate').val("<?php echo $result['alternate'];?>");
-	        
-	        $('#partner_status').val("<?php echo $result['partner_status'];?>");
-	        $('#disclosure').val("<?php echo $result['disclosure'];?>");
-	        $('#match_spouse').val("<?php echo $result['secondary_spouse'];?>");
-
-
-	        //if partner status is not concordant do not show spouse field
-	    	partner_status="<?php echo $result['partner_status'];?>";
-	    	if(partner_status !=1){
-				$(".status_hidden").css("display","none");	
-				$("#match_spouse").val("");
-	    	}
-			
-		    //Select Family Planning Methods Selected
-		    var family_planning="<?php echo $result['fplan']; ?>";
 		
-			if(family_planning != null || family_planning != " ") {
-				var fplan = family_planning.split(',');
-				for(var i = 0; i < fplan.length; i++) {
-                  $('input[name="family_planning"][type="checkbox"][value="' + fplan[i] + '"]').attr('checked', true);
+		//Check if patient has dependant/spouse who are lost to follow up
+		var dependant_msg = '<?php echo $dependant_msg; ?>';
+		if(dependant_msg!=''){
+			bootbox.alert("<h4>Dependant/Spouse Message </h4>\n\<hr/><span>"+dependant_msg+"</span>");
+		}
+		
+		$("#history_table").find("tr :first").css("width","120px");
+		var base_url="<?php echo base_url();?>";
+		var record_id="<?php echo @$result['id'];?>";
+		
+		<?php if($this->session->get("print_labels") !=""){ ?>
+			window.location=base_url+"dispensement_management/print_labels/"+record_id;
+		<?php }?>
+		
+		//Function to Check Patient Numner exists
+		var patient_identification="<?php echo @$result['patient_number_ccc'];?>";
+
+		$("#patient_number").change(function(){
+			var patient_no=$("#patient_number").val();
+			var link=base_url+"/public/patient/checkpatient_no/"+patient_no;
+			$.ajax({
+				url: link,
+				type: 'POST',
+				success: function(data) {
+					if(data==1){
+						bootbox.alert("<h4>Duplicate Entry</h4>\n\<hr/><center>Patient Number Matches an existing record</center>");
+					}
 				}
-			}
-			
-			//Select Drug Prophylaxis Methods Selected
-		    var drug_prophylaxis="<?php echo $result['drug_prophylaxis'];?>";
-		    //On Select Drug Prophylaxis
-			$("#isoniazid_view").css("display","none");
-		
-			if(drug_prophylaxis != null || drug_prophylaxis != " ") {
-				var prophylaxis = drug_prophylaxis.split(',');
-				for(var i = 0; i < prophylaxis.length; i++) {
-					var selected_obj=$('input[name="drug_prophylaxis"][type="checkbox"][value="' + prophylaxis[i] + '"]');
-                  	selected_obj.attr('checked', true);
-                  	if(prophylaxis[i]==3){
-                  	   $("#isoniazid_view").show(); 
-                  	}
-				}
-			}
-
-			//select isonazid dates
-			$("#iso_start_date").val("<?php echo $result['isoniazid_start_date'];?>");
-			$("#iso_end_date").val("<?php echo $result['isoniazid_end_date'];?>");
-
-			//To Disable Textareas
-			$("textarea[name='other_chronic']").not(this).attr("disabled", "true");
-			$("textarea[name='other_drugs']").not(this).attr("disabled", "true");
-			$("textarea[name='other_allergies_listing']").not(this).attr("disabled", "true");
-			$("textarea[name='support_group_listing']").not(this).attr("disabled", "true");
-			
-			//Select Other Illnesses Methods Selected
-			other_illnesses=<?php echo $result['other_illnesses'];?>;
-			other_sickness_list="";
-
-			$.each(other_illnesses,function(i,v){
-				ill_count=0;
-				//get list of illnesses
-				illness_list=$('input[name="other_illnesses_listing"][type="checkbox"]');
-				//loop through list to find match for current selected illness
-				$.each(illness_list,function(index,value){
-                      if($(this).val()==v){
-                      	$(this).attr('checked', true);
-                      	ill_count=1;
-                      }
-				});
-                if(ill_count==0){
-                	other_sickness_list+=","+v;
-                }
 			});
-			$("#other_chronic").val(other_sickness_list.substring(1));
+		});
+		
+		//Attach date picker for date of birth
+		$("#dob").datepicker({
+				yearRange : "-120:+0",
+				maxDate : "0D",
+				dateFormat : $.datepicker.ATOM,
+				changeMonth : true,
+				changeYear : true
+		});
+		
+		$("#medical_record_number").val("<?php echo $result['medical_record_number'];?>");
+		$("#patient_number").val("<?php echo $result['patient_number_ccc'];?>");
+		$("#last_name").val("<?php echo $result['last_name'];?>");
+		$("#first_name").val("<?php echo $result['first_name'];?>");
+		$("#other_name").val("<?php echo $result['other_name'];?>");
+		$("#dob").val("<?php echo $result['dob'];?>");
+		$("#pob").val("<?php echo $result['pob'];?>");
+		$("#match_parent").val("<?php echo $result['child'];?>");
+		$("#gender").val("<?php echo $result['gender'];?>");
+		
+		//Display Gender Tab
+		if($("#gender").val()==2){
+			$("#pregnant_view").show();
+		}
+		$("#pregnant").val("<?php echo $result['pregnant'];?>");
+		
+		
+		$('#start_age').val(getStartAge("<?php echo $result['dob'];?>","<?php echo $result['date_enrolled'];?>"));
+		$('#age').val(getAge("<?php echo $result['dob'];?>"));
 
-			if($("#other_chronic").val()){
-				$("input[name='other_other']").not(this).attr("checked", "true");
-			    $("textarea[name='other_chronic']").not(this).removeAttr("disabled");		
-			}
+		current_age=getAge("<?php echo $result['dob'];?>");
+		if(current_age < 15 ){
+			//if patient is less than 15 years old hide all family planning data
+			$(".plan_hidden").css("display","none");
+		}else{
+			//if patient is more than 15 years old hide all parent/dependant data
+			$('.match_hidden').css("display","none");
+		}
 	
-			<?php
-				$other_drugs=str_replace(array("\n"," ","/"),array(" \ ","","-"),$result['other_drugs']);
-			?>
-            $("#other_drugs").val("<?php echo  $other_drugs;?>");
+		$("#info_age").text($('#age').val());
+		$('#start_weight').val("<?php echo $result['start_weight'];?>");
+		$('#start_height').val("<?php echo $result['start_height'];?>");
+		$('#start_bsa').val("<?php echo $result['start_bsa'];?>");
+		$('#current_weight').val("<?php echo $result['weight'];?>");
+		$('#current_height').val("<?php echo $result['height'];?>");
+		$('#current_bsa').val("<?php echo $result['sa'];?>");
+		$('#phone').val("<?php echo $result['phone'];?>");
+		
+		//To Check Sms Consent
+		var sms_consent="<?php echo $result['sms_consent'];?>";
+		if(sms_consent==1){
+		$("#sms_yes").attr("checked", "true");	
+		}else if(sms_consent==0){
+		$("#sms_no").attr("checked", "true");	
+		}
+		
+		
+		$('#physical').val("<?php echo $result['physical'];?>");
+		$('#alternate').val("<?php echo $result['alternate'];?>");
+		
+		$('#partner_status').val("<?php echo $result['partner_status'];?>");
+		$('#disclosure').val("<?php echo $result['disclosure'];?>");
+		$('#match_spouse').val("<?php echo $result['secondary_spouse'];?>");
 
-            if($("#other_drugs").val()){
-				$("input[name='other_drugs_box']").not(this).attr("checked", "true");
-			    $("textarea[name='other_drugs']").not(this).removeAttr("disabled");		
+
+		//if partner status is not concordant do not show spouse field
+		partner_status="<?php echo $result['partner_status'];?>";
+		if(partner_status !=1){
+			$(".status_hidden").css("display","none");	
+			$("#match_spouse").val("");
+		}
+		
+		//Select Family Planning Methods Selected
+		var family_planning="<?php echo $result['fplan']; ?>";
+	
+		if(family_planning != null || family_planning != " ") {
+			var fplan = family_planning.split(',');
+			for(var i = 0; i < fplan.length; i++) {
+				$('input[name="family_planning"][type="checkbox"][value="' + fplan[i] + '"]').attr('checked', true);
 			}
-			
-			//To Check Disclosure
-			var disclosure="<?php echo $result['disclosure'];?>";
-			if(disclosure==1){
-			$("#disclosure_yes").attr("checked", "true");	
-			}else if(disclosure==0){
-			$("#disclosure_no").attr("checked", "true");	
-			}
-			
-			
-			//Select Other Drug Allergies
-			var other_drug_allergies='<?php echo  $adr=str_replace(array("\n"," ","/"),array(" \ ","","-"),$result['adr']);?>';
-			if (other_drug_allergies.indexOf(',') == -1) {
-              other_drug_allergies=other_drug_allergies+",";
-            }else{
-              other_drug_allergies=other_drug_allergies;
-            }
-			var other_drug_allergy="";
-				if(other_drug_allergies != null || other_drug_allergies != " ") {
-					var other_all = other_drug_allergies.split(',');
-					for(var i = 0; i < other_all.length; i++) {
-					   $('input[name="other_drug_allergies_listing"][type="checkbox"][value="' + other_all[i] + '"]').attr('checked', true);
-	                   if(other_all[i].charAt(0) !="-"){
-	                   	other_drug_allergy+=","+other_all[i];
-	                   }
-					}
-					$("#other_allergies_listing").val(other_drug_allergy.substring(1));
+		}
+		
+		//Select Drug Prophylaxis Methods Selected
+		var drug_prophylaxis="<?php echo $result['drug_prophylaxis'];?>";
+		//On Select Drug Prophylaxis
+		$("#isoniazid_view").css("display","none");
+	
+		if(drug_prophylaxis != null || drug_prophylaxis != " ") {
+			var prophylaxis = drug_prophylaxis.split(',');
+			for(var i = 0; i < prophylaxis.length; i++) {
+				var selected_obj=$('input[name="drug_prophylaxis"][type="checkbox"][value="' + prophylaxis[i] + '"]');
+				selected_obj.attr('checked', true);
+				if(prophylaxis[i]==3){
+					$("#isoniazid_view").show(); 
 				}
-
-			if($("#other_drug_allergies_listing").val()){
-				$("input[name='other_allergies']").not(this).attr("checked", "true");
-			  	$("textarea[name='other_allergies_listing']").not(this).removeAttr("disabled");		
 			}
-			
-			
-			//Hide Unchecked checkboxes
-			$(":checkbox:not(:checked)").attr("style", "display:none;");
-			$(':checkbox:not(:checked)').each(function() {
-				var unchecked = $(this).attr('id');
-				$('label[for="' + unchecked + '"]').attr('style', 'display:none;');
+		}
 
+		//select isonazid dates
+		$("#iso_start_date").val("<?php echo $result['isoniazid_start_date'];?>");
+		$("#iso_end_date").val("<?php echo $result['isoniazid_end_date'];?>");
+
+		//To Disable Textareas
+		$("textarea[name='other_chronic']").not(this).attr("disabled", "true");
+		$("textarea[name='other_drugs']").not(this).attr("disabled", "true");
+		$("textarea[name='other_allergies_listing']").not(this).attr("disabled", "true");
+		$("textarea[name='support_group_listing']").not(this).attr("disabled", "true");
+		
+		//Select Other Illnesses Methods Selected
+		other_illnesses=<?php echo $result['other_illnesses'];?>;
+		other_sickness_list="";
+
+		$.each(other_illnesses,function(i,v){
+			ill_count=0;
+			//get list of illnesses
+			illness_list=$('input[name="other_illnesses_listing"][type="checkbox"]');
+			//loop through list to find match for current selected illness
+			$.each(illness_list,function(index,value){
+					if($(this).val()==v){
+					$(this).attr('checked', true);
+					ill_count=1;
+					}
 			});
-            
-            //Hide Unchecked radiobuttons
-			$(':radio:not(:checked)').each(function() {
-				var unchecked = $(this).attr('id');
-				$('label[for="' + unchecked + '"]').attr('style', 'display:none;');
-
-			});	
-			
-			 $("#support_group_listing").val("<?php echo $result['support_group']?>");
-
-            if($("#support_group_listing").val()){
-				$("input[name='support_group']").not(this).attr("checked", "true");
-			    $("textarea[name='support_group_listing']").not(this).removeAttr("disabled");		
+			if(ill_count==0){
+				other_sickness_list+=","+v;
 			}
+		});
+		$("#other_chronic").val(other_sickness_list.substring(1));
+
+		if($("#other_chronic").val()){
+			$("input[name='other_other']").not(this).attr("checked", "true");
+			$("textarea[name='other_chronic']").not(this).removeAttr("disabled");		
+		}
+
+		<?php
+			$other_drugs=str_replace(array("\n"," ","/"),array(" \ ","","-"),$result['other_drugs']);
+		?>
+		$("#other_drugs").val("<?php echo  $other_drugs;?>");
+
+		if($("#other_drugs").val()){
+			$("input[name='other_drugs_box']").not(this).attr("checked", "true");
+			$("textarea[name='other_drugs']").not(this).removeAttr("disabled");		
+		}
+		
+		//To Check Disclosure
+		var disclosure="<?php echo $result['disclosure'];?>";
+		if(disclosure==1){
+		$("#disclosure_yes").attr("checked", "true");	
+		}else if(disclosure==0){
+		$("#disclosure_no").attr("checked", "true");	
+		}
+		
+		
+		//Select Other Drug Allergies
+		var other_drug_allergies='<?php echo  $adr=str_replace(array("\n"," ","/"),array(" \ ","","-"),$result['adr']);?>';
+		if (other_drug_allergies.indexOf(',') == -1) {
+			other_drug_allergies=other_drug_allergies+",";
+		}else{
+			other_drug_allergies=other_drug_allergies;
+		}
+		var other_drug_allergy="";
+			if(other_drug_allergies != null || other_drug_allergies != " ") {
+				var other_all = other_drug_allergies.split(',');
+				for(var i = 0; i < other_all.length; i++) {
+					$('input[name="other_drug_allergies_listing"][type="checkbox"][value="' + other_all[i] + '"]').attr('checked', true);
+					if(other_all[i].charAt(0) !="-"){
+					other_drug_allergy+=","+other_all[i];
+					}
+				}
+				$("#other_allergies_listing").val(other_drug_allergy.substring(1));
+			}
+
+		if($("#other_drug_allergies_listing").val()){
+			$("input[name='other_allergies']").not(this).attr("checked", "true");
+			$("textarea[name='other_allergies_listing']").not(this).removeAttr("disabled");		
+		}
+		
+		
+		//Hide Unchecked checkboxes
+		$(":checkbox:not(:checked)").attr("style", "display:none;");
+		$(':checkbox:not(:checked)').each(function() {
+			var unchecked = $(this).attr('id');
+			$('label[for="' + unchecked + '"]').attr('style', 'display:none;');
+
+		});
+		
+		//Hide Unchecked radiobuttons
+		$(':radio:not(:checked)').each(function() {
+			var unchecked = $(this).attr('id');
+			$('label[for="' + unchecked + '"]').attr('style', 'display:none;');
+
+		});	
+		
+			$("#support_group_listing").val("<?php echo $result['support_group']?>");
+
+		if($("#support_group_listing").val()){
+			$("input[name='support_group']").not(this).attr("checked", "true");
+			$("textarea[name='support_group_listing']").not(this).removeAttr("disabled");		
+		}
+		
+		$('#tested_tb').val("<?php echo $result['tb_test'];?>");
+		$('#pep_reason').val("<?php echo $result['pep_reason'];?>");
+		$('#smoke').val("<?php echo $result['smoke'];?>");
+		$('#alcohol').val("<?php echo $result['alcohol'];?>");	
+		
+		$("#tb").val("<?php echo $result['tb']; ?>");
+		
+		if($("#tb").val()==1){
+			$("#tbphase_view").show();
+			$("#tbcategory_view").show();
+			$("#tbcategory").val("<?php echo $result['tb_category']; ?>");
+			$("#tbphase").val("<?php echo $result['tbphase']; ?>");
+			$("#fromphase").val("<?php echo $result['startphase']; ?>");
+			$("#tophase").val("<?php echo $result['endphase']; ?>");
 			
-			$('#tested_tb').val("<?php echo $result['tb_test'];?>");
-			$('#pep_reason').val("<?php echo $result['pep_reason'];?>");
-			$('#smoke').val("<?php echo $result['smoke'];?>");
-			$('#alcohol').val("<?php echo $result['alcohol'];?>");	
-			
-			$("#tb").val("<?php echo $result['tb']; ?>");
-			
-			if($("#tb").val()==1){
-				$("#tbphase_view").show();
+				if($("#tbphase").val() ==3) {
+				$("#fromphase_view").hide();
+				$("#tophase_view").show();
+				} 
+				else if($("#tbphase").val()==0){
+				$("#fromphase_view").hide();
+				$("#tophase_view").hide();
+				}else {
+				$("#fromphase_view").show();
+				$("#tophase_view").show();
+				$("#transfer_source").attr("value",'');
+				}
+		}
+
+		//Function to display tb phases
+		$(".tb").change(function() {
+			var tb = $(this).val();
+				if(tb == 1) {
 				$("#tbcategory_view").show();
-				$("#tbcategory").val("<?php echo $result['tb_category']; ?>");
-				$("#tbphase").val("<?php echo $result['tbphase']; ?>");
-				$("#fromphase").val("<?php echo $result['startphase']; ?>");
-				$("#tophase").val("<?php echo $result['endphase']; ?>");
-				
-				 if($("#tbphase").val() ==3) {
-		   	     	$("#fromphase_view").hide();
-				    $("#tophase_view").show();
-				 } 
-				 else if($("#tbphase").val()==0){
-				 	$("#fromphase_view").hide();
-				 	$("#tophase_view").hide();
-				 }else {
-					$("#fromphase_view").show();
-				    $("#tophase_view").show();
-					$("#transfer_source").attr("value",'');
-			     }
-			}
+				$("#tbphase_view").show();
+				} 
+				else {
+				//hide views
+				$("#tbcategory_view").hide();
+				$("#fromphase_view").hide();
+				$("#tophase_view").hide();
+				$("#tbphase_view").hide();
+				//reset values
+				$("#tbphase").attr("value",'0');
+				$("#tbcategory").attr("value",'0');
+				$("#fromphase").attr("value",'');
+				$("#tophase").attr("value",'');
+				}
+		});
 
-			//Function to display tb phases
-		   $(".tb").change(function() {
-		   	    var tb = $(this).val();
-		   	     if(tb == 1) {
-				    $("#tbcategory_view").show();
-				    $("#tbphase_view").show();
-				 } 
-				 else {
-				 	//hide views
-					$("#tbcategory_view").hide();
-					$("#fromphase_view").hide();
-				 	$("#tophase_view").hide();
-				 	$("#tbphase_view").hide();
-                    //reset values
-					$("#tbphase").attr("value",'0');
-					$("#tbcategory").attr("value",'0');
-					$("#fromphase").attr("value",'');
-		   	        $("#tophase").attr("value",'');
-			     }
-		   });
+		$("#current_status").change(function(){
+			$("#status_started").datepicker('setDate', new Date());
+		});
 
-		   $("#current_status").change(function(){
-		   	    $("#status_started").datepicker('setDate', new Date());
-		   });
+		// function to display tb phase view
+		$("#tbcategory").change(function(){
+			$("#tbphase_view").show();
+			$("#fromphase").attr("value",'');
+			$("#tophase").attr("value",'');
 
-		   // function to display tb phase view
-		   $("#tbcategory").change(function(){
-              $("#tbphase_view").show();
-               $("#fromphase").attr("value",'');
-		   	    $("#tophase").attr("value",'');
-
-			});
-		   
-		   //Function to display tbphase dates
-		   $(".tbphase").change(function() {
-		   	    var tbpase = $(this).val();
-		   	    $("#fromphase").attr("value",'');
-		   	    $("#tophase").attr("value",'');
-		   	     if(tbpase ==3) {
-		   	     	$("#fromphase_view").hide();
-				    $("#tophase_view").show();
-				    $("#tb").val(0);
-				 } 
-				 else if(tbpase==0){
-				 	$("#fromphase_view").hide();
-				 	$("#tophase_view").hide();
-				 }else {
-					$("#fromphase_view").show();
-				    $("#tophase_view").show();
-			     }
-		   });
-		   
-		   //Function to display datepicker for tb fromphase
-		   $("#fromphase").datepicker({
-					maxDate : "0D",
-					dateFormat : $.datepicker.ATOM,
-					changeMonth : true,
-					changeYear : true
-			});
-			
-			//Function to display datepicker for tb tophase
-			$("#tophase").datepicker({
-					dateFormat : $.datepicker.ATOM,
-					changeMonth : true,
-					changeYear : true
-			});
-			
-			
-			//Function to calculate date ranges for tb stages
-			$("#fromphase").change(function(){
-				var from_date=$(this).val();
-				var new_date=new Date(from_date);
-				var to_date=new Date();
-				var category=$("#tbcategory").val();
-				var tbphase=$(".tbphase").val();
-			    if (category==1) {
+		});
+		
+		//Function to display tbphase dates
+		$(".tbphase").change(function() {
+			var tbpase = $(this).val();
+			$("#fromphase").attr("value",'');
+			$("#tophase").attr("value",'');
+				if(tbpase ==3) {
+				$("#fromphase_view").hide();
+				$("#tophase_view").show();
+				$("#tb").val(0);
+				} 
+				else if(tbpase==0){
+				$("#fromphase_view").hide();
+				$("#tophase_view").hide();
+				}else {
+				$("#fromphase_view").show();
+				$("#tophase_view").show();
+				}
+		});
+		
+		//Function to display datepicker for tb fromphase
+		$("#fromphase").datepicker({
+				maxDate : "0D",
+				dateFormat : $.datepicker.ATOM,
+				changeMonth : true,
+				changeYear : true
+		});
+		
+		//Function to display datepicker for tb tophase
+		$("#tophase").datepicker({
+				dateFormat : $.datepicker.ATOM,
+				changeMonth : true,
+				changeYear : true
+		});
+		
+		
+		//Function to calculate date ranges for tb stages
+		$("#fromphase").change(function(){
+			var from_date=$(this).val();
+			var new_date=new Date(from_date);
+			var to_date=new Date();
+			var category=$("#tbcategory").val();
+			var tbphase=$(".tbphase").val();
+			if (category==1) {
+				if(tbphase==1){
+					//Intensive
+					var numberOfDaysToAdd=90;
+				}else if(tbphase==2){
+					//Continuation
+					var numberOfDaysToAdd=112;
+				} 
+			}else if (category==2) {
 					if(tbphase==1){
-					  	//Intensive
-					  	var numberOfDaysToAdd=90;
-					}else if(tbphase==2){
-					  	//Continuation
-					  	var numberOfDaysToAdd=112;
-					} 
-			    }else if (category==2) {
-	                 if(tbphase==1){
-					  	//Intensive
-					  	var numberOfDaysToAdd=90;
-					}else if(tbphase==2){
-					  	//Continuation
-					  	var numberOfDaysToAdd=150;
-					}
-			    }
-                var start_date = new Date(new_date.getFullYear(), new_date.getMonth(), new_date.getDate());
-                var start_date_timestamp = start_date.getTime();
-                var end_date_timestamp = (1000 * 60 * 60 * 24 * numberOfDaysToAdd) + start_date_timestamp;
-			    $("#tophase").datepicker('setDate', new Date(end_date_timestamp));
-			});
-			
-			//Function to enable textareas for other chronic illnesses
-			$("#other_other").change(function() {
-					var other = $(this).is(":checked");
-					if(other){
-						$("textarea[name='other_chronic']").not(this).removeAttr("disabled");
-					}else{
-						$("textarea[name='other_chronic']").not(this).attr("disabled", "true");
-					}
-			});
-			
-			//Function to enable textareas for other allergies
-			$("#other_drugs_box").change(function() {
-					var other = $(this).is(":checked");
-					if(other){
-						$("textarea[name='other_drugs']").not(this).removeAttr("disabled");
-					}else{
-						$("textarea[name='other_drugs']").not(this).attr("disabled", "true");
-					}
-			});
-			
-			//Function to enable textareas for other allergies
-			$("#other_allergies").change(function() {
-					var other = $(this).is(":checked");
-					if(other){
-						$("textarea[name='other_allergies_listing']").not(this).removeAttr("disabled");
-					}else{
-						$("textarea[name='other_allergies_listing']").not(this).attr("disabled", "true");
-					}
-			});
-			
-			//Function to enable textareas for support group
-			$("#support_group").change(function() {
-					var other = $(this).is(":checked");
-					if(other){
-						$("textarea[name='support_group_listing']").not(this).removeAttr("disabled");
-					}else{
-						$("textarea[name='support_group_listing']").not(this).attr("disabled", "true");
-					}
-			});
-			
-			//Attach date picker for date of enrollment
-			$("#enrolled").datepicker({
-					yearRange : "-30:+0",
-					maxDate : "0D",
-					dateFormat : $.datepicker.ATOM,
-					changeMonth : true,
-					changeYear : true
-			});
-			$("#enrolled").val("<?php echo $result['date_enrolled'] ?>");
-			$("#current_status").val("<?php echo $result['current_status'] ?>");	
-			$("#info_status").text($('#current_status option:selected').text());	
-			$("#status_started").val("<?php echo $result['status_change_date'] ?>");
-			$("#source").val("<?php echo $result['source'] ?>");
-			$("#drug_prophylaxis").val("<?php echo $result['drug_prophylaxis'] ?>");
-			
-			$("#service").val("<?php echo $result['service'] ?>");
-			
-			var service_name="<?php echo $result['service_name'];?>";
-			if(service_name=="PEP"){
-				$("#pep_reason_listing").show();
-				$("#who_listing").hide();
-				$("#drug_prophylax").hide();
+					//Intensive
+					var numberOfDaysToAdd=90;
+				}else if(tbphase==2){
+					//Continuation
+					var numberOfDaysToAdd=150;
+				}
 			}
-			
-			$("#service_started").val("<?php echo $result['start_regimen_date'] ?>");
-			
-			$("#regimen").val("<?php echo $result['start_regimen'] ?>");
-			$("#current_regimen").val("<?php echo $result['current_regimen'] ?>");
-			$("#who_stage").val("<?php echo $result['who_stage'] ?>");
-                         
-                        
-                        
-			
-			//Attach date picker for date of status change
-			$("#status_started").datepicker({
-					yearRange : "-30:+0",
-					dateFormat : $.datepicker.ATOM,
-					changeMonth : true,
-					maxDate : "0D",
-					changeYear : true
+			var start_date = new Date(new_date.getFullYear(), new_date.getMonth(), new_date.getDate());
+			var start_date_timestamp = start_date.getTime();
+			var end_date_timestamp = (1000 * 60 * 60 * 24 * numberOfDaysToAdd) + start_date_timestamp;
+			$("#tophase").datepicker('setDate', new Date(end_date_timestamp));
+		});
+		
+		//Function to enable textareas for other chronic illnesses
+		$("#other_other").change(function() {
+				var other = $(this).is(":checked");
+				if(other){
+					$("textarea[name='other_chronic']").not(this).removeAttr("disabled");
+				}else{
+					$("textarea[name='other_chronic']").not(this).attr("disabled", "true");
+				}
+		});
+		
+		//Function to enable textareas for other allergies
+		$("#other_drugs_box").change(function() {
+				var other = $(this).is(":checked");
+				if(other){
+					$("textarea[name='other_drugs']").not(this).removeAttr("disabled");
+				}else{
+					$("textarea[name='other_drugs']").not(this).attr("disabled", "true");
+				}
+		});
+		
+		//Function to enable textareas for other allergies
+		$("#other_allergies").change(function() {
+				var other = $(this).is(":checked");
+				if(other){
+					$("textarea[name='other_allergies_listing']").not(this).removeAttr("disabled");
+				}else{
+					$("textarea[name='other_allergies_listing']").not(this).attr("disabled", "true");
+				}
+		});
+		
+		//Function to enable textareas for support group
+		$("#support_group").change(function() {
+				var other = $(this).is(":checked");
+				if(other){
+					$("textarea[name='support_group_listing']").not(this).removeAttr("disabled");
+				}else{
+					$("textarea[name='support_group_listing']").not(this).attr("disabled", "true");
+				}
+		});
+		
+		//Attach date picker for date of enrollment
+		$("#enrolled").datepicker({
+				yearRange : "-30:+0",
+				maxDate : "0D",
+				dateFormat : $.datepicker.ATOM,
+				changeMonth : true,
+				changeYear : true
+		});
+		$("#enrolled").val("<?php echo $result['date_enrolled'] ?>");
+		$("#current_status").val("<?php echo $result['current_status'] ?>");	
+		$("#info_status").text($('#current_status option:selected').text());	
+		$("#status_started").val("<?php echo $result['status_change_date'] ?>");
+		$("#source").val("<?php echo $result['source'] ?>");
+		$("#drug_prophylaxis").val("<?php echo $result['drug_prophylaxis'] ?>");
+		
+		$("#service").val("<?php echo $result['service'] ?>");
+		
+		var service_name="<?php echo $result['service_name'];?>";
+		if(service_name=="PEP"){
+			$("#pep_reason_listing").show();
+			$("#who_listing").hide();
+			$("#drug_prophylax").hide();
+		}
+		
+		$("#service_started").val("<?php echo $result['start_regimen_date'] ?>");
+		
+		$("#regimen").val("<?php echo $result['start_regimen'] ?>");
+		$("#current_regimen").val("<?php echo $result['current_regimen'] ?>");
+		$("#who_stage").val("<?php echo $result['who_stage'] ?>");
+						
+					
+					
+		
+		//Attach date picker for date of status change
+		$("#status_started").datepicker({
+				yearRange : "-30:+0",
+				dateFormat : $.datepicker.ATOM,
+				changeMonth : true,
+				maxDate : "0D",
+				changeYear : true
+		});
+		
+		//Attach date picker for date of start regimen 
+		$("#service_started").datepicker({
+				yearRange : "-30:+0",
+				dateFormat : $.datepicker.ATOM,
+				changeMonth : true,
+				changeYear : true,
+				maxDate : "0D"
+		});
+		
+		//Function to display transfer from list if patient source is(transfer in)
+			$("#source").change(function() {
+				var selected_value = $(this).val();
+				if(selected_value == 3) {
+					$("#patient_source_listing").show();
+				} else {
+					$("#patient_source_listing").hide();
+					$("#transfer_source").attr("value",'');
+				}
 			});
 			
-			//Attach date picker for date of start regimen 
-			$("#service_started").datepicker({
-					yearRange : "-30:+0",
-					dateFormat : $.datepicker.ATOM,
-					changeMonth : true,
-					changeYear : true,
-					maxDate : "0D"
+		//Function to display Regimens in this line
+		$("#service").change(function() {
+		$("#drug_prophylax").show();
+		$("#regimen option").remove();
+			var service_line = $(this).val();
+			var link=base_url+"regimen_management/getRegimenLine/"+service_line;
+			$.ajax({
+				url: link,
+				type: 'POST',
+				dataType: "json",
+				success: function(data) {	
+					$("#regimen").append($("<option></option>").attr("value",'').text('--Select One--'));
+					$.each(data, function(i, jsondata){
+						$("#regimen").append($("<option></option>").attr("value",jsondata.id).text(jsondata.regimen_code+" | "+jsondata.regimen_desc));
+					});
+				}
 			});
-			
-			//Function to display transfer from list if patient source is(transfer in)
-				$("#source").change(function() {
-					var selected_value = $(this).val();
-					if(selected_value == 3) {
-						$("#patient_source_listing").show();
-					} else {
-						$("#patient_source_listing").hide();
-						$("#transfer_source").attr("value",'');
+		});
+		
+		$("#next_appointment_date").datepicker({
+			yearRange : "-30:+0",
+			dateFormat : $.datepicker.ATOM,
+			changeMonth : true,
+			changeYear : true
+		});
+		
+		$("#next_appointment_date").val("<?php echo $result['nextappointment'];?>");
+		$("#prev_appointment_date").val("<?php echo $result['nextappointment'];?>");
+
+		$("#next_clinical_appointment_date").val("<?php echo $result['clinicalappointment'];?>");
+		
+
+		
+		var appointment=$("#next_appointment_date").val();
+		var days = getDays(appointment);
+		//if(days>=0){
+		$('#days_to_next').attr("value", days);
+		//}
+		
+		$("#next_appointment_date").change(function(){
+			var appointment=$(this).val();
+			var days = getDays(appointment);
+			$('#days_to_next').attr("value", days);
+		});
+		
+		$("#days_to_next").change(function() {
+			var days = $("#days_to_next").attr("value");
+			var base_date = new Date();
+			var appointment_date = $("#next_appointment_date");
+			var today = new Date(base_date.getFullYear(), base_date.getMonth(), base_date.getDate());
+			var today_timestamp = today.getTime();
+			var appointment_timestamp = (1000 * 60 * 60 * 24 * days) + today_timestamp;
+			appointment_date.datepicker("setDate", new Date(appointment_timestamp));
+		});
+		
+		
+		//Function to display tranfer From	
+		if($("#source").val()==3){
+		$("#patient_source_listing").show();
+		}       
+		$("#transfer_source").val("<?php echo $result['transfer_from']; ?>");
+		
+		//Function to check if female is pregnant
+		$("#gender").change(function() {
+				var selected_value = $(this).attr("value");
+				//if female, display the prengancy selector
+				if(selected_value == 2) {
+					//If female show pregnant container
+					$('#pregnant_view').slideDown('slow', function() {
+
+					});
+				} else {
+					//If male do not show pregnant container
+					$('#pregnant_view').slideUp('slow', function() {
+
+					});
+				}
+		});
+		//Disabling the form
+		$("input,select,textarea").attr("disabled", 'disabled');
+		$(".btn").removeAttr("disabled");
+		$(".button").removeAttr("disabled");
+		
+		var current_status="<?php echo $result['current_status']; ?>";
+		//Disable the dispense button
+		if(current_status != 1) {
+			bootbox.alert("<h4>Status Not Active</h4>\n\<hr/><center>Cannot Dispense to Patient</center>");
+			$("#dispense").attr("disabled", "disabled");
+		}
+
+		
+		$(".edit_dispensing").click(function() {
+			var dispensing_id = $(this).attr("id");
+			var url = base_url+"dispensement_management/edit/" + dispensing_id;
+			window.location.href = url;
+		});
+		$("#edit_patient").click(function() {
+			var url = base_url+"/public/patient/edit/" + record_id;
+			window.location.href = url;
+		});
+		$("#dispense").click(function() {
+			var url = base_url+"dispensement_management/dispense/"+ record_id;
+			window.location.href = url;  
+									
+		});
+		$("#patient_info").click(function() {
+			getDispensing();
+			getRegimenChange();
+			getAppointmentHistory();
+			$("#patient_details").dialog("open");
+			//function to get last viral load for this patient
+			get_viral_result($("#patient_number").val())
+		});
+
+		$("#patient_details").dialog({
+			width : 1200,
+			modal : true,
+			height: 600,
+			autoOpen : false,
+			show: 'fold'
+			});
+
+		$("#viral_load").on('click', function() {
+			getViralLoad();
+			$("#viral_load_details").dialog("open");
+		});
+		
+		$("#viral_load_details").dialog({
+			width: '700',
+			modal: true,
+			height: '400',
+			autoOpen: false,
+			show: 'fold',
+			});
+
+		function get_viral_result(ccc_no){
+			data_source="<?php echo base_url().'assets/viral_load.json'; ?>";
+			$("#viral_load_date").text('N/A');
+			$("#viral_load_result").text('N/A');
+			$.get(data_source,function(data){
+				if(data.length !=0){
+					data_length=data[ccc_no].length 
+					if(data_length >0){
+						$.each(data[ccc_no],function(key,val) {
+							if(key==(data_length-1)){  
+								$("#viral_load_date").text(val.date_tested);
+								$("#viral_load_result").text(val.result)   
+							}      
+						});	
 					}
-				});
-				
-		   //Function to display Regimens in this line
-		   $("#service").change(function() {
-		   	$("#drug_prophylax").show();
-		   	$("#regimen option").remove();
-		   	  var service_line = $(this).val();
-		   	  var link=base_url+"regimen_management/getRegimenLine/"+service_line;
+				}
+			});
+		}
+			
+		function getDispensing(){
+				var patient_no=$("#patient_number").val();
+				var link=base_url+"/public/patient/getSixMonthsDispensing/"+patient_no;
 				$.ajax({
-				    url: link,
-				    type: 'POST',
-				    dataType: "json",
-				    success: function(data) {	
-				    	$("#regimen").append($("<option></option>").attr("value",'').text('--Select One--'));
-				    	$.each(data, function(i, jsondata){
-				    		$("#regimen").append($("<option></option>").attr("value",jsondata.id).text(jsondata.regimen_code+" | "+jsondata.regimen_desc));
-				    	});
-				    }
-				});
-		   });
-		   
-		   $("#next_appointment_date").datepicker({
-	         yearRange : "-30:+0",
-	         dateFormat : $.datepicker.ATOM,
-	         changeMonth : true,
-	         changeYear : true
-	       });
-	       
-	       $("#next_appointment_date").val("<?php echo $result['nextappointment'];?>");
-	       $("#prev_appointment_date").val("<?php echo $result['nextappointment'];?>");
-
-	       $("#next_clinical_appointment_date").val("<?php echo $result['clinicalappointment'];?>");
- 	       
-
-	       
-	       var appointment=$("#next_appointment_date").val();
-	       var days = getDays(appointment);
-	       //if(days>=0){
-	       $('#days_to_next').attr("value", days);
-	       //}
-	       
-	       $("#next_appointment_date").change(function(){
-	       	    var appointment=$(this).val();
-	       	    var days = getDays(appointment);
-	       	    $('#days_to_next').attr("value", days);
-	       });
-	       
-	       $("#days_to_next").change(function() {
-	           var days = $("#days_to_next").attr("value");
-	           var base_date = new Date();
-	           var appointment_date = $("#next_appointment_date");
-	           var today = new Date(base_date.getFullYear(), base_date.getMonth(), base_date.getDate());
-	           var today_timestamp = today.getTime();
-	           var appointment_timestamp = (1000 * 60 * 60 * 24 * days) + today_timestamp;
-	           appointment_date.datepicker("setDate", new Date(appointment_timestamp));
-	       });
-	       
-	       
-	       //Function to display tranfer From	
-	       if($("#source").val()==3){
-	       	$("#patient_source_listing").show();
-	       }       
-	       $("#transfer_source").val("<?php echo $result['transfer_from']; ?>");
-	       
-	       //Function to check if female is pregnant
-			$("#gender").change(function() {
-					var selected_value = $(this).attr("value");
-					//if female, display the prengancy selector
-					if(selected_value == 2) {
-						//If female show pregnant container
-						$('#pregnant_view').slideDown('slow', function() {
-
-						});
-					} else {
-						//If male do not show pregnant container
-						$('#pregnant_view').slideUp('slow', function() {
-
-						});
+					url: link,
+					type: 'POST',
+					success: function(data) {	
+						$("#patient_pill_count>tbody").empty();
+						$("#patient_pill_count").append(data);
+						
 					}
-			});
-			//Disabling the form
-			$("input,select,textarea").attr("disabled", 'disabled');
-		    $(".btn").removeAttr("disabled");
-		    $(".button").removeAttr("disabled");
-		    
-		    var current_status="<?php echo $result['current_status']; ?>";
-			//Disable the dispense button
-			if(current_status != 1) {
-               bootbox.alert("<h4>Status Not Active</h4>\n\<hr/><center>Cannot Dispense to Patient</center>");
-			   $("#dispense").attr("disabled", "disabled");
+				});
 			}
-
-            
-            $(".edit_dispensing").click(function() {
-				var dispensing_id = $(this).attr("id");
-				var url = base_url+"dispensement_management/edit/" + dispensing_id;
-				window.location.href = url;
-			});
-			$("#edit_patient").click(function() {
-				var url = base_url+"/public/patient/edit/" + record_id;
-				window.location.href = url;
-			});
-			$("#dispense").click(function() {
-                var url = base_url+"dispensement_management/dispense/"+ record_id;
-				window.location.href = url;  
-                                        
-			});
-			$("#patient_info").click(function() {
-				getDispensing();
-				getRegimenChange();
-				getAppointmentHistory();
-				$("#patient_details").dialog("open");
-				//function to get last viral load for this patient
-				get_viral_result($("#patient_number").val())
-			});
-
-			$("#patient_details").dialog({
-	           width : 1200,
-	           modal : true,
-	           height: 600,
-	           autoOpen : false,
-	           show: 'fold'
-             });
-
-			$("#viral_load").on('click', function() {
-				getViralLoad();
-				$("#viral_load_details").dialog("open");
-			});
 			
-			$("#viral_load_details").dialog({
-	            width: '700',
-                modal: true,
-                height: '400',
-                autoOpen: false,
-                show: 'fold',
-             });
-
-			function get_viral_result(ccc_no){
-				data_source="<?php echo base_url().'assets/viral_load.json'; ?>";
-				$("#viral_load_date").text('N/A');
-				$("#viral_load_result").text('N/A');
-				$.get(data_source,function(data){
-					if(data.length !=0){
-						data_length=data[ccc_no].length 
-						if(data_length >0){
-	 						$.each(data[ccc_no],function(key,val) {
-	 						    if(key==(data_length-1)){  
-	 						    	$("#viral_load_date").text(val.date_tested);
-							        $("#viral_load_result").text(val.result)   
-							    }      
-							});	
-	 					}
+			function getRegimenChange(){
+				var patient_no=$("#patient_number").val();
+				var link=base_url+"/public/patient/getRegimenChange/"+patient_no;
+				$.ajax({
+					url: link,
+					type: 'POST',
+					success: function(data) {	
+						$("#patient_regimen_history>tbody").empty();
+						$("#patient_regimen_history").append(data);
+						
 					}
 				});
 			}
-             
-            function getDispensing(){
-             	 var patient_no=$("#patient_number").val();
-             	 var link=base_url+"/public/patient/getSixMonthsDispensing/"+patient_no;
-					$.ajax({
-					    url: link,
-					    type: 'POST',
-					    success: function(data) {	
-					    	$("#patient_pill_count>tbody").empty();
-					    	$("#patient_pill_count").append(data);
-					    	
-					    }
-					});
-             }
-             
-              function getRegimenChange(){
-             	 var patient_no=$("#patient_number").val();
-             	 var link=base_url+"/public/patient/getRegimenChange/"+patient_no;
-					$.ajax({
-					    url: link,
-					    type: 'POST',
-					    success: function(data) {	
-					    	$("#patient_regimen_history>tbody").empty();
-					    	$("#patient_regimen_history").append(data);
-					    	
-					    }
-					});
-             }
-             
-             function getAppointmentHistory(){
-             	 var patient_no=$("#patient_number").val();
-             	 var link=base_url+"/public/patient/getAppointmentHistory/"+patient_no;
-					$.ajax({
-					    url: link,
-					    type: 'POST',
-					    success: function(data) {	
-					    	$("#patient_appointment_history>tbody").empty();
-					    	$("#patient_appointment_history").append(data);
-					    	
-					    }
-					});
-             }
+			
+			function getAppointmentHistory(){
+				var patient_no=$("#patient_number").val();
+				var link=base_url+"/public/patient/getAppointmentHistory/"+patient_no;
+				$.ajax({
+					url: link,
+					type: 'POST',
+					success: function(data) {	
+						$("#patient_appointment_history>tbody").empty();
+						$("#patient_appointment_history").append(data);
+						
+					}
+				});
+			}
 
-             function getViralLoad(){
-             	var patient_no=$("#patient_number").val();
-             	var link=base_url+"assets/viral_load.json";
-					$.ajax({
-					    url: link,
-					    type: 'POST',
-					    dataType:'json',
-					    success: function(data) {
-					    	var table='';
-					        if(data.length !=0){
-					        	viral_data=data[patient_no];
-	                            $.each(viral_data,function(i,v){
-	                                   table+='<tr><td>'+v.date_tested+'</td><td>'+v.result+'</td></tr>';
-	                            });
-	                        }else{
-                                table+='<tr><td colspan="2">no data available!</td></tr>';
-	                        }
-	                        $("#viral_load_data tbody").empty();
-					    	$("#viral_load_data tbody").append(table);	
-					    }
-					});
-             }
+			function getViralLoad(){
+			var patient_no=$("#patient_number").val();
+			var link=base_url+"assets/viral_load.json";
+				$.ajax({
+					url: link,
+					type: 'POST',
+					dataType:'json',
+					success: function(data) {
+						var table='';
+						if(data.length !=0){
+							viral_data=data[patient_no];
+							$.each(viral_data,function(i,v){
+									table+='<tr><td>'+v.date_tested+'</td><td>'+v.result+'</td></tr>';
+							});
+						}else{
+							table+='<tr><td colspan="2">no data available!</td></tr>';
+						}
+						$("#viral_load_data tbody").empty();
+						$("#viral_load_data tbody").append(table);	
+					}
+				});
+			}
              
 		
     });
@@ -843,7 +843,7 @@ if(isset($results)){
 		</script>
 <div class="full-content" style="background:#9CF">
 	<div>
-		<?php if($this->session->userdata("msg_save_transaction")){
+		<?php if($this->session->get("msg_save_transaction")){
 			?>
 			
 			<script type="text/javascript">
@@ -852,24 +852,24 @@ if(isset($results)){
 				},6000)
 			</script>
 			<?php
-			if($this->session->userdata("msg_save_transaction")=="success"){
-				   if($this->session->userdata("user_updated")){
+			if($this->session->get("msg_save_transaction")=="success"){
+				   if($this->session->get("user_updated")){
 						?>
-						<p class=""><span class="message success"><?php echo $this->session->userdata("user_updated") ?>'s details were successfully updated !</span></p>
+						<p class=""><span class="message success"><?php echo $this->session->get("user_updated") ?>'s details were successfully updated !</span></p>
 						<?php
-						$this->session->unset_userdata('user_updated');
+						$this->session->remove('user_updated');
 					}
-					else if($this->session->userdata("dispense_updated")){
+					else if($this->session->get("dispense_updated")){
 						?>
 						<p class=""><span class="message  success">The dispensing details were successfully updated !</span></p>
 						<?php
-						$this->session->unset_userdata('dispense_updated');
+						$this->session->remove('dispense_updated');
 					}
-					else if($this->session->userdata("dispense_deleted")){
+					else if($this->session->get("dispense_deleted")){
 						?>
 						<p class=""><span class="message  error">The dispensing details were successfully deleted !</span></p>
 						<?php
-						$this->session->unset_userdata('dispense_deleted');
+						$this->session->remove('dispense_deleted');
 					} 
 			}
 			else{
@@ -877,7 +877,7 @@ if(isset($results)){
 				<p class=""><span class="message  error">Your data were not saved ! Try again or contact your system administrator.</span></p>
 				<?php
 			}
-			$this->session->unset_userdata('msg_save_transaction');
+			$this->session->remove('msg_save_transaction');
 		}
 		?>
 	</div>

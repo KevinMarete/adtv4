@@ -13,8 +13,10 @@ class Order_settings extends BaseController {
 
     var $db;
     var $table;
+    protected $session = null;
 
 	function __construct() {
+        $this->session = session();
 		$this->session->set("link_id", "/public/listing/sync_drug");
 		$this->session->set("linkSub", "/public/order_settings/listing/sync_drug");
         $this->session->set("linkTitle", "Settings Management");

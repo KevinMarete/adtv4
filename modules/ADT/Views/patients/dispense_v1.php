@@ -240,5 +240,5 @@
 </div>
 
 <!-- custom scripts-->
-<script src="<?php echo base_url().'assets/modules/forms/forms.js'; ?>"></script>
-<script src="<?php echo base_url().'assets/modules/patients/dispensing.js'; ?>"></script>
+<script src="<?php echo base_url().'/public/assets/modules/forms/forms.js'; ?>"></script>
+<script src="<?php echo base_url().'/public/assets/modules/patients/dispensing.js'; ?>"></script>

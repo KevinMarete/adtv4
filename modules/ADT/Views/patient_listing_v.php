@@ -19,33 +19,33 @@
 	
 	$(document).ready(function(){
 		var oTable =$('.listing_table').dataTable({
-				"bJQueryUI" : true,
-				"sPaginationType" : "full_numbers",
-				"bStateSave" : true,
-				"sDom" : '<"H"T<"clear">lfr>t<"F"ip>',
-				"bProcessing" : true,
-				"bServerSide" : true,
-				"bAutoWidth" : false,
-				"bDeferRender" : true,
-				"bInfo" : true,
-				"sAjaxSource": "/public/patients/listing",
-				"aoColumnDefs": [ { "bSearchable": true, "aTargets": [0,1,3,4] }, { "bSearchable": false, "aTargets": [ "_all" ] } ]
-            });
-		 setTimeout(function(){
+			"bJQueryUI" : true,
+			"sPaginationType" : "full_numbers",
+			"bStateSave" : true,
+			"sDom" : '<"H"T<"clear">lfr>t<"F"ip>',
+			"bProcessing" : true,
+			"bServerSide" : true,
+			"bAutoWidth" : false,
+			"bDeferRender" : true,
+			"bInfo" : true,
+			"sAjaxSource": "/public/patients/listing",
+			"aoColumnDefs": [ { "bSearchable": true, "aTargets": [0,1,3,4] }, { "bSearchable": false, "aTargets": [ "_all" ] } ]
+		});
+		setTimeout(function(){
 			$(".message").fadeOut("2000");
-		 },6000);
-         oTable.fnSort([[2,'desc']]);
-         oTable.columnFilter({ 
-         /*	sPlaceHolder: "head:after",*/
-         	aoColumns: [{ type: "text"},{ type: "text" },null,{ type: "text" },{ type: "text" },null]}
-         );
+		},6000);
+		oTable.fnSort([[2,'desc']]);
+		oTable.columnFilter({ 
+		/*	sPlaceHolder: "head:after",*/
+        	aoColumns: [{ type: "text"},{ type: "text" },null,{ type: "text" },{ type: "text" },null]}
+        );
          
-         $(".listing_table").wrap('<div class="dataTables_scroll" />');
+        $(".listing_table").wrap('<div class="dataTables_scroll" />');
 	});
 
 </script>
 <?php
-$access_level = $this -> session -> userdata('user_indicator');
+$access_level = $this->session->get('user_indicator');
 $user_is_administrator = false;
 $user_is_nascop = false;
 $user_is_pharmacist = false;

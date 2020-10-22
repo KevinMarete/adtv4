@@ -448,7 +448,7 @@
             success: function (data) {
                 if (data != 0) {
 
-                    $.getJSON("<?= base_url(); ?>inventory_management/serverStatus", function (resp) {
+                    $.getJSON("<?= base_url(); ?>/public/inventory_management/serverStatus", function (resp) {
                         if (resp.status === 404) {
 
                         } else if (resp.status === 200) {
@@ -1208,7 +1208,7 @@
                             dataType: "json"
                         });
                         request.done(function (datas) {
-                            var adult_age = datas[0].adult_age;
+                            var adult_age = datas.adult_age;
                             var url_dose = "<?php echo base_url() . '/public/dispensement_management/getDoses'; ?>";
                             //Get doses
                             var request_dose = $.ajax({
@@ -2040,7 +2040,7 @@
             type: 'POST',
             dataType: 'json',
             success: function (data) {
-                var all_appointments_link = "<a class='link' target='_blank' href='<?php echo base_url() . 'report_management/getScheduledPatients/'; ?>" + appointment + "/" + appointment + "' style='font-weight:bold;color:red;'>View appointments</a>";
+                var all_appointments_link = "<a class='link' target='_blank' href='<?php echo base_url() . '/public/report_management/getScheduledPatients/'; ?>" + appointment + "/" + appointment + "' style='font-weight:bold;color:red;'>View appointments</a>";
                 var html = "Patients Scheduled on Date: <b>" + data[0].total_appointments + "</b> Patients" + all_appointments_link;
                 var new_date = new Date(appointment);
                 var formatted_date_day = new_date.getDay();

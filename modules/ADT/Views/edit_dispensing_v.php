@@ -446,7 +446,7 @@ foreach ($expiries as $expiry) {
 		<hr size="1">
 	</div>
 	<h3>Dispensing History Editing</h3>
-	<form id="edit_dispense_form" name="edit_dispense_form" method="post"  action="<?php echo base_url().'dispensement_management/save_edit';?>"  >
+	<form id="edit_dispense_form" name="edit_dispense_form" method="post"  action="<?php echo base_url().'/public/dispensement_management/save_edit';?>"  >
 		<input id="original_dispensing_date" name="original_dispensing_date" type="hidden"/>
 		<input id="original_expiry_date" name="original_expiry_date" type="hidden"/>
 		<input id="original_drug" name="original_drug" type="hidden"/>

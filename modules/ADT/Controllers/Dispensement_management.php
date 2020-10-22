@@ -4,6 +4,7 @@ namespace Modules\ADT\Controllers;
 
 use App\Controllers\BaseController;
 use Illuminate\Database\Capsule\Manager as DB;
+use Modules\ADT\Models\CCC_store_service_point;
 use Modules\ADT\Models\ClinicAppointment;
 use Modules\ADT\Models\DCM_change_log;
 use Modules\ADT\Models\DCM_exit_reason;
@@ -23,6 +24,7 @@ use Modules\ADT\Models\RegimenChangePurpose;
 use Modules\ADT\Models\RegimenDrug;
 use Modules\ADT\Models\Transaction_type;
 use Modules\ADT\Models\VisitPurpose;
+use Mpdf\Mpdf;
 
 class Dispensement_management extends BaseController {
 
@@ -906,9 +908,9 @@ class Dispensement_management extends BaseController {
         $record_no = "";
         $soh = $this->post("soh");
         //Get transaction type
-        $transaction_type = transaction_type::getTransactionType("dispense", "0");
+        $transaction_type = Transaction_type::where('name', 'like', '%dispense%')->where('effect', '0')->first();
         $transaction_type = $transaction_type->id;
-        $transaction_type1 = transaction_type::getTransactionType("returns", "1");
+        $transaction_type1 = Transaction_type::where('name', 'like', '%returns%')->where('effect', '1')->first();
         $transaction_type1 = $transaction_type1->id;
         $original_qty = @$_POST["qty_hidden"];
         $facility = $this->session->get("facility");
@@ -924,8 +926,8 @@ class Dispensement_management extends BaseController {
         $destination = $facility;
 
         //Get ccc_store_name 
-        $ccc_store = CCC_store_service_point::getCCC($ccc_id);
-        $ccc_name = $ccc_store->Name;
+        $ccc_store = CCC_store_service_point::where('id', $ccc_id)->where('active', '1')->first();
+        $ccc_name = $ccc_store->name;
 
         if (stripos($ccc_name, 'store')) {
             $source = $facility;
@@ -933,10 +935,10 @@ class Dispensement_management extends BaseController {
         }
 
         //Get running balance in drug stock movement
-        $sql_run_balance = $this->db->query("SELECT machine_code as balance FROM drug_stock_movement WHERE drug ='" . @$_POST['original_drug'] . "' AND ccc_store_sp ='$ccc_id' AND expiry_date >=CURDATE() ORDER BY id DESC  LIMIT 1");
-        $run_balance_array = $sql_run_balance->result_array();
+        $sql_run_balance = "SELECT machine_code as balance FROM drug_stock_movement WHERE drug ='" . @$_POST['original_drug'] . "' AND ccc_store_sp ='$ccc_id' AND expiry_date >=CURDATE() ORDER BY id DESC  LIMIT 1";
+        $run_balance_array = DB::select($sql_run_balance);
         if (count($run_balance_array) > 0) {
-            $prev_run_balance = $run_balance_array[0]["balance"];
+            $prev_run_balance = $run_balance_array[0]->balance;
         } else {
             //If drug does not exist, initialise the balance to zero
             $prev_run_balance = 0;
@@ -946,7 +948,7 @@ class Dispensement_management extends BaseController {
         //If record is to be deleted
         if (@$_POST['delete_trigger'] == 1) {
             $sql = "update patient_visit set active='0' WHERE id='" . @$_POST["dispensing_id"] . "';";
-            $this->db->query($sql);
+            DB::statement($sql);
             $bal = $soh + @$_POST["qty_disp"];
 
             $act_run_balance = $prev_run_balance + @$_POST["qty_disp"]; //Actual running balance		
@@ -956,20 +958,19 @@ class Dispensement_management extends BaseController {
             if ($today <= $original_expiry) {
                 //If balance for this batch is greater than zero, update stock, otherwise, insert in drug stock balance
                 $sql_batch_balance = "SELECT balance FROM drug_stock_balance WHERE drug_id='" . @$_POST["original_drug"] . "' AND batch_number='" . @$_POST["batch"] . "' AND expiry_date='" . @$_POST["original_expiry_date"] . "' AND stock_type='$ccc_id' AND facility_code='$facility'";
-                $query = $this->db->query($sql_batch_balance);
-                $res = $query->result_array();
+                $res = DB::select($sql_batch_balance);
                 $prev_batch_balance = "";
                 if ($res) {
-                    $prev_batch_balance = $res[0]['balance'];
+                    $prev_batch_balance = $res[0]->balance;
                 }
                 if ($prev_batch_balance > 0) {
                     //Update drug_stock_balance
                     $sql = "UPDATE drug_stock_balance SET balance=balance+" . @$_POST["qty_disp"] . " WHERE drug_id='" . @$_POST["original_drug"] . "' AND batch_number='" . @$_POST["batch"] . "' AND expiry_date='" . @$_POST["original_expiry_date"] . "' AND stock_type='$ccc_id' AND facility_code='$facility'";
-                    $this->db->query($sql);
+                    DB::statement($sql);
                 } else {
 
                     $sql = "INSERT INTO drug_stock_balance (balance,dug_id,batch_number,expiry_date,stock_type,facility_code) VALUES('" . @$_POST["qty_disp"] . "','" . @$_POST["original_drug"] . "','" . @$_POST["batch"] . "','" . @$_POST["original_expiry_date"] . "','$ccc_id','$facility')";
-                    $this->db->query($sql);
+                    DB::statement($sql);
                 }
             }
 
@@ -977,22 +978,21 @@ class Dispensement_management extends BaseController {
             //Insert in drug stock movement
             //Get balance after update
             $sql = "SELECT balance FROM drug_stock_balance WHERE drug_id='" . @$_POST["original_drug"] . "' AND batch_number='" . @$_POST["batch"] . "' AND expiry_date='" . @$_POST["original_expiry_date"] . "' AND stock_type='$ccc_id' AND facility_code='$facility'";
-            $query = $this->db->query($sql);
-            $results = $query->result_array();
-            $actual_balance = $results[0]['balance'];
+            $results = DB::select($sql);
+            $actual_balance = $results[0]->balance;
             $sql = "INSERT INTO drug_stock_movement (drug, transaction_date, batch_number, transaction_type,source,destination,source_destination,expiry_date, quantity, balance, facility, machine_code,timestamp,ccc_store_sp) SELECT '" . @$_POST["original_drug"] . "','" . @$_POST["original_dispensing_date"] . "', '" . @$_POST["batch"] . "','$transaction_type1','$source','$destination','Dispensed To Patients','$expiry_date','" . @$_POST["qty_disp"] . "','" . @$actual_balance . "','$facility','$act_run_balance','$timestamp','$ccc_id' from drug_stock_movement WHERE batch_number= '" . @$_POST["batch"] . "' AND drug='" . @$_POST["original_drug"] . "' LIMIT 1;";
-            $this->db->query($sql);
+            DB::statement($sql);
 
             //Update drug consumption
             $period = date('Y-m-01');
             $sql = "UPDATE drug_cons_balance SET amount=amount-" . $original_qty . " WHERE drug_id='" . @$_POST["original_drug"] . "' AND stock_type='$ccc_id' AND period='$period' AND facility='$facility'";
-            $this->db->query($sql);
+            DB::statement($sql);
 
             $this->session->set('dispense_deleted', 'success');
         } else {//If record is edited
             $period = date('Y-m-01');
             $sql = "UPDATE patient_visit SET dispensing_date = '" . @$_POST["dispensing_date"] . "', visit_purpose = '" . @$_POST["purpose"] . "', current_weight='" . @$_POST["weight"] . "', current_height='" . @$_POST["height"] . "', regimen='" . @$_POST["current_regimen"] . "', drug_id='" . @$_POST["drug"] . "', batch_number='" . @$_POST["batch"] . "', dose='" . @$_POST["dose"] . "', duration='" . @$_POST["duration"] . "', quantity='" . @$_POST["qty_disp"] . "', brand='" . @$_POST["brand"] . "', indication='" . @$_POST["indication"] . "', pill_count='" . @$_POST["pill_count"] . "', missed_pills='" . @$_POST["missed_pills"] . "', comment='" . @$_POST["comment"] . "',non_adherence_reason='" . @$_POST["non_adherence_reasons"] . "',adherence='" . @$_POST["adherence"] . "',differentiated_care='" . @$differentiated_care . "' WHERE id='" . @$_POST["dispensing_id"] . "';";
-            $this->db->query($sql);
+            DB::statement($sql);
             if (@$_POST["batch"] != @$_POST["batch_hidden"] || @$_POST["qty_disp"] != @$_POST["qty_hidden"]) {
                 //Update drug_stock_balance
                 //Balance=balance+(previous_qty_disp-actual_qty_dispense)
@@ -1005,20 +1005,20 @@ class Dispensement_management extends BaseController {
                 if ($new_qty_dispensed > 0) {
                     $bal = $soh + $new_qty_dispensed;
                     $sql = "UPDATE drug_stock_balance SET balance=balance+" . @$new_qty_dispensed . " WHERE drug_id='" . @$_POST["original_drug"] . "' AND batch_number='" . @$_POST["batch"] . "' AND expiry_date='" . @$_POST["original_expiry_date"] . "' AND stock_type='$ccc_id' AND facility_code='$facility'";
-                    $this->db->query($sql);
+                    DB::statement($sql);
 
                     //Update drug consumption
                     $sql = "UPDATE drug_cons_balance SET amount=amount-" . $new_qty_dispensed . " WHERE drug_id='" . @$_POST["original_drug"] . "' AND stock_type='$ccc_id' AND period='$period' AND facility='$facility'";
-                    $this->db->query($sql);
+                    DB::statement($sql);
                 } else if ($new_qty_dispensed < 0) {
                     $bal = $soh - $new_qty_dispensed;
                     $new_qty_dispensed = abs($new_qty_dispensed);
                     $sql = "UPDATE drug_stock_balance SET balance=balance-" . @$new_qty_dispensed . " WHERE drug_id='" . @$_POST["original_drug"] . "' AND batch_number='" . @$_POST["batch"] . "' AND expiry_date='" . @$_POST["original_expiry_date"] . "' AND stock_type='$ccc_id' AND facility_code='$facility'";
-                    $this->db->query($sql);
+                    DB::statement($sql);
 
                     //Update drug consumption
                     $sql = "UPDATE drug_cons_balance SET amount=amount+" . $new_qty_dispensed . " WHERE drug_id='" . @$_POST["original_drug"] . "' AND stock_type='$ccc_id' AND period='$period' AND facility='$facility'";
-                    $this->db->query($sql);
+                    DB::statement($sql);
                 }
                 //Balance after returns
                 $bal1 = $soh + $original_qty;
@@ -1026,19 +1026,18 @@ class Dispensement_management extends BaseController {
                 $act_run_balance = $act_run_balance + $original_qty;
                 //Returns transaction
                 $sql = "INSERT INTO drug_stock_movement (drug, transaction_date, batch_number, transaction_type,source,destination,source_destination,expiry_date, quantity,balance, facility, machine_code,timestamp,ccc_store_sp) SELECT '" . @$_POST["original_drug"] . "','" . @$_POST["original_dispensing_date"] . "', '" . @$_POST["batch_hidden"] . "','$transaction_type1','$source','$destination','Dispensed To Patients',expiry_date,'" . @$_POST["qty_hidden"] . "','$bal1','$facility','$act_run_balance1','$timestamp','$ccc_id' from drug_stock_movement WHERE batch_number= '" . @$_POST["batch_hidden"] . "' AND drug='" . @$_POST["original_drug"] . "' LIMIT 1;";
-                $this->db->query($sql);
+                DB::statement($sql);
                 //Dispense transaction
                 $sql = "INSERT INTO drug_stock_movement (drug, transaction_date, batch_number, transaction_type,source,destination,expiry_date, quantity_out,balance, facility, machine_code,timestamp,ccc_store_sp) SELECT '" . @$_POST["drug"] . "','" . @$_POST["original_dispensing_date"] . "', '" . @$_POST["batch"] . "','$transaction_type','$source','$destination',expiry_date,'" . @$_POST["qty_disp"] . "','$bal','$facility','$act_run_balance','$timestamp','$ccc_id' from drug_stock_movement WHERE batch_number= '" . @$_POST["batch"] . "' AND drug='" . @$_POST["drug"] . "' LIMIT 1;";
-                $this->db->query($sql);
+                DB::statement($sql);
             }
             $this->session->set('dispense_updated', 'success');
         }
         $sql = "select * from patient where patient_number_ccc='$patient' and facility_code='$facility'";
-        $query = $this->db->query($sql);
-        $results = $query->result_array();
-        $record_no = $results[0]['id'];
+        $results = DB::select($sql);
+        $record_no = $results[0]->id;
         $this->session->set('msg_save_transaction', 'success');
-        redirect("patient_management/load_view/details/$record_no");
+        return redirect()->to(base_url("public/patient_management/load_view/details/$record_no"));
     }
 
     public function drugAllergies() {
@@ -1074,7 +1073,6 @@ class Dispensement_management extends BaseController {
         $facility_name = $this->post("print_facility_name");
         $facility_phone = $this->post("print_facility_phone");
         $str = "";
-        $this->load->library('mpdf');
 
         //MPDF Config
         $mode = 'utf-8';
@@ -1089,7 +1087,7 @@ class Dispensement_management extends BaseController {
         $margin_footer = '';
         $orientation = 'P';
 
-        $this->mpdf = new mPDF($mode, $format, $default_font_size, $default_font, $margin_left, $margin_right, $margin_top, $margin_bottom, $margin_header, $margin_footer, $orientation);
+        $this->mpdf = new Mpdf([$mode, $format, $default_font_size, $default_font, $margin_left, $margin_right, $margin_top, $margin_bottom, $margin_header, $margin_footer, $orientation]);
 
         if ($check_if_print) {
             //loop through checkboxes check if they are selected to print
@@ -1130,7 +1128,7 @@ class Dispensement_management extends BaseController {
             } //end foreach
             $file_name = 'assets/download/' . $patient_name . '(Labels).pdf';
             $this->mpdf->Output($file_name, 'F');
-            echo base_url() . $file_name;
+            return $this->response->download($file_name, null);
         } else {
             echo 0;
         }

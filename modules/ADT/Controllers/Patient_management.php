@@ -1206,7 +1206,7 @@ class Patient_management extends BaseController {
         //Set session for notications
         $this->session->set('msg_save_transaction', 'success');
         $this->session->set('user_enabled', $first_name . " was enabled!");
-        redirect()->to(base_url()."/public/patients");
+        return redirect()->to(base_url()."/public/patients");
     }
 
     public function disable($id) {
@@ -1220,7 +1220,7 @@ class Patient_management extends BaseController {
         //Set session for notications
         $this->session->set('msg_save_transaction', 'success');
         $this->session->set('user_disabled', $first_name . " was disabled!");
-        redirect()->to(base_url()."/public/patients");
+        return redirect()->to(base_url()."/public/patients");
     }
 
     public function delete($id) {
@@ -1228,7 +1228,7 @@ class Patient_management extends BaseController {
         //Set session for notications
         $this->session->set('msg_save_transaction', 'success');
         $this->session->set('user_disabled', "User Deleted");
-        redirect()->to(base_url()."/public/patients");
+        return redirect()->to(base_url()."/public/patients");
     }
 
     public function getAppointments($appointment = "") {
@@ -1271,16 +1271,16 @@ class Patient_management extends BaseController {
         if ($results) {
             foreach ($results as $result) {
                 $dyn_table .= "<tbody><tr>";
-                $dyn_table .= "<td>" . $result['dispensing_date'] . "</td>";
-                $dyn_table .= "<td>" . $result['drug'] . "</td>";
-                $dyn_table .= "<td>" . $result['quantity'] . "</td>";
-                $dyn_table .= "<td>" . $result['pill_count'] . "</td>";
-                $dyn_table .= "<td>" . $result['missed_pills'] . "</td>";
-                $dyn_table .= "<td>" . $result['pill_adh'] . "%</td>";
-                $dyn_table .= "<td>" . $result['missed_adh'] . "%</td>";
+                $dyn_table .= "<td>" . $result->dispensing_date . "</td>";
+                $dyn_table .= "<td>" . $result->drug . "</td>";
+                $dyn_table .= "<td>" . $result->quantity . "</td>";
+                $dyn_table .= "<td>" . $result->pill_count . "</td>";
+                $dyn_table .= "<td>" . $result->missed_pills . "</td>";
+                $dyn_table .= "<td>" . $result->pill_adh . "%</td>";
+                $dyn_table .= "<td>" . $result->missed_adh . "%</td>";
 
-                $adherence = doubleval(str_replace(array("%", "<", ">", "="), "", $result['adherence']));
-                $average_adherence = (( doubleval($result['pill_adh']) + doubleval($result['missed_adh']) + $adherence) / 3);
+                $adherence = doubleval(str_replace(array("%", "<", ">", "="), "", $result->adherence));
+                $average_adherence = (( doubleval($result->pill_adh) + doubleval($result->missed_adh) + $adherence) / 3);
                 $dyn_table .= "<td>" . $adherence . "%</td>";
                 $dyn_table .= "<td>" . number_format($average_adherence, 2) . "%</td>";
                 $dyn_table .= "</tr></tbody>";
@@ -1392,21 +1392,21 @@ class Patient_management extends BaseController {
         $results = DB::select($sql, [$patient_no, $facility]);
         if ($results) {
             foreach ($results as $result) {
-                if ($result['current_regimen'] == "") {
-                    $result['current_regimen'] = "-";
+                if ($result->current_regimen == "") {
+                    $result->current_regimen = "-";
                 }
-                if ($result['previous_regimen'] == "") {
-                    $result['previous_regimen'] = "-";
+                if ($result->previous_regimen == "") {
+                    $result->previous_regimen = "-";
                 }
-                if ($result['reason'] == "") {
-                    $result['reason'] = "-";
-                } elseif ($result['reason'] == "undefined") {
-                    $result['reason'] = "-";
-                } elseif ($result['reason'] == "null") {
-                    $result['reason'] = "-";
+                if ($result->reason == "") {
+                    $result->reason = "-";
+                } elseif ($result->reason == "undefined") {
+                    $result->reason = "-";
+                } elseif ($result->reason == "null") {
+                    $result->reason = "-";
                 }
                 //if ($result['current_regimen'] == "-") {
-                $dyn_table .= "<tbody><tr><td>" . date('d-M-Y', strtotime($result['dispensing_date'])) . "</td><td>" . $result['current_regimen'] . "</td><td align='center'>" . $result['previous_regimen'] . "</td><td align='center'>" . $result['reason'] . "</td></tr></tbody>";
+                $dyn_table .= "<tbody><tr><td>" . date('d-M-Y', strtotime($result->dispensing_date)) . "</td><td>" . $result->current_regimen . "</td><td align='center'>" . $result->previous_regimen . "</td><td align='center'>" . $result->reason . "</td></tr></tbody>";
                 //}
             }
         }
@@ -1430,23 +1430,23 @@ class Patient_management extends BaseController {
         if ($results) {
             foreach ($results as $result) {
 
-                if ($result['Days_To'] > 0) {
-                    $status = "<td align='center'>" . $result['Days_To'] . " Days To</td>";
-                } else if ($result['Days_To'] < 0) {
-                    $mysql = "select dispensing_date,DATEDIFF(dispensing_date,'" . @$result['appointment'] . "')as days from patient_visit where patient_id='$patient_no' and dispensing_date>'" . @$result['appointment'] . "' and facility='$facility' ORDER BY dispensing_date asc LIMIT 1";
+                if ($result->Days_To > 0) {
+                    $status = "<td align='center'>" . $result->Days_To . " Days To</td>";
+                } else if ($result->Days_To < 0) {
+                    $mysql = "select dispensing_date,DATEDIFF(dispensing_date,'" . @$result->appointment . "')as days from patient_visit where patient_id='$patient_no' and dispensing_date>'" . @$result->appointment . "' and facility='$facility' ORDER BY dispensing_date asc LIMIT 1";
                     $myresults = DB::select($mysql);
-                    $result['dispensing_date'] = date('Y-m-d');
+                    $result->dispensing_date = date('Y-m-d');
                     if ($myresults) {
-                        $result['dispensing_date'] = $myresults[0]['dispensing_date'];
-                        $result['Days_To'] = $myresults[0]['days'];
+                        $result->dispensing_date = $myresults[0]->dispensing_date;
+                        $result->Days_To = $myresults[0]->days;
                     }
-                    $result['Days_To'] = str_replace("-", "", $result['Days_To']);
-                    $status = "<td align='center'> Late By " . $result['Days_To'] . " Days (" . date('d-M-Y', strtotime($result['dispensing_date'])) . ")</td>";
+                    $result->Days_To = str_replace("-", "", $result->Days_To);
+                    $status = "<td align='center'> Late By " . $result->Days_To . " Days (" . date('d-M-Y', strtotime($result->dispensing_date)) . ")</td>";
                 } else {
-                    $status = "<td align='center' class='green'>" . $result['Days_To'] . "</td>";
+                    $status = "<td align='center' class='green'>" . $result->Days_To . "</td>";
                 }
 
-                $dyn_table .= "<tbody><tr><td>" . date('d-M-Y', strtotime($result['appointment'])) . "</td>$status</tr></tbody>";
+                $dyn_table .= "<tbody><tr><td>" . date('d-M-Y', strtotime($result->appointment)) . "</td>$status</tr></tbody>";
             }
         }
         echo $dyn_table;
@@ -2202,9 +2202,9 @@ class Patient_management extends BaseController {
                     //Active Patient
                     if ($access_level == "facility_administrator") {
                         if ($value == 1) {
-                            $link = '| <a href="' . base_url() . 'patient/disable/' . $id . '" class="red actual">Disable</a>';
+                            $link = '| <a href="' . base_url() . '/public/patient/disable/' . $id . '" class="red actual">Disable</a>';
                         } else {
-                            $link = '| <a href="' . base_url() . 'patient/enable/' . $id . '" class="green actual">Enable</a>';
+                            $link = '| <a href="' . base_url() . '/public/patient/enable/' . $id . '" class="green actual">Enable</a>';
                         }
                     }
                     if ($value == 1) {
