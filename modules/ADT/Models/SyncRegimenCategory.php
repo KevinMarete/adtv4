@@ -9,11 +9,11 @@ class SyncRegimenCategory extends BaseModel {
     protected $appends = ['regimens'];
 
     // public function regimens(){
-    //     return $this->hasMany(Regimen::class, 'id', 'category');
+    //     return $this->hasMany(SyncRegimen::class, 'id', 'category_id');
     // }
 
     public function getRegimensAttribute(){
-        return Regimen::where('category', $this->id)->get();
+        return SyncRegimen::where('category_id', $this->id)->get();
     }
 
 }

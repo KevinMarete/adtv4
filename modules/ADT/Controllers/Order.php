@@ -544,7 +544,7 @@ class Order extends BaseController {
 			$data["is_view"] = 0;
 
 			if($order_type == 0){ //satellite
-				$facility_code = $this->post("satellite_facility", TRUE);
+				$facility_code = $this->post("satellite_facility");
 				$data['page_title'] = "Satellite Facility(F-MAPS)";
 				$data['banner_text'] = "Satellite Facility(F-MAPS)";
 				$data['maps_type'] = "fmaps";

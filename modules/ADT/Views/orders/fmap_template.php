@@ -299,7 +299,7 @@ if ($facility_object->service_pep == "1") {
 						?><tr class="accordion"><th colspan="5" class="reg_cat_name" id="<?php echo $cat; ?>" ><?php echo $category->Name;?></th></tr><?php
 						foreach($regimens as $regimen){
 								$ids[] = $regimen->id;
-								if($regimen->enabled == '1'){
+								if($regimen->Active == '1'){
 								//Checking if the regimens are OI and assigning them the corresponding classes (that is the class that the input field is in, to enable easier calling from js - GT)
 								$regimen_io_code = $regimen->code;							
 								if($regimen_io_code=='OI1AM'||$regimen_io_code=='OI1AF'||$regimen_io_code=='OI1A'||$regimen_io_code=='OI1CM'||$regimen_io_code=='OI1CF'||$regimen_io_code=='OI1C'||$regimen_io_code=='OI2AM'||$regimen_io_code=='OI2AF'||$regimen_io_code=='OI2A'||$regimen_io_code=='OI2CM'||$regimen_io_code=='OI2CF'||$regimen_io_code=='OI2C'||$regimen_io_code=='OI5AM'||$regimen_io_code='OI5AF'||$regimen_io_code=='OI5A'||$regimen_io_code=='OI5CM'||$regimen_io_code=='OI5CF'||$regimen_io_code=='OI5C'||$regimen_io_code=='ATPT1AM'||$regimen_io_code=='ATPT1AF'||$regimen_io_code=='ATPT1A'||$regimen_io_code=='CTPT1AM'||$regimen_io_code=='CTPT1AF'||$regimen_io_code=='CTPT1A'){?>
