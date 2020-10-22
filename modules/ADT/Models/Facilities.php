@@ -6,6 +6,30 @@ use App\Models\BaseModel;
 use Illuminate\Database\Capsule\Manager as DB;
 
 class Facilities extends BaseModel {
+        
+    public function facility_county(){
+        return $this->belongsTo(County::class, 'county', 'id');
+    }
+        
+    public function parent_district(){
+        return $this->belongsTo(District::class, 'district', 'id');
+    }
+        
+    public function type(){
+        return $this->belongsTo(FacilityType::class, 'facilitytype', 'id');
+    }
+        
+    public function supplier(){
+        return $this->belongsTo(FacilityType::class, 'supplied_by', 'id');
+    }
+        
+    public function support(){
+        return $this->belongsTo(Supporter::class, 'supported_by', 'id');
+    }
+        
+    public function sync_facility(){
+        return $this->belongsTo(Sync_facility::class, 'map', 'id');
+    }
 
     protected $table = 'facilities';
     protected $guarded = ['id'];
