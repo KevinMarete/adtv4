@@ -27,13 +27,15 @@ use Illuminate\Database\Capsule\Manager as DB;
 
 class Regimen_management extends \App\Controllers\BaseController {
 
+	protected $session;
     var $db;
     var $table;
 
     function __construct() {
-        session()->set("link_id", "index");
-        session()->set("linkSub", "regimen_management");
-        session()->set("linkTitle", "Regimen Management");
+		$this->session = session();
+		$this->session->set("link_id", "index");
+		$this->session->set("linkSub", "regimen_management");
+		$this->session->set("linkTitle", "Regimen Management");
         $this->db = \Config\Database::connect();
         $this->table = new \CodeIgniter\View\Table();
     }
@@ -195,8 +197,8 @@ class Regimen_management extends \App\Controllers\BaseController {
         $map = $this->input->post('regimen_mapping');
 
         $query = $this->db->query("UPDATE regimen SET regimen_code='$regimen_Code',regimen_desc='$regimen_Desc',category='$category',line='$line',type_of_service='$type_Of_Service',remarks='$remarks',map='$map' WHERE id='$regimen_id'");
-        session()->set('message_counter', '1');
-        session()->set('msg_success', $this->input->post('regimen_code') . ' was Updated');
+		$this->session->set('message_counter', '1');
+		$this->session->set('msg_success', $this -> input -> post('regimen_code') . ' was Updated');
         $this->session->set_flashdata('filter_datatable', $this->input->post('regimen_code'));
         //Filter after updating
         redirect("settings_management");
@@ -232,9 +234,9 @@ class Regimen_management extends \App\Controllers\BaseController {
             $regimens_to_disable = implode(",", $regimens);
             $the_query = "UPDATE regimen SET enabled='0' WHERE id IN($regimens_to_disable);";
             if ($this->db->query($the_query)) {
-                session()->set('msg_success', 'The selected regimens were successfully disabled!');
+				$this->session->set('msg_success','The selected regimens were successfully disabled!');
             } else {
-                session()->set('msg_error', 'One or more of the selected regimens were not disabled!');
+				$this->session->set('msg_error', 'One or more of the selected regimens were not disabled!');
             }
         } else {
             $query = $this->db->query("UPDATE regimen SET enabled='0'WHERE id='$regimen_id'");
@@ -303,14 +305,18 @@ class Regimen_management extends \App\Controllers\BaseController {
         redirect('settings_management');
     }
 
-    public function getRegimenLine($service, $pmtct_oi = FALSE) {
-        if ($pmtct_oi == TRUE) {
-            $regimens = Regimen::get_pmtct_oi_regimens();
-        } else {
-            $regimens = Regimen::getLineRegimens($service);
-        }
-        echo json_encode($regimens);
-    }
+	public function getRegimenLine($service=false,$pmtct_oi=FALSE) {
+        $service = $this->uri->getSegment(3);
+        $pmtct_oi = $this->uri->getSegment(4) ?? false;
+		if($pmtct_oi){
+			$regimens = Regimen::whereHas('regimen_service_type', function($query){
+                $query->where('name', 'like', '%pmtct%')->orWhere('name', 'like', '%oi%');
+            })->where('enabled', '1')->orderBy('regimen_code')->get()->toArray();
+		}else{
+			$regimens = Regimen::where('enabled', '1')->where('type_of_service', $service)->orderBy('regimen_code')->get()->toArray();
+		}
+		echo json_encode($regimens);
+	}
 
     public function getDrugs($regimen) {
         $sql = "select rd.drugcode as drug_id,d.drug as drug_name from drugcode d,regimen_drug rd left join regimen r ON r.id=rd.regimen where (rd.regimen='$regimen' or r.regimen_code='OI') and r.enabled='1' and d.enabled='1' and rd.drugcode=d.id and rd.active='1' group by rd.drugcode order by rd.drugcode desc";
@@ -369,27 +375,42 @@ class Regimen_management extends \App\Controllers\BaseController {
     }
 
     public function getFilteredRegiments() {
-        $age = $this->input->post("age") + 0;
-        $service = $this->input->post("service");
-        $regimens = "";
-        if ($service == 'prep' || $service == 'pep') {
-            $regimens = Regimen::getServiceRegimens($service);
-        } else {
+		$age = $this->post("age")+0;
+		$service = $this->post("service");
+		$regimens = "";
+		if($service =='prep' || $service =='pep'){
+			$regimens = Regimen::whereHas('regimen_service_type', function($query) use ($service){
+				$query->where('name', 'like', '%'.$service.'%');
+			})->orderBy('type_of_service')->get()->toArray();			
+		}
+		else{
 
-            if ($age == '') {
-                $regimens = Regimen::getRegimens();
-            } else {
-                if ($age < 15) {
-                    //paediatric regimens
-                    $regimens = Regimen::getChildRegimens();
-                } else if ($age >= 15) {
-                    //adult regimens
-                    $regimens = Regimen::getAdultRegimens();
-                }
-            }
-        }
-        echo json_encode($regimens);
-    }
+			if($age==''){
+				$regimens = Regimen::orderBy('regimen_code')->get()->toArray();
+			}else{
+				if($age<15){
+				//paediatric regimens
+					$regimens=Regimen::whereHas('regimen_category', function($query){
+						$query->where('Name', 'like', '%paed%');
+						$query->orWhere('Name', 'like', '%ped%');
+						$query->orWhere('Name', 'like', '%child%');
+						$query->orWhere('Name', 'like', '%oi%');
+						$query->orWhere('Name', 'like', '%hepatitis%');
+					})->where('enabled', '1')->orderBy('regimen_code')->get()->toArray();
+				}else if($age>=15){
+				//adult regimens
+					$regimens=Regimen::whereHas('regimen_category', function($query){
+						$query->where('Name', 'like', '%adult%');
+						$query->orWhere('Name', 'like', '%mother%');
+						$query->orWhere('Name', 'like', '%oi%');
+						$query->orWhere('Name', 'like', '%hepatitis%');
+						$query->orWhere('Name', 'like', '%prep%');
+					})->where('enabled', '1')->orderBy('regimen_code')->get()->toArray();
+				}
+			}
+		}
+		echo json_encode($regimens);
+	}
 
     public function base_params($data) {
         $data['quick_link'] = "regimen";

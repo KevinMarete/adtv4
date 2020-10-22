@@ -93,9 +93,8 @@ class Auto_management extends \App\Controllers\BaseController {
             $message .= $this->updateViralLoad();
 
             //finally update the log file for auto_update 
-            if (session()->get("curl_error") == '') {
-                $sql = "UPDATE migration_log SET  count = 1 WHERE source='auto_update'";
-                DB::statement($sql);
+            if ($this->session->get("curl_error") == '') {
+                Migration_log::where('source', 'auto_update')->update(['count' => 1]);
                 $this->session->set("curl_error", "");
             }
         }

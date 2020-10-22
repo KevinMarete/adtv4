@@ -4,19 +4,20 @@ namespace Modules\ADT\Controllers;
 
 ob_start();
 
+use App\Controllers\BaseController;
 use \Modules\ADT\Models\Facilities;
 use \Modules\ADT\Models\Patient_Source;
 use Illuminate\Database\Capsule\Manager as DB;
 
-class Order_settings extends \App\Controllers\BaseController {
+class Order_settings extends BaseController {
 
     var $db;
     var $table;
 
 	function __construct() {
-		session()->set("link_id", "/public/listing/sync_drug");
-		session()->set("linkSub", "/public/order_settings/listing/sync_drug");
-        session()->set("linkTitle", "Settings Management");
+		$this->session->set("link_id", "/public/listing/sync_drug");
+		$this->session->set("linkSub", "/public/order_settings/listing/sync_drug");
+        $this->session->set("linkTitle", "Settings Management");
         $this->table = new \CodeIgniter\View\Table();
         $this->db = \Config\Database::connect();
         ini_set("max_execution_time", "1000000");
@@ -24,7 +25,7 @@ class Order_settings extends \App\Controllers\BaseController {
 
     public function listing($table = "") {
         //Setup parameters
-        $access_level = session()->get('user_indicator');
+		$access_level = $this->session->get('user_indicator');
         $seperator = ' | ';
 		$exclude_columns = ['Active'];
 		$params = [
