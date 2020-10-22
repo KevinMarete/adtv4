@@ -14,9 +14,9 @@ class Order_settings extends \App\Controllers\BaseController {
     var $table;
 
 	function __construct() {
-		$this->session->set("link_id", "/public/listing/sync_drug");
-		$this->session->set("linkSub", "/public/order_settings/listing/sync_drug");
-        $this->session->set("linkTitle", "Settings Management");
+		session()->set("link_id", "/public/listing/sync_drug");
+		session()->set("linkSub", "/public/order_settings/listing/sync_drug");
+        session()->set("linkTitle", "Settings Management");
         $this->table = new \CodeIgniter\View\Table();
         $this->db = \Config\Database::connect();
         ini_set("max_execution_time", "1000000");

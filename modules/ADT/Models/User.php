@@ -9,6 +9,7 @@ class User extends BaseModel
 {
 
     //protected $table = 'users';
+    protected $guarded = ['id'];
 
     protected function _encrypt_password($value)
     {
@@ -48,7 +49,7 @@ class User extends BaseModel
 
     public function getSpecific($user_id)
     {
-        $query = DB::select("SELECT u.id, u.name, u.username, u.email_address, u.phone_number, a.level_name, u2.name AS u2name, u.active AS Active FROM users u LEFT JOIN access_level a ON u.access_level = a.id LEFT JOIN users u2 ON u.created_by = u2.id WHERE u.id = '$user_id'");
+        $query = DB::select("SELECT u.id, u.Name,u.Username, a.Level_Name as Access, u.Email_Address, u.Phone_Number, u2.Name as Creator,u.Active as Active FROM users u LEFT JOIN access_level a ON u.access_level = a.id LEFT JOIN users u2 ON u.created_by = u2.id WHERE u.id = '$user_id'");
         return $query;
     }
 
@@ -60,7 +61,7 @@ class User extends BaseModel
 
     public function getInactive($facility_code)
     {
-        $query = DB::select("SELECT u.id, u.name, u.username, u.email_address, u.phone_number, a.level_name, u2.name AS u2name, u.active AS uactive FROM users u LEFT JOIN access_level a ON u.access_level = a.id LEFT JOIN users u2 ON u.created_by = u2.id WHERE  a.level_name !='Pharmacist' and facility_fode=" . $facility_code . " and u.active='0'");
+        $query = DB::select("SELECT u.id, u.Name,u.Username, a.Level_Name as Access, u.Email_Address, u.Phone_Number, u2.Name as Creator,u.Active as Active FROM users u LEFT JOIN access_level a ON u.access_level = a.id LEFT JOIN users u2 ON u.created_by = u2.id WHERE  a.level_name !='Pharmacist' and u.facility_code=" . $facility_code . " and u.active='0'");
         return $query;
     }
 

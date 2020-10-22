@@ -6,6 +6,9 @@ use App\Models\BaseModel;
 use Illuminate\Database\Capsule\Manager as DB;
 
 class Drug_stock_movement extends BaseModel {
+
+    protected $table = 'drug_stock_movement';
+
     /* public function setTableDefinition() {
       $this -> hasColumn('Machine_Code', 'varchar', 10);
       $this -> hasColumn('Drug', 'varchar', 10);

@@ -157,8 +157,8 @@ if ($access_level == "system_administrator") {
         }
         if ($user_is_administrator) {
             ?>
-            $('#span1').load('<?php echo base_url() . 'admin_management/inactive_users'; ?>');
-            $('#span2').load('<?php echo base_url() . 'admin_management/online_users'; ?>');
+            $('#span1').load('<?php echo base_url() . '/public/admin_management/inactive_users'; ?>');
+            $('#span2').load('<?php echo base_url() . '/public/admin_management/online_users'; ?>');
         <?php
         }
         ?>
@@ -457,7 +457,7 @@ if ($access_level == "system_administrator") {
                                         ?>
 
                                 <li class="divider"></li>
-                                <li><a href="<?php echo base_url() . 'facilitydashboard_management/getPatientMasterList' ?>" id="ReportGenerator"> <i class="icon-book"></i>Patient Master list</a></li>
+                                <li><a href="<?php echo base_url() . '/public/facilitydashboard_management/getPatientMasterList' ?>" id="ReportGenerator"> <i class="icon-book"></i>Patient Master list</a></li>
                                 <li><a href="<?php echo base_url() . 'assets/manuals/user_manual.pdf' ?>" target="_blank"><i class="icon-book"></i>User Manual</a></li>
 
 

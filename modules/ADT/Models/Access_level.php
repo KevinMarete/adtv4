@@ -20,10 +20,9 @@ class Access_level extends BaseModel {
         return json_decode(json_encode($query), true);
     }
 
-    public function getAllHydrated() {
-        $query = Doctrine_Query::create()->select("al.Id as Id,al.Level_Name as Access")->from("access_level al");
-        $users = $query->execute(array(), Doctrine::HYDRATE_ARRAY);
-        return $users;
+    public static function getAllHydrated() {
+        $query = Access_level::select(DB::raw("Id,Level_Name as Access"))->get();
+        return $query;
     }
 
 }

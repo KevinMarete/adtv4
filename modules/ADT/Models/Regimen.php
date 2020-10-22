@@ -62,20 +62,8 @@ class Regimen extends BaseModel {
         return $this->regimen_code.' | '.$this->regimen_desc;
     }
 
-    public function regimen_category(){
-        return $this->belongsTo(RegimenCategory::class, 'category', 'id');
-    }
-
-    public function regimen_service_type(){
-        return $this->belongsTo(RegimenServiceType::class, 'type_of_service', 'id');
-    }
-
     public function drugs(){
         return $this->hasMany(RegimenDrug::class, 'id', 'regimen');
-    }
-
-    public function sync_regimen(){
-        return $this->belongsTo(SyncRegimen::class, 'map', 'id');
     }
 
     public static function getTotalNumber($source = 0) {

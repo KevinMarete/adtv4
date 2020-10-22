@@ -566,7 +566,7 @@ if ($facility_object->service_pep == "1") {
 	function getoiPatients(){
 		var base_url = "<?php echo base_url(); ?>";
 		//Get the data from the controller
-		var link = base_url + '/public/order/getoiPatients/';
+		var link = base_url + '/public/order/getoiPatients';
 		$.ajax({
 			url : link,
 			type : 'POST',

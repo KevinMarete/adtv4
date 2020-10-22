@@ -6,6 +6,9 @@ use App\Models\BaseModel;
 use Illuminate\Database\Capsule\Manager as DB;
 
 class Facilities extends BaseModel {
+
+    protected $table = 'facilities';
+    protected $guarded = ['id'];
         
     public function facility_county(){
         return $this->belongsTo(County::class, 'county', 'id');

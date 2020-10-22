@@ -3006,7 +3006,7 @@ class Order extends BaseController {
 			$results = Maps::find($order_id);
             $code = '';
 
-            $query = Sync_facility::where('sync_facility', $results->facility_id)->first();
+            $query = Sync_facility::find($results->facility_id);
 			$dhis_org = $query->dhiscode;
 
 			switch ($order_type) {
@@ -3022,22 +3022,19 @@ class Order extends BaseController {
 				$code = 'MoH 729b';
 				break;
 			}
-            $results['item'] = MapsItem::whereHas('dhis_element', function ($query) {
-                $query->where('dhis_report', 'MoH 729b')
-                    ->where('target_report', '!=', 'unknown');
-            })->where('maps_id', $order_id)->get()->toArray();
+            $results['item'] = MapsItem::getDhisItem($order_id,$code);
 
 			$dataValues = [];
 			foreach ($results['item'] as $key => $item) {
-				if ($item['dhis_code'] ==NULL){continue;}
-				if ($item['male']!==null){
-				$dataValues[] = ['dataElement' =>$item['dhis_code'],'categoryOptionCombo' =>'MJAGUpeHkpn', 'value' =>$item['male']];
+				if ($item->dhis_code ==NULL){continue;}
+				if ($item->male!==null){
+				$dataValues[] = ['dataElement' =>$item->dhis_code,'categoryOptionCombo' =>'MJAGUpeHkpn', 'value' =>$item->male];
 				}
-				if ($item['female']!==null){
-				$dataValues[] = ['dataElement' =>$item['dhis_code'],'categoryOptionCombo' =>'a57uWFr3dUy', 'value' =>$item['female']];
+				if ($item->female!==null){
+				$dataValues[] = ['dataElement' =>$item->dhis_code,'categoryOptionCombo' =>'a57uWFr3dUy', 'value' =>$item->female];
 				}
-				if ($item['total']!==null){
-					$dataValues[] = ['dataElement' =>$item['dhis_code'],'categoryOptionCombo' =>'NhSoXUMPK2K', 'value' =>$item['total']];
+				if ($item->total!==null){
+					$dataValues[] = ['dataElement' =>$item->dhis_code,'categoryOptionCombo' =>'NhSoXUMPK2K', 'value' =>$item->total];
 				}
 			}
 			$dhismessage = [

@@ -71,13 +71,19 @@ $routes->get('update_balances', '\Modules\ADT\Controllers\Drug_stock_balance_syn
 
 /* Settings Management */
 $routes->get('settings_management', '\Modules\ADT\Controllers\Settings_management::index');
+$routes->match(['get', 'post'], 'settings_management/getActiveAccessLevels', '\Modules\ADT\Controllers\Settings_management::getActiveAccessLevels');
+$routes->match(['get', 'post'], 'settings_management/getMenus', '\Modules\ADT\Controllers\Settings_management::getMenus');
+
 /* Auto Management */
 $routes->get('auto_management', '\Modules\ADT\Controllers\Auto_management::index');
 $routes->get('auto_management/get_viral_load/(:any)', '\Modules\ADT\Controllers\Auto_management::get_viral_load');
+
 /* Facilities */
 $routes->get('facility_management', '\Modules\ADT\Controllers\Facility_Management::index');
+$routes->match(['get', 'post'], 'facility_management/getCurrent', '\Modules\ADT\Controllers\Facility_Management::getCurrent');
 $routes->get('client_management', '\Modules\ADT\Controllers\Client_management::index');
 $routes->get('order_settings/listing/(:any)', '\Modules\ADT\Controllers\Order_settings::listing/$1');
+$routes->get('facilitydashboard_management/getPatientMasterList', '\Modules\ADT\Controllers\Facilitydashboard_Management::getPatientMasterList');
 
 /* Others */
 $routes->get('nonadherence_management', '\Modules\ADT\Controllers\Nonadherence_management::index');
@@ -244,3 +250,8 @@ $routes->get('order/get_dhis_data/(:any)', '\Modules\ADT\Controllers\Order::get_
 
 /** Order Settings */
 $routes->get('order_settings/fetch/(:any)', '\Modules\ADT\Controllers\Order_settings::fetch');
+
+/** Order Settings */
+$routes->get('admin_management/inactive_users', '\Modules\ADT\Controllers\Admin_management::inactive_users');
+$routes->get('admin_management/online_users', '\Modules\ADT\Controllers\Admin_management::online_users');
+$routes->get('admin_management/addCounty', '\Modules\ADT\Controllers\Admin_management::addCounty');
