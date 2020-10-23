@@ -13,6 +13,7 @@
 
 </style>
 <?php 
+helper('form');
 if($table){
 ?>
 <a href="#dialog_<?php echo $table;?>" role="button" id="<?php echo $table;?>" class="btn add" data-toggle="modal"><i class="icon-plus icon-black"></i>New<?php echo "  " . $label;?></a>
@@ -20,10 +21,11 @@ if($table){
 <!--Dialog for Counties-->
 <div id="dialog_counties" title="Add County" class="modal hide fade cyan" tabindex="-1" role="dialog" aria-labelledby="AddCounty" aria-hidden="true">
 	   <?php
-		$attributes = array('class' => 'input_form');
-		echo form_open('admin_management/save/'.$table, $attributes);
-		echo validation_errors('<p class="error">', '</p>');
+		$attributes = ['class' => 'input_form'];
+		echo form_open(base_url().'/public/admin_management/save/'.$table, $attributes);
+		// echo validation_errors('<p class="error">', '</p>');
 		?>
+	<p class="error"> <?= \Config\Services::validation()->listErrors(); ?> </p>
 	<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
 			×
@@ -47,10 +49,11 @@ if($table){
 
 <div id="edit_counties" title="Edit County" class="modal hide fade cyan" tabindex="-1" role="dialog" aria-labelledby="AddCounty" aria-hidden="true">
 	   <?php
-		$attributes = array('class' => 'input_form');
-		echo form_open('admin_management/update/'.$table, $attributes);
-		echo validation_errors('<p class="error">', '</p>');
+		$attributes = ['class' => 'input_form'];
+		echo form_open(base_url().'/public/admin_management/update/'.$table, $attributes);
+		// echo validation_errors('<p class="error">', '</p>');
 		?>
+		<p class="error"> <?= \Config\Services::validation()->listErrors(); ?> </p>
 	<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
 			×
@@ -76,10 +79,11 @@ if($table){
 <!--Dialog for Satellites-->
 <div id="dialog_satellites" title="Add Satellite" class="modal hide fade cyan" tabindex="-1" role="dialog" aria-labelledby="AddCounty" aria-hidden="true">
     <?php
-		$attributes = array('class' => 'input_form', 'id' => 'satellite_frm');
-		echo form_open('admin_management/save/'.$table, $attributes);
-		echo validation_errors('<p class="error">', '</p>');
+		$attributes = ['class' => 'input_form', 'id' => 'satellite_frm'];
+		echo form_open(base_url().'/public/admin_management/save/'.$table, $attributes);
+		// echo validation_errors('<p class="error">', '</p>');
 	?>
+	<p class="error"> <?= \Config\Services::validation()->listErrors(); ?> </p>
 	<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
 			×
@@ -106,10 +110,11 @@ if($table){
 <!--Dialog for Facilities-->
 <div id="dialog_facilities" title="Add Facility" class="modal hide fade cyan" tabindex="-1" role="dialog" aria-labelledby="AddFacility" aria-hidden="true">
 	<?php
-		$attributes = array('class' => 'input_form');
-		echo form_open('admin_management/save/'.$table, $attributes);
-		echo validation_errors('<p class="error">', '</p>');
+		$attributes = ['class' => 'input_form'];
+		echo form_open(base_url().'/public/admin_management/save/'.$table, $attributes);
+		// echo validation_errors('<p class="error">', '</p>');
 	?>
+	<p class="error"> <?= \Config\Services::validation()->listErrors(); ?> </p>
 	<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
 			×
@@ -137,10 +142,11 @@ if($table){
 
 <div id="edit_facilities" title="Edit Facility" class="modal hide fade cyan" tabindex="-1" role="dialog" aria-labelledby="AddFacility" aria-hidden="true">
 	<?php
-		$attributes = array('class' => 'input_form');
-		echo form_open('admin_management/update/'.$table, $attributes);
-		echo validation_errors('<p class="error">', '</p>');
+		$attributes = ['class' => 'input_form'];
+		echo form_open(base_url().'/public/admin_management/update/'.$table, $attributes);
+		// echo validation_errors('<p class="error">', '</p>');
 	?>
+	<p class="error"> <?= \Config\Services::validation()->listErrors(); ?> </p>
 	<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
 			×
@@ -171,10 +177,11 @@ if($table){
 <!--Dialog for Districts-->
 <div id="dialog_district" title="Add District" class="modal hide fade cyan" tabindex="-1" role="dialog" aria-labelledby="AddDistrict" aria-hidden="true">
 	<?php
-		$attributes = array('class' => 'input_form');
-		echo form_open('admin_management/save/'.$table, $attributes);
-		echo validation_errors('<p class="error">', '</p>');
+		$attributes = ['class' => 'input_form'];
+		echo form_open(base_url().'/public/admin_management/save/'.$table, $attributes);
+		// echo validation_errors('<p class="error">', '</p>');
 	?>
+	<p class="error"> <?= \Config\Services::validation()->listErrors(); ?> </p>
 	<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
 			×
@@ -198,10 +205,11 @@ if($table){
 
 <div id="edit_district" title="Edit District" class="modal hide fade cyan" tabindex="-1" role="dialog" aria-labelledby="AddDistrict" aria-hidden="true">
 	<?php
-		$attributes = array('class' => 'input_form');
-		echo form_open('admin_management/update/'.$table, $attributes);
-		echo validation_errors('<p class="error">', '</p>');
+		$attributes = ['class' => 'input_form'];
+		echo form_open(base_url().'/public/admin_management/update/'.$table, $attributes);
+		// echo validation_errors('<p class="error">', '</p>');
 	?>
+	<p class="error"> <?= \Config\Services::validation()->listErrors(); ?> </p>
 	<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
 			×
@@ -226,10 +234,11 @@ if($table){
 <!--Dialog for Menus-->
 <div id="dialog_menu" title="Add Menu" class="modal hide fade cyan" tabindex="-1" role="dialog" aria-labelledby="AddDistrict" aria-hidden="true">
 	<?php
-		$attributes = array('class' => 'input_form');
-		echo form_open('admin_management/save/'.$table, $attributes);
-		echo validation_errors('<p class="error">', '</p>');
+		$attributes = ['class' => 'input_form'];
+		echo form_open(base_url().'/public/admin_management/save/'.$table, $attributes);
+		// echo validation_errors('<p class="error">', '</p>');
 	?>
+	<p class="error"> <?= \Config\Services::validation()->listErrors(); ?> </p>
 	<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
 			×
@@ -261,10 +270,11 @@ if($table){
 
 <div id="edit_menu" title="Edit Menu" class="modal hide fade cyan" tabindex="-1" role="dialog" aria-labelledby="AddDistrict" aria-hidden="true">
 	<?php
-		$attributes = array('class' => 'input_form');
-		echo form_open('admin_management/update/'.$table, $attributes);
-		echo validation_errors('<p class="error">', '</p>');
+		$attributes = ['class' => 'input_form'];
+		echo form_open(base_url().'/public/admin_management/update/'.$table, $attributes);
+		// echo validation_errors('<p class="error">', '</p>');
 	?>
+	<p class="error"> <?= \Config\Services::validation()->listErrors(); ?> </p>
 	<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
 			×
@@ -300,10 +310,11 @@ if($table){
 <div id="dialog_users" title="New User" class="modal hide fade cyan" tabindex="-1" role="dialog" aria-labelledby="label" aria-hidden="true">
 		
 			<?php
-			$attributes = array('class' => 'input_form','id'=>'fm_user');
-			echo form_open('admin_management/save/'.$table, $attributes);
-			echo validation_errors('<p class="error">', '</p>');
+			$attributes = ['class' => 'input_form','id'=>'fm_user'];
+			echo form_open(base_url().'/public/admin_management/save/'.$table, $attributes);
+			// echo validation_errors('<p class="error">', '</p>');
 			?>
+			<p class="error"> <?= \Config\Services::validation()->listErrors(); ?> </p>
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
 				<h3 id="NewDrug">User details</h3>
@@ -368,20 +379,21 @@ if($table){
 			</form>
 			<?php echo form_close(); ?>
 		</div>
-<!--Dialog for FAQs-->
-<div id="dialog_faq" title="Add FAQ" class="modal hide fade cyan" tabindex="-1" role="dialog" aria-labelledby="AddFAQ" aria-hidden="true">
-	   <?php
-		$attributes = array('class' => 'input_form');
-		echo form_open('admin_management/save/'.$table, $attributes);
-		echo validation_errors('<p class="error">', '</p>');
-		?>
-	<div class="modal-header">
-		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-			×
-		</button>
-		<h3 id="NewDrug">Add Frequently Asked Questions</h3>
-	</div>
-	<div class="modal-body">
+		<!--Dialog for FAQs-->
+		<div id="dialog_faq" title="Add FAQ" class="modal hide fade cyan" tabindex="-1" role="dialog" aria-labelledby="AddFAQ" aria-hidden="true">
+		<?php
+			$attributes = ['class' => 'input_form'];
+			echo form_open(base_url().'/public/admin_management/save/'.$table, $attributes);
+			// echo validation_errors('<p class="error">', '</p>');
+			?>
+			<p class="error"> <?= \Config\Services::validation()->listErrors(); ?> </p>
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+				×
+			</button>
+			<h3 id="NewDrug">Add Frequently Asked Questions</h3>
+		</div>
+		<div class="modal-body">
             <div class="max-row">
 				<label>Module</label>
 				<!--<input type="text" class="input-large" name="faq_module" required="required"/>-->
@@ -392,31 +404,32 @@ if($table){
 					<option value="Reports">Reports</option>
 					<option value="Settings">Settings</option>
 				</select>
-		</div>
-		<div class="max-row">
+			</div>
+			<div class="max-row">
 				<label>Question</label>
 				<input type="text" class="input-large" name="faq_question" required="required"/>
-		</div>
+			</div>
                 <div class="max-row">
 				<label>Answer</label>
 				<textarea cols="40" rows="6" name="faq_answer" id="faq_answers"></textarea>
+			</div>
 		</div>
+		<div class="modal-footer">
+			<button class="btn" data-dismiss="modal" aria-hidden="true">
+				Cancel
+			</button>
+			<input type="submit" value="Save" class="btn btn-primary " />
+		</div>
+		<?php echo form_close(); ?>
 	</div>
-	<div class="modal-footer">
-		<button class="btn" data-dismiss="modal" aria-hidden="true">
-			Cancel
-		</button>
-		<input type="submit" value="Save" class="btn btn-primary " />
-	</div>
-	<?php echo form_close(); ?>
-</div>
 
 <div id="edit_faq" title="Edit FAQ" class="modal hide fade cyan" tabindex="-1" role="dialog" aria-labelledby="AddFAQ" aria-hidden="true">
 	   <?php
-		$attributes = array('class' => 'input_form');
-		echo form_open('admin_management/update/'.$table, $attributes);
-		echo validation_errors('<p class="error">', '</p>');
+		$attributes = ['class' => 'input_form'];
+		echo form_open(base_url().'/public/admin_management/update/'.$table, $attributes);
+		// echo validation_errors('<p class="error">', '</p>');
 		?>
+		<p class="error"> <?= \Config\Services::validation()->listErrors(); ?> </p>
 	<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
 			×
@@ -450,10 +463,11 @@ if($table){
 <!--Dialog for Access_Levels-->
 <div id="dialog_access_level" title="Add Access Level" class="modal hide fade cyan" tabindex="-1" role="dialog" aria-labelledby="AddAccessLevel" aria-hidden="true">
 	   <?php
-		$attributes = array('class' => 'input_form');
-		echo form_open('admin_management/save/'.$table, $attributes);
-		echo validation_errors('<p class="error">', '</p>');
+		$attributes = ['class' => 'input_form'];
+		echo form_open(base_url().'/public/admin_management/save/'.$table, $attributes);
+		// echo validation_errors('<p class="error">', '</p>');
 		?>
+		<p class="error"> <?= \Config\Services::validation()->listErrors(); ?> </p>
 	<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
 			×
@@ -485,10 +499,11 @@ if($table){
 
 <div id="edit_access_level" title="Edit Access Level" class="modal hide fade cyan" tabindex="-1" role="dialog" aria-labelledby="AddAccessLevel" aria-hidden="true">
 	   <?php
-		$attributes = array('class' => 'input_form');
-		echo form_open('admin_management/update/'.$table, $attributes);
-		echo validation_errors('<p class="error">', '</p>');
+		$attributes = ['class' => 'input_form'];
+		echo form_open(base_url().'/public/admin_management/update/'.$table, $attributes);
+		// echo validation_errors('<p class="error">', '</p>');
 		?>
+		<p class="error"> <?= \Config\Services::validation()->listErrors(); ?> </p>
 	<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
 			×
@@ -522,10 +537,11 @@ if($table){
 <!--Dialog For User Rights-->
 <div id="dialog_user_right" title="Add User Right" class="modal hide fade cyan" tabindex="-1" role="dialog" aria-labelledby="AddCounty" aria-hidden="true">
 	<?php
-		$attributes = array('class' => 'input_form','id'=>'fm_user');
-		echo form_open('admin_management/save/'.$table, $attributes);
-		echo validation_errors('<p class="error">', '</p>');
-	 ?>
+		$attributes = ['class' => 'input_form','id'=>'fm_user'];
+		echo form_open(base_url().'/public/admin_management/save/'.$table, $attributes);
+		// echo validation_errors('<p class="error">', '</p>');
+	?>
+	<p class="error"> <?= \Config\Services::validation()->listErrors(); ?> </p>
 	<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
 			×
@@ -557,10 +573,11 @@ if($table){
 
 <div id="edit_user_right" title="Edit User Right" class="modal hide fade cyan" tabindex="-1" role="dialog" aria-labelledby="AddCounty" aria-hidden="true">
 	<?php
-		$attributes = array('class' => 'input_form','id'=>'fm_user');
-		echo form_open('admin_management/update/'.$table, $attributes);
-		echo validation_errors('<p class="error">', '</p>');
-	 ?>
+		$attributes = ['class' => 'input_form','id'=>'fm_user'];
+		echo form_open(base_url().'/public/admin_management/update/'.$table, $attributes);
+		// echo validation_errors('<p class="error">', '</p>');
+	?>
+	<p class="error"> <?= \Config\Services::validation()->listErrors(); ?> </p>
 	<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
 			×
@@ -589,10 +606,11 @@ if($table){
 
 <div id="edit_nascop" title="Edit Nascop" class="modal hide fade cyan" tabindex="-1" role="dialog" aria-labelledby="AddCounty" aria-hidden="true">
 	   <?php
-		$attributes = array('class' => 'input_form');
-		echo form_open('admin_management/update/nascop', $attributes);
-		echo validation_errors('<p class="error">', '</p>');
+		$attributes = ['class' => 'input_form'];
+		echo form_open(base_url().'/public/admin_management/update/nascop', $attributes);
+		// echo validation_errors('<p class="error">', '</p>');
 		?>
+		<p class="error"> <?= \Config\Services::validation()->listErrors(); ?> </p>
 	<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
 			×
@@ -620,7 +638,7 @@ if($table){
 		$("#actual_page").text("<?php echo $actual_page; ?>");
 		//Adding Satellites
 		$("#satellites").live('click',function(){
-		    var link=base_url+"facility_management/getFacilityList";
+		    var link=base_url+"/public/facility_management/getFacilityList";
 			$.ajax({
 			    url: link,
 			    type: 'POST',
@@ -640,7 +658,7 @@ if($table){
 		//Adding Users
 		$("#users").live('click',function(){
 			//Get current facility
-		    var link=base_url+"facility_management/getCurrent";
+		    var link=base_url+"/public/facility_management/getCurrent";
 			$.ajax({
 			    url: link,
 			    type: 'POST',
@@ -653,7 +671,7 @@ if($table){
 			    }
 			});
 			//Get lower access_levels
-			var accessURL = base_url + "settings_management/getActiveAccessLevels";
+			var accessURL = base_url + "/public/settings_management/getActiveAccessLevels";
 		    		$("#access_level").empty();
 			$.getJSON(accessURL, function(levels){
 				$.each(levels, function(i, level){
@@ -664,7 +682,7 @@ if($table){
 		
 		//Adding User Rights
 	    $("#user_right").live('click',function(){
-		    var link1=base_url+"settings_management/getActiveAccessLevels";
+		    var link1=base_url+"/public/settings_management/getActiveAccessLevels";
 			$.ajax({
 			    url: link1,
 			    type: 'POST',
@@ -677,7 +695,7 @@ if($table){
 			    }
 			});
 				
-			var link2=base_url+"settings_management/getMenus";
+			var link2=base_url+"/public/settings_management/getMenus";
 			$.ajax({
 			    url: link2,
 			    type: 'POST',
@@ -686,7 +704,7 @@ if($table){
 			    	$("#menus").empty();	
 			    	$("#menus").append($("<option></option>").attr("value",'').text('--Select One--'));
 			    	$.each(data, function(i, jsondata){
-			    		$("#menus").append($("<option></option>").attr("value",jsondata.id).text(jsondata.Menu_Text));
+			    		$("#menus").append($("<option></option>").attr("value",jsondata.id).text(jsondata.menu_text));
 			    	});
 			    }
 			});	
@@ -724,7 +742,7 @@ if($table){
 				$("#edit_right_id").val($(this).attr("right_id"))
 				var access_id = $(this).attr("access_id");
 				var menu_id = $(this).attr("edit_menu_id");
-				var link1 = base_url + "settings_management/getActiveAccessLevels";
+				var link1 = base_url + "/public/settings_management/getActiveAccessLevels";
 				$.ajax({
 					url : link1,
 					type : 'POST',
@@ -741,7 +759,7 @@ if($table){
 					}
 				});
 
-				var link2 = base_url + "settings_management/getMenus";
+				var link2 = base_url + "/public/settings_management/getMenus";
 				$.ajax({
 					url : link2,
 					type : 'POST',
@@ -751,9 +769,9 @@ if($table){
 						$("#edit_menus").append($("<option></option>").attr("value", '').text('--Select One--'));
 						$.each(data, function(i, jsondata) {
 							if(menu_id == jsondata.id) {
-								$("#edit_menus").append($("<option selected='selected'></option>").attr("value", jsondata.id).text(jsondata.Menu_Text));
+								$("#edit_menus").append($("<option selected='selected'></option>").attr("value", jsondata.id).text(jsondata.menu_text));
 							} else {
-								$("#edit_menus").append($("<option></option>").attr("value", jsondata.id).text(jsondata.Menu_Text));
+								$("#edit_menus").append($("<option></option>").attr("value", jsondata.id).text(jsondata.menu_text));
 							}
 						});
 					}

@@ -9,7 +9,7 @@ use Illuminate\Database\Capsule\Manager as DB;
 class Dose extends BaseModel {
 
     protected $table = 'dose';
-    protected $fillable = array('Name', 'Value', 'Frequency', 'Active');
+    protected $guarded = ['id'];
 
     public static function getAll($access_level = "") {
         if ($access_level = "" || $access_level == "facility_administrator") {

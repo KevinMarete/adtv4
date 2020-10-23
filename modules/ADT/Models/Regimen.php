@@ -15,14 +15,7 @@ class Regimen extends BaseModel {
     protected $table = 'regimen';
     protected $fillable = array('Regimen_Code', 'Regimen_Desc', 'Category', 'Type_Of_Service', 'Remarks', 'Enabled', 'Source', 'Optimality', 'Merged_To', 'map');
     protected $with = ['Regimen_Service_Type', 'Regimen_Category', 'Regimen_Drug', 'Sync_Regimen'];
-
-    /* public static function setUp() {
-      $this->setTableName('regimen');
-      $this->hasOne('Regimen_Category as Regimen_Category', array('local' => 'Category', 'foreign' => 'id'));
-      $this->hasOne('Regimen_Service_Type as Regimen_Service_Type', array('local' => 'Type_Of_Service', 'foreign' => 'id'));
-      $this->hasMany('Regimen_Drug as Drugs', array('local' => 'id', 'foreign' => 'Regimen'));
-      $this->hasOne('Sync_Regimen as S_Regimen', array('local' => 'map', 'foreign' => 'id'));
-      } */
+    protected $appends = ['name'];
 
     function Regimen_Category() {
         return $this->hasOne(Regimen_Category::class, 'id', 'category');
@@ -63,6 +56,14 @@ class Regimen extends BaseModel {
         }
         $query = DB::select("SELECT r.id, r.Regimen_Code, r.Regimen_Desc, r.Line, rc.Name as Regimen_Category, rst.Name as Regimen_Service_Type, r.Enabled, r.Merged_To, r.map FROM Regimen r LEFT JOIN Regimen_Category rc ON r.category = rc.id LEFT JOIN Regimen_Service_Type rst ON rst.id = r.type_of_service WHERE $displayed_enabled ORDER BY r.id desc ");
         return BaseModel::resultSet($query);
+    }
+
+    public function getNameAttribute(){
+        return $this->regimen_code.' | '.$this->regimen_desc;
+    }
+
+    public function drugs(){
+        return $this->hasMany(RegimenDrug::class, 'id', 'regimen');
     }
 
     public static function getTotalNumber($source = 0) {

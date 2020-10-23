@@ -13,10 +13,11 @@ use \Modules\ADT\Models\User;
 use \Modules\ADT\Models\User_right;
 use \Modules\ADT\Models\Patient_appointment;
 use \Modules\ADT\Models\CCC_store_service_point;
+use Illuminate\Database\Capsule\Manager as DB;
 
 class Facilitydashboard_Management extends \App\Controllers\BaseController {
 
-    var $drug_array = array();
+    var $drug_array = [];
     var $drug_count = 0;
     var $counter = 0;
     var $db;
@@ -351,38 +352,39 @@ class Facilitydashboard_Management extends \App\Controllers\BaseController {
 
     public function getPatientMasterList() {
         ini_set("memory_limit", '2048M');
-        $this->load->dbutil();
-        $this->load->helper('file');
-        $this->load->helper('download');
+        helper('file');
+        helper('download');
         $delimiter = ",";
         $newline = "\r\n";
         $filename = "patient_master_list.csv";
-        $query = "
-        SELECT ccc_number,first_name,other_name,last_name,date_of_birth,age,maturity,pob,gender,pregnant,current_weight,current_height,current_bsa,current_bmi,phone_number,physical_address,alternate_address,other_illnesses,other_drugs,drug_allergies,tb,smoke,alcohol,date_enrolled,patient_source,supported_by,service,start_regimen,start_regimen_date,current_status,sms_consent,family_planning,tbphase,startphase,endphase,partner_status,status_change_date,disclosure,support_group,current_regimen,nextappointment,days_to_nextappointment,clinicalappointment,start_height,start_weight,start_bsa,start_bmi,transfer_from,prophylaxis,isoniazid_start_date,isoniazid_end_date,rifap_isoniazid_start_date,rifap_isoniazid_end_date,pep_reason,differentiated_care_status,
-        CASE WHEN t.is_tested = 1 THEN 'YES'
-        ELSE 'NO' END AS is_tested
-        ,test_date	as prep_test_date,
-        CASE WHEN t.test_result = 1 THEN 'Positive'
-        ELSE 'Negative' END AS  prep_test_result,
-        name as prep_reason_name
-        FROM vw_patient_list v1 
-		LEFT JOIN (
-			SELECT ppt.*,pr.name
-			FROM patient_prep_test ppt
-			INNER JOIN prep_reason pr ON pr.id = ppt.prep_reason_id
-			INNER JOIN (
-					SELECT patient_id, MAX(test_date) test_date
-					FROM patient_prep_test 
-					GROUP BY patient_id
-					) t ON t.patient_id = ppt.patient_id AND t.test_date = ppt.test_date
-			GROUP BY ppt.patient_id
-			) t ON t.patient_id = v1.patient_id 
-		GROUP BY v1.patient_id";
+        $query = 
+        "SELECT ccc_number,first_name,other_name,last_name,date_of_birth,age,maturity,pob,gender,pregnant,current_weight,current_height,current_bsa,current_bmi,phone_number,physical_address,alternate_address,other_illnesses,other_drugs,drug_allergies,tb,smoke,alcohol,date_enrolled,patient_source,supported_by,service,start_regimen,start_regimen_date,current_status,sms_consent,family_planning,tbphase,startphase,endphase,partner_status,status_change_date,disclosure,support_group,current_regimen,nextappointment,days_to_nextappointment,clinicalappointment,start_height,start_weight,start_bsa,start_bmi,transfer_from,prophylaxis,isoniazid_start_date,isoniazid_end_date,rifap_isoniazid_start_date,rifap_isoniazid_end_date,pep_reason,differentiated_care_status, ".
+        "CASE WHEN t.is_tested = 1 THEN 'YES' ".
+        "ELSE 'NO' END AS is_tested ".
+        ",test_date	as prep_test_date, ".
+        "CASE WHEN t.test_result = 1 THEN 'Positive' ".
+        "ELSE 'Negative' END AS  prep_test_result, ".
+        "name as prep_reason_name ".
+        "FROM vw_patient_list v1 ".
+		"LEFT JOIN (".
+			"SELECT ppt.*,pr.name ".
+			"FROM patient_prep_test ppt ".
+			"INNER JOIN prep_reason pr ON pr.id = ppt.prep_reason_id ".
+			"INNER JOIN (".
+					"SELECT patient_id, MAX(test_date) test_date ".
+					"FROM patient_prep_test ".
+					"GROUP BY patient_id".
+					") t ON t.patient_id = ppt.patient_id AND t.test_date = ppt.test_date ".
+			"GROUP BY ppt.patient_id ".
+			") t ON t.patient_id = v1.patient_id ".
+		"GROUP BY v1.patient_id";
 
-        $results = $this->db->query($query);
-        $data = $this->dbutil->csv_from_result($results, $delimiter, $newline);
+        $db = \Config\Database::connect();
+        $results = $db->query($query);
+        $util = (new \CodeIgniter\Database\Database())->loadUtils($db);
+        $data = $util->getCSVFromResult($results, $delimiter, $newline);
         ob_clean(); //Removes spaces
-        force_download($filename, $data);
+        return $this->response->download($filename, $data);
     }
 
 }

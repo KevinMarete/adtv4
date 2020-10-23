@@ -157,8 +157,8 @@ if ($access_level == "system_administrator") {
         }
         if ($user_is_administrator) {
             ?>
-            $('#span1').load('<?php echo base_url() . 'admin_management/inactive_users'; ?>');
-            $('#span2').load('<?php echo base_url() . 'admin_management/online_users'; ?>');
+            $('#span1').load('<?php echo base_url() . '/public/admin_management/inactive_users'; ?>');
+            $('#span2').load('<?php echo base_url() . '/public/admin_management/online_users'; ?>');
         <?php
         }
         ?>
@@ -457,7 +457,7 @@ if ($access_level == "system_administrator") {
                                         ?>
 
                                 <li class="divider"></li>
-                                <li><a href="<?php echo base_url() . 'facilitydashboard_management/getPatientMasterList' ?>" id="ReportGenerator"> <i class="icon-book"></i>Patient Master list</a></li>
+                                <li><a href="<?php echo base_url() . '/public/facilitydashboard_management/getPatientMasterList' ?>" id="ReportGenerator"> <i class="icon-book"></i>Patient Master list</a></li>
                                 <li><a href="<?php echo base_url() . 'assets/manuals/user_manual.pdf' ?>" target="_blank"><i class="icon-book"></i>User Manual</a></li>
 
 
@@ -565,11 +565,10 @@ if ($access_level == "system_administrator") {
                         <div id="footer_text2" class="span12" style="text-align:center">
                             Government of Kenya &copy; <?php echo date('Y'); ?>.
                             All Rights Reserved . <strong>Web-ADT version 3.5.0</strong>
-                    <?php //if (str_replace('.', '', $update_available->release) + 0 > '3.4.2') { 
-                    ?>
-                    <a class="badge badge-warning blinking" href="#adt_update_modal" data-toggle="modal">New Update available</a>
-                    <?php // } 
-                    ?>
+                            <?php if ($session->get('update_available')) { ?>
+                                <a class="badge badge-warning blinking" href="#adt_update_modal" data-toggle="modal">New Update available</div>
+                        <?php } ?>
+                    </div>  
                 </div>
         </div>
         </div>
@@ -586,11 +585,11 @@ if ($access_level == "system_administrator") {
                 <div class="modal-body">
                     <div class="control-group">
                         <div class="controls">
-                            <select id="search_criteria" name="search_criteria" required class="span3">
-                                <option data-cat='patient' value="0" data-dest="patient_management/load_view/details/">Search Patients</option>
+                            <select id="search_criteria" name="search_criteria" required  class="span3">
+                                <option data-cat='patient' value="0" data-dest="/public/patient/load_view/details/">Search Patients</option>
                                 <?php
                                 foreach ($ccc_stores as $ccc_store) {
-                                    echo "<option data-cat='drugcode' value='" . $ccc_store->id . "' data-id ='" . $ccc_store->id . "' data-dest='inventory_management/getDrugBinCard/'>Search drugs (" . $ccc_store->name . ")</option>";
+                                    echo "<option data-cat='drugcode' value='" . $ccc_store->id . "' data-id ='" . $ccc_store->id . "' data-dest='/public/inventory_management/getDrugBinCard'>Search drugs (" . $ccc_store->name . ")</option>";
                                 }
                                 ?>
                             </select>

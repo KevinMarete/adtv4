@@ -1,21 +1,24 @@
 <!--Custom CSS files-->
-<link href="<?php echo base_url().'assets/modules/patients/listing.css'; ?>" type="text/css" rel="stylesheet"/>
+<link href="<?php echo base_url().'/public/assets/modules/patients/listing.css'; ?>" type="text/css" rel="stylesheet"/>
 
 <!--container-->
 <div class="container-fluid center-content">
     <!--message row-->
     <div class="row-fluid">
         <div class="span12">
-            <?php 
-			  if($this->session->userdata("msg_save_transaction")){
-			  ?>
+			<?php 
+				$session = session();
+				
+			  	if($session->get("msg_save_transaction")){
+
+			?>
 				<?php
-				if($this->session->userdata("msg_save_transaction")=="success"){
+				if($session->get("msg_save_transaction")=="success"){
 					?>
 				<div class="alert alert-success">
 	              <button type="button" class="close" data-dismiss="alert">&times;</button>
-				    <?php echo $this->session->userdata("user_enabled");  ?>
-				    <?php echo $this->session->flashdata("dispense_updated");  ?>
+				    <?php echo $session->get("user_enabled");  ?>
+				    <?php echo $session->getFlashdata("dispense_updated");  ?>
 				</div> 	
 					<?php
 				}
@@ -27,7 +30,7 @@
 				   </div> 	
 				<?php
 				}
-				$this->session->unset_userdata('msg_save_transaction');
+				$session->remove('msg_save_transaction');
 			  }
 			?>
         </div>
@@ -92,5 +95,5 @@
 </div>
 
 <!--custom js-->
-<script src="./assets/modules/patients/listing.js"></script>
+<script src="<?php echo base_url(); ?>/public/assets/modules/patients/listing.js"></script>
 

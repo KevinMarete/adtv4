@@ -35,68 +35,68 @@
         $(".merge_patient").live('click', function () {
             var target_patient_id = $(this).attr("id");
             bootbox.confirm("<h4>Save</h4>\n\<hr/><center>Are you sure?</center>",
-                    function (res) {
-                        if (res === true) {
-                            var counter = 0;
-                            var patients = new Array();
-
-                            $("input:checkbox[name='patients']:checked").each(function () {
-                                patients.push($(this).val());
-                                counter++;
-                            });
-                            if (counter > 0) {
-                                //ajax call to patient merge function
-                                $.ajax({
-                                    url: base_url + 'patient_management/merge',
-                                    type: 'POST',
-                                    data: {
-                                        'patients': patients,
-                                        'target_ccc': target_patient_id
-                                    },
-                                    success: function (data) {
-                                        //Refresh Page
-                                        location.reload();
-                                    },
-                                    error: function () {
-                                        bootbox.alert('<h4>Merge Error!</h4>\n\<hr/><center>failed merged!</center>');
-                                    }
-                                });
-                            } else {
-                                bootbox.alert('<h4>Selection Alert</h4>\n\<hr/><center>no patient selected!</center>');
-                            }
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    });
-        });
-        //unmerging patient
-        $(".unmerge_patient").live('click', function () {
-            var target_patient_id = $(this).attr("id");
-            bootbox.confirm("<h4>Save</h4>\n\<hr/><center>Are you sure?</center>",
-                    function (res) {
-                        if (res === true) {
-                            //ajax call to patient unmerge function
-                            $.ajax({
-                                url: base_url + 'patient_management/unmerge',
-                                type: 'POST',
-                                data: {
-                                    'target_ccc': target_patient_id
-                                },
-                                success: function (data) {
-                                    //Refresh Page
-                                    location.reload();
-                                },
-                                error: function () {
-                                    bootbox.alert('<h4>Merge Error!</h4>\n\<hr/><center>failed unmerged!</center>');
-                                }
-                            });
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    });
-        });
-    });
+                function(res){
+                    if(res===true){
+                    var counter=0;
+					var patients=new Array();
+					
+					$("input:checkbox[name='patients']:checked").each(function(){
+					    patients.push($(this).val());
+					    counter++;
+		            });
+		            if(counter>0){
+                        //ajax call to patient merge function
+                        $.ajax({
+			                url: base_url+'/public/patient/merge',
+			                type: 'POST', 
+			                data: { 
+			                	'patients': patients ,
+			                	'target_ccc':target_patient_id
+			                },      
+			                success: function(data) {
+			                     //Refresh Page
+			                     location.reload(); 
+			                },
+			                error: function(){
+			                	bootbox.alert('<h4>Merge Error!</h4>\n\<hr/><center>failed merged!</center>');
+			                }
+			           });
+		            }else{
+		               bootbox.alert('<h4>Selection Alert</h4>\n\<hr/><center>no patient selected!</center>');
+		            }
+                    return true;
+                    }else{
+                     	return false;
+                    }
+                });
+		});
+		//unmerging patient
+		$(".unmerge_patient").live('click',function(){
+			var target_patient_id = $(this).attr("id");
+			bootbox.confirm("<h4>Save</h4>\n\<hr/><center>Are you sure?</center>",
+                function(res){
+                    if(res===true){
+                        //ajax call to patient unmerge function
+                        $.ajax({
+			                url: base_url+'/public/patient/unmerge',
+			                type: 'POST', 
+			                data: { 
+			                	'target_ccc':target_patient_id
+			                },      
+			                success: function(data) {
+			                     //Refresh Page
+			                     location.reload(); 
+			                },
+			                error: function(){
+			                	bootbox.alert('<h4>Merge Error!</h4>\n\<hr/><center>failed unmerged!</center>');
+			                }
+			            });
+                    	return true;
+                    }else{
+                     	return false;
+                    }
+                });
+		});
+	});
 
 </script>

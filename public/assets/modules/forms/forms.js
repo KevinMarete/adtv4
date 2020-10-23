@@ -4,7 +4,7 @@ function getPageData(url){
 			    $.each( resp, function( column , elements ) {
 		    	var text = "<option value='0'>Select One</option>";
 		    	$.each( elements, function( key , value ) {
-		    		text += "<option value='" + value.id +"'>" + value.Name + "</option>";    	
+		    		text += "<option value=" + (value.indicator ? value.indicator : value.id) +">" + (value.name ? value.name : value.Name) + "</option>";    	
 		        });
 		        //Append html elements to DOM
 		        $( "#"+column ).html( text );

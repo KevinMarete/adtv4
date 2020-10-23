@@ -16,10 +16,11 @@ td {
 	text-overflow: ellipsis;
 }
 </style>
+<?php $session = session(); ?>
 <script type="text/javascript">
 	$(document).ready(function() {
 		
-		var link="<?php echo base_url(); ?>"+"notification_management/error_generator";
+		var link="<?php echo base_url(); ?>"+"/public/notification_management/error_generator";
 		var error_list="<?php echo $first_error; ?>";
 		var start_reg_error=error_list.indexOf("Patients without Start Regimen");
 		var pat_reg_error=error_list.indexOf("Patients with the wrong Regimen");
@@ -43,7 +44,7 @@ td {
 					"sPaginationType": "full_numbers",
 					"sDom": '<"H"Tfr>t<"F"ip>',
 					"oTableTools": {
-						"sSwfPath": base_url+"assets/scripts/datatable/copy_csv_xls_pdf.swf",
+						"sSwfPath": <?php echo base_url(); ?>+"/public/assets/scripts/datatable/copy_csv_xls_pdf.swf",
 						"aButtons": [ "copy", "print","xls","pdf" ]
 					},
 					"bProcessing": true,
@@ -79,7 +80,7 @@ td {
 						"sPaginationType": "full_numbers",
 						"sDom": '<"H"Tfr>t<"F"ip>',
 						"oTableTools": {
-							"sSwfPath": base_url+"assets/scripts/datatable/copy_csv_xls_pdf.swf",
+							"sSwfPath": <?php echo base_url(); ?>+"/public/assets/scripts/datatable/copy_csv_xls_pdf.swf",
 							"aButtons": [ "copy", "print","xls","pdf" ]
 						},
 						"bProcessing": true,
@@ -95,7 +96,7 @@ td {
 	    //startregimen
 	    $('#error_fix_btn').click(function(){
 	    	$('#loadingDiv').show();
-	    	var link="<?php echo base_url(); ?>"+"notification_management/startRegimen_Error";
+	    	var link="<?php echo base_url(); ?>"+"/public/notification_management/startRegimen_Error";
 	    	$.ajax({
 	    		url:link,
 	    		success:function(){
@@ -107,7 +108,7 @@ td {
         //lost to followup
         $('#error_fix_btn').click(function(){
         	$('#loadingDiv').show();
-        	var link="<?php echo base_url(); ?>"+"notification_management/lost_to_followup";
+        	var link="<?php echo base_url(); ?>"+"/public/notification_management/lost_to_followup";
         	$.ajax({
         		url:link,
         		success:function(){
@@ -119,7 +120,7 @@ td {
         //patient without start regimen date
         $('#error_fix_btn').click(function(){
         	$('#loadingDiv').show();
-        	var link="<?php echo base_url(); ?>"+"notification_management/start_regimen_date_error";
+        	var link="<?php echo base_url(); ?>"+"/public/notification_management/start_regimen_date_error";
         	$.ajax({
         		url:link,
         		success:function(){
@@ -136,24 +137,24 @@ td {
 	<div class="center-content">
 		<div>
 			<?php
-			if($this->session->userdata("msg_success")){
+			if($session->get("msg_success")){
 				?>
-				<span class="message success"><?php echo $this->session->userdata("msg_success")  ?></span>
+				<span class="message success"><?php echo $session->get("msg_success")  ?></span>
 				<?php
-				$this->session->unset_userdata("msg_success");
+				$session->remove("msg_success");
 			}
 			
-			elseif($this->session->userdata("msg_error")){
+			elseif($session->get("msg_error")){
 				?>
-				<span class="message error"><?php echo $this->session->userdata("msg_error")  ?></span>
+				<span class="message error"><?php echo $session->get("msg_error")  ?></span>
 				<?php
-				$this->session->unset_userdata("msg_error");
+				$session->remove("msg_error");
 			}
 			?>
 		</div>
 		
 		<div>
-			<?php if($this->session->userdata("msg_save_transaction")){
+			<?php if($session->get("msg_save_transaction")){
 				?>
 				
 				<script type="text/javascript">
@@ -162,7 +163,7 @@ td {
 					},6000)
 				</script>
 				<?php
-				if($this->session->userdata("msg_save_transaction")=="success"){
+				if($session->get("msg_save_transaction")=="success"){
 					?>
 					<div class="message success">Your data were successfully saved !</div>
 					<?php
@@ -172,13 +173,13 @@ td {
 					<div class="message error">Your data were not saved ! Try again or contact your system administrator.</div>
 					<?php
 				}
-				$this->session->unset_userdata('msg_save_transaction');
+				$session->remove('msg_save_transaction');
 			}
 			?>
 		</div>
 		<div>
 			<ul class="breadcrumb">
-				<li><a href="<?php echo site_url().'notification_management/error_fix' ?>">Errors</a> </li>
+				<li><a href="<?php echo base_url().'/public/notification_management/error_fix' ?>">Errors</a> </li>
 				<li>
 					<select style="width:auto;color:#000;font-weight:bold" id="error_list">
 						<?php 
