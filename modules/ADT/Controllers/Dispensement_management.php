@@ -211,7 +211,7 @@ class Dispensement_management extends BaseController {
 
     public function adr($record_no = null) {
         $dated = '';
-        $id = $this->db->select_max('id')->get('adr_form')->result();
+        $id = $this->db->table('adr_form')->selectMax('id')->get()->result();
         $newid =(int) $id[0]->id + 1;
         if ($_POST) {
             $adr = [
@@ -251,12 +251,12 @@ class Dispensement_management extends BaseController {
             ];
             
 
-            $this->db->insert('adr_form', $adr);
+            $this->db->table('adr_form')->insert($adr);
             //$adr_id = $this->db->insert_id();
             if (count($_POST['drug_name']) > 0) {
 
                 foreach ($_POST['drug_name'] as $key => $drug) {
-                    $adr_details = array(
+                    $adr_details = [
                         'adr_id' => $newid,
                         'drug' => $_POST['drug_name'][$key],
                         'brand' => $_POST['brand_name'][$key],
@@ -269,10 +269,10 @@ class Dispensement_management extends BaseController {
                         'indication' => $_POST['indication'][$key],
                         'suspecteddrug' => (isset($_POST['suspecteddrug'][$key])) ? $_POST['suspecteddrug'][$key] : false,
                         'visitid' => $_POST['visitid'][$key]
-                    );
-                    $this->db->insert('adr_form_details', $adr_details);
+                    ];
+                    $this->db->table('adr_form_details')->insert($adr_details);
                 }
-                redirect('inventory_management/adr/');
+                redirect()->to('/public/inventory_management/adr/');
                 
             } else {
                 echo "No drugs selected";

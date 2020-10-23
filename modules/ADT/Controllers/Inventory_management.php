@@ -19,6 +19,7 @@ use \Modules\ADT\Models\CCC_store_service_point;
 use \Modules\ADT\Models\Drug_Stock_Movement;
 use Illuminate\Database\Capsule\Manager as DB;
 use Modules\ADT\Models\PatientVisit;
+use Mpdf\Mpdf;
 
 class Inventory_management extends \App\Controllers\BaseController {
 
@@ -251,8 +252,8 @@ class Inventory_management extends \App\Controllers\BaseController {
     public function getDrugTransactions($drug_id = '4', $ccc_id = '2') {
         $db = \Config\Database::connect();
         $uri = $this->request->uri;
-        $drug_id = $uri->getSegments(2);
-        $ccc_id = $uri->getSegments(3);
+        $drug_id = $uri->getSegment(3);
+        $ccc_id = $uri->getSegment(4);
         /* Added Limit as there are issues */
         ini_set("memory_limit", -1);
         $iDisplayStart = $_GET['iDisplayStart'];
@@ -263,10 +264,11 @@ class Inventory_management extends \App\Controllers\BaseController {
         $sEcho = $_GET['sEcho'];
 
         $where = "";
-        $builder;
+        $builder = $this->db->table('drug_stock_movement as ds');
 
         //columns
-        $aColumns = array('Order_Number',
+        $aColumns = [
+            'Order_Number',
             'Transaction_Date',
             't.name as Transaction_Type',
             't.effect',
@@ -281,13 +283,14 @@ class Inventory_management extends \App\Controllers\BaseController {
             'ds.Quantity_Out',
             'Machine_Code',
             'Unit_Cost',
-            'Amount');
+            'Amount'
+        ];
 
         $count = 0;
 
         // Paging
         if (isset($iDisplayStart) && $iDisplayLength != '-1') {
-            $builder = $this->db->limit($this->db->escapeString($iDisplayLength), $this->db->escapeString($iDisplayStart));
+            $builder->limit($this->db->escapeString($iDisplayLength), $this->db->escapeString($iDisplayStart));
         }
 
         // Ordering
@@ -298,7 +301,7 @@ class Inventory_management extends \App\Controllers\BaseController {
                 $sSortDir = $_GET['sSortDir_' . $i];
 
                 if ($bSortable == 'true') {
-                    $builder = $this->db->orderBy($aColumns[intval($this->db->escapeString($iSortCol))], $this->db->escapeString($sSortDir));
+                    $builder->orderBy($aColumns[intval($this->db->escapeString($iSortCol))], $this->db->escapeString($sSortDir));
                 }
             }
         }
@@ -306,7 +309,7 @@ class Inventory_management extends \App\Controllers\BaseController {
         if (isset($sSearch) && !empty($sSearch)) {
             $column_count = 0;
             //new columns
-            $newColumns = array('Order_Number',
+            $newColumns = ['Order_Number',
                 'Transaction_Date',
                 't.name',
                 't.effect',
@@ -321,7 +324,7 @@ class Inventory_management extends \App\Controllers\BaseController {
                 'ds.Quantity_Out',
                 'Machine_Code',
                 'Unit_Cost',
-                'Amount');
+                'Amount'];
             for ($i = 0; $i < count($newColumns); $i++) {
                 $bSearchable = $_GET['bSearchable_' . $i];
 
@@ -332,7 +335,7 @@ class Inventory_management extends \App\Controllers\BaseController {
                     } else {
                         $where .= " OR ";
                     }
-                    $where .= $newColumns[$i] . " LIKE '%" . $builder->escapeLikeString($sSearch) . "%'";
+                    $where .= $newColumns[$i] . " LIKE '%" . $sSearch . "%'";
                     $column_count++;
                 }
             }
@@ -341,11 +344,11 @@ class Inventory_management extends \App\Controllers\BaseController {
         //data
         $builder->select('SQL_CALC_FOUND_ROWS ' . str_replace(' , ', ' ', implode(', ', $aColumns)), false);
         $builder->select('t.effect');
-        $builder->from("drug_stock_movement ds");
-        $builder->join("drugcode dc", "dc.id=ds.drug", "left");
-        $builder->join("transaction_type t", "t.id=ds.transaction_type", "left");
-        $builder->join("drug_source s", "s.id=ds.source_destination", "left");
-        $builder->join("drug_destination d", "d.id=ds.source_destination", "left");
+        // $builder->from("drug_stock_movement ds");
+        $builder->join("drugcode as dc", "dc.id = ds.drug", "left");
+        $builder->join("transaction_type as t", "t.id = ds.transaction_type", "left");
+        $builder->join("drug_source as s", "s.id = ds.source_destination", "left");
+        $builder->join("drug_destination as d", "d.id = ds.source_destination", "left");
         $builder->where("ds.drug", $drug_id);
         $builder->where("ds.ccc_store_sp", $ccc_id);
         //search sql clause
@@ -361,25 +364,27 @@ class Inventory_management extends \App\Controllers\BaseController {
         $iFilteredTotal = count($res);
 
         // Total data set length
-        $this->db->select("ds.*");
-        $this->db->from("drug_stock_movement ds");
-        $this->db->join("drugcode dc", "dc.id=ds.drug", "left");
-        $this->db->join("transaction_type t", "t.id=ds.transaction_type", "left");
-        $this->db->join("drug_source s", "s.id=ds.source_destination", "left");
-        $this->db->join("drug_destination d", "d.id=ds.source_destination", "left");
-        $this->db->where("ds.drug", $drug_id);
-        $this->db->where("ds.ccc_store_sp", $ccc_id);
-        $total = $this->db->getResult();
+        $builder2 = $this->db->table('drug_stock_movement ds');
+        $builder2->select("ds.*");
+        // $this->db->from("drug_stock_movement ds");
+        $builder2->join("drugcode dc", "dc.id=ds.drug", "left");
+        $builder2->join("transaction_type t", "t.id=ds.transaction_type", "left");
+        $builder2->join("drug_source s", "s.id=ds.source_destination", "left");
+        $builder2->join("drug_destination d", "d.id=ds.source_destination", "left");
+        $builder2->where("ds.drug", $drug_id);
+        $builder2->where("ds.ccc_store_sp", $ccc_id);
+        $total = $builder2->get();
         $iTotal = count($total->getResultArray());
         // Output
-        $output = array('sEcho' => intval($sEcho),
+        $output = ['sEcho' => intval($sEcho),
             'iTotalRecords' => $iTotal,
             'iTotalDisplayRecords' => $iFilteredTotal,
-            'aaData' => array());
+            'aaData' => []
+        ];
 
         //loop through data to change transaction type
         foreach ($rResult->getResult() as $drug_transaction) {
-            $row = array();
+            $row = [];
             if ($drug_transaction->effect == 1) {
                 //quantity_out & source (means adds stock to system)
                 $transaction_type = $drug_transaction->Transaction_Type;
@@ -549,48 +554,48 @@ class Inventory_management extends \App\Controllers\BaseController {
         $id = $this->db->select_max('id')->get('pqms')->result();
         $newid = (int) $id[0]->id + 1;
 
-        if ($this->input->post("facility_name")) {
+        if ($this->post("facility_name")) {
             $pqmp_data = array(
-                'county_id' => $this->input->post('county_id'),
-                'sub_county_id' => $this->input->post('sub_county_id'),
-                'country_id' => $this->input->post('country_id'),
-                'designation_id' => $this->input->post('designation_id'),
-                'facility_name' => $this->input->post('facility_name'),
-                'facility_code' => $this->input->post('facility_code'),
-                'facility_address' => $this->input->post('facility_address'),
-                'facility_phone' => $this->input->post('facility_phone'),
-                'brand_name' => $this->input->post('brand_name'),
-                'generic_name' => $this->input->post('generic_name'),
-                'batch_number' => $this->input->post('batch_no'),
-                'manufacture_date' => date('Y-m-d', strtotime($this->input->post('manufacture_date'))),
-                'expiry_date' => date('Y-m-d', strtotime($this->input->post('expiry_date'))),
-                'receipt_date' => date('Y-m-d', strtotime($this->input->post('receipt_date'))),
-                'name_of_manufacturer' => $this->input->post('manufacturer_name'),
-                'country_of_origin' => $this->input->post('country_id'),
-                'supplier_name' => $this->input->post('supplier_name'),
-                'supplier_address' => $this->input->post('supplier_address'),
-                'product_formulation' => $this->input->post('product_formulation'),
-                'product_formulation_specify' => $this->input->post('formulation_other'),
-                'colour_change' => $this->input->post('colour_change'),
-                'separating' => $this->input->post('separating'),
-                'powdering' => $this->input->post('powdering'),
-                'caking' => $this->input->post('caking'),
-                'moulding' => $this->input->post('moulding'),
-                'odour_change' => $this->input->post('odour_change'),
-                'mislabeling' => $this->input->post('mislabeling'),
-                'incomplete_pack' => $this->input->post('incomplete_pack'),
-                'complaint_other' => $this->input->post('complaint_other'),
-                'complaint_other_specify' => $this->input->post('complaint_other_specify'),
-                'complaint_description' => $this->input->post('description'),
-                'require_refrigeration' => $this->input->post('product_refrigiration'),
-                'product_at_facility' => $this->input->post('product_availability'),
-                'returned_by_client' => $this->input->post('product_returned'),
-                'stored_to_recommendations' => $this->input->post('product_storage'),
-                'other_details' => $this->input->post(''),
-                'comments' => $this->input->post('comments'),
-                'reporter_name' => $this->input->post('reporter_name'),
-                'reporter_email' => $this->input->post(''),
-                'contact_number' => $this->input->post('reporter_phone'),
+                'county_id' => $this->post('county_id'),
+                'sub_county_id' => $this->post('sub_county_id'),
+                'country_id' => $this->post('country_id'),
+                'designation_id' => $this->post('designation_id'),
+                'facility_name' => $this->post('facility_name'),
+                'facility_code' => $this->post('facility_code'),
+                'facility_address' => $this->post('facility_address'),
+                'facility_phone' => $this->post('facility_phone'),
+                'brand_name' => $this->post('brand_name'),
+                'generic_name' => $this->post('generic_name'),
+                'batch_number' => $this->post('batch_no'),
+                'manufacture_date' => date('Y-m-d', strtotime($this->post('manufacture_date'))),
+                'expiry_date' => date('Y-m-d', strtotime($this->post('expiry_date'))),
+                'receipt_date' => date('Y-m-d', strtotime($this->post('receipt_date'))),
+                'name_of_manufacturer' => $this->post('manufacturer_name'),
+                'country_of_origin' => $this->post('country_id'),
+                'supplier_name' => $this->post('supplier_name'),
+                'supplier_address' => $this->post('supplier_address'),
+                'product_formulation' => $this->post('product_formulation'),
+                'product_formulation_specify' => $this->post('formulation_other'),
+                'colour_change' => $this->post('colour_change'),
+                'separating' => $this->post('separating'),
+                'powdering' => $this->post('powdering'),
+                'caking' => $this->post('caking'),
+                'moulding' => $this->post('moulding'),
+                'odour_change' => $this->post('odour_change'),
+                'mislabeling' => $this->post('mislabeling'),
+                'incomplete_pack' => $this->post('incomplete_pack'),
+                'complaint_other' => $this->post('complaint_other'),
+                'complaint_other_specify' => $this->post('complaint_other_specify'),
+                'complaint_description' => $this->post('description'),
+                'require_refrigeration' => $this->post('product_refrigiration'),
+                'product_at_facility' => $this->post('product_availability'),
+                'returned_by_client' => $this->post('product_returned'),
+                'stored_to_recommendations' => $this->post('product_storage'),
+                'other_details' => $this->post(''),
+                'comments' => $this->post('comments'),
+                'reporter_name' => $this->post('reporter_name'),
+                'reporter_email' => $this->post(''),
+                'contact_number' => $this->post('reporter_phone'),
             );
             $this->db->where('id', $record_no);
             $this->db->update('pqms', $pqmp_data);
@@ -647,56 +652,56 @@ class Inventory_management extends \App\Controllers\BaseController {
     public function new_pqmp($record_no = NULL) {
         $id = $this->db->select_max('id')->get('pqms')->result();
         $newid = (int) $id[0]->id + 1;
-        if ($this->input->post("facility_name")) {
+        if ($this->post("facility_name")) {
             $pqmp_data = array(
-                'facility_name' => $this->input->post('facility_name'),
-                'district_name' => $this->input->post('district_name'),
-                'province_name' => $this->input->post('province_name'),
-                'facility_address' => $this->input->post('facility_address'),
-                'facility_phone' => $this->input->post('facility_phone'),
-                'brand_name' => $this->input->post('brand_name'),
-                'generic_name' => $this->input->post('generic_name'),
-                'batch_no' => $this->input->post('batch_no'),
-                'manufacture_date' => date('Y-m-d', strtotime($this->input->post('manufacture_date'))),
-                'expiry_date' => date('Y-m-d', strtotime($this->input->post('expiry_date'))),
-                'receipt_date' => date('Y-m-d', strtotime($this->input->post('receipt_date'))),
-                'manufacturer_name' => $this->input->post('manufacturer_name'),
-                'origin_county' => $this->input->post('origin_county'),
-                'supplier_name' => $this->input->post('supplier_name'),
-                'supplier_address' => $this->input->post('supplier_address'),
-                'formulation_oral' => $this->input->post('formulation_oral'),
-                'formulation_injection' => $this->input->post('formulation_injection'),
-                'formulation_diluent' => $this->input->post('formulation_diluent'),
-                'formulation_powdersuspension' => $this->input->post('formulation_powdersuspension'),
-                'formulation_powderinjection' => $this->input->post('formulation_powderinjection'),
-                'formulation_eyedrops' => $this->input->post('formulation_eyedrops'),
-                'formulation_eardrops' => $this->input->post('formulation_eardrops'),
-                'formulation_nebuliser' => $this->input->post('formulation_nebuliser'),
-                'formulation_cream' => $this->input->post('formulation_cream'),
-                'other_formulation' => $this->input->post('other_formulation'),
-                'formulation_other' => $this->input->post('formulation_other'),
-                'complaint_colour' => $this->input->post('complaint_colour'),
-                'complaint_separating' => $this->input->post('complaint_separating'),
-                'complaint_powdering' => $this->input->post('complaint_powdering'),
-                'complaint_caking' => $this->input->post('complaint_caking'),
-                'complaint_moulding' => $this->input->post('complaint_moulding'),
-                'complaint_change' => $this->input->post('complaint_change'),
-                'complaint_mislabeilng' => $this->input->post('complaint_mislabeilng'),
-                'complaint_incomplete' => $this->input->post('complaint_incomplete'),
-                'other_complaint' => $this->input->post('other_complaint'),
-                'complaint_other' => $this->input->post('complaint_other'),
-                'description' => $this->input->post('description'),
-                'comments' => $this->input->post('comments'),
-                'product_refrigiration' => $this->input->post('product_refrigiration'),
-                'product_availability' => $this->input->post('product_availability'),
-                'product_returned' => $this->input->post('product_returned'),
-                'product_returned' => $this->input->post('product_returned'),
-                'product_storage' => $this->input->post('product_storage'),
-                'product_storage' => $this->input->post('product_storage'),
-                'reporter_name' => $this->input->post('reporter_name'),
-                'reporter_phone' => $this->input->post('reporter_phone'),
-                'reporter_title' => $this->input->post('reporter_title'),
-                'reporter_signature' => $this->input->post('reporter_signature')
+                'facility_name' => $this->post('facility_name'),
+                'district_name' => $this->post('district_name'),
+                'province_name' => $this->post('province_name'),
+                'facility_address' => $this->post('facility_address'),
+                'facility_phone' => $this->post('facility_phone'),
+                'brand_name' => $this->post('brand_name'),
+                'generic_name' => $this->post('generic_name'),
+                'batch_no' => $this->post('batch_no'),
+                'manufacture_date' => date('Y-m-d', strtotime($this->post('manufacture_date'))),
+                'expiry_date' => date('Y-m-d', strtotime($this->post('expiry_date'))),
+                'receipt_date' => date('Y-m-d', strtotime($this->post('receipt_date'))),
+                'manufacturer_name' => $this->post('manufacturer_name'),
+                'origin_county' => $this->post('origin_county'),
+                'supplier_name' => $this->post('supplier_name'),
+                'supplier_address' => $this->post('supplier_address'),
+                'formulation_oral' => $this->post('formulation_oral'),
+                'formulation_injection' => $this->post('formulation_injection'),
+                'formulation_diluent' => $this->post('formulation_diluent'),
+                'formulation_powdersuspension' => $this->post('formulation_powdersuspension'),
+                'formulation_powderinjection' => $this->post('formulation_powderinjection'),
+                'formulation_eyedrops' => $this->post('formulation_eyedrops'),
+                'formulation_eardrops' => $this->post('formulation_eardrops'),
+                'formulation_nebuliser' => $this->post('formulation_nebuliser'),
+                'formulation_cream' => $this->post('formulation_cream'),
+                'other_formulation' => $this->post('other_formulation'),
+                'formulation_other' => $this->post('formulation_other'),
+                'complaint_colour' => $this->post('complaint_colour'),
+                'complaint_separating' => $this->post('complaint_separating'),
+                'complaint_powdering' => $this->post('complaint_powdering'),
+                'complaint_caking' => $this->post('complaint_caking'),
+                'complaint_moulding' => $this->post('complaint_moulding'),
+                'complaint_change' => $this->post('complaint_change'),
+                'complaint_mislabeilng' => $this->post('complaint_mislabeilng'),
+                'complaint_incomplete' => $this->post('complaint_incomplete'),
+                'other_complaint' => $this->post('other_complaint'),
+                'complaint_other' => $this->post('complaint_other'),
+                'description' => $this->post('description'),
+                'comments' => $this->post('comments'),
+                'product_refrigiration' => $this->post('product_refrigiration'),
+                'product_availability' => $this->post('product_availability'),
+                'product_returned' => $this->post('product_returned'),
+                'product_returned' => $this->post('product_returned'),
+                'product_storage' => $this->post('product_storage'),
+                'product_storage' => $this->post('product_storage'),
+                'reporter_name' => $this->post('reporter_name'),
+                'reporter_phone' => $this->post('reporter_phone'),
+                'reporter_title' => $this->post('reporter_title'),
+                'reporter_signature' => $this->post('reporter_signature')
             );
             $this->db->insert('pqmp', $pqmp_data);
             $this->session->set_flashdata('pqmp_saved', 'Pharmacovigilance form was saved successfully!');
@@ -749,47 +754,47 @@ class Inventory_management extends \App\Controllers\BaseController {
 
         $pmpq = array(
             'user_id' => session()->get("user_id"),
-            'county_id' => $this->input->post('county_id'),
-            'sub_county_id' => $this->input->post('sub_county_id'),
-            'country_id' => $this->input->post('country_id'),
-            'designation_id' => $this->input->post('designation_id'),
-            'facility_name' => $this->input->post('facility_name'),
-            'facility_code' => $this->input->post('facility_code'),
-            'facility_address' => $this->input->post('facility_address'),
-            'facility_phone' => $this->input->post('facility_phone'),
-            'brand_name' => $this->input->post('brand_name'),
-            'generic_name' => $this->input->post('generic_name'),
-            'batch_number' => $this->input->post('batch_no'),
-            'manufacture_date' => date('Y-m-d', strtotime($this->input->post('manufacture_date'))),
-            'expiry_date' => date('Y-m-d', strtotime($this->input->post('expiry_date'))),
-            'receipt_date' => date('Y-m-d', strtotime($this->input->post('receipt_date'))),
-            'name_of_manufacturer' => $this->input->post('manufacturer_name'),
-            'country_of_origin' => $this->input->post('country_id'),
-            'supplier_name' => $this->input->post('supplier_name'),
-            'supplier_address' => $this->input->post('supplier_address'),
-            'product_formulation' => $this->input->post('product_formulation'),
-            'product_formulation_specify' => $this->input->post('formulation_other'),
-            'colour_change' => $this->input->post('colour_change'),
-            'separating' => $this->input->post('separating'),
-            'powdering' => $this->input->post('powdering'),
-            'caking' => $this->input->post('caking'),
-            'moulding' => $this->input->post('moulding'),
-            'odour_change' => $this->input->post('odour_change'),
-            'mislabeling' => $this->input->post('mislabeling'),
-            'incomplete_pack' => $this->input->post('incomplete_pack'),
-            'complaint_other' => $this->input->post('complaint_other'),
-            'complaint_other_specify' => $this->input->post('complaint_other_specify'),
-            'complaint_description' => $this->input->post('description'),
-            'require_refrigeration' => $this->input->post('product_refrigiration'),
-            'product_at_facility' => $this->input->post('product_availability'),
-            'returned_by_client' => $this->input->post('product_returned'),
-            'stored_to_recommendations' => $this->input->post('product_storage'),
-            'other_details' => $this->input->post(''),
-            'comments' => $this->input->post('comments'),
-            'reporter_name' => $this->input->post('reporter_name'),
-            'reporter_email' => $this->input->post(''),
-            'contact_number' => $this->input->post('reporter_phone'),
-            'emails' => $this->input->post(''),
+            'county_id' => $this->post('county_id'),
+            'sub_county_id' => $this->post('sub_county_id'),
+            'country_id' => $this->post('country_id'),
+            'designation_id' => $this->post('designation_id'),
+            'facility_name' => $this->post('facility_name'),
+            'facility_code' => $this->post('facility_code'),
+            'facility_address' => $this->post('facility_address'),
+            'facility_phone' => $this->post('facility_phone'),
+            'brand_name' => $this->post('brand_name'),
+            'generic_name' => $this->post('generic_name'),
+            'batch_number' => $this->post('batch_no'),
+            'manufacture_date' => date('Y-m-d', strtotime($this->post('manufacture_date'))),
+            'expiry_date' => date('Y-m-d', strtotime($this->post('expiry_date'))),
+            'receipt_date' => date('Y-m-d', strtotime($this->post('receipt_date'))),
+            'name_of_manufacturer' => $this->post('manufacturer_name'),
+            'country_of_origin' => $this->post('country_id'),
+            'supplier_name' => $this->post('supplier_name'),
+            'supplier_address' => $this->post('supplier_address'),
+            'product_formulation' => $this->post('product_formulation'),
+            'product_formulation_specify' => $this->post('formulation_other'),
+            'colour_change' => $this->post('colour_change'),
+            'separating' => $this->post('separating'),
+            'powdering' => $this->post('powdering'),
+            'caking' => $this->post('caking'),
+            'moulding' => $this->post('moulding'),
+            'odour_change' => $this->post('odour_change'),
+            'mislabeling' => $this->post('mislabeling'),
+            'incomplete_pack' => $this->post('incomplete_pack'),
+            'complaint_other' => $this->post('complaint_other'),
+            'complaint_other_specify' => $this->post('complaint_other_specify'),
+            'complaint_description' => $this->post('description'),
+            'require_refrigeration' => $this->post('product_refrigiration'),
+            'product_at_facility' => $this->post('product_availability'),
+            'returned_by_client' => $this->post('product_returned'),
+            'stored_to_recommendations' => $this->post('product_storage'),
+            'other_details' => $this->post(''),
+            'comments' => $this->post('comments'),
+            'reporter_name' => $this->post('reporter_name'),
+            'reporter_email' => $this->post(''),
+            'contact_number' => $this->post('reporter_phone'),
+            'emails' => $this->post(''),
             'submitted' => 1,
             'active' => 1,
             'device' => 1,
@@ -1192,10 +1197,10 @@ class Inventory_management extends \App\Controllers\BaseController {
     //Get balance details
     public function getBalanceDetails() {
         $facility_code = session()->get('facility');
-        $stock_type = $this->input->post("stock_type");
-        $selected_drug = $this->input->post("selected_drug");
-        $batch_selected = $this->input->post("batch_selected");
-        $expiry_date = $this->input->post("expiry_date");
+        $stock_type = $this->post("stock_type");
+        $selected_drug = $this->post("selected_drug");
+        $batch_selected = $this->post("batch_selected");
+        $expiry_date = $this->post("expiry_date");
         $sql = "SELECT 
 		dsb.balance, 
 		dsb.expiry_date 
@@ -1234,41 +1239,41 @@ class Inventory_management extends \App\Controllers\BaseController {
          */
         $balance = "";
         $facility = session()->get("facility");
-        $facility_detail = facilities::getSupplier($facility);
-        $supplier_name = $facility_detail->supplier->name;
+        // $facility_detail = Facilities::getSupplier($facility);
+        // $supplier_name = $facility_detail->supplier->name;
         $get_user = session()->get("user_id");
-        $cdrr_id = $_POST['cdrr_id'];
-        $get_qty_choice = $_POST['quantity_choice'];
-        $get_qty_out_choice = $_POST['quantity_out_choice'];
-        $get_source = $_POST['source'];
-        $get_source_name = $_POST['source_name'];
-        $get_destination_name = $_POST['destination_name'];
-        $get_destination = $_POST['destination'];
-        $get_transaction_date = date('Y-m-d', strtotime($_POST['transaction_date']));
-        $get_ref_number = $_POST['reference_number'];
-        $get_transaction_type = $_POST['transaction_type'];
-        $transaction_type_name = $_POST['trans_type'];
-        $transaction_effect = $_POST['trans_effect'];
-        $get_drug_id = $_POST['drug_id'];
-        $get_batch = $_POST['batch'];
-        $get_expiry = $_POST['expiry'];
-        $get_packs = $_POST['packs'];
-        $get_qty = $_POST['quantity'];
-        $get_available_qty = $_POST['available_qty'];
-        $get_unit_cost = $_POST['unit_cost'];
-        $get_amount = $_POST['amount'];
-        $get_comment = $_POST['comment'];
-        $get_stock_type = $_POST['stock_type'];
-        $stock_type_name = $_POST['stock_transaction']; //Name of kind of transaction being carried
-        $all_drugs_supplied = $_POST['all_drugs_supplied'];
-        $time_stamp = $_POST['time_stamp'];
-        $email = $_POST['emailaddress'];
+        $cdrr_id = $this->post('cdrr_id');
+        $get_qty_choice = $this->post('quantity_choice');
+        $get_qty_out_choice = $this->post('quantity_out_choice');
+        $get_source = $this->post('source');
+        $get_source_name = $this->post('source_name');
+        $get_destination_name = $this->post('destination_name');
+        $get_destination = $this->post('destination');
+        $get_transaction_date = date('Y-m-d', strtotime($this->post('transaction_date')));
+        $get_ref_number = $this->post('reference_number');
+        $get_transaction_type = $this->post('transaction_type');
+        $transaction_type_name = $this->post('trans_type');
+        $transaction_effect = $this->post('trans_effect');
+        $get_drug_id = $this->post('drug_id');
+        $get_batch = $this->post('batch');
+        $get_expiry = $this->post('expiry');
+        $get_packs = $this->post('packs');
+        $get_qty = $this->post('quantity');
+        $get_available_qty = $this->post('available_qty');
+        $get_unit_cost = $this->post('unit_cost');
+        $get_amount = $this->post('amount');
+        $get_comment = $this->post('comment');
+        $get_stock_type = $this->post('stock_type');
+        $stock_type_name = $this->post('stock_transaction'); //Name of kind of transaction being carried
+        $all_drugs_supplied = $this->post('all_drugs_supplied');
+        $time_stamp = $this->post('time_stamp');
+        $email = $this->post('emailaddress');
         $balance = 0;
         $pharma_balance = 0;
         $store_balance = 0;
         $sql_queries = "";
-        $source_destination = $_POST['source_destination'];
-        $check_optgroup = $_POST['optgroup']; //Check if store selected as source or destination
+        $source_destination = $this->post('source_destination');
+        $check_optgroup = $this->post('optgroup'); //Check if store selected as source or destination
         $source_dest_type = '';
         $running_balance = 0;
         $other_running_balance = 0; //For other store
@@ -1521,7 +1526,7 @@ class Inventory_management extends \App\Controllers\BaseController {
         //echo json_encode($running_balance ." -- ".$other_running_balance);die();
         //echo json_encode($source_destination);die();
         // STEP 3, INSERT TRANSACTION IN DRUG STOCK MOVEMENT FOR CURRENT STORES
-        $drug_stock_mvt_transact = array(
+        $drug_stock_mvt_transact = [
             'drug' => $get_drug_id,
             'transaction_date' => $get_transaction_date,
             'batch_number' => $get_batch,
@@ -1543,10 +1548,9 @@ class Inventory_management extends \App\Controllers\BaseController {
             'timestamp' => $time_stamp,
             'machine_code' => $running_balance,
             'ccc_store_sp' => $get_stock_type
-        );
+        ];
 
-
-        $this->db->insert('drug_stock_movement', $drug_stock_mvt_transact);
+        $this->db->table('drug_stock_movement')->insert($drug_stock_mvt_transact);
 
         //check if query inserted
         $inserted = $this->db->affectedRows();
@@ -1637,7 +1641,7 @@ class Inventory_management extends \App\Controllers\BaseController {
             );
 
 
-            $this->db->insert('drug_stock_movement', $drug_stock_mvt_other_trans);
+            $this->db->table('drug_stock_movement')->insert($drug_stock_mvt_other_trans);
             //echo json_encode($source_destination);die();
             //check if query inserted
             $inserted = $this->db->affectedRows();
@@ -1680,7 +1684,7 @@ class Inventory_management extends \App\Controllers\BaseController {
 
 
         //Check if transaction came from picking list and not all drugs where supplied
-        iF ($all_drugs_supplied == 0) {
+        if ($all_drugs_supplied == 0) {
             //Update supplied drugs
             $sql = "UPDATE cdrr_item SET publish='1' WHERE id='$cdrr_id'";
             $this->db->query($sql);
@@ -1696,17 +1700,17 @@ class Inventory_management extends \App\Controllers\BaseController {
     //Print Issue transactions
     public function print_issues() {
         $facility = session()->get('facility_name');
-        $source = $this->input->post("source");
-        $destination = $this->input->post("destination");
-        $drug = $this->input->post("drug");
-        $unit = $this->input->post("unit");
-        $batch = $this->input->post("batch");
-        $pack_size = $this->input->post("pack_size");
-        $expiry = date('Y-m-d', strtotime($this->input->post("expiry")));
-        $pack = $this->input->post("pack");
-        $quantity = $this->input->post("quantity");
-        $counter = $this->input->post("counter");
-        $total = $this->input->post("total");
+        $source = $this->post("source");
+        $destination = $this->post("destination");
+        $drug = $this->post("drug");
+        $unit = $this->post("unit");
+        $batch = $this->post("batch");
+        $pack_size = $this->post("pack_size");
+        $expiry = date('Y-m-d', strtotime($this->post("expiry")));
+        $pack = $this->post("pack");
+        $quantity = $this->post("quantity");
+        $counter = $this->post("counter");
+        $total = $this->post("total");
 
         //Build table
         $string = "<style>table{border-collapse: collapse;color: #3a3434;} table>td{color: #3a3434;padding: 9px 8px 0;}</style>
@@ -1744,7 +1748,7 @@ class Inventory_management extends \App\Controllers\BaseController {
 			</thead>
 			<tbody>
 			';
-            $this->session->set_userdata('string', $string);
+            session()->set('string', $string);
         }
         if ($counter == ($total - 1)) {//If las row
             $string = session()->get('string') . '
@@ -1789,8 +1793,7 @@ class Inventory_management extends \App\Controllers\BaseController {
 	   	<br />
 	   	' . date('D j M Y');
             //write to page
-            $this->load->library('mpdf');
-            $this->mpdf = new mPDF('c', 'B4');
+            $this->mpdf = new Mpdf(['c', 'B4']);
             $this->mpdf->ignore_invalid_utf8 = true;
             $this->mpdf->simpleTables = true;
             $this->mpdf->WriteHTML($string);
@@ -1811,26 +1814,26 @@ class Inventory_management extends \App\Controllers\BaseController {
 	   	<td> </td>
 	   	<td> </td>
 	   	</tr>';
-            $this->session->set_userdata('string', $string);
+            session()->set('string', $string);
         }
         echo json_encode($counter . '-' . $total);
         die();
     }
 
     public function set_transaction_session() {
-        $drugs_transacted = $this->input->post("list_drugs_transacted");
-        $remaining_drugs = $this->input->post("remaining_drugs");
-        //$this->session->set_userdata('filter_datatable',$drugs_transacted);
+        $drugs_transacted = $this->post("list_drugs_transacted");
+        $remaining_drugs = $this->post("remaining_drugs");
+        //session()->set('filter_datatable',$drugs_transacted);
         if ($remaining_drugs == 0) {
-            $this->session->set_userdata("msg_save_transaction", "success");
-            $this->session->unset_userdata("updated_dsb");
+            session()->set("msg_save_transaction", "success");
+            session()->remove("updated_dsb");
         } else {
-            $this->session->set_userdata("msg_save_transaction", "failure");
+            session()->set("msg_save_transaction", "failure");
         }
     }
 
     public function save_edit() {
-        $sql = $this->input->post("sql");
+        $sql = $this->post("sql");
         $queries = explode(";", $sql);
         foreach ($queries as $query) {
             if (strlen($query) > 0) {
@@ -1843,7 +1846,7 @@ class Inventory_management extends \App\Controllers\BaseController {
         $today = date('Y-m-d');
         $sql = "select drug_stock_balance.batch_number,drug_unit.Name as unit,dose.Name as dose,drugcode.quantity,drugcode.duration from drug_stock_balance,drugcode,drug_unit,dose where drug_id='$drug' and drugcode.id=drug_stock_balance.drug_id  and drug_unit.id=drugcode.unit and dose.id= drugcode.dose and expiry_date>'$today' and balance>0 group by batch_number order by drug_stock_balance.expiry_date asc";
         $query = $this->db->query($sql);
-        $results = $query->result_array();
+        $results = $query->getResultArray();
         if ($results) {
             echo json_encode($results);
         }
@@ -1865,7 +1868,7 @@ class Inventory_management extends \App\Controllers\BaseController {
     public function getBatchInfo($drug, $batch) {
         $sql = "select * from drug_stock_balance where drug_id='$drug' and batch_number='$batch'";
         $query = $this->db->query($sql);
-        $results = $query->result_array();
+        $results = $query->getResultArray();
         if ($results) {
             echo json_encode($results);
         }
@@ -1874,7 +1877,7 @@ class Inventory_management extends \App\Controllers\BaseController {
     public function getDrugsBrands($drug) {
         $sql = "select * from brand where drug_id='$drug' group by brand";
         $query = $this->db->query($sql);
-        $results = $query->result_array();
+        $results = $query->getResultArray();
         if ($results) {
             echo json_encode($results);
         }
@@ -1882,16 +1885,16 @@ class Inventory_management extends \App\Controllers\BaseController {
 
     //Get orders for a picking list
     public function getOrderDetails() {
-        $order_id = $this->input->post("order_id");
+        $order_id = $this->post("order_id");
         $sql = $this->db->query("SELECT ci.id as cdrr_id,dc.id,u.Name as unit,dc.pack_size,ci.drug_id,ci.newresupply,ci.resupply FROM cdrr_item ci LEFT JOIN drugcode dc ON dc.drug=ci.drug_id LEFT JOIN facility_order fo ON fo.unique_id=ci.cdrr_id LEFT JOIN drug_unit u ON dc.unit=u.id  WHERE fo.id='$order_id' AND ci.publish=0");
-        $order_list = $sql->result_array();
+        $order_list = $sql->getResultArray();
         echo json_encode($order_list);
     }
 
     //Set order status
     public function set_order_status() {
-        $order_id = $this->input->post("order_id");
-        $status = $this->input->post("status");
+        $order_id = $this->post("order_id");
+        $status = $this->post("status");
         $updated_on = date("U");
         $this->db->query("UPDATE facility_order SET status='$status',updated='$updated_on' WHERE id='$order_id'");
     }

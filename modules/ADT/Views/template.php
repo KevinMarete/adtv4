@@ -589,7 +589,7 @@ if ($access_level == "system_administrator") {
                                 <option data-cat='patient' value="0" data-dest="/public/patient/load_view/details/">Search Patients</option>
                                 <?php
                                 foreach ($ccc_stores as $ccc_store) {
-                                    echo "<option data-cat='drugcode' value='" . $ccc_store->id . "' data-id ='" . $ccc_store->id . "' data-dest='inventory_management/getDrugBinCard/'>Search drugs (" . $ccc_store->name . ")</option>";
+                                    echo "<option data-cat='drugcode' value='" . $ccc_store->id . "' data-id ='" . $ccc_store->id . "' data-dest='/public/inventory_management/getDrugBinCard'>Search drugs (" . $ccc_store->name . ")</option>";
                                 }
                                 ?>
                             </select>
