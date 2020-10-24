@@ -268,7 +268,7 @@ class Inventory_management extends \App\Controllers\BaseController {
         $sEcho = @$_GET['sEcho'];
 
         $where = "";
-        $builder = $this->db->table('drug_stock_movement as ds');
+        $builder = DB::table('drug_stock_movement as ds');
 
         //columns
         $aColumns = [
@@ -346,7 +346,7 @@ class Inventory_management extends \App\Controllers\BaseController {
         }
 
         //data
-//        $builder->table("drug_stock_movement ds");
+        // $builder->table("drug_stock_movement ds");
         $builder->select(DB::raw('SQL_CALC_FOUND_ROWS ' . str_replace(' , ', ' ', implode(', ', $aColumns)), false));
         $builder->select('effect');
         $builder->leftJoin("drugcode as dc", "dc.id", "=", "ds.drug");
@@ -364,20 +364,20 @@ class Inventory_management extends \App\Controllers\BaseController {
         $rResult = $builder->get();
 
         // Data set length after filtering
-//        $res = $this->db->query('SELECT FOUND_ROWS() AS found_rows')->getResult();
+        // $res = $this->db->query('SELECT FOUND_ROWS() AS found_rows')->getResult();
         $iFilteredTotal = count($rResult);
 
         // Total data set length
         $qb = DB::table("drug_stock_movement as ds");
         $qb->select("ds.*");
-//        $qb->table("drug_stock_movement ds");
+        // $qb->table("drug_stock_movement ds");
         $qb->leftJoin("drugcode as dc", "dc.id", "=", "ds.drug");
         $qb->leftJoin("transaction_type as t", "t.id", "=", "ds.transaction_type");
         $qb->leftJoin("drug_source as s", "s.id", "=", "ds.source_destination");
         $qb->leftJoin("drug_destination as d", "d.id", "=", "ds.source_destination");
         $qb->where("ds.drug", $drug_id);
         $qb->where("ds.ccc_store_sp", $ccc_id);
-//        $total = $this->db->getResult();
+        // $total = $this->db->getResult();
         $iTotal = $qb->count();
         $rResult = $qb->get();
         // Output
@@ -558,7 +558,7 @@ class Inventory_management extends \App\Controllers\BaseController {
 
 
         if ($this->request->getPost("facility_name")) {
-            $pqmp_data = array(
+            $pqmp_data = [
                 'county_id' => $this->request->getPost('county_id'),
                 'sub_county_id' => $this->request->getPost('sub_county_id'),
                 'country_id' => $this->request->getPost('country_id'),
@@ -599,7 +599,7 @@ class Inventory_management extends \App\Controllers\BaseController {
                 'reporter_name' => $this->request->getPost('reporter_name'),
                 'reporter_email' => $this->request->getPost(''),
                 'contact_number' => $this->request->getPost('reporter_phone'),
-            );
+            ];
             $builder = $this->db->table('pqms');
             $builder->where('id', $record_no);
             $builder->update($pqmp_data);
@@ -608,7 +608,7 @@ class Inventory_management extends \App\Controllers\BaseController {
             return redirect()->to(base_url() . '/public/inventory_management/loadRecord/' . $record_no);
         }
 
-        $data = array();
+        $data = [];
         $pqmp1_data;
         $content_view = '\Modules\ADT\Views\\pqmp_list_v';
 
@@ -911,7 +911,7 @@ class Inventory_management extends \App\Controllers\BaseController {
         $data['user_full_name'] = session()->get('full_name');
         $data['user_email'] = session()->get('Email_Address');
         $data['user_phone'] = session()->get('Phone_Number');
-// last visit id by patient
+        // last visit id by patient
         $sql = "select dispensing_date from vw_patient_list vpv,patient_visit pv WHERE pv.patient_id = vpv.ccc_number and vpv.patient_id = $record_no order by dispensing_date desc  limit 1";
         $query = $this->db->query($sql);
         if ($query->getResultArray()) {
@@ -1158,12 +1158,12 @@ class Inventory_management extends \App\Controllers\BaseController {
 
     public function export_pqmp($id) {
 
-        $adr = $this->db->query("SELECT p.*,co.county_name,su.sub_county_name,de.name designation , cou.name country
-                    FROM pqms p 
-                    INNER JOIN pv_counties co ON p.county_id = co.id 
-                    INNER JOIN pv_countries cou ON cou.id = p.country_of_origin
-                    INNER JOIN pv_sub_counties su ON p.sub_county_id = su.id 
-                    INNER JOIN pv_designations de ON p.designation_id = de.id WHERE p.id='$id'")->getResultArray();
+        $adr = $this->db->query("SELECT p.*,co.county_name,su.sub_county_name,de.name designation , cou.name country ".
+                    "FROM pqms p ".
+                    "INNER JOIN pv_counties co ON p.county_id = co.id ".
+                    "INNER JOIN pv_countries cou ON cou.id = p.country_of_origin ".
+                    "INNER JOIN pv_sub_counties su ON p.sub_county_id = su.id ".
+                    "INNER JOIN pv_designations de ON p.designation_id = de.id WHERE p.id='".$id."'")->getResultArray();
 
 
 
@@ -1174,7 +1174,7 @@ class Inventory_management extends \App\Controllers\BaseController {
 
         $inputFileType = 'Excel5';
         $inputFileName = 'assets/templates/moh_forms/PQMP_form.xls';
-        $objReader = PHPExcel_IOFactory::createReader($inputFileType);
+        $objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
         $objPHPExcel = $objReader->load($inputFileName);
 
 
@@ -1237,13 +1237,13 @@ class Inventory_management extends \App\Controllers\BaseController {
         $original_filename = strtoupper('pqmp') . "_" . $id . ".xls";
 
         $filename = $dir . "/" . urldecode($original_filename);
-        $objWriter = new PHPExcel_Writer_Excel5($objPHPExcel);
+        $objWriter = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($objPHPExcel, "Xlsx");
         $objWriter->save($filename);
         $objPHPExcel->disconnectWorksheets();
         unset($objPHPExcel);
         if (file_exists($filename)) {
             $filename = str_replace("#", "%23", $filename);
-            redirect($filename);
+            return $this->response->download($filename, null);
         }
     }
 
@@ -1252,11 +1252,10 @@ class Inventory_management extends \App\Controllers\BaseController {
         $adr = $this->db->query("SELECT p.*,co.county_name county_name,su.sub_county_name sub_county_name,de.name designation_d FROM adr_form p LEFT JOIN pv_counties co ON p.county = co.id LEFT JOIN pv_sub_counties su ON p.sub_county = su.id LEFT JOIN pv_designations de ON p.designation = de.id WHERE p.id='$id'")->result_array();
         $adr_details = $this->db->query("SELECT afd.id,afd.dose_id, afd.route_freq, afd.adr_id,afd.visitid,afd.dose,afd.route,d.value dose_unit, r.name route_name, f.name freq_name, afd.drug, afd.brand,afd.date_started,afd.date_stopped,afd.indication, afd.suspecteddrug FROM adr_form_details afd LEFT JOIN pv_doses d ON d.id = afd.dose_id LEFT JOIN pv_frequencies f ON f.id = afd.route_freq LEFT JOIN pv_routes r ON r.id = afd.route WHERE afd.adr_id='$id'")->result_array();
 
-        $this->load->library('PHPExcel');
         $dir = "assets/download";
         $inputFileType = 'Excel5';
         $inputFileName = 'assets/templates/moh_forms/ADR_form.xls';
-        $objReader = PHPExcel_IOFactory::createReader($inputFileType);
+        $objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
         $objPHPExcel = $objReader->load($inputFileName);
 
         $objPHPExcel->getActiveSheet()->SetCellValue('B10', $adr[0]['institution_name']);
@@ -1311,7 +1310,7 @@ class Inventory_management extends \App\Controllers\BaseController {
 
 
         $filename = $dir . "/" . urldecode($original_filename);
-        $objWriter = new PHPExcel_Writer_Excel5($objPHPExcel);
+        $objWriter = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($objPHPExcel, "Xlsx");
         $objWriter->save($filename);
         $objPHPExcel->disconnectWorksheets();
         unset($objPHPExcel);
