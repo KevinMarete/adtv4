@@ -68,4 +68,9 @@ class BaseController extends Controller {
         else return "";
     }
 
+    function loadChoices($table, $column) {
+        $db = \Config\Database::connect();
+        return (array) $db->table($table)->select($column)->groupBy($column)->get();
+    }
+
 }

@@ -192,7 +192,7 @@ class Order extends BaseController {
 		$this->session->remove("dhis_user");
 		$this->session->remove("dhis_pass");
 		$this->session->remove("dhis_orgs");
-		redirect()->to(base_url()."/public/order");
+		return redirect()->to(base_url()."/public/order");
 	}
 	function facility_dhis(){
 		$code = $this->session->get('facility');
@@ -1092,7 +1092,7 @@ class Order extends BaseController {
 			}
 		}
 		if ($mission == 0) {
-			redirect()->to("\Modules\ADT\Views\order");
+			return redirect()->to(base_url()."/public/order");
 		}
 	}
 
@@ -1923,7 +1923,7 @@ class Order extends BaseController {
 		}
 		$ret = implode("<br/>", $ret);
 		$this->session->setFlashdata('order_message', $ret);
-		return redirect()->to("order");
+		return redirect()->to(base_url()."/public/order");
 	}
 
 	public function getMainRegimen($regimen_code = "", $regimen_desc = "") {

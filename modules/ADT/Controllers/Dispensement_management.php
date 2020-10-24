@@ -17,8 +17,10 @@ use Modules\ADT\Models\NonAdherenceReasons;
 use Modules\ADT\Models\OpportunisticInfection;
 use Modules\ADT\Models\Patient;
 use Modules\ADT\Models\Patient_appointment;
+use Modules\ADT\Models\PatientPrepTest;
 use Modules\ADT\Models\PatientStatus;
 use Modules\ADT\Models\PatientVisit;
+use Modules\ADT\Models\PrepReason;
 use Modules\ADT\Models\Regimen;
 use Modules\ADT\Models\RegimenChangePurpose;
 use Modules\ADT\Models\RegimenDrug;
@@ -55,10 +57,9 @@ class Dispensement_management extends BaseController {
     public function get_patient_details() {
         $record_no = $this->post('record_no');
         $facility_code = $this->session->get('facility');
-        $sql = "select ps.name as patient_source,p.patient_number_ccc,FLOOR(DATEDIFF(CURDATE(),p.dob)/365) as age from patient p 
-		LEFT JOIN patient_source ps ON ps.id = p.source
-		where p.id='$record_no' and facility_code='$facility_code'
-		";
+        $sql = "select ps.name as patient_source,p.patient_number_ccc,FLOOR(DATEDIFF(CURDATE(),p.dob)/365) as age from patient p ".
+		"LEFT JOIN patient_source ps ON ps.id = p.source ".
+		"where p.id='".$record_no."' and facility_code='".$facility_code."'";
         $results = DB::select($sql);
         echo json_encode($results);
     }
@@ -66,32 +67,29 @@ class Dispensement_management extends BaseController {
     public function get_patient_data($patient_id = NULL) {
         $data = [];
         /* Dispensing information */
-        $sql = "SELECT 
-		p.ccc_store_sp,
-		p.patient_number_ccc AS patient_id,
-		UPPER(CONCAT_WS(' ', CONCAT_WS(' ', p.first_name, p.other_name), p.last_name)) AS patient_name,
-		UPPER(CONCAT_WS(' ', CONCAT_WS(' ', p.first_name, p.other_name), p.last_name)) AS patient_name_link,
-		CURDATE() AS dispensing_date,
-		p.height AS current_height,
-		p.weight AS current_weight,
-		p.nextappointment AS appointment_date
-		FROM patient p
-		WHERE p.id = ?";
+        $sql = "SELECT  p.ccc_store_sp, p.patient_number_ccc AS patient_id, ".
+		"UPPER(CONCAT_WS(' ', CONCAT_WS(' ', p.first_name, p.other_name), p.last_name)) AS patient_name, ".
+		"UPPER(CONCAT_WS(' ', CONCAT_WS(' ', p.first_name, p.other_name), p.last_name)) AS patient_name_link, ".
+		"CURDATE() AS dispensing_date, ".
+		"p.height AS current_height, ".
+		"p.weight AS current_weight, ".
+		"p.nextappointment AS appointment_date ".
+		"FROM patient p ".
+		"WHERE p.id = ?";
         $data = DB::select($sql, [$patient_id]);
         if (!empty($data)) {
             /* Visit information */
-            $sql = "SELECT 
-			v.dispensing_date AS prev_visit_date,
-			v.last_regimen AS prev_regimen_id,
-			d.drug AS prev_drug_name,
-			v.quantity AS prev_drug_qty,
-			v.drug_id AS prev_drug_id,
-			v.dose AS prev_drug_dose,
-			v.duration AS prev_duration
-			FROM patient_visit v
-			LEFT JOIN drugcode d ON d.id = v.drug_id
-			WHERE v.patient_id = ?
-            AND v.dispensing_date IN (SELECT MAX(dispensing_date) FROM patient_visit WHERE patient_id = ?)";
+            $sql = "SELECT  v.dispensing_date AS prev_visit_date, ".
+			"v.last_regimen AS prev_regimen_id, ".
+			"d.drug AS prev_drug_name, ".
+			"v.quantity AS prev_drug_qty, ".
+			"v.drug_id AS prev_drug_id, ".
+			"v.dose AS prev_drug_dose, ".
+			"v.duration AS prev_duration ".
+			"FROM patient_visit v ".
+			"LEFT JOIN drugcode d ON d.id = v.drug_id ".
+			"WHERE v.patient_id = ? ".
+            "AND v.dispensing_date IN (SELECT MAX(dispensing_date) FROM patient_visit WHERE patient_id = ?)";
             
             $visits = DB::select($sql, [$data['patient_id'], $data['patient_id']]);
             $data['prev_visit_data'] = "";
@@ -404,10 +402,10 @@ class Dispensement_management extends BaseController {
     }
 
     public function get_prep_reasons() {
-        $data = array();
-        $reasons = Prep_Reason::getActive();
+        $data = [];
+        $reasons = PrepReason::where('active', '1')->get();
         foreach ($reasons as $reason) {
-            $data[] = array('text' => $reason['name'], 'value' => $reason['id']);
+            $data[] = ['text' => $reason->name, 'value' => $reason->id];
         }
         echo json_encode($data);
     }
@@ -415,16 +413,16 @@ class Dispensement_management extends BaseController {
 
     public function update_prep_test($patient_id, $prep_reason_id, $is_tested, $test_date, $test_result) {
         $message = '';
-        $test_data = array(
+        $test_data = [
             'patient_id' => $patient_id,
             'prep_reason_id' => $prep_reason_id,
             'is_tested' => $is_tested,
             'test_date' => $test_date,
             'test_result' => $test_result
-        );
-        $prev_test_data = $this->db->get_where('patient_prep_test', $test_data)->row_array();
+        ];
+        $prev_test_data = PatientPrepTest::where($test_data)->first();
         if (empty($prev_test_data)) {
-            $this->db->insert('patient_prep_test', $test_data);
+            PatientPrepTest::create($test_data);
             $message .= 'Test Result Updated Successfully!<br/>';
         } else {
             $message .= 'Test Result Already Exist!<br/>';
@@ -450,17 +448,17 @@ class Dispensement_management extends BaseController {
     public function getPreviouslyDispensedDrugs() {
         $patient_ccc = $this->post("patient_ccc");
         $ccc_id = $this->post("ccc_store");
-        $sql = "SELECT d.id as drug_id,d.drug,d.dose,pv.duration, pv.quantity,pv.dispensing_date,pv.pill_count,r.id as regimen_id,r.regimen_desc,r.regimen_code,pv.months_of_stock as mos,ds.value,ds.frequency
-		FROM patient_visit pv
-		LEFT JOIN drugcode d ON d.id = pv.drug_id
-		LEFT JOIN dose ds ON ds.Name=d.dose
-		LEFT JOIN regimen r ON r.id = pv.regimen
-		WHERE pv.patient_id =  '$patient_ccc'
-		AND pv.active = 1
-		AND pv.ccc_store_sp = '$ccc_id'
-		AND pv.dispensing_date = (SELECT MAX(dispensing_date) dispensing_date FROM patient_visit pv WHERE pv.patient_id =  '$patient_ccc' AND pv.active=1)
-		GROUP BY pv.drug_id,pv.dispensing_date,pv.patient_id 
-		ORDER BY dispensing_date DESC";
+        $sql = "SELECT d.id as drug_id,d.drug,d.dose,pv.duration, pv.quantity,pv.dispensing_date,pv.pill_count,r.id as regimen_id,r.regimen_desc,r.regimen_code,pv.months_of_stock as mos,ds.value,ds.frequency ".
+		"FROM patient_visit pv ".
+		"LEFT JOIN drugcode d ON d.id = pv.drug_id ".
+		"LEFT JOIN dose ds ON ds.Name=d.dose ".
+		"LEFT JOIN regimen r ON r.id = pv.regimen ".
+		"WHERE pv.patient_id =  '".$patient_ccc."' ".
+		"AND pv.active = 1 ".
+		"AND pv.ccc_store_sp = '".$ccc_id."' ".
+		"AND pv.dispensing_date = (SELECT MAX(dispensing_date) dispensing_date FROM patient_visit pv WHERE pv.patient_id =  '".$patient_ccc."' AND pv.active=1) ".
+		"GROUP BY pv.drug_id,pv.dispensing_date,pv.patient_id ".
+		"ORDER BY dispensing_date DESC";
         // echo $sql;
         $results = DB::select($sql);
         echo json_encode($results);
@@ -520,11 +518,11 @@ class Dispensement_management extends BaseController {
         $adult_age = $facility->adult_age;
 
         if ($age < $adult_age) {
-            $weight_cond = (isset($weight)) ? "and min_weight <= $weight and max_weight >= $weight" : "";
-            $sql = "select drug_id as id,Name as dose,frequency as freq,value from dossing_chart d  inner join dose do on do.id=d.dose_id 
-			where drug_id=$drug_id
-			$weight_cond
-			and is_active = 1";
+            $weight_cond = (isset($weight)) ? "and min_weight <= ".$weight." and max_weight >= ".$weight : "";
+            $sql = "select drug_id as id,Name as dose,frequency as freq,value from dossing_chart d  inner join dose do on do.id=d.dose_id ".
+			"where drug_id=".$drug_id." ".
+			$weight_cond.
+			" and is_active = 1";
             $dose_array = DB::select($sql);
         }
         if (empty($dose_array) || $age > $adult_age) {
@@ -541,11 +539,10 @@ class Dispensement_management extends BaseController {
         echo json_encode($get_adult_age_array);
     }
 
-//function to return drugs on the sync_drugs
+    //function to return drugs on the sync_drugs
     public function getMappedDrugCode() {
         $drug_id = $this->post("selected_drug");
-        $get_drugcode_sql = $this->db->query("SELECT map FROM drugcode WHERE id='" . $drug_id . "' ");
-        $get_drugcode_array = $get_drugcode_sql->result_array();
+        $get_drugcode_array = Drugcode::select('map')->where('id', $drug_id)->first()->toArray();
         echo json_encode($get_drugcode_array);
     }
 
@@ -1158,14 +1155,12 @@ class Dispensement_management extends BaseController {
     }
 
     public function getPrescriptions($patient_ccc = null) {
-        $prescription = array();
+        $prescription = [];
         $sql = "SELECT * FROM drug_prescription WHERE patient_ccc = '$patient_ccc' ORDER BY id DESC LIMIT 1";
-        $query = $this->db->query($sql);
-        $results = $query->result_array();
+        $results = (array) DB::select($sql);
         if ($results) {
             $sql = "SELECT * FROM drug_prescription_details WHERE drug_prescriptionid =" . $results[0]['id'];
-            $query = $this->db->query($sql);
-            $res = $query->result_array();
+            $res = (array) DB::select($sql);
             if ($res) {
                 $prescription = $results[0];
                 $prescription['prescription_details'] = $res;
@@ -1177,27 +1172,24 @@ class Dispensement_management extends BaseController {
     }
 
     public function getPrescription($pid) {
-        $data = array();
-        $ps_sql = "SELECT dpd.id,drug_prescriptionid,drug_name from drug_prescription dp,drug_prescription_details dpd where
-		dp.id = dpd.drug_prescriptionid and dp.id = $pid";
-        $query = $this->db->query($ps_sql);
-        $ps = $query->result_array();
+        $data = [];
+        $ps_sql = "SELECT dpd.id,drug_prescriptionid,drug_name from drug_prescription dp,drug_prescription_details dpd where ".
+		"dp.id = dpd.drug_prescriptionid and dp.id = ".$pid;
+        $ps = (array) DB::select($ps_sql);
         $data = $ps;
         // find if possible regimen from prescription
         foreach ($ps as $key => $p) {
             $drugname = $p['drug_name'];
-            $regimen_sql = "SELECT  * FROM regimen where regimen_code like '%$drugname%'";
-            $r_query = $this->db->query($regimen_sql);
-            $rs = $r_query->result_array();
+            $rs = Regimen::where('regimen_code', 'like', '%'.$drugname.'%')->first();
             if ($rs) {
-                $data[$key]['prescription_regimen_id'] = $rs[0]['id'];
+                $data[$key]['prescription_regimen_id'] = $rs->id;
                 $arv_prescription = $p['id'];
                 $data['arv_prescription'] = $arv_prescription;
                 //Get oi_prescription(s)
-                $sql = "SELECT dpd.id from drug_prescription dp,drug_prescription_details dpd where
-				dp.id = dpd.drug_prescriptionid and dp.id = $pid and dpd.id != '$arv_prescription'";
-                $query = $this->db->query($sql);
-                $data['oi_prescription'] = $query->row_array()['id'];
+                $sql = "SELECT dpd.id from drug_prescription dp,drug_prescription_details dpd where ".
+				"dp.id = dpd.drug_prescriptionid and dp.id = ".$pid." and dpd.id != '".$arv_prescription."'";
+                $query = DB::select($sql);
+                $data['oi_prescription'] = $query[0]->id;
             }
         }
         return $data;
@@ -1206,7 +1198,7 @@ class Dispensement_management extends BaseController {
     public function base_params($data) {
         $data['title'] = "webADT | Drug Dispensing";
         $data['banner_text'] = "Facility Dispensing";
-        $data['link'] = "dispensements";
+        $data['link'] = "/public/dispensements";
         echo view('\Modules\ADT\Views\template', $data);
     }
 

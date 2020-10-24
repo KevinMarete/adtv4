@@ -27,6 +27,7 @@ use Modules\ADT\Models\PrepReason;
 use Modules\ADT\Models\Regimen;
 use Modules\ADT\Models\RegimenChangePurpose;
 use Modules\ADT\Models\RegimenServiceType;
+use Modules\ADT\Models\ReportingFacility;
 use Modules\ADT\Models\VisitPurpose;
 use Modules\ADT\Models\WhoStage;
 
@@ -381,18 +382,14 @@ class Patient_management extends BaseController {
         $this->session->set('record_no', $record_no);
         $patient = "";
         $facility = "";
-        $sql = "SELECT p.*,
-                       rst.Name as service_name,
-                       dp.child,
-                       s.secondary_spouse 
-                FROM patient p 
-                LEFT JOIN regimen_service_type rst ON rst.id=p.service 
-                LEFT JOIN dependants dp ON p.patient_number_ccc=dp.parent  
-                LEFT JOIN spouses s ON p.patient_number_ccc=s.primary_spouse 
-                WHERE p.id='$record_no'
-                GROUP BY p.id";
-        $query = DB::select($sql);
-        $results = $query->get();
+        $sql = "SELECT p.*, rst.Name as service_name, dp.child, s.secondary_spouse ".
+                "FROM patient p ".
+                "LEFT JOIN regimen_service_type rst ON rst.id=p.service ".
+                "LEFT JOIN dependants dp ON p.patient_number_ccc=dp.parent ".
+                "LEFT JOIN spouses s ON p.patient_number_ccc=s.primary_spouse ".
+                "WHERE p.id='".$record_no."' ".
+                "GROUP BY p.id";
+        $results = (array) DB::select($sql);
 
         $depdendant_msg = "";
         if ($results) {
@@ -419,38 +416,37 @@ class Patient_management extends BaseController {
             }
         }
         //Patient History
-        $sql = "SELECT pv.dispensing_date,
-                         v.name AS visit, 
-                         u.Name AS unit, 
-                         pv.dose, 
-                         pv.duration, 
-                         pv.indication, 
-                         pv.patient_visit_id AS record, 
-                         d.drug, 
-                         pv.quantity, 
-                         pv.current_weight, 
-                         pv.current_height, 
-                         r1.regimen_desc as last_regimen, 
-                         r.regimen_desc, 
-                         pv.batch_number, 
-                         pv.pill_count, 
-                         pv.adherence, 
-                         pv.user, 
-                         rcp.name as regimen_change_reason 
-                FROM v_patient_visits pv 
-                    LEFT JOIN drugcode d ON pv.drug_id = d.id 
-                    LEFT JOIN drug_unit u ON d.unit = u.id 
-                    LEFT JOIN regimen r ON pv.regimen_id = r.id 
-                    LEFT JOIN regimen r1 ON pv.last_regimen = r1.id 
-                    LEFT JOIN visit_purpose v ON pv.visit_purpose_id = v.id 
-                    LEFT JOIN regimen_change_purpose rcp ON rcp.id=pv.regimen_change_reason
-                WHERE pv.patient_id = '$patient' 
-                AND pv.facility =  '$facility' 
-                AND pv.active='1' AND pv.pv_active='1'
-                GROUP BY d.drug,pv.dispensing_date
-                ORDER BY  pv.patient_visit_id DESC";
-        $query = DB::select($sql);
-        $results = $query->get();
+        $sql = "SELECT pv.dispensing_date, ".
+                         "v.name AS visit, ".
+                         "u.Name AS unit, ".
+                         "pv.dose, ".
+                         "pv.duration, ".
+                         "pv.indication, ".
+                         "pv.patient_visit_id AS record, ".
+                         "d.drug, ".
+                         "pv.quantity, ".
+                         "pv.current_weight, ".
+                         "pv.current_height, ".
+                         "r1.regimen_desc as last_regimen, ".
+                         "r.regimen_desc, ".
+                         "pv.batch_number, ".
+                         "pv.pill_count, ".
+                         "pv.adherence, ".
+                         "pv.user, ".
+                         "rcp.name as regimen_change_reason ".
+                "FROM v_patient_visits pv ".
+                    "LEFT JOIN drugcode d ON pv.drug_id = d.id ".
+                    "LEFT JOIN drug_unit u ON d.unit = u.id ".
+                    "LEFT JOIN regimen r ON pv.regimen_id = r.id ".
+                    "LEFT JOIN regimen r1 ON pv.last_regimen = r1.id ".
+                    "LEFT JOIN visit_purpose v ON pv.visit_purpose_id = v.id ".
+                    "LEFT JOIN regimen_change_purpose rcp ON rcp.id=pv.regimen_change_reason ".
+                "WHERE pv.patient_id = '".$patient."' ". 
+                "AND pv.facility =  '".$facility."' ". 
+                "AND pv.active='1' AND pv.pv_active='1' ".
+                "GROUP BY d.drug,pv.dispensing_date ".
+                "ORDER BY  pv.patient_visit_id DESC";
+        $results = (array) DB::select($sql);
         if ($results) {
             $data['history_logs'] = $results;
         } else {
@@ -734,10 +730,10 @@ class Patient_management extends BaseController {
     }
 
     public function getDependentStatus($patient_number_ccc) {
-        $sql = "SELECT ps.name,p.patient_number_ccc,p.first_name,p.last_name,p.other_name FROM patient p
-                INNER JOIN patient_status ps ON ps.id = p.current_status
-                AND p.patient_number_ccc='$patient_number_ccc'
-                AND ps.name LIKE '%lost%'";
+        $sql = "SELECT ps.name,p.patient_number_ccc,p.first_name,p.last_name,p.other_name FROM patient p ".
+                "INNER JOIN patient_status ps ON ps.id = p.current_status ".
+                "AND p.patient_number_ccc='".$patient_number_ccc."' ".
+                "AND ps.name LIKE '%lost%'";
         $result = DB::select($sql);
         if (count($result) > 0) {
             $patient = '<b>' . strtoupper($result[0]['first_name'] . ' ' . $result[0]['last_name'] . ' ' . $result[0]['other_name']) . '</b> ( CCC Number:' . $result[0]['patient_number_ccc'] . ')';
@@ -1009,17 +1005,17 @@ class Patient_management extends BaseController {
             $facility = $this->post('facility');
         }
         $data = [];
-        $data['current'] = "patient_management";
+        $data['current'] = "/public/patient_management";
         $data['title'] = "webADT | Patient Regimen Breakdown";
         $data['content_view'] = "\Modules\ADT\Views\patient_regimen_breakdown_v";
         $data['banner_text'] = "Patient Regimen Breakdown";
-        $data['facilities'] = Reporting_Facility::getAll();
+        $data['facilities'] = ReportingFacility::all();
         //Get the regimen data
-        $data['optimal_regimens'] = Regimen::getOptimalityRegimens("1");
-        $data['sub_optimal_regimens'] = Regimen::getOptimalityRegimens("2");
+        $data['optimal_regimens'] = Regimen::where(['optimality'=>"1", 'source'=>'0'])->orderBy('regimen_desc')->get();
+        $data['sub_optimal_regimens'] = Regimen::where(['optimality'=>"1", 'source'=>'2'])->orderBy('regimen_desc')->get();
         $months = 12;
         $months_previous = 11;
-        $regimen_data = array();
+        $regimen_data = [];
         for ($current_month = 1; $current_month <= $months; $current_month++) {
             $start_date = date("Y-m-01", strtotime("-$months_previous months"));
             $end_date = date("Y-m-t", strtotime("-$months_previous months"));
@@ -1029,8 +1025,8 @@ class Patient_management extends BaseController {
             } else {
                 $get_month_statistics_sql = "SELECT regimen,count(patient_id) as patient_numbers,sum(months_of_stock) as months_of_stock FROM (select  distinct patient_id,months_of_stock,regimen,dispensing_date from `patient_visit` where dispensing_date between str_to_date('" . $start_date . "','%Y-%m-%d') and str_to_date('" . $end_date . "','%Y-%m-%d')) patient_visits group by regimen";
             }
-            $month_statistics_query = $this->db->query($get_month_statistics_sql);
-            foreach ($month_statistics_query->result_array() as $month_data) {
+            $month_statistics_query = (array) DB::select($get_month_statistics_sql);
+            foreach ($month_statistics_query as $month_data) {
                 $regimen_data[$month_data['regimen']][$start_date] = array("patient_numbers" => $month_data['patient_numbers'], "mos" => $month_data['months_of_stock']);
             }
             //echo $get_month_statistics_sql . "<br>";
@@ -1053,22 +1049,21 @@ class Patient_management extends BaseController {
 
     public function export() {
         $facility_code = $this->session->get('facility');
-        $sql = "SELECT medical_record_number,patient_number_ccc,first_name,last_name,other_name,dob,pob,IF(gender=1,'MALE','FEMALE')as gender,IF(pregnant=1,'YES','NO')as pregnant,weight as Current_Weight,height as Current_height,sa as Current_BSA,p.phone,physical as Physical_Address,alternate as Alternate_Address,other_illnesses,other_drugs,adr as Drug_Allergies,IF(tb=1,'YES','NO')as TB,IF(smoke=1,'YES','NO')as smoke,IF(alcohol=1,'YES','NO')as alcohol,date_enrolled,ps.name as Patient_source,s.Name as supported_by,timestamp,facility_code,rst.name as Service,r1.regimen_desc as Start_Regimen,start_regimen_date,pst.Name as Current_status,migration_id,machine_code,IF(sms_consent=1,'YES','NO') as SMS_Consent,fplan as Family_Planning,tbphase,startphase,endphase,IF(partner_status=1,'HIV Positive',IF(partner_status=2,'HIV Negative','')) as partner_status,status_change_date,IF(partner_type=1,'YES','NO') as Disclosure,support_group,r.regimen_desc as Current_Regimen,nextappointment,start_height,start_weight,start_bsa,IF(p.transfer_from !='',f.name,'N/A') as Transfer_From,DATEDIFF(nextappointment,CURDATE()) AS Days_to_NextAppointment,dp.name as prophylaxis
-                FROM patient p
-                left join regimen r on r.id=p.current_regimen
-                left join regimen r1 on r1.id=p.start_regimen
-                left join patient_source ps on ps.id=p.source
-                left join supporter s on s.id=p.supported_by
-                left join regimen_service_type rst on rst.id=p.service
-                left join patient_status pst on pst.id=p.current_status
-                left join facilities f on f.facilitycode=p.transfer_from
-                left join drug_prophylaxis dp on dp.id=p.drug_prophylaxis
-                WHERE facility_code='$facility_code'
-                ORDER BY p.patient_number_ccc ASC";
-        // echo $sql;die();
-        $results = DB::select($sql);
+        $sql = "SELECT medical_record_number,patient_number_ccc,first_name,last_name,other_name,dob,pob,IF(gender=1,'MALE','FEMALE')as gender,IF(pregnant=1,'YES','NO')as pregnant,weight as Current_Weight,height as Current_height,sa as Current_BSA,p.phone,physical as Physical_Address,alternate as Alternate_Address,other_illnesses,other_drugs,adr as Drug_Allergies,IF(tb=1,'YES','NO')as TB,IF(smoke=1,'YES','NO')as smoke,IF(alcohol=1,'YES','NO')as alcohol,date_enrolled,ps.name as Patient_source,s.Name as supported_by,timestamp,facility_code,rst.name as Service,r1.regimen_desc as Start_Regimen,start_regimen_date,pst.Name as Current_status,migration_id,machine_code,IF(sms_consent=1,'YES','NO') as SMS_Consent,fplan as Family_Planning,tbphase,startphase,endphase,IF(partner_status=1,'HIV Positive',IF(partner_status=2,'HIV Negative','')) as partner_status,status_change_date,IF(partner_type=1,'YES','NO') as Disclosure,support_group,r.regimen_desc as Current_Regimen,nextappointment,start_height,start_weight,start_bsa,IF(p.transfer_from !='',f.name,'N/A') as Transfer_From,DATEDIFF(nextappointment,CURDATE()) AS Days_to_NextAppointment,dp.name as prophylaxis ".
+                "FROM patient p ".
+                "left join regimen r on r.id=p.current_regimen ".
+                "left join regimen r1 on r1.id=p.start_regimen ".
+                "left join patient_source ps on ps.id=p.source ".
+                "left join supporter s on s.id=p.supported_by ".
+                "left join regimen_service_type rst on rst.id=p.service ".
+                "left join patient_status pst on pst.id=p.current_status ".
+                "left join facilities f on f.facilitycode=p.transfer_from ".
+                "left join drug_prophylaxis dp on dp.id=p.drug_prophylaxis ".
+                "WHERE facility_code='".$facility_code."' ".
+                "ORDER BY p.patient_number_ccc ASC";
+        $results = (array) DB::select($sql);
 
-        $objPHPExcel = new PHPExcel();
+        $objPHPExcel = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
         $objPHPExcel->setActiveSheetIndex(0);
         $i = 1;
 
@@ -1187,7 +1182,7 @@ class Patient_management extends BaseController {
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment;filename=' . $filename);
 
-        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'CSV');
+        $objWriter = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($objPHPExcel, 'CSV');
 
         $objWriter->save('php://output');
 
@@ -1250,22 +1245,21 @@ class Patient_management extends BaseController {
         $dyn_table = "";
         $facility = $this->session->get("facility");
 
-        $sql = "SELECT
-                    DATE_FORMAT(pv.dispensing_date,'%d-%b-%Y') as dispensing_date,
-                    UPPER(dc.Drug) as drug,
-                    pv.quantity,
-                    pv.pill_count,
-                    pv.missed_pills,
-                    round(((pv.quantity-(pv.pill_count-pv.months_of_stock))/pv.quantity)*100,2) as pill_adh,
-                    round(((pv.quantity-pv.missed_pills)/pv.quantity)*100,2) as missed_adh,
-                    pv.adherence
-                FROM patient_visit pv
-                LEFT JOIN patient p ON p.patient_number_ccc=pv.patient_id
-                LEFT JOIN drugcode dc ON dc.id=pv.drug_id
-                WHERE pv.patient_id = ?
-                AND pv.facility = ?
-                GROUP BY dispensing_date,pv.patient_id, pv.drug_id
-                ORDER BY pv.dispensing_date DESC";
+        $sql = "SELECT DATE_FORMAT(pv.dispensing_date,'%d-%b-%Y') as dispensing_date, ".
+                    "UPPER(dc.Drug) as drug, ".
+                    "pv.quantity, ".
+                    "pv.pill_count, ".
+                    "pv.missed_pills, ".
+                    "round(((pv.quantity-(pv.pill_count-pv.months_of_stock))/pv.quantity)*100,2) as pill_adh, ".
+                    "round(((pv.quantity-pv.missed_pills)/pv.quantity)*100,2) as missed_adh, ".
+                    "pv.adherence ".
+                "FROM patient_visit pv ".
+                "LEFT JOIN patient p ON p.patient_number_ccc=pv.patient_id ".
+                "LEFT JOIN drugcode dc ON dc.id=pv.drug_id ".
+                "WHERE pv.patient_id = ? ".
+                "AND pv.facility = ? ".
+                "GROUP BY dispensing_date,pv.patient_id, pv.drug_id ".
+                "ORDER BY pv.dispensing_date DESC";
         $results = DB::select($sql, [$patient_no, $facility]);
 
         if ($results) {
@@ -1424,8 +1418,8 @@ class Patient_management extends BaseController {
         $dyn_table = "";
         $status = "";
         $facility = $this->session->get("facility");
-        $sql = "SELECT pa.appointment,IF(pa.appointment=pv.dispensing_date,'Visited',DATEDIFF(pa.appointment,curdate()))as Days_To 
-                FROM(SELECT patient,appointment FROM patient_appointment pa WHERE patient = ? AND facility = ?) as pa,(SELECT patient_id,dispensing_date FROM patient_visit WHERE patient_id = ? AND facility = ?) as pv GROUP BY pa.appointment ORDER BY pa.appointment desc";
+        $sql = "SELECT pa.appointment,IF(pa.appointment=pv.dispensing_date,'Visited',DATEDIFF(pa.appointment,curdate()))as Days_To ".
+                "FROM(SELECT patient,appointment FROM patient_appointment pa WHERE patient = ? AND facility = ?) as pa,(SELECT patient_id,dispensing_date FROM patient_visit WHERE patient_id = ? AND facility = ?) as pv GROUP BY pa.appointment ORDER BY pa.appointment desc";
         $results = DB::select($sql, [$patient_no, $facility, $patient_no, $facility]);
         if ($results) {
             foreach ($results as $result) {
@@ -1455,31 +1449,28 @@ class Patient_management extends BaseController {
     public function updateLastRegimen() {
 
         //Get list of patients who changed regimen
-        $sql_patient = "SELECT DISTINCT(p.id) as patient_id FROM patient p
-                        LEFT JOIN patient_visit pv ON pv.patient_id=p.id
-                        WHERE pv.regimen_change_reason IS NOT NULL";
-        $query_exec = $this->db->query($sql_patient);
-        $patients = $query_exec->result_array();
+        $sql_patient = "SELECT DISTINCT(p.id) as patient_id FROM patient p ".
+                        "LEFT JOIN patient_visit pv ON pv.patient_id=p.id ".
+                        "WHERE pv.regimen_change_reason IS NOT NULL";
+        $patients = (array) DB::select($sql_patient);
         foreach ($patients as $patient) {
             $patient_id = $patient["patient_id"];
             $sql = "SELECT * FROM patient_visit WHERE regimen_change_reason IS NOT NULL AND patient_id =" . $patient_id . " ORDER BY dispensing_date ASC";
 
-            $query = $this->db->query($sql);
-            $result = $query->result_array();
+            $result = (array) DB::select($sql);
             foreach ($result as $key => $value) {
 
                 if ($key == 0) {//For the first in the list, get the previous regimen under which the patient was
                     $curr_disp = $result[$key]["dispensing_date"];
                     $s = "SELECT * from patient_visit WHERE dispensing_date <'" . $curr_disp . "' AND patient_id =" . $patient_id . " ORDER BY dispensing_date DESC LIMIT 1";
 
-                    $q = $this->db->query($s);
-                    $res = $q->result_array();
+                    $res = (array) DB::select($s);
 
                     if (count($res) > 0) {
                         //echo (count($res))."<br>";
                         $regimen = $res[0]["regimen"];
                         $sql = "UPDATE patient_visit SET last_regimen =" . $regimen . " WHERE id =" . $result[$key]["id"];
-                        $q = $this->db->query($sql);
+                        DB::statement($sql);
                     }
                 } else {
                     $x = $key - 1;
@@ -1488,8 +1479,7 @@ class Patient_management extends BaseController {
                     if ($result[$x]["regimen"] != $result[$key]["regimen"]) {
                         //Update current_patient visit last regimen column
                         $sql = "UPDATE patient_visit SET last_regimen =" . $result[$x]["regimen"] . " WHERE id =" . $result[$key]["id"];
-                        $query = $this->db->query($sql);
-                        $count = $this->db->affected_rows();
+                        $count = DB::select($sql);
                     }
                 }
             }
@@ -1499,23 +1489,20 @@ class Patient_management extends BaseController {
     public function updatePregnancyStatus() {
         $patient_ccc = $this->post("patient_ccc");
         //Check if patient is on PMTCT and change them to ART
-        $sql = "SELECT rst.name FROM patient p
-                LEFT JOIN regimen_service_type rst ON p.service = rst.id
-                WHERE p.patient_number_ccc ='$patient_ccc'";
-        $query = $this->db->query($sql);
-        $result = $query->result_array();
-        $service = $result[0]['name'];
+        $sql = "SELECT rst.name FROM patient p ".
+                "LEFT JOIN regimen_service_type rst ON p.service = rst.id ".
+                "WHERE p.patient_number_ccc ='".$patient_ccc."'";
+        $result = DB::select($sql);
+        $service = $result[0]->name;
         $extra = '';
         if (stripos($service, "pmtct") === 0) {
             $sql_get_art = "SELECT id FROM regimen_service_type WHERE name LIKE '%art%'";
-            $query = $this->db->query($sql_get_art);
-            $result = $query->result_array();
-            $art_service_id = $result[0]['id'];
+            $result = DB::select($sql_get_art);
+            $art_service_id = $result[0]->id;
             $extra = ", service = '$art_service_id' ";
         }
         $sql = "UPDATE patient SET pregnant = '0', breastfeeding = '0' $extra WHERE patient_number_ccc ='$patient_ccc'";
-        $this->db->query($sql);
-        $count = $this->db->affected_rows();
+        $count = DB::select($sql);
     }
 
     public function update_tb_status() {
@@ -1605,15 +1592,16 @@ class Patient_management extends BaseController {
     public function getPatientMasterList($results) {
 
         ini_set("memory_limit", '2048M');
-        $this->load->dbutil();
         helper('file');
         helper('download');
         $delimiter = ",";
         $newline = "\r\n";
         $filename = "patient_master_list.csv";
-        $data = $this->dbutil->csv_from_result($results, $delimiter, $newline);
+        $db = \Config\Database::connect();
+        $util = (new \CodeIgniter\Database\Database())->loadUtils($db);
+        $data = $util->getCSVFromResult($results, $delimiter, $newline);
         ob_clean(); //Removes spaces
-        force_download($filename, $data);
+        return $this->response->download($filename, $data);
     }
 
     public function getPatientMergeList() {
@@ -1627,18 +1615,21 @@ class Patient_management extends BaseController {
         $facility_code = $this->session->get("facility");
 
         //columns
-        $aColumns = array('id',
+        $aColumns = [
+            'id',
             'patient_number_ccc',
             'first_name',
             'other_name',
             'last_name',
-            'active');
+            'active'
+        ];
 
         $count = 0;
 
+        $builder = DB::table("patient");
         // Paging
         if (isset($iDisplayStart) && $iDisplayLength != '-1') {
-            $this->db->limit($this->db->escape_str($iDisplayLength), $this->db->escape_str($iDisplayStart));
+            $builder->limit($iDisplayLength, $iDisplayStart);
         }
 
         // Ordering
@@ -1649,7 +1640,7 @@ class Patient_management extends BaseController {
                 $sSortDir = $this->post('sSortDir_' . $i, true);
 
                 if ($bSortable == 'true') {
-                    $this->db->order_by($aColumns[intval($this->db->escape_str($iSortCol))], $this->db->escape_str($sSortDir));
+                    $builder->orderBy($aColumns[intval($iSortCol)], $sSortDir);
                 }
             }
         }
@@ -1666,43 +1657,40 @@ class Patient_management extends BaseController {
                     } else {
                         $where .= " OR ";
                     }
-                    $where .= $aColumns[$i] . " LIKE '%" . $this->db->escape_like_str($sSearch) . "%'";
+                    $where .= $aColumns[$i] . " LIKE '%" . $sSearch . "%'";
                     $column_count++;
                 }
             }
         }
 
         //data
-        $this->db->select('SQL_CALC_FOUND_ROWS ' . str_replace(' , ', ' ', implode(', ', $aColumns)), false);
-        $this->db->from("patient p");
-        $this->db->where("p.facility_code", $facility_code);
+        $builder->select(DB::raw('SQL_CALC_FOUND_ROWS ' . str_replace(' , ', ' ', implode(', ', $aColumns))));
+        $builder->where("facility_code", $facility_code);
         //search sql clause
         if ($where != "") {
             $where .= ")";
-            $this->db->where($where);
+            $builder->where(DB::raw($where));
         }
-        $rResult = $this->db->get();
+        $rResult = $builder->get();
 
         // Data set length after filtering
         $this->db->select('FOUND_ROWS() AS found_rows');
         $iFilteredTotal = $this->db->get()->row()->found_rows;
 
         // Total data set length
-        $this->db->select("p.*");
-        $this->db->from("patient p");
-        $this->db->where("p.facility_code", $facility_code);
-        $total = $this->db->get();
-        $iTotal = count($total->result_array());
+        $iTotal = Patient::where("facility_code", $facility_code)->count();
 
         // Output
-        $msg = array('sEcho' => intval($sEcho),
+        $msg = [
+            'sEcho' => intval($sEcho),
             'iTotalRecords' => $iTotal,
             'iTotalDisplayRecords' => $iFilteredTotal,
-            'aaData' => array());
+            'aaData' => []
+        ];
 
         //loop through data to parse to josn array
-        foreach ($rResult->result() as $patient) {
-            $row = array();
+        foreach ($rResult as $patient) {
+            $row = [];
             //options
             $links = "<a href='#' class='btn btn-danger btn-mini unmerge_patient' id='" . $patient->id . "'>unmerge</a>";
             $checkbox = "<input type='checkbox' name='patients' class='patients' value='" . $patient->id . "' disabled/>";
@@ -1723,7 +1711,7 @@ class Patient_management extends BaseController {
         //Handle the array with all patients that are to be merged
         $target_patient_id = $this->post('target_ccc');
         $patients = $this->post('patients');
-        $patients = array_diff($patients, array($target_patient_id));
+        $patients = array_diff($patients, [$target_patient_id]);
 
         //Get Target CCC_NO
         $results = Patient::find($target_patient_id);
@@ -1757,7 +1745,7 @@ class Patient_management extends BaseController {
         $this->session->set('message_counter', '1');
         $this->session->set('msg_success', '[' . $patients_to_remove . '] was Merged to [' . $target_patient_ccc . '] !');
         $this->session->set("link_id", "merge_list");
-        $this->session->set("linkSub", "patient_management/merge_list");
+        $this->session->set("linkSub", "/public/patient_management/merge_list");
     }
 
     public function unmerge() {
@@ -1783,7 +1771,7 @@ class Patient_management extends BaseController {
         $this->session->set('message_counter', '1');
         $this->session->set('msg_success', '[' . $target_patient_ccc . '] was unmerged!');
         $this->session->set("link_id", "merge_list");
-        $this->session->set("linkSub", "patient_management/merge_list");
+        $this->session->set("linkSub", "/public/patient_management/merge_list");
     }
 
     public function load_view($page_id = null, $id = null) {
@@ -1968,11 +1956,7 @@ class Patient_management extends BaseController {
 
         $data['aaData'] = $temp;
 
-        //echo "<pre>";
-
         echo json_encode($data, JSON_PRETTY_PRINT);
-
-        //echo "</pre>";
     }
 
     public function load_visits($patient_id = null) {
@@ -2004,9 +1988,11 @@ class Patient_management extends BaseController {
             'rcp.name AS regimen_change_reason'
         ];
 
+        $builder = DB::table("patient_visit as pv");
+
         // Paging
         if (isset($iDisplayStart) && $iDisplayLength != '-1') {
-            $this->db->limit($this->db->escape_str($iDisplayLength), $this->db->escape_str($iDisplayStart));
+            $builder->limit($iDisplayLength, $iDisplayStart);
         }
 
         // Ordering
@@ -2017,7 +2003,7 @@ class Patient_management extends BaseController {
                 $sSortDir = $this->post('sSortDir_' . $i, true);
 
                 if ($bSortable == 'true') {
-                    $this->db->order_by($aColumns[intval($this->db->escape_str($iSortCol))], $this->db->escape_str($sSortDir));
+                    $builder->orderBy($aColumns[intval($iSortCol)], $sSortDir);
                 }
             }
         }
@@ -2043,8 +2029,6 @@ class Patient_management extends BaseController {
                         $col = trim($col = substr($col, 0, $pos));
                     }
 
-                    $sSearch = mysql_real_escape_string($sSearch);
-
                     if ($i != 0) {
                         $sWhere .= " OR " . $col . " LIKE '%" . $sSearch . "%'";
                     } else {
@@ -2056,63 +2040,55 @@ class Patient_management extends BaseController {
         }
 
         // Select Data
-        $this->db->select('SQL_CALC_FOUND_ROWS ' . str_replace(' , ', ' ', implode(', ', $aColumns)), false);
-        $this->db->from("patient_visit pv");
-        $this->db->join("patient p", "pv.patient_id = p.patient_number_ccc", "left");
-        $this->db->join("drugcode d", "pv.drug_id = d.id", "left");
-        $this->db->join("regimen r", "pv.regimen", "left");
-        $this->db->join("regimen r1", "pv.last_regimen = r1.id", "left");
-        $this->db->join("visit_purpose v", "pv.visit_purpose = v.id", "left");
-        $this->db->join("regimen_change_purpose rcp", "rcp.id=pv.regimen_change_reason", "left");
-        $this->db->where("p.id", $patient_id);
-        $this->db->where("pv.facility", $facility_code);
-        $this->db->where("pv.active", 1);
+        $builder->select(DB::raw('SQL_CALC_FOUND_ROWS ' . str_replace(' , ', ' ', implode(', ', $aColumns))));
+        $builder->leftJoin("patient as p", "pv.patient_id", "=", "p.patient_number_ccc");
+        $builder->leftJoin("drugcode as d", "pv.drug_id", "=", "d.id");
+        $builder->leftJoin("regimen as r", "pv.regimen", "=", "r.id");
+        $builder->leftJoin("regimen as r1", "pv.last_regimen", "=", "r1.id");
+        $builder->leftJoin("visit_purpose as v", "pv.visit_purpose", "=", "v.id");
+        $builder->leftJoin("regimen_change_purpose rcp", "rcp.id=pv.regimen_change_reason", "left");
+        $builder->where("p.id", $patient_id);
+        $builder->where("pv.facility", $facility_code);
+        $builder->where("pv.active", 1);
         if ($sWhere) {
-            $this->db->where($sWhere);
+            $this->db->where(DB::raw($sWhere));
         }
-        $this->db->group_by(array("d.drug,pv.dispensing_date"));
+        $builder->groupBy("d.drug, pv.dispensing_date");
 
-        $rResult = $this->db->get();
+        $rResult = $builder->get();
 
-        echo $this->db->last_query();
-        die();
+        // echo $this->db->last_query();
+        // die();
 
         // Data set length after filtering
         $this->db->select('FOUND_ROWS() AS found_rows');
-        $iFilteredTotal = $this->db->get()->row()->found_rows;
+        $iFilteredTotal = $builder->count();
 
-        // Total data set length
-        $this->db->select("pv.*");
-        $this->db->from("patient_visit pv");
-        $this->db->join("patient p", "pv.patient_id = p.patient_number_ccc", "left");
-        $this->db->join("drugcode d", "pv.drug_id = d.id", "left");
-        $this->db->join("regimen r", "pv.regimen", "left");
-        $this->db->join("regimen r1", "pv.last_regimen = r1.id", "left");
-        $this->db->join("visit_purpose v", "pv.visit_purpose = v.id", "left");
-        $this->db->join("regimen_change_purpose rcp", "rcp.id=pv.regimen_change_reason", "left");
-        $this->db->where("p.id", $patient_id);
-        $this->db->where("pv.facility", $facility_code);
-        $this->db->where("pv.active", 1);
+        // Total data set length'
+        $builder2 = DB::table("patient_visit as pv");
+        $builder2->leftJoin("patient as p", "pv.patient_id", "=", "p.patient_number_ccc");
+        $builder2->where("p.id", $patient_id);
+        $builder2->where("pv.facility", $facility_code);
+        $builder2->where("pv.active", 1);
         if ($sWhere) {
-            $this->db->where($sWhere);
+            $builder2->whereRaw($sWhere);
         }
-        $this->db->group_by(array("d.drug,pv.dispensing_date"));
-        $total = $this->db->get();
-        $iTotal = count($total->result_array());
+        $builder2->groupBy("d.drug, pv.dispensing_date");
+        $iTotal = count($builder2->get());
 
         // Output
-        $msg = array(
+        $msg = [
             'sEcho' => intval($sEcho),
             'iTotalRecords' => $iTotal,
             'iTotalDisplayRecords' => $iFilteredTotal,
-            'aaData' => array()
-        );
+            'aaData' => []
+        ];
 
-        foreach ($rResult->result_array() as $count => $aRow) {
-            $data = array();
+        foreach ($rResult as $count => $aRow) {
+            $data = [];
             foreach ($aRow as $col => $value) {
                 if ($col == "record_id") {
-                    $link = base_url() . 'dispensement_management/edit/' . $value;
+                    $link = base_url() . '/public/dispensement_management/edit/' . $value;
                     $data[] = "<a href='" . $link . "' class='btn btn-small btn-warning'>Edit</a>";
                 } else {
                     $data[] = $value;
@@ -2174,21 +2150,18 @@ class Patient_management extends BaseController {
         }
         $store = $this->session->get('ccc_store_id');
 
-        $sql = "SELECT 
-        $medical_cond
-                    UPPER(CONCAT_WS(' ',CONCAT_WS(' ',p.first_name,p.other_name),p.last_name)) as patient_name,
-                    DATE_FORMAT(p.nextappointment,'%b %D, %Y') as appointment,
-                    $contact_sql
-                    CONCAT_WS(' | ',r.regimen_code,r.regimen_desc) as regimen,
-                    ps.name as status,
-                    p.active,
-                    p.id,
-                    p.current_status
-                FROM patient p  
-                LEFT JOIN regimen r ON r.id=p.current_regimen
-                LEFT JOIN patient_status ps ON ps.id=p.current_status
-                WHERE p.facility_code = '$facility_code'
-                AND p.patient_number_ccc != '' $filter ";
+        $sql = "SELECT ".$medical_cond." UPPER(CONCAT_WS(' ',CONCAT_WS(' ',p.first_name,p.other_name),p.last_name)) as patient_name, ".
+                    "DATE_FORMAT(p.nextappointment,'%b %D, %Y') as appointment, ".$contact_sql." ".
+                    "CONCAT_WS(' | ',r.regimen_code,r.regimen_desc) as regimen, ".
+                    "ps.name as status, ".
+                    "p.active, ".
+                    "p.id, ".
+                    "p.current_status ".
+                "FROM patient p ".
+                "LEFT JOIN regimen r ON r.id=p.current_regimen ".
+                "LEFT JOIN patient_status ps ON ps.id=p.current_status ".
+                "WHERE p.facility_code = '".$facility_code."' ".
+                "AND p.patient_number_ccc != '' ".$filter." ";
 
         $patients = DB::select($sql);
 
@@ -2251,9 +2224,9 @@ class Patient_management extends BaseController {
     public function get_peadiatric_dose() {
         $weight = $this->post('weight');
         $drug_id = $this->post('drug_id');
-        $sql = "select do.id,Name,value,frequency from dossing_chart d
-              inner join dose do on do.id=d.dose_id
-              where min_weight <= '$weight' and max_weight >= '$weight' and drug_id='$drug_id' and is_active = '1'";
+        $sql = "select do.id,Name,value,frequency from dossing_chart d ".
+              "inner join dose do on do.id=d.dose_id ".
+              "where min_weight <= '".$weight."' and max_weight >= '".$weight."' and drug_id='".$drug_id."' and is_active = '1'";
 
         $data = DB::select($sql);
         echo json_encode($data);
