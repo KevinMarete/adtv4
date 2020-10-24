@@ -11,6 +11,7 @@ class VisitPurpose extends BaseModel {
     protected $fillable = array('Name', 'Active');
 
     public static function getAll($service = 'null') {
+        $purposes=[];
         $query = DB::table('Visit_Purpose')->where("Active", "1")->get()->toArray();
         if ($service == 'prep') {
             $prep_purposes = [];

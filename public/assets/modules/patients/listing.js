@@ -1,9 +1,10 @@
 $(function(){
+	var base_url = $("#base_url").val();
 	//Patient Listing DataTables
 	var oTable = $('#patient_listing').dataTable({
 			        "bProcessing": true,
 			         "bDestroy": true,
-			        "sAjaxSource": 'patient_management/get_patients',
+			        "sAjaxSource": base_url+'/public/get-patients',
 			        "bJQueryUI" : true,
 					"sPaginationType" : "full_numbers",
 					"bStateSave" : true,
@@ -25,11 +26,12 @@ $(function(){
     },6000);
 });
 
-function filter(status){
+function filter(url){
+	var base_url = $("#base_url").val();
 	var oTable = $('#patient_listing').dataTable({
 			        "bProcessing": true,
 			        "bDestroy": true,
-			        "sAjaxSource": status,
+			        "sAjaxSource": base_url+url,
 			        "bJQueryUI" : true,
 					"sPaginationType" : "full_numbers",
 					"bStateSave" : true,
@@ -54,13 +56,12 @@ function filter(status){
 $(document).ready(function(){
 		$('#filter').change(function(){
 			var choice = $('#filter').val();
-			var url = "<?php echo base_url(); ?>";
 			if(choice ==0){
-				var new_url = 'patient_management/get_patients/';				
+				var new_url = '/public/get-patients';				
 			}else if(choice==1){
-				var new_url = 'patient_management/get_patients/inactive';	
+				var new_url = '/public/get-patients/inactive';	
 			}else if(choice==2){
-				var new_url = 'patient_management/get_patients/all';	
+				var new_url = '/public/get-patients/all';	
 			}
 			filter(new_url);
 		});

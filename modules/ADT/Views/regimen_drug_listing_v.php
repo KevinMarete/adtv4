@@ -37,18 +37,18 @@
 </style>
 <script type="text/javascript">
     // regimen_drug_management/disable
-
+        new_base="<?php echo base_url().'/public/';?>"
     function toggleDrugRegimen(regimen_drug) {
 
         if ($('.reg_drug_name_' + regimen_drug).hasClass('enabled')) {
             // disable drug
-            $.get(base_url + "regimen_drug_management/disable/" + regimen_drug, function (data, status) {
+            $.get(new_base + "regimen_drug_management/disable/" + regimen_drug, function (data, status) {
                 $('.reg_drug_name_' + regimen_drug).removeClass('enabled');
                 $('.reg_drug_name_' + regimen_drug).addClass('disabled');
             });
         } else {
             // enable drug
-            $.get(base_url + "regimen_drug_management/enable/" + regimen_drug, function (data, status) {
+            $.get(new_base + "regimen_drug_management/enable/" + regimen_drug, function (data, status) {
                 $('.reg_drug_name_' + regimen_drug).removeClass('disabled');
                 $('.reg_drug_name_' + regimen_drug).addClass('enabled');
                 // alert(data);
@@ -101,7 +101,7 @@
                                     ?>
                                     <tr>
                                         <td><?php echo "<b>" . $regimen->regimen_code . "</b> | " . $regimen->regimen_desc; ?></td>
-                                        <td><?php echo $regimen->Regimen_service_type->name ?></td>
+                                        <td><?php echo $regimen->Regimen_service_type->name ?? '' ?></td>
                                         <td><a href="#show_drugs_<?php echo $regimen->id ?>" data-toggle="modal">View List of drugs</a></td>
                                     </tr>
                                     <!-- Hide list of drugs for each regimen -->
@@ -169,7 +169,7 @@
         $attributes = array(
             'class' => 'input_form',
             'onsubmit' => 'return process_drugs()');
-        echo form_open('regimen_drug_management/save', $attributes);
+        echo form_open(base_url().'/public/regimen_drug_management/save', $attributes);
         ?>
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>

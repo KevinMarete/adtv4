@@ -300,7 +300,7 @@
             if (rowCount == 2) {
 
             }
-            var link = "<?php echo base_url() . 'inventory_management/getOrderDetails' ?>";
+            var link = "<?php echo base_url() . '/public/inventory_management/getOrderDetails' ?>";
             //Get list of orders
             var order_id = $("#picking_list_name").val();
             $.ajax({
@@ -620,7 +620,7 @@
         function print_transactions(counter, total, data) {
 
             if (counter < (total)) {
-                var _url = "<?php echo base_url() . 'inventory_management/print_issues'; ?>";
+                var _url = "<?php echo base_url() . '/public/inventory_management/print_issues'; ?>";
                 var request = $.ajax({
                     url: _url,
                     type: 'post',
@@ -752,10 +752,11 @@
             //Before going any further, first calculate the number of drugs being recorded
             var drugs_count = 0;
             var c = 0;
-<?php
-//Set a variable to store drugs are being added for filtering after saving
-$drug_names_transacted = "";
-?>
+            
+            <?php
+            //Set a variable to store drugs are being added for filtering after saving
+            $drug_names_transacted = "";
+            ?>
 
             $.each($(".drug"), function (i, v) {
                 //Check if batch number was entered
@@ -893,7 +894,7 @@ $drug_names_transacted = "";
                             if (all_drugs_supplied == 0) {
 
                                 //Set session after completing transactions
-                                var _url = "<?php echo base_url() . 'inventory_management/set_transaction_session'; ?>";
+                                var _url = "<?php echo base_url() . '/public/inventory_management/set_transaction_session'; ?>";
                                 var request = $.ajax({
                                     url: _url,
                                     type: 'post',
@@ -901,11 +902,11 @@ $drug_names_transacted = "";
                                     dataType: "json"
                                 });
                                 request.always(function (data) {
-                                    window.location.replace('<?php echo base_url() . 'inventory_management' ?>');
+                                    window.location.replace('<?php echo base_url() . '/public/inventory_management' ?>');
                                 });
                             } else {//Change picking list status
                                 var order_id = $("#picking_list_name").val();
-                                var _url = "<?php echo base_url() . 'inventory_management/set_order_status'; ?>";
+                                var _url = "<?php echo base_url() . '/public/inventory_management/set_order_status'; ?>";
                                 var request = $.ajax({
                                     url: _url,
                                     type: 'post',
@@ -914,7 +915,7 @@ $drug_names_transacted = "";
                                 });
                                 request.always(function (data) {
                                     //Set session after completing transactions
-                                    var _url = "<?php echo base_url() . 'inventory_management/set_transaction_session'; ?>";
+                                    var _url = "<?php echo base_url() . '/public/inventory_management/set_transaction_session'; ?>";
                                     var request = $.ajax({
                                         url: _url,
                                         type: 'post',
@@ -922,7 +923,7 @@ $drug_names_transacted = "";
                                         dataType: "json"
                                     });
                                     request.always(function (data) {
-                                        window.location.replace('<?php echo base_url() . 'inventory_management' ?>');
+                                        window.location.replace('<?php echo base_url() . '/public/inventory_management' ?>');
                                     });
                                 });
                             }
@@ -1065,7 +1066,7 @@ $drug_names_transacted = "";
     }
 
     function getBatchList(selected_drug, stock_type_selected, row) {//Get list of batches for adjustment (+)
-        var url_dose = "<?php echo base_url() . 'inventory_management/getBacthes'; ?>";
+        var url_dose = "<?php echo base_url() . '/public/inventory_management/getBacthes'; ?>";
         //Get doses
         var request_dose = $.ajax({
             url: url_dose,
@@ -1382,7 +1383,7 @@ $drug_names_transacted = "";
             <textarea name="sql" id="sql" style="display: none"></textarea>
 
             <div id="sub_title" >
-                <a href="<?php echo base_url() . 'inventory_management ' ?>">Inventory</a> <i class=" icon-chevron-right"></i>  <?php echo $store ?> 
+                <a href="<?php echo base_url() . '/public/inventory_management ' ?>">Inventory</a> <i class=" icon-chevron-right"></i>  <?php echo $store ?> 
                 <hr size="1">
             </div>
             <div id="transaction_type_details">

@@ -30,7 +30,7 @@ $routes->setAutoRoute(true);
  */
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
-$routes->get('/', '\Modules\ADT\Controllers\User_management::sendToLgin');
+//$routes->get('/', '\Modules\ADT\Controllers\User_management::sendToLgin');
 //$routes->get('/recover', 'Modules\Recover\Controllers\Recover::index');
 
 

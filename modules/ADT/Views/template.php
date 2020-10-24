@@ -433,7 +433,7 @@ if ($user_is_administrator) {
                                                 ?>
                                             </ul>
                                         </li>
-                                        <li><a href="<?php echo base_url() . '/public/pqmp/' ?>"><i class="icon-flag"></i>Pharmacovigilance</a></li>
+                                        <li><a href="<?php echo base_url() . '/public/pqmp/0/0' ?>"><i class="icon-flag"></i>Pharmacovigilance</a></li>
 
                                         <li>
                                             <a href="<?php echo base_url() . '/public/get_faq'; ?>" target="_blank"><i class="icon-question-sign"></i>FAQ</a>

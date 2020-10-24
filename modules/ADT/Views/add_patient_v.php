@@ -75,7 +75,7 @@
 					$(".btn").attr("disabled",false);
 
 				if(patient_no !=''){
-					var link=base_url+"patient_management/checkpatient_no/"+patient_no;
+					var link=base_url+"/public/patient/checkpatient_no/"+patient_no;
 					$.ajax({
 						url: link,
 						type: 'POST',
@@ -99,7 +99,7 @@
 			$("#match_spouse").change(function(){
 				var patient_no=$("#match_spouse").val();
 				if(patient_no !=''){
-					var link=base_url+"patient_management/checkpatient_no/"+patient_no;
+					var link=base_url+"/public/patient/checkpatient_no/"+patient_no;
 					$.ajax({
 						url: link,
 						type: 'POST',
@@ -118,7 +118,7 @@
 			$("#match_parent").change(function(){
 				var patient_no=$("#match_parent").val();
 				if(patient_no !=''){
-					var link=base_url+"patient_management/checkpatient_no/"+patient_no;
+					var link=base_url+"/public/patient/checkpatient_no/"+patient_no;
 					$.ajax({
 						url: link,
 						type: 'POST',
@@ -242,7 +242,7 @@
 		   $("#service").change(function() {
 		   	var service_line = $(this).val();
 		   	var service_line_text = $("#service option[value='"+service_line+"']").text().toLowerCase();
-		   	var link = base_url+"regimen_management/getRegimenLine/"+service_line;
+		   	var link = base_url+"/public/regimen_management/getRegimenLine/"+service_line;
 
 		   	$("#drug_prophylax").css("display","block");
 		   	$("#regimen option").remove();
@@ -283,7 +283,7 @@
 		   	}
 		   	else{
 		   		if(service_line_text == "pmtct" && $("#age_in_years").val() < 2){
-		   			var link = base_url+"regimen_management/getRegimenLine/"+service_line+"/true";
+		   			var link = base_url+"/public/regimen_management/getRegimenLine/"+service_line+"/true";
 		   		}
 		   		$("#pep_reason_listing").hide();
 		   		$("#pep_reason").val(0);
@@ -299,7 +299,7 @@
 		   		success: function(data) {	
 		   			$("#regimen").append($("<option></option>").attr("value",'').text('--Select One--'));
 		   			$.each(data, function(i, jsondata){
-		   				$("#regimen").append($("<option></option>").attr("value",jsondata.id).text(jsondata.Regimen_Code+" | "+jsondata.Regimen_Desc));
+		   				$("#regimen").append($("<option></option>").attr("value",jsondata.id).text(jsondata.regimen_code+" | "+jsondata.regimen_desc));
 		   			});
 		   		}
 		   	});
@@ -658,7 +658,7 @@
 		}
 
 	</script>
-	<script type="text/javascript" src="<?= base_url()?>assets/scripts/jcook.js"></script>
+	<script type="text/javascript" src="<?= base_url()?>/public/assets/scripts/jcook.js"></script>
 
 </head>
 
@@ -666,7 +666,7 @@
 
 	<div class="full-content" style="background:#80f26d">
 		<div id="sub_title" >
-			<a href="<?php  echo base_url().'patient_management ' ?>">Patient Listing </a> <i class=" icon-chevron-right"></i> <strong>Add Patients</strong>
+			<a href="<?php  echo base_url().'/public/patients ' ?>">Patient Listing </a> <i class=" icon-chevron-right"></i> <strong>Add Patients</strong>
 			<hr size="1">
 		</div>
 		<h3>Patient Registration
@@ -674,7 +674,7 @@
 				(Fields Marked with <b><span class='astericks'>*</span></b> Asterisks are required)
 			</div></h3>
 
-			<form id="add_patient_form" name="add_patient_form" method="post"  action="<?php echo base_url().'patient_management/save';?>"  >
+			<form id="add_patient_form" name="add_patient_form" method="post"  action="<?php echo base_url().'/public/patient/save';?>"  >
 				<div class="column" id="columnOne">
 					<fieldset>
 						<legend>
@@ -686,7 +686,7 @@
 									<option value="">--Select--</option>
 									<?php
 									foreach($sources as $source){
-										echo "<option value='".$source['id']."'>".$source['Name']."</option>";	
+										echo "<option value='".$source['id']."'>".$source['name']."</option>";	
 									}
 									?>	
 								</select>
@@ -741,7 +741,7 @@
 									<option value=" ">--Select--</option>
 									<?php
 									foreach($districts as $district){
-										echo "<option value='".$district['id']."'>".$district['Name']."</option>";
+										echo "<option value='".$district['id']."'>".$district['name']."</option>";
 									}
 									?>
 								</select>
@@ -923,7 +923,7 @@
 								<select name="drug_allergies" id="drug_allergies"  multiple="multiple" style="width:400px;">
 									<?php
 									foreach($drugs as $drug){
-										echo "<option value='-".$drug['id']."-'>"." ".$drug['Drug']."</option>";
+										echo "<option value='-".$drug['id']."-'>"." ".$drug['drug']."</option>";
 									}
 									?>	
 								</select>
@@ -1033,7 +1033,7 @@
 									<option value="">--Select--</option>
 									<?php
 									foreach($service_types as $service_type){
-										echo "<option value='".$service_type['id']."'>".$service_type['Name']."</option>";
+										echo "<option value='".$service_type['id']."'>".$service_type['name']."</option>";
 									}
 									?>	
 								</select> </label>

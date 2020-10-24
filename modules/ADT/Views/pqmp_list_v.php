@@ -16,16 +16,16 @@ function ellipsis($string, $max_length) {
 ?>
 <div class="row">
     <div class="span11" style="background: #fdfdfd;">
-        <a class="button info" href="<?php echo base_url() . 'inventory_management/pqmp/'; ?>">PQMP</a>
-        <a class="button disabled" href="<?php echo base_url() . 'inventory_management/adr/'; ?>">ADR</a>
+        <a class="button info" href="<?php echo base_url().'/public/pqmp/0/0'; ?>">PQMP</a>
+        <a class="button disabled" href="<?php echo base_url() . '/public/adr/0/0'; ?>">ADR</a>
         <hr>
     </div>
     <div class="span11">
         <h5>PQMP Reports</h5>
     </div>
     <div class="span11">
-        <a href="<?= base_url(); ?>inventory_management/new_pqmp"  id="NEWPQ" class="btn btn-default" > New PQMQ </a>
-        <a href="#synchdata" class="btn btn-warning pull-right" id="SYNDATA" ><i class="icon icon-refresh"></i> Synch with PPB </a>
+        <a href="<?= base_url(); ?>/public/inventory_management/new_pqmp"  id="NEWPQ" class="btn btn-default" > New PQMQ </a>
+<!--        <a href="#synchdata" class="btn btn-warning pull-right" id="SYNDATA" ><i class="icon icon-refresh"></i> Synch with PPB </a>-->
         <span id="NOCOM" style="display:none">Synch disabled, connection to the SPQM server could not be established...</span>
         <span id="SYNCHLOADER" style="display:none;">
             <img src="<?= base_url(); ?>/public/assets/images/loading_spin.gif" width="30px" height="30px"/>
@@ -40,21 +40,21 @@ function ellipsis($string, $max_length) {
         </div>
 
         <?php
-        $pqmp_saved = $this->session->flashdata('pqmp_saved');
+        $pqmp_saved = session()->getFlashdata('pqmp_saved');
         if (!empty($pqmp_saved)) {
             ?>
             <div class="alert alert-success">
-                <?= $this->session->flashdata('pqmp_saved'); ?>
+                <?= session()->getFlashdata('pqmp_saved'); ?>
             </div> 
         <?php }
         ?>
 
         <?php
-        $pqmp_error = $this->session->flashdata('pqmp_error');
+        $pqmp_error = session()->getFlashdata('pqmp_error');
         if (!empty($pqmp_error)) {
             ?>
             <div class="alert alert-danger">
-                <?= $this->session->flashdata('pqmp_error'); ?>
+                <?= session()->getFlashdata('pqmp_error'); ?>
             </div> 
         <?php }
         ?>
@@ -63,7 +63,8 @@ function ellipsis($string, $max_length) {
 
         <table border="1" class="table" >
             <thead>
-            <th>Synch<br><input type="checkbox" id="CHECKALL"/>
+            <th>
+                Synch<br><input type="checkbox" id="CHECKALL"/>
                 <input type="checkbox" checked="checked" name="pmpqid" style="display:none;" value="1010101010101010"/>
             </th>
 
@@ -97,10 +98,10 @@ function ellipsis($string, $max_length) {
                         <td style="width:50px;">
                             <?php if ($pqmp['synch'] == '0') { ?>
                         
-                                <a href="<?= base_url(); ?>inventory_management/loadRecord/<?= $pqmp['id']; ?> "> View</a> |
-                                <a href="<?= base_url(); ?>inventory_management/pqmp/<?= $pqmp['id']; ?>/delete"><span style="color:red;font-weight: bold;"> Delete</span></a>
+                                <a href="<?= base_url(); ?>/public/inventory_management/loadRecord/<?= $pqmp['id']; ?> "> View</a> |
+                                <a href="<?= base_url(); ?>/public/pqmp/<?= $pqmp['id']; ?>/delete"><span style="color:red;font-weight: bold;"> Delete</span></a>
                             <?php } else { ?>
-                                <a href="<?= base_url(); ?>inventory_management/loadRecord/<?= $pqmp['id']; ?> "> View</a>
+                                <a href="<?= base_url(); ?>/public/inventory_management/loadRecord/<?= $pqmp['id']; ?> "> View</a>
                             <?php }?>
                         </td> 
 
@@ -130,7 +131,7 @@ function ellipsis($string, $max_length) {
                 return $(this).val();
             }).get();
 
-            $.post("<?= base_url(); ?>inventory_management/getpvdata/pqms/pqm/", {ids: searchIDs}, function (resp) {
+            $.post("<?= base_url(); ?>/public/inventory_management/getpvdata/pqms/pqm/", {ids: searchIDs}, function (resp) {
 
                 if (resp.status === 'success') {
 
@@ -139,7 +140,7 @@ function ellipsis($string, $max_length) {
                     $('#SYNDATA').prop('disabled', false);
                     $('#NEWPQ').prop('disabled', false);
                     setInterval(function () {
-                        window.location.href = "<?= base_url(); ?>inventory_management/pqmp/";
+                        window.location.href = "<?= base_url(); ?>/public/inventory_management/pqmp/";
                     }, 2000);
 
                 } else if (resp.status === 'none') {
@@ -154,7 +155,7 @@ function ellipsis($string, $max_length) {
 
 
         setInterval(function () {
-            $.getJSON("<?= base_url(); ?>inventory_management/serverStatus", function (resp) {
+            $.getJSON("<?= base_url(); ?>/public/inventory_management/serverStatus", function (resp) {
                 if (resp.status === 404) {
                     $('#NOCOM').show();
                     $('#SYNDATA').hide();

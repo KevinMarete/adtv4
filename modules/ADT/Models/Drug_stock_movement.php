@@ -6,6 +6,9 @@ use App\Models\BaseModel;
 use Illuminate\Database\Capsule\Manager as DB;
 
 class Drug_stock_movement extends BaseModel {
+
+    protected $table = 'drug_stock_movement';
+
     /* public function setTableDefinition() {
       $this -> hasColumn('Machine_Code', 'varchar', 10);
       $this -> hasColumn('Drug', 'varchar', 10);
@@ -100,8 +103,9 @@ class Drug_stock_movement extends BaseModel {
     }
 
     public static function getDrugConsumption($drug_id, $facility, $ccc_id = 1, $transaction_type = '') {
-        $query = DB::select("SELECT dsm.quantity_out as total_out FROM drug_stock_movement dsm WHERE dsm.drug='$drug_id' AND facility ='$facility' AND DATEDIFF(CURDATE(),dsm.transaction_date) <= 90 and transaction_type ='$transaction_type' and ccc_store_sp='$ccc_id'");
-        return json_decode(json_encode($query), true);
+        
+        $query = DB::select("SELECT quantity_out as total_out FROM drug_stock_movement WHERE drug='".$drug_id."' AND facility ='".$facility."' AND DATEDIFF(CURDATE(), transaction_date) <= 90 and transaction_type ='".$transaction_type."' and ccc_store_sp='".$ccc_id."'");
+        return (array) $query;
     }
 
     public function getTransactionItems($stores, $period_begin, $period_end, $drug_id, $transaction) {

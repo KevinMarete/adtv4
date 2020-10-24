@@ -1,3 +1,4 @@
+<?php $session = session(); ?>
 <style type="text/css">
     #ui-datepicker-div{
         zoom:1;
@@ -76,7 +77,7 @@
     <div>
         <div>
             <ul class="breadcrumb">
-                <li><a href="<?php echo site_url() . 'home_controller/home' ?>"  id='goHome'><i class="icon-home"></i><strong>Home</strong></a> 
+                <li><a href="<?php echo base_url() . '/public/home' ?>"  id='goHome'><i class="icon-home"></i><strong>Home</strong></a> 
                     <span class="divider">/</span></li>
                 <li class="active" id="actual_page"></li>
             </ul>
@@ -200,7 +201,7 @@
 
 
         if (default_link) {
-            default_link = base_url + "public/admin_management/" + default_link;
+            default_link = base_url + "/public/admin_management/" + default_link;
             $.blockUI({message: '<h3><img width="30" height="30" src="<?php echo base_url() . '/public/images/loading_spin.gif' ?>" /> Working...</h3>'});
             $("#display_content").load(default_link, function () {
                 $('.dataTables').dataTable({

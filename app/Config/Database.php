@@ -7,7 +7,8 @@ namespace Config;
  *
  * @package Config
  */
-class Database extends \CodeIgniter\Database\Config {
+class Database extends \CodeIgniter\Database\Config
+{
 
     /**
      * The directory that holds the Migrations
@@ -82,7 +83,8 @@ class Database extends \CodeIgniter\Database\Config {
 
     //--------------------------------------------------------------------
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
 
         // Ensure that we always set the database group to 'tests' if

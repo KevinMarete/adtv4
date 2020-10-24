@@ -20,6 +20,8 @@ use \Modules\ADT\Models\Drug_destination;
 use \Modules\ADT\Models\CCC_store_service_point;
 use \Modules\ADT\Models\Drug_Stock_Movement;
 use Illuminate\Database\Capsule\Manager as DB;
+use Modules\ADT\Models\Access_level;
+use Modules\ADT\Models\Menu;
 
 class Settings_management extends \App\Controllers\BaseController {
 
@@ -49,17 +51,17 @@ class Settings_management extends \App\Controllers\BaseController {
     }
 
     public function getMenus() {
-        $menus = Menu::getAllActive();
+        $menus = Menu::where('active', '1')->get();
         echo json_encode($menus);
     }
 
     public function getAccessLevels() {
-        $access = Access_Level::getAllHydrated();
+        $access = Access_level::getAllHydrated();
         echo json_encode($access);
     }
 
     public function getActiveAccessLevels() {
-        $access = $this->db->where('active', 1)->get('access_level')->result_array();
+        $access = Access_level::where('active', 1)->get()->toArray();
         echo json_encode($access);
     }
 

@@ -47,7 +47,7 @@
                             if (counter > 0) {
                                 //ajax call to patient merge function
                                 $.ajax({
-                                    url: base_url + 'patient_management/merge',
+                                    url: base_url + '/public/patient_management/merge',
                                     type: 'POST',
                                     data: {
                                         'patients': patients,
@@ -78,7 +78,7 @@
                         if (res === true) {
                             //ajax call to patient unmerge function
                             $.ajax({
-                                url: base_url + 'patient_management/unmerge',
+                                url: base_url + '/public/patient_management/unmerge',
                                 type: 'POST',
                                 data: {
                                     'target_ccc': target_patient_id

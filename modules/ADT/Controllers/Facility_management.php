@@ -58,8 +58,8 @@ class Facility_Management extends \App\Controllers\BaseController {
     }
 
     public function getFacilityList() {
-        $response = array();
-        $facilities = Facilities::getAll();
+        $response = [];
+        $facilities = Facilities::orderBy('name')->get()->toArray();
         foreach ($facilities as $index => $facility) {
             foreach ($facility as $key => $value) {
                 $response[$index][$key] = utf8_encode($value);
@@ -148,12 +148,10 @@ class Facility_Management extends \App\Controllers\BaseController {
         $access_level = session()->get('user_indicator');
         $data['quick_link'] = "facility";
         if ($access_level == "system_administrator") {
-            $data['facilities_list'] = Facilities::getAll($source);
+            $data['facilities_list'] = Facilities::orderBy('name')->get()->toArray();
             echo view("\Modules\ADT\Views\\facility_v", $data);
         } else {
-            $sql = "SELECT * FROM Facilities where facilitycode='$source'";
-            $query = $this->db->query($sql);
-            $data['facilities'] = $query->getResultArray();
+            $data['facilities'] = Facilities::where('facilitycode', $source)->get()->toArray();
             //$data['facilities'] = Facilities::getCurrentFacility($source);
             echo view("\Modules\ADT\Views\\facility_user_v", $data);
         }

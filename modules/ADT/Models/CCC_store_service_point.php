@@ -36,12 +36,11 @@ class CCC_store_service_point extends BaseModel {
         return json_decode(json_encode($query), true)[0];
     }
 
-    public function getStoreGroups() {
-        $query = Doctrine_Query::create()->select("id,Name as name")->from("ccc_store_service_point")->where("Name LIKE '%store%' and Active='1'");
-        $category['Store'] = $query->execute(array(), Doctrine::HYDRATE_ARRAY);
-        $query = Doctrine_Query::create()->select("id,Name as name")->from("ccc_store_service_point")->where("Name LIKE '%pharm%' and Active='1'");
-        $category['Pharmacy'] = $query->execute(array(), Doctrine::HYDRATE_ARRAY);
-        return $category;
+    public static function getStoreGroups() {
+        $categories = [];
+        $categories['Store'] = CCC_store_service_point::where('name', 'like', '%store%')->where('active', '1')->get()->toArray();
+        $categories['Pharmacy'] = CCC_store_service_point::where('name', 'like', '%pharm%')->where('active', '1')->get()->toArray();
+        return $categories;
     }
 
 }

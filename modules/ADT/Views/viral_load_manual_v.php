@@ -24,32 +24,18 @@
         $("#test_date").datepicker();
         $("#test_date").datepicker("setDate", new Date());
 
-        //populate patient_ccc_number
-        var link = base_url + "viral_load_manual/get_patient_ccc_number";
-        var request_viral_load = $.ajax({
-            url: link,
-            type: 'POST',
-            dataType: "json",
-            success: function (data) {
-                $.each(data, function (i, data) {
-                    $('#patient_ccc_number').append("<option value='" + data.patient_ccc_number + "'>" + data.patient_ccc_number + "</option>");
-                });
-            }
-        });
-
-        var table = $('.vl_results').dataTable({
-            "bProcessing": true,
-            "bServerSide": true,
-            "sAjaxSource": base_url + "viral_load_manual/get_viral_load",
-            "bJQueryUI": true,
-            "sPaginationType": "full_numbers",
-            "bStateSave": true,
-            "bDestroy": true,
-            "aoColumnDefs": [
-                {"bSearchable": false, "aTargets": [2]}
-            ]
-        });
-
+        		var table=$('.vl_results').dataTable( {
+			"bProcessing": true,
+			"bServerSide": true,
+			"sAjaxSource": "<?= base_url();?>/public/viral_load_manual/get_viral_load",
+	        "bJQueryUI": true,
+	        "sPaginationType": "full_numbers",
+	        "bStateSave" : true,
+	        "bDestroy": true,
+	       "aoColumnDefs": [
+      		{ "bSearchable": false, "aTargets": [ 2 ] }
+    		] 
+		});
 
     });
 

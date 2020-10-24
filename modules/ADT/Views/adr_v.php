@@ -15,19 +15,19 @@
 
 <div class="container" style="background-color: #fffacc;border: solid thick #2b597e;padding: 30px; margin-top: 130px; margin-bottom: 130px;border-radius:20px;">
 
-    <a href="<?= base_url(); ?>inventory_management/adr" class="btn btn-default" > Back </a>
+    <a href="<?= base_url(); ?>/public/inventory_management/adr" class="btn btn-default" > Back </a>
     <?php if (!\is_null($adr_data[0]['ppid']) || $adr_data[0]['synch'] === '1') { ?>
 
     <?php } else { ?>
-        <a href="<?= base_url(); ?>inventory_management/pqmp/<?= $record_no; ?>/delete" class="btn btn-danger delete-form" > Delete  </a>  
+        <a href="<?= base_url(); ?>/public/inventory_management/adr/<?= $record_no; ?>/delete" class="btn btn-danger delete-form" > Delete  </a>  
     <?php } ?>
 
-    <a href="<?= base_url(); ?>inventory_management/export_adr/<?= $record_no; ?>/export" class="btn btn-default" > Export(.xls) </a>
-    <form name="adr_form" action="<?= base_url(); ?>inventory_management/adr/<?= $record_no; ?>" method="post">
+    <a href="<?= base_url(); ?>/public/inventory_management/export_adr/<?= $record_no; ?>/export" class="btn btn-default" > Export(.xls) </a>
+    <form name="adr_form" action="<?= base_url(); ?>/public/inventory_management/adr/<?= $record_no; ?>" method="post">
         <div class="container">
             <div class="row">
                 <div class="text-center">
-                    <img src="<?php echo base_url() . 'assets/images/top_logo.png'; ?>">
+                    <img src="<?php echo base_url() . '/public/assets/images/top_logo.png'; ?>">
                     <h4>
                         MINISTRY OF HEALTH <br />
                         THE PHARMACY AND POISONS BOARD<br />
@@ -73,7 +73,7 @@
 
                 <label ><span class='astericks'>*</span>COUNTY:</label>
                 <select class="fi" class="" name="county_id"  id="county_id">
-                    <option value="<?php echo $this->session->userdata('county_id'); ?>" selected="selected"><?php echo $this->session->userdata('facility_county'); ?></option>
+                    <option value="<?php echo session()->get('county_id'); ?>" selected="selected"><?php echo session()->get('facility_county'); ?></option>
 
                 </select>
 
@@ -82,7 +82,7 @@
 
                 <label ><span class='astericks'>*</span>SUB-COUNTY</label>
                 <select class="fi" name="sub_county_id" id="sub_county_id"  class="" id="SadrSubCountyId">
-                    <option value="<?php echo $this->session->userdata('subcounty_id'); ?>"><?php echo $this->session->userdata('facility_subcounty'); ?></option>                  
+                    <option value="<?php echo session()->get('subcounty_id'); ?>"><?php echo session()->get('facility_subcounty'); ?></option>                  
 
                 </select>
 
@@ -218,7 +218,8 @@
                         <label><span class='astericks'>*</span>DIAGNOSIS: (What was the patient treated for): </label>
                         <select class="fil" name='diagnosis' id='diagnosis' style="width:150px;">
                             <option value="<?= $adr_data[0]['diagnosis'] ?>"><?= $adr_data[0]['diagnosis'] ?></option>
-                            <?php foreach ($diagnosis as $d) {
+                            <?php
+                            foreach ($diagnosis as $d) {
                                 ;
                                 ?>
                                 <option value="<?= str_replace(['Anti', 'Family Planning medicine', 'Essential drug'], '', $d->name); ?>"><?= str_replace(['Anti', 'Family Planning medicine', 'Essential drug'], '', $d->name); ?></option>
@@ -432,9 +433,10 @@
 
                     </tr>
 
-    <?php $i++;
-}
-?>
+                    <?php
+                    $i++;
+                }
+                ?>
 
             </tbody>
         </table>
@@ -444,12 +446,12 @@
             <div class="mid-row">
                 <label id="dcs" for="severity" ><b>Severity of reaction (refer to scale overleaf)</b></label>
                 <input  type="radio" class="severity"  name="severity" <?php
-if ($adr_data[0]['severity'] == 'Mild') {
-    echo 'checked';
-} else {
-    
-}
-?> value="Mild">
+                if ($adr_data[0]['severity'] == 'Mild') {
+                    echo 'checked';
+                } else {
+                    
+                }
+                ?> value="Mild">
                 Mild <br /> 
                 <input  type="radio" class="severity"  name="severity" <?php
                 if ($adr_data[0]['severity'] == 'Moderate') {
@@ -513,12 +515,12 @@ if ($adr_data[0]['severity'] == 'Mild') {
                 ?>  value="Dose reduced">
                 Dose reduced<br />
                 <input  type="radio"  name="action" class="action" <?php
-                        if ($adr_data[0]['action_taken'] == 'Dose not changed') {
-                            echo 'checked';
-                        } else {
-                            
-                        }
-                        ?>  value="Dose not changed">
+                if ($adr_data[0]['action_taken'] == 'Dose not changed') {
+                    echo 'checked';
+                } else {
+                    
+                }
+                ?>  value="Dose not changed">
                 Dose not changed<br />
                 <input  type="radio"  name="action" class="action" <?php
                 if ($adr_data[0]['action_taken'] == 'Unknown') {
@@ -526,7 +528,7 @@ if ($adr_data[0]['severity'] == 'Mild') {
                 } else {
                     
                 }
-                        ?>  value="Unknown">
+                ?>  value="Unknown">
                 Unknown
             </div>
 
@@ -566,12 +568,12 @@ if ($adr_data[0]['severity'] == 'Mild') {
                 ?>  value="Causes a congenital anomaly">
                 Causes a congenital anomaly<br />
                 <input  type="radio"  name="outcome" class="outcome" <?php
-                        if ($adr_data[0]['outcome'] == 'Requires intervention to prevent permanent damage') {
-                            echo 'checked';
-                        } else {
-                            
-                        }
-                        ?>  value="Requires intervention to prevent permanent damage">
+                if ($adr_data[0]['outcome'] == 'Requires intervention to prevent permanent damage') {
+                    echo 'checked';
+                } else {
+                    
+                }
+                ?>  value="Requires intervention to prevent permanent damage">
                 Requires intervention to prevent permanent damage <br />
                 <input  type="radio"  name="outcome" class="outcome" <?php
                 if ($adr_data[0]['outcome'] == 'Unknown') {
@@ -579,7 +581,7 @@ if ($adr_data[0]['severity'] == 'Mild') {
                 } else {
                     
                 }
-                        ?>  value="Unknown">
+                ?>  value="Unknown">
                 Unknown
             </div>
 
@@ -587,52 +589,52 @@ if ($adr_data[0]['severity'] == 'Mild') {
             <div class="mid-row">
                 <label id="dcs" for="casuality" ><b>CAUSALITY OF REACTION (refer to scale overleaf)</b></label>
                 <input  type="radio"  name="casuality" class="casuality" <?php
-                        if ($adr_data[0]['reaction_casualty'] == 'Certain') {
-                            echo 'checked';
-                        } else {
-                            
-                        }
-                        ?>   value="Certain">
+                if ($adr_data[0]['reaction_casualty'] == 'Certain') {
+                    echo 'checked';
+                } else {
+                    
+                }
+                ?>   value="Certain">
                 Certain <br />
                 <input  type="radio"  name="casuality" class="casuality" <?php
-                        if ($adr_data[0]['reaction_casualty'] == 'Probable / Likely') {
-                            echo 'checked';
-                        } else {
-                            
-                        }
-                        ?>   value="Probable / Likely">
+                if ($adr_data[0]['reaction_casualty'] == 'Probable / Likely') {
+                    echo 'checked';
+                } else {
+                    
+                }
+                ?>   value="Probable / Likely">
                 Probable / Likely <br />
                 <input  type="radio"  name="casuality" class="casuality" <?php
-                        if ($adr_data[0]['reaction_casualty'] == 'Possible') {
-                            echo 'checked';
-                        } else {
-                            
-                        }
-                        ?>   value="Possible">
+                if ($adr_data[0]['reaction_casualty'] == 'Possible') {
+                    echo 'checked';
+                } else {
+                    
+                }
+                ?>   value="Possible">
                 Possible <br />
                 <input  type="radio"  name="casuality" class="casuality" <?php
-                        if ($adr_data[0]['reaction_casualty'] == 'Unlikely') {
-                            echo 'checked';
-                        } else {
-                            
-                        }
-                        ?>  value="Unlikely">
+                if ($adr_data[0]['reaction_casualty'] == 'Unlikely') {
+                    echo 'checked';
+                } else {
+                    
+                }
+                ?>  value="Unlikely">
                 Unlikely <br />
                 <input  type="radio"  name="casuality" class="casuality" <?php
-                        if ($adr_data[0]['reaction_casualty'] == 'Conditional / Unclassified') {
-                            echo 'checked';
-                        } else {
-                            
-                        }
-                        ?>  value="Conditional / Unclassified">
+                if ($adr_data[0]['reaction_casualty'] == 'Conditional / Unclassified') {
+                    echo 'checked';
+                } else {
+                    
+                }
+                ?>  value="Conditional / Unclassified">
                 Conditional / Unclassified <br />
                 <input  type="radio"  name="casuality" class="casuality" <?php
-                        if ($adr_data[0]['reaction_casualty'] == 'Unassessable / Unclassifiable') {
-                            echo 'checked';
-                        } else {
-                            
-                        }
-                        ?>   value="Unassessable / Unclassifiable">
+                if ($adr_data[0]['reaction_casualty'] == 'Unassessable / Unclassifiable') {
+                    echo 'checked';
+                } else {
+                    
+                }
+                ?>   value="Unassessable / Unclassifiable">
                 Unassessable / Unclassifiable
             </div>
 
@@ -678,7 +680,7 @@ if ($adr_data[0]['severity'] == 'Mild') {
                 <input type="text" name="officersignature" id="officersignature" class="validate[required] f-input" value="<?= $adr_data[0]['signature']; ?>">
             </div>
             <div class="mid-row" id="submit-container" >
-<?php if ($adr_data[0]['synch'] !== '1') { ?>
+                <?php if ($adr_data[0]['synch'] !== '1') { ?>
                     <button type="submit" class="btn btn-primary" value="Submit">Submit</button>
 <?php } ?>
 

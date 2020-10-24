@@ -18,19 +18,19 @@
     ?>
     <div class="row" id="pv_form">
         <div class="span11" style="background: #fdfdfd;">
-            <a class="button disabled" href="<?php echo base_url() . 'inventory_management/pqmp/'; ?>">PQMP</a>
-            <a class="button info" href="<?php echo base_url() . 'inventory_management/adr'; ?>">ADR</a>
+            <a class="button disabled" href="<?php echo base_url().'/public/' . '/pqmp/0/0'; ?>">PQMP</a>
+            <a class="button info" href="<?php echo base_url().'/public/' . '/adr/0/0'; ?>">ADR</a>
             <hr>
         </div>
         <div class="span11">
             <h5>Patient ADR Reports</h5>
-            <!--a href="<?php echo base_url() . 'inventory_management/pqmp_followup/'; ?>" class="btn btn-primary pull-right" id="followup" ><i class="icon icon-refresh"></i> ADR FOLLOWUP  </a-->
+            <!--a href="<?php echo base_url().'/public/' . 'inventory_management/pqmp_followup/'; ?>" class="btn btn-primary pull-right" id="followup" ><i class="icon icon-refresh"></i> ADR FOLLOWUP  </a-->
             <a href="#newADR" data-toggle="modal" id="NEWADR" class="btn btn-default" > New ADR </a>
-            <a href="#synchdata" class="btn btn-warning pull-right" id="SYNDATA" ><i class="icon icon-refresh"></i> Synch with PPB  </a>
+<!--            <a href="#synchdata" class="btn btn-warning pull-right" id="SYNDATA" ><i class="icon icon-refresh"></i> Synch with PPB  </a>-->
             <span id="NOCOM" style="display:none">Synch disabled, connection to the SADR server could not be established...</span>
 
             <span id="SYNCHLOADER" style="display:none;">
-                <img src="<?= base_url(); ?>/public/assets/images/loading_spin.gif" width="30px" height="30px"/>
+                <img src="<?= base_url().'/public/'; ?>/public/assets/images/loading_spin.gif" width="30px" height="30px"/>
                 Synchronizing Please wait....<span id="SYNCHPERCENT"></span>
             </span>
 
@@ -38,18 +38,18 @@
                 Synchronization Successfully Completed..
             </div>
 
-            <?php $msg = $this->session->flashdata('pqmp_saved');
+            <?php $msg = session()->get('pqmp_saved');
             if (!empty($msg)) { ?>
                 <div class="alert alert-success">
-                    <?= $this->session->flashdata('pqmp_saved'); ?>
+                    <?= session()->get('pqmp_saved'); ?>
                 </div> 
             <?php }
             ?>
 
-            <?php $adr_error = $this->session->flashdata('adr_error');
+            <?php $adr_error = session()->get('adr_error');
             if (!empty($adr_error)) { ?>
                 <div class="alert alert-danger">
-                    <?= $this->session->flashdata('adr_error'); ?>
+                    <?= session()->get('adr_error'); ?>
                 </div> 
             <?php }
             ?>
@@ -91,10 +91,10 @@
                              <td style="width:50px;">
                                 <?php if ($adr['synch'] == '0') { ?>
 
-                                    <a href="<?= base_url(); ?>inventory_management/loadAdrRecord/<?= $adr['id']; ?> "> View</a> |
-                                    <a href="<?= base_url(); ?>inventory_management/adr/<?= $adr['id']; ?>/delete"><span style="color:red;font-weight: bold;"> Delete</span></a>
+                                    <a href="<?= base_url().'/public/'; ?>inventory_management/loadAdrRecord/<?= $adr['id']; ?> "> View</a> |
+                                    <a href="<?= base_url().'/public/'; ?>inventory_management/deladr/<?= $adr['id']; ?>/delete"><span style="color:red;font-weight: bold;"> Delete</span></a>
                                 <?php } else { ?>
-                                    <a href="<?= base_url(); ?>inventory_management/loadAdrRecord/<?= $adr['id']; ?> "> View</a>
+                                    <a href="<?= base_url().'/public/'; ?>inventory_management/loadAdrRecord/<?= $adr['id']; ?> "> View</a>
                                 <?php } ?>
                             </td> 
 
@@ -143,7 +143,7 @@
     $(document).ready(function () {
         $('#create_adr_btn').click(function (e) {
             e.preventDefault();
-            window.location.href = "<?=base_url()?>dispensement_management/adr/"+$('#new_patient_adr').val();
+            window.location.href = "<?=base_url().'/public/'?>adr_view/adr/"+$('#new_patient_adr').val();
 
         });
 
@@ -164,7 +164,7 @@
 
                 $.ajax({
                     type: 'post',
-                    url: "<?= base_url(); ?>inventory_management/getpvdata/adr_form/adr/",
+                    url: "<?= base_url().'/public/'; ?>inventory_management/getpvdata/adr_form/adr/",
                     dataType: 'json',
                     data: {ids: searchIDs},
                     success: function (resp) {
@@ -175,7 +175,7 @@
                             $('#SYNDATA').prop('disabled', false);
                             $('#NEWPQ').prop('disabled', false);
                             setInterval(function () {
-                                window.location.href = "<?= base_url(); ?>inventory_management/adr/";
+                                window.location.href = "<?= base_url().'/public/'; ?>inventory_management/adr/";
                             }, 2000);
                         } else {
                             alert("Something went Wrong, Synchronization could not be done");
@@ -207,7 +207,7 @@
         });
 
         setInterval(function () {
-            $.getJSON("<?= base_url(); ?>inventory_management/serverStatus", function (resp) {
+            $.getJSON("<?= base_url().'/public/'; ?>inventory_management/serverStatus", function (resp) {
                 if (resp.status === 404) {
                     $('#NOCOM').show();
                     $('#SYNDATA').hide();
@@ -224,7 +224,7 @@
             "sDom": '<"H"Tfr>t<"F"ip>',
             "aoColumnDefs": [{"bSortable": false, "aTargets": [0]}],
             "oTableTools": {
-                "sSwfPath": base_url + "scripts/datatable/copy_csv_xls_pdf.swf",
+                "sSwfPath": base_url + "/public/scripts/datatable/copy_csv_xls_pdf.swf",
                 "aButtons": ["copy", "print", "xls", "pdf"]
             },
             "bProcessing": true,

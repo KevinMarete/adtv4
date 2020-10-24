@@ -1,5 +1,5 @@
 <?php
-//print_r($pqmp_data);
+//print_r(@$pqmp_data);
 ?>
 <style type="text/css">
     /*@media (min-width: 992px)*/
@@ -19,16 +19,11 @@
     }
 </style>
 <div class="container" style="background-color: #fde8e7;border: solid thick #2b597e;padding: 30px; margin-top: 130px; margin-bottom: 130px;border-radius: 20px;">
-    <a href="<?= base_url(); ?>inventory_management/pqmp" class="btn btn-default" > Back </a>
-    <?php if (!\is_null($pqmp_data[0]['ppid']) || $pqmp_data[0]['synch'] === '1') { ?>
-
-    <?php } else { ?>
-        <!--        <a href="javascript:;;" class="btn btn-default" id="edit-btn" > Edit </a>-->
-<!--        <a href="<?= base_url(); ?>inventory_management/pqmp/<?= $record_no; ?>/delete" class="btn btn-danger delete-form" > Delete  </a>  -->
-    <?php } ?>
+    <a href="<?= base_url().'/public/'; ?>pqmp/0/0" class="btn btn-default" > Back </a>
+ 
 
 
-    <a href="<?= base_url(); ?>inventory_management/export_pqmp/<?= $record_no; ?>/export" class="btn btn-default" > Export(.xls) </a>
+    <a href="<?= base_url().'/public/'; ?>inventory_management/export_pqmp/<?= $record_no; ?>/export" class="btn btn-default" > Export(.xls) </a>
     <div class="container">
         <div class="row">
             <div class="text-center">
@@ -42,53 +37,53 @@
             </div>
         </div>
     </div>
-    <form name="pqmp-form" id="pqmp-form" method="POST" action="<?= base_url(); ?>inventory_management/pqmp/<?= $record_no; ?>">
+    <form name="pqmp-form" id="pqmp-form" method="POST" action="<?= base_url().'/public/'; ?>inventory_management/pqmp/<?= $record_no; ?>">
         <table border="1" style="">
             <tr>
-                <td colspan="2">Name of Facility : <input type="text" name="facility_name" id="facility_name" class="form-control" value="<?= $pqmp_data[0]['facility_name']; ?>"> </td>
+                <td colspan="2">Name of Facility : <input type="text" name="facility_name" id="facility_name" class="form-control" value="<?= @$pqmp_data[0]['facility_name']; ?>"> </td>
                 <td colspan="3">County: <!--input type="text" name="district_name" id="district_name" class="form-control"-->
                     <select name="county_id" id="county_id" class="" id="PqmpCountyId">
-                        <option value="<?php echo $this->session->userdata('county_id'); ?>" selected="selected"><?php echo $this->session->userdata('facility_county'); ?></option>
+                        <option value="<?php echo session()->get('county_id'); ?>" selected="selected"><?php echo session()->get('facility_county'); ?></option>
                     </select>
                 </td>
                 <td colspan="3">Sub County: <!--input type="text" name="province_name" id="province_name" class="form-control"-->
                     <select name="sub_county_id" id="sub_county_id" class="" id="PqmpSubCountyId">
-                        <option value="<?php echo $this->session->userdata('subcounty_id'); ?>"><?php echo $this->session->userdata('facility_subcounty'); ?></option>                  
+                        <option value="<?php echo @session()->get('subcounty_id'); ?>"><?php echo @session()->get('facility_subcounty'); ?></option>                  
                     </select>
 
                 </td>
             </tr>
             <tr>
-                <td colspan="2">Facility Address: <input type="text" name="facility_address" id="facility_address" class="form-control" value="<?= $pqmp_data[0]['facility_address']; ?>"></td>
-                <td colspan="3">Facility Telephone: <input type="text" name="facility_phone" id="facility_phone" class="form-control" value="<?= $pqmp_data[0]['facility_phone']; ?>"></td>
-                <td colspan="3">Facility Code: <input type="text" name="facility_code" id="facility_code" class="form-control" value="<?= $pqmp_data[0]['facility_code']; ?>"></td>
+                <td colspan="2">Facility Address: <input type="text" name="facility_address" id="facility_address" class="form-control" value="<?= @$pqmp_data[0]['facility_address']; ?>"></td>
+                <td colspan="3">Facility Telephone: <input type="text" name="facility_phone" id="facility_phone" class="form-control" value="<?= @$pqmp_data[0]['facility_phone']; ?>"></td>
+                <td colspan="3">Facility Code: <input type="text" name="facility_code" id="facility_code" class="form-control" value="<?= @$pqmp_data[0]['facility_code']; ?>"></td>
             </tr>
             <tr>
                 <td colspan="8" align="center" style="background-color: lightblue;"><h3>PRODUCT IDENTITY</h3></td>
             </tr>
             <tr>
                 <td>Brand Name</td>
-                <td colspan="3"><input type="text" name="brand_name" id="brand_name" value="<?= $pqmp_data[0]['brand_name']; ?>" class="form-control"> </td>
+                <td colspan="3"><input type="text" name="brand_name" id="brand_name" value="<?= @$pqmp_data[0]['brand_name']; ?>" class="form-control"> </td>
                 <td>Generic Name</td>
-                <td colspan="3"><input type="text" name="generic_name" id="generic_name" value="<?= $pqmp_data[0]['generic_name']; ?>" class="form-control"> </td>
+                <td colspan="3"><input type="text" name="generic_name" id="generic_name" value="<?= @$pqmp_data[0]['generic_name']; ?>" class="form-control"> </td>
             </tr>
             <tr>
                 <td>Batch/Lot Number</td>
-                <td><input type="text" name="batch_no" id="batch_no" value="<?= $pqmp_data[0]['batch_number']; ?>" class="form-control"></td>
+                <td><input type="text" name="batch_no" id="batch_no" value="<?= @$pqmp_data[0]['batch_number']; ?>" class="form-control"></td>
                 <td>Date of Manufacture</td>
-                <td><input type="text" name="manufacture_date" value="<?= $pqmp_data[0]['manufacture_date']; ?>" id="manufacture_date" class=""></td>
+                <td><input type="text" name="manufacture_date" value="<?= @$pqmp_data[0]['manufacture_date']; ?>" id="manufacture_date" class=""></td>
                 <td>Date of Expiry</td>
-                <td><input type="text" name="expiry_date" value="<?= $pqmp_data[0]['expiry_date']; ?>" id="expiry_date" class=""></td>
+                <td><input type="text" name="expiry_date" value="<?= @$pqmp_data[0]['expiry_date']; ?>" id="expiry_date" class=""></td>
                 <td>Date of Receipt</td>
-                <td><input type="text" name="receipt_date" value="<?= $pqmp_data[0]['receipt_date']; ?>" id="receipt_date" class=""></td>
+                <td><input type="text" name="receipt_date" value="<?= @$pqmp_data[0]['receipt_date']; ?>" id="receipt_date" class=""></td>
             </tr>
             <tr>
                 <td>Name of Manufacturer</td>
-                <td colspan="3"><input type="text" name="manufacturer_name" value="<?= $pqmp_data[0]['name_of_manufacturer']; ?>" id="manufacturer_name" class="form-control"> </td>
+                <td colspan="3"><input type="text" name="manufacturer_name" value="<?= @$pqmp_data[0]['name_of_manufacturer']; ?>" id="manufacturer_name" class="form-control"> </td>
                 <td>Country of Origin</td>
                 <td colspan="3">
                     <select name="country_id" id="country_id" class="fil" id="PqmpCountryId">
-                        <option value="<?= $pqmp_data[0]['country_of_origin']; ?>" selected><?= $pqmp_data[0]['country']; ?></option>
+                        <option value="<?= @$pqmp_data[0]['country_of_origin']; ?>" selected><?= @$pqmp_data[0]['country']; ?></option>
                         <option value="1">Andorra</option>
                         <option value="2">United Arab Emirates</option>
                         <option value="3">Afghanistan</option>
@@ -342,9 +337,9 @@
             </tr>
             <tr>
                 <td>Name of Distributor/Supplier</td>
-                <td colspan="2"><input type="text" name="supplier_name" value="<?= $pqmp_data[0]['supplier_name']; ?>" id="supplier_name" class="form-control"> </td>
+                <td colspan="2"><input type="text" name="supplier_name" value="<?= @$pqmp_data[0]['supplier_name']; ?>" id="supplier_name" class="form-control"> </td>
                 <td>Distributor/Supplier's Address</td>
-                <td colspan="4"><input type="text" name="supplier_address" value="<?= $pqmp_data[0]['supplier_address']; ?>" id="supplier_address" class="form-control"> </td>
+                <td colspan="4"><input type="text" name="supplier_address" value="<?= @$pqmp_data[0]['supplier_address']; ?>" id="supplier_address" class="form-control"> </td>
             </tr>
             <tr>
                 <td colspan="4" align="center" style="background-color:lightblue;"><h4>PRODUCT FORMULATION (Tick appropriate box)</h4></td>
@@ -353,170 +348,170 @@
             <tr>
                 <td colspan="4" align="">
                     <input name="product_formulation"  value="Oral tablets / capsules" <?php
-                    if ($pqmp_data[0]['product_formulation'] == 'Oral tablets / capsules') {
+                    if (@$pqmp_data[0]['product_formulation'] == 'Oral tablets / capsules') {
                         echo ' checked ';
                     } else {
                         
                     }
                     ?> type="radio">Oral tablets / capsules<br>
                     <input name="product_formulation"  value="Oral suspension / syrup" <?php
-                    if ($pqmp_data[0]['product_formulation'] == 'Oral suspension / syrup') {
+                    if (@$pqmp_data[0]['product_formulation'] == 'Oral suspension / syrup') {
                         echo ' checked ';
                     } else {
                         
                     }
                     ?> type="radio">Oral suspension / syrup<br>
                     <input name="product_formulation"  value="Injection" <?php
-                    if ($pqmp_data[0]['product_formulation'] == 'Injection') {
+                    if (@$pqmp_data[0]['product_formulation'] == 'Injection') {
                         echo ' checked ';
                     } else {
                         
                     }
                     ?> type="radio">Injection<br>
                     <input name="product_formulation"  value="Diluent" <?php
-                    if ($pqmp_data[0]['product_formulation'] == 'Diluent') {
+                    if (@$pqmp_data[0]['product_formulation'] == 'Diluent') {
                         echo ' checked ';
                     } else {
                         
                     }
                     ?> type="radio">Diluent<br>
                     <input name="product_formulation"  value="Powder for Reconstitution of Suspension" <?php
-                    if ($pqmp_data[0]['product_formulation'] == 'Powder for Reconstitution of Suspension') {
+                    if (@$pqmp_data[0]['product_formulation'] == 'Powder for Reconstitution of Suspension') {
                         echo ' checked ';
                     } else {
                         
                     }
                     ?> type="radio">Powder for Reconstitution of Suspensions<br>
                     <input name="product_formulation"  value="Powder for Reconstitution of Injection" <?php
-                    if ($pqmp_data[0]['product_formulation'] == 'Powder for Reconstitution of Injection') {
+                    if (@$pqmp_data[0]['product_formulation'] == 'Powder for Reconstitution of Injection') {
                         echo ' checked ';
                     } else {
                         
                     }
                     ?> type="radio">Powder for Reconstitution of Injection<br>
                     <input name="product_formulation"  value="Eye drops" <?php
-                    if ($pqmp_data[0]['product_formulation'] == 'Eye drops') {
+                    if (@$pqmp_data[0]['product_formulation'] == 'Eye drops') {
                         echo ' checked ';
                     } else {
                         
                     }
                     ?> type="radio">Eye drops<br>
                     <input name="product_formulation"  value="Ear drops" <?php
-                    if ($pqmp_data[0]['product_formulation'] == 'Ear drops') {
+                    if (@$pqmp_data[0]['product_formulation'] == 'Ear drops') {
                         echo ' checked ';
                     } else {
                         
                     }
                     ?> type="radio">Ear drops<br>
                     <input name="product_formulation"  value="Nebuliser solution" <?php
-                    if ($pqmp_data[0]['product_formulation'] == 'Nebuliser solution') {
+                    if (@$pqmp_data[0]['product_formulation'] == 'Nebuliser solution') {
                         echo ' checked ';
                     } else {
                         
                     }
                     ?> type="radio">Nebuliser solution<br>
                     <input name="product_formulation"  value="Cream / Ointment / Liniment / Paste" <?php
-                    if ($pqmp_data[0]['product_formulation'] == 'Cream / Ointment / Liniment / Paste') {
+                    if (@$pqmp_data[0]['product_formulation'] == 'Cream / Ointment / Liniment / Paste') {
                         echo ' checked ';
                     } else {
                         
                     }
                     ?> type="radio">Cream / Ointment / Liniment / Paste<br>
                     <input name="product_formulation"  value="Cream / Ointment / Liniment / Paste" <?php
-                    if ($pqmp_data[0]['product_formulation'] == 'Cream / Ointment / Liniment / Paste') {
+                    if (@$pqmp_data[0]['product_formulation'] == 'Cream / Ointment / Liniment / Paste') {
                         echo ' checked ';
                     } else {
                         
                     }
                     ?> type="radio">Other<br>
-                    <input type="text" name="formulation_other" id="formulation_other" value="<?= $pqmp_data[0]['product_formulation_specify'] ?>">
+                    <input type="text" name="formulation_other" id="formulation_other" value="<?= @$pqmp_data[0]['product_formulation_specify'] ?>">
 
                 </td>
                 <td colspan="4" align="">
                     <input type="checkbox" name="colour_change" <?php
-                    if ($pqmp_data[0]['colour_change'] == '1') {
+                    if (@$pqmp_data[0]['colour_change'] == '1') {
                         echo ' checked ';
                     } else {
                         
                     }
                     ?> value="1">Colour Change <br />
                     <input type="checkbox" name="separating" <?php
-                    if ($pqmp_data[0]['separating'] == '1') {
+                    if (@$pqmp_data[0]['separating'] == '1') {
                         echo ' checked ';
                     } else {
                         
                     }
                     ?> value="1">Separating <br />       
                     <input type="checkbox" name="powdering" <?php
-                    if ($pqmp_data[0]['powdering'] == '1') {
+                    if (@$pqmp_data[0]['powdering'] == '1') {
                         echo ' checked ';
                     } else {
                         
                     }
                     ?>value="1">Powdering/crumbling<br />
                     <input type="checkbox" name="caking" <?php
-                    if ($pqmp_data[0]['caking'] == '1') {
+                    if (@$pqmp_data[0]['caking'] == '1') {
                         echo ' checked ';
                     } else {
                         
                     }
                     ?>value="1">Caking <br />
                     <input type="checkbox" name="moulding" <?php
-                    if ($pqmp_data[0]['moulding'] == '1') {
+                    if (@$pqmp_data[0]['moulding'] == '1') {
                         echo ' checked ';
                     } else {
                         
                     }
                     ?> value="1">Moulding <br />
                     <input type="checkbox" name="odour_change" <?php
-                    if ($pqmp_data[0]['odour_change'] == '1') {
+                    if (@$pqmp_data[0]['odour_change'] == '1') {
                         echo ' checked ';
                     } else {
                         
                     }
                     ?> value="1">Change of oduor <br />
                     <input type="checkbox" name="mislabeling" <?php
-                    if ($pqmp_data[0]['mislabeling'] == '1') {
+                    if (@$pqmp_data[0]['mislabeling'] == '1') {
                         echo ' checked ';
                     } else {
                         
                     }
                     ?>value="1">Mislabeilng <br />
                     <input type="checkbox" name="incomplete_pack" <?php
-                    if ($pqmp_data[0]['incomplete_pack'] == '1') {
+                    if (@$pqmp_data[0]['incomplete_pack'] == '1') {
                         echo ' checked ';
                     } else {
                         
                     }
                     ?>value="1">Incomplete pack <br />
                     <input type="checkbox" name="complaint_other" <?php
-                    if ($pqmp_data[0]['complaint_other'] == '1') {
+                    if (@$pqmp_data[0]['complaint_other'] == '1') {
                         echo ' checked ';
                     } else {
                         
                     }
                     ?>value="1">Other
-                    <input type="text" name="complaint_other_specify" id="complaint_other" value="<?= $pqmp_data[0]['complaint_other_specify'] ?>">
+                    <input type="text" name="complaint_other_specify" id="complaint_other" value="<?= @$pqmp_data[0]['complaint_other_specify'] ?>">
 
 
                 </td>
             </tr>
             <tr>
                 <td colspan="8">Describe in detail
-                    <textarea name="description" id="description" style="width: 100%;"><?= $pqmp_data[0]['complaint_description'] ?></textarea>
+                    <textarea name="description" id="description" style="width: 100%;"><?= @$pqmp_data[0]['complaint_description'] ?></textarea>
                 </td>
             </tr>
             <tr>
                 <td colspan="3">Does the product require refrigiration?</td>
                 <td><input type="radio" name="product_refrigiration" class="product_refrigiration" <?php
-                    if ($pqmp_data[0]['require_refrigeration'] == 'Yes') {
+                    if (@$pqmp_data[0]['require_refrigeration'] == 'Yes') {
                         echo ' checked ';
                     } else {
                         
                     }
                     ?> value="Yes">Yes</td>
                 <td><input type="radio" name="product_refrigiration" class="product_refrigiration" <?php
-                    if ($pqmp_data[0]['require_refrigeration'] == 'No') {
+                    if (@$pqmp_data[0]['require_refrigeration'] == 'No') {
                         echo ' checked ';
                     } else {
                         
@@ -527,14 +522,14 @@
             <tr>
                 <td colspan="3">Was product available at facility?</td>
                 <td><input type="radio" name="product_availability" class="product_availability" <?php
-                    if ($pqmp_data[0]['product_at_facility'] == 'Yes') {
+                    if (@$pqmp_data[0]['product_at_facility'] == 'Yes') {
                         echo ' checked ';
                     } else {
                         
                     }
                     ?>value="Yes">Yes</td>
                 <td><input type="radio" name="product_availability" class="product_availability" <?php
-                    if ($pqmp_data[0]['product_at_facility'] == 'No') {
+                    if (@$pqmp_data[0]['product_at_facility'] == 'No') {
                         echo ' checked ';
                     } else {
                         
@@ -544,14 +539,14 @@
             <tr>
                 <td colspan="3">Was dispensed and returned by client?</td>
                 <td><input type="radio" name="product_returned" class="product_returned" <?php
-                    if ($pqmp_data[0]['returned_by_client'] == 'Yes') {
+                    if (@$pqmp_data[0]['returned_by_client'] == 'Yes') {
                         echo ' checked ';
                     } else {
                         
                     }
                     ?>value="Yes">Yes</td>
                 <td><input type="radio" name="product_returned" class="product_returned" <?php
-                    if ($pqmp_data[0]['returned_by_client'] == 'No') {
+                    if (@$pqmp_data[0]['returned_by_client'] == 'No') {
                         echo ' checked ';
                     } else {
                         
@@ -561,14 +556,14 @@
             <tr>
                 <td colspan="3">Was product stored according to manufacturer/MOH recommendations?</td>
                 <td><input type="radio" name="product_storage" class="product_storage" <?php
-                    if ($pqmp_data[0]['stored_to_recommendations'] == 'Yes') {
+                    if (@$pqmp_data[0]['stored_to_recommendations'] == 'Yes') {
                         echo ' checked ';
                     } else {
                         
                     }
                     ?>value="Yes">Yes</td>
                 <td><input type="radio" name="product_storage" class="product_storage" <?php
-                    if ($pqmp_data[0]['stored_to_recommendations'] == 'No') {
+                    if (@$pqmp_data[0]['stored_to_recommendations'] == 'No') {
                         echo ' checked ';
                     } else {
                         
@@ -577,24 +572,24 @@
             </tr>
             <tr>
                 <td colspan="8">Comments (if any)
-                    <textarea style="width: 100%;" id="comments" name="comments"> <?= $pqmp_data[0]['comments'] ?></textarea>
+                    <textarea style="width: 100%;" id="comments" name="comments"> <?= @$pqmp_data[0]['comments'] ?></textarea>
                 </td>
             </tr>
             <tr>
-                <td colspan="4">Name of reporter : <input type="text" name="reporter_name" id="reporter_name" value="<?= $pqmp_data[0]['reporter_name'] ?>" class="form-control"> </td>
-                <td colspan="4">Contact Number : <input type="text" name="reporter_phone" id="reporter_phone" value="<?= $pqmp_data[0]['contact_number'] ?>" class="form-control"> </td>
+                <td colspan="4">Name of reporter : <input type="text" name="reporter_name" id="reporter_name" value="<?= @$pqmp_data[0]['reporter_name'] ?>" class="form-control"> </td>
+                <td colspan="4">Contact Number : <input type="text" name="reporter_phone" id="reporter_phone" value="<?= @$pqmp_data[0]['contact_number'] ?>" class="form-control"> </td>
             </tr>
             <tr>
                 <td colspan="4">Cadre Job Title : 
                     <select name="designation_id" class="fil" id="designation_id">
-                        <option value="<?= $pqmp_data[0]['designation_id'] ?>"><?= $pqmp_data[0]['designation'] ?></option>
+                        <option value="<?= @$pqmp_data[0]['designation_id'] ?>"><?= @$pqmp_data[0]['designation'] ?></option>
                         <option value="1">physician</option>
                         <option value="2">pharmacist</option>
                         <option value="3" selected="selected">other professional</option>
                         <option value="5">consumer or other non health professional</option>
                     </select>
                 </td>
-                <td colspan="4">Signature : <input type="text" name="reporter_signature" id="reporter_signature" value="<?= $pqmp_data[0]['reporter_name'] ?>" class="form-control"> </td>
+                <td colspan="4">Signature : <input type="text" name="reporter_signature" id="reporter_signature" value="<?= @$pqmp_data[0]['reporter_name'] ?>" class="form-control"> </td>
             </tr>
             <tr>
                 <td colspan="8" align="center" style="background-color: lightblue;"><h5>Once completed one copy of this form should be emailed or posted to:</h5></td>
@@ -617,7 +612,7 @@
 
         </table>
         <div class="mid-row" >
-            <?php if ($pqmp_data[0]['synch'] === '0') { ?>
+            <?php if (@$pqmp_data[0]['synch'] === '0') { ?>
                 <input type="submit" class="btn btn-primary" value="Submit"/>
             <?php } ?>
 

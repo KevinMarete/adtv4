@@ -1,7 +1,7 @@
 <div id="wrapperd">
-	
+
 	<div id="patient_enrolled_content" class="full-content">
-		<?php $this->load->view("reports/reports_top_menus_v") ?>
+		<?php echo view("\Modules\ADT\Views\\reports\\reports_top_menus_v"); ?>
 		<h4 style="text-align: center">Listing of HIV Drugs Resistance Early Warning Indicators Between <span class="green"><?php echo $from; ?></span> And <span class="green"><?php echo $to; ?></span></h4>
 		<hr size="1" style="width:80%">
 		<div class="patient_percentage">
@@ -16,11 +16,13 @@
 				<tr>
 					<td align="center"><?php echo $tot_patients ?></td>
 					<td align="center"><?php echo $first_line ?></td>
-					<td align="center"><?php echo number_format($percentage_firstline,1); ?>
-					</td><td align="center"><?php echo number_format($percentage_onotherline,1); ?></td></tr>
+					<td align="center"><?php echo number_format($percentage_firstline, 1); ?>
+					</td>
+					<td align="center"><?php echo number_format($percentage_onotherline, 1); ?></td>
+				</tr>
 			</table>
 		</div>
-		
+
 		<div class="retention_percentage">
 			<h3 style="text-align: center;margin:0 auto;"> Percentage of patients retained on first line at month 12 [Target >95%]</h3>
 			<table class="listing_table" id="percentage_retention" cellpadding="5" border="1">
@@ -30,7 +32,11 @@
 					<th> % Alternative first Line regimens</th>
 					<th> % Second line</th>
 				</tr>
-				<tr><td align="center"><?php echo $stil_in_first_line; ?></td><td align="center"><?php echo $total_from_period;?></td><td align="center"><?php echo $percentage_stillfirstline ?></td></tr>
+				<tr>
+					<td align="center"><?php echo $stil_in_first_line; ?></td>
+					<td align="center"><?php echo $total_from_period; ?></td>
+					<td align="center"><?php echo $percentage_stillfirstline ?></td>
+				</tr>
 			</table>
 		</div>
 		<div class="lost_to_follow_up_percentage" cellpadding="5">
@@ -40,7 +46,7 @@
 					<th colspan="2">3 Months </th>
 					<th colspan="2">6 Months back </th>
 					<th colspan="2">12 Months back </th>
-					<th colspan="2">24 Months back </th>	                           
+					<th colspan="2">24 Months back </th>
 				</tr>
 				<tr>
 					<th>Started</th>
@@ -65,9 +71,9 @@
 					</tr>
 				</tbody>
 
-				
+
 			</table>
 		</div>
-		
+
 	</div>
 </div>

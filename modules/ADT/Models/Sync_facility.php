@@ -8,7 +8,7 @@ use Illuminate\Database\Capsule\Manager as DB;
 class Sync_facility extends BaseModel {
 
     protected $table = 'sync_facility';
-    protected $fillable = array('name', 'code', 'category', 'hcsm_id', 'keph_level', 'location', 'sponsors', 'affiliate_organization_id', 'services', 'manager_id', 'district_id', 'address_id', 'parent_id', 'ordering', 'affiliation', 'service_point', 'county_id');
+    protected $fillable = ['name', 'code', 'category', 'hcsm_id', 'keph_level', 'location', 'sponsors', 'affiliate_organization_id', 'services', 'manager_id', 'district_id', 'address_id', 'parent_id', 'ordering', 'affiliation', 'service_point', 'county_id'];    
 
     public function getAll() {
         $query = Doctrine_Query::create()->select("*")->from("sync_facility");
@@ -17,28 +17,32 @@ class Sync_facility extends BaseModel {
     }
 
     public static function getId($facility_code, $parent_sites = 0) {
+        $query = Sync_facility::select('id')->where('code', $facility_code);
         if ($parent_sites == 0) {
-            $conditions = "code='$facility_code' and category like '%satellite%' and ordering = '0' and service_point = '1'";
+            $query = $query->where('category', 'like', '%satellite%');
         } else if ($parent_sites == 1) {
-            $conditions = "code='$facility_code' and category like '%standalone%' and ordering = '1' and service_point = '1'";
+            $query = $query->where('category', 'like', '%standalone%');
         } else if ($parent_sites > 1) {
-            $conditions = "code='$facility_code' and (category like '%central%' or category like '%standalone%') and ordering = '1' and (service_point = '0' or service_point = '1')";
+            $query = $query->where(function($query){
+                $query->where('category', 'like', '%central%');
+                $query->orWhere('category', 'like', '%standalone%');
+            });            
         }
-        $query = DB::select("SELECT id FROM sync_facility WHERE $conditions ORDER BY id");
-        return @$query[0]->id;
+        $query = $query->first();
+        return @$query->id;
     }
 
-    public function getCode($facility_id, $parent_sites = 0) {
+    public static function getCode($facility_id, $parent_sites = 0) {
+        $sync_facility = Sync_facility::select('code')->where('id', $facility_id);
         if ($parent_sites == 0) {
-            $conditions = "id='$facility_id' and category like '%satellite%' and ordering = '0' and service_point = '1'";
+            $sync_facility = $sync_facility->where('category', 'like', '%satellite%');
         } else if ($parent_sites == 1) {
-            $conditions = "id='$facility_id' and category like '%standalone%' and ordering = '1' and service_point = '1'";
+            $sync_facility = $sync_facility->where('category', 'like', '%standalone%');
         } else {
-            $conditions = "id='$facility_id' and category like '%central%' and ordering = '1' and service_point = '0'";
+            $sync_facility = $sync_facility->where('category', 'like', '%central%');
         }
-        $query = Doctrine_Query::create()->select("code")->from("sync_facility")->where("$conditions");
-        $sync_facility = $query->execute(array(), Doctrine::HYDRATE_ARRAY);
-        return @$sync_facility[0];
+        $sync_facility = $sync_facility->first();
+        return @$sync_facility;
     }
 
     public function getSatellites($central_site) {//Include CUrrent facility

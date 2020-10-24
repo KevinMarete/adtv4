@@ -10,12 +10,12 @@ class Non_adherence_reasons extends BaseModel {
     protected $table = 'non_adherence_reasons';
     protected $fillable = array('Name', 'Active');
 
-    public function getAll() {
+    public static function getAll() {
         $query = DB::table('Non_Adherence_Reasons')->where("Active", "1")->get();
         return $query;
     }
 
-    public function getAllHydrated() {
+    public static function getAllHydrated() {
         return BaseModel::resultSet(DB::table('Non_Adherence_Reasons')->where("Active", "1")->get());
     }
 

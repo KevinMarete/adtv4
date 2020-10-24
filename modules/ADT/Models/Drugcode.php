@@ -13,10 +13,9 @@ use \Modules\ADT\Models\Suppliers;
 use Illuminate\Database\Capsule\Manager as DB;
 
 class Drugcode extends BaseModel {
-
     protected $table = 'drugcode';
-    protected $fillable = array('Drug', 'Unit', 'Pack_Size', 'Safety_Quantity', 'Generic_Name', 'Supported_By', 'classification', 'none_arv', 'Tb_Drug', 'Drug_In_Use',
-        'Comment', 'Dose', 'Quantity', 'Duration', 'Source', 'Type', 'Supplied', 'Enabled', 'Strength', 'Merged_To', 'map', 'instructions');
+    protected $guarded = ['id'];
+
     protected $with = ['Generic_Name', 'Drug_Unit', 'Supporter', 'Suppliers', 'Brand', 'Dose', 'Sync_Drug'];
 
     function Generic_Name() {
@@ -79,8 +78,8 @@ class Drugcode extends BaseModel {
     public static function getBrands() {
         $query = DB::table('Drugcode')->where('enabled', '1')->get();
         return $query;
-    }
 
+    }
     public static function getEnabledDrugs() {
         return BaseModel::resultSet(DB::table('Drugcode')->where('enabled', '1')->get());
     }

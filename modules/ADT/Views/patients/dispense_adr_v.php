@@ -12,10 +12,10 @@
         width: 100% !important;
     }
 </style>
-
+<?php $uri = service('uri');?>
 <div class="container" style="background-color: #fffacc;border: solid thick #2b597e;padding: 30px; margin-top: 130px; margin-bottom: 130px; border-radius:20px;">
 
-    <form name="adr_form" id="adr_form" method="post" action="<?= base_url();?>dispensement_management/adr/<?= $patient_id ?>">
+    <form name="adr_form" id="adr_form" method="post" action="<?= base_url();?>/public/inventory_management/adr/save/<?= $patient_id ?>">
         <div class="container">
             <div class="row">
                 <div class="text-center">
@@ -36,7 +36,7 @@
         <div class="max-row">
             <div class="mid-row">
                 <label><span class='astericks'>*</span>REPORT TITLE </label>
-                <input type="text" name="report_title" id="report_title" value="<?= str_replace('%20', ' ',$this->uri->segment(4));?>">
+                <input type="text" name="report_title" id="report_title" value="<?= str_replace('%20', ' ',$uri->getSegment(4));?>">
             </div>
               <div class="mid-row">
                 <label ><span class='astericks'>*</span>UNIQUE ID:</label>
@@ -74,7 +74,7 @@
 
                 <label ><span class='astericks'>*</span>COUNTY:</label>
                   <select class="fi" class="" name="county_id"  id="county_id">
-                    <option value="<?php echo $this->session->userdata('county_id'); ?>" selected="selected"><?php echo $this->session->userdata('facility_county'); ?></option>
+                    <option value="<?php echo session()->get('county_id'); ?>" selected="selected"><?php echo session()->get('facility_county'); ?></option>
 
                 </select>
 
@@ -83,7 +83,7 @@
 
                 <label ><span class='astericks'>*</span>SUB-COUNTY</label>
                 <select class="fi" name="sub_county_id" id="sub_county_id"  class="" id="SadrSubCountyId">
-                    <option value="<?php echo $this->session->userdata('subcounty_id'); ?>"><?php echo $this->session->userdata('facility_subcounty'); ?></option>                  
+                    <option value="<?php echo session()->get('subcounty_id'); ?>"><?php echo session()->get('facility_subcounty'); ?></option>                  
 
                 </select>
 
@@ -178,7 +178,7 @@
                 </tr>
                 <tr>
                     <td colspan="3">
-                        <label ><span class='astericks'>*</span>BRIEF DESCRIPTION OF REACTION (<?= str_replace('%20', ' ',$this->uri->segment(4));?>):</label>
+                        <label ><span class='astericks'>*</span>BRIEF DESCRIPTION OF REACTION (<?= str_replace('%20', ' ',$uri->getSegment(4));?>):</label>
                         <textarea name="reaction" id="reaction" class=""></textarea>         
                     </td>
                 </tr>
@@ -241,8 +241,8 @@
                             <?php 
                             $pre_dose = $pv['dose'];
                             $splitter = explode(' ',$pre_dose);
-                            $_dose = $splitter[0];
-                            $frequency = $splitter[1];
+                            $_dose = @$splitter[0];
+                            $frequency = @$splitter[1];
                             ?>
                             <div class="control-group required"><input name="dose[]" maxlength="100" value="<?= $_dose ?>"  style="width:40px !important;" type="text" /></div></div></td>
                         <td>

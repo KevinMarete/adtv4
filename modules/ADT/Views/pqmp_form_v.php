@@ -16,11 +16,11 @@
     }
 </style>
 <div class="container" style="background-color: #fde8e7;border: solid thick #2b597e;padding: 30px; margin-top: 130px; margin-bottom: 130px; border-radius: 20px;">
-    <a href="<?= base_url(); ?>inventory_management/pqmp" class="btn btn-default" > Back </a>
+    <a href="<?= base_url(); ?>/public/pqmp/0/0" class="btn btn-default" > Back </a>
     <div class="container">
         <div class="row">
             <div class="text-center">
-                <img src="<?php echo base_url() . 'assets/images/top_logo.png'; ?>">
+                <img src="<?php echo base_url() . '/public/assets/images/top_logo.png'; ?>">
                 <h4 style="color: #2e3092;">
                     MINISTRY OF HEALTH <br />
                     THE PHARMACY AND POISONS BOARD<br />
@@ -29,21 +29,21 @@
                 <h3 style="color:#3b8476;">FORM FOR REPORTING POOR QUALITY MEDICINAL PRODUCTS</h3>
             </div>
         </div>
-        
+
     </div>
-    <form name="pqmp-form" id="PQMS" method="POST"   action="<?= base_url(); ?>inventory_management/save_pqm_for_synch">
+    <form name="pqmp-form" id="PQMS" method="POST"   action="<?= base_url(); ?>/public/inventory_management/save_pqm_for_synch">
         <center>UNIQUE ID: <input type="text" name="uniqueid" id="uniqueid" readonly class="form-control" value="<?= $uniqueid; ?>"></center>
         <table border="1" style="">
             <tr>
                 <td colspan="2">Name of Facility : <input type="text" name="facility_name" id="facility_name" class="form-control" value="<?= $facility_name; ?>"> </td>
                 <td colspan="3">County: <!--input type="text" name="district_name" id="district_name" class="form-control"-->
                     <select name="county_id" id="county_id" class="" id="PqmpCountyId">
-                        <option value="<?php echo $this->session->userdata('county_id');?>" selected="selected"><?php echo $this->session->userdata('facility_county');?></option>
+                        <option value="<?php echo session()->get('county_id'); ?>" selected="selected"><?php echo session()->get('facility_county'); ?></option>
                     </select>
                 </td>
                 <td colspan="3">Sub County: <!--input type="text" name="province_name" id="province_name" class="form-control"-->
                     <select name="sub_county_id" id="sub_county_id" class="" id="PqmpSubCountyId">
-                        <option value="<?php echo $this->session->userdata('subcounty_id');?>"><?php echo $this->session->userdata('facility_subcounty');?></option>                  
+                        <option value="<?php echo session()->get('subcounty_id'); ?>"><?php echo session()->get('facility_subcounty'); ?></option>                  
                     </select>
 
                 </td>
@@ -462,7 +462,7 @@
 
     $(document).ready(function () {
 
-$("#manufacture_date,#expiry_date,#receipt_date").datepicker();
+        $("#manufacture_date,#expiry_date,#receipt_date").datepicker();
 
         $('.fil').select2();
         $('#genname').change(function () {

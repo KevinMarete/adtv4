@@ -2860,13 +2860,13 @@ class PHPExcel_Writer_Excel5_Worksheet extends PHPExcel_Writer_Excel5_BIFFwriter
 				$options |= $type << 0;
 
 				// error style
-				$errorStyle = $dataValidation->getType();
+				/*$errorStyle = $dataValidation->getType();
 				switch ($errorStyle) {
 					case PHPExcel_Cell_DataValidation::STYLE_STOP:			$errorStyle = 0x00;		break;
 					case PHPExcel_Cell_DataValidation::STYLE_WARNING:		$errorStyle = 0x01;		break;
 					case PHPExcel_Cell_DataValidation::STYLE_INFORMATION:	$errorStyle = 0x02;		break;
 				}
-				$options |= $errorStyle << 4;
+				$options |= $errorStyle << 4;*/
 
 				// explicit formula?
 				if ($type == 0x03 && preg_match('/^\".*\"$/', $dataValidation->getFormula1())) {

@@ -11,8 +11,8 @@ class Sync_regimen extends BaseModel {
     protected $table = 'sync_regimen';
     protected $fillable = array('name', 'code', 'old_code', 'description', 'category_id', 'Active');
 
-    public static function Sync_Regimen_Category() {
-        $this->hasOne('Sync_Regimen_Category', array('category_id', 'id'));
+    public function Sync_Regimen_Category() {
+        return $this->hasOne('Sync_Regimen_Category', array('category_id', 'id'));
     }
 
     public static function getAll() {
@@ -40,5 +40,3 @@ class Sync_regimen extends BaseModel {
     }
 
 }
-
-?>

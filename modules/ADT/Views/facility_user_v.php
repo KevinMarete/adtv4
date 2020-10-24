@@ -27,13 +27,13 @@ foreach ($facilities as $facility) {
         font-weight:bold;
     }
 
-    #facility_form(
-    margin-top: 5px;
-    border:1px solid #DDD;
-    padding:20px;
-    margin-left:500px;
-    margin-right:200px;
-    )
+    #facility_form{
+        margin-top: 5px;
+        border:1px solid #DDD;
+        padding:20px;
+        margin-left:500px;
+        margin-right:200px;
+    }
     .submit-button .Save{
         display:none;
     }
@@ -217,10 +217,10 @@ foreach ($facilities as $facility) {
                                         
                         <?php foreach ($supporter as $support) {
                             ?>
-                                                                            <label class="radio">
-                                                                                    <input type="radio" name="supported_by" value="<?php echo $support->id ?>" id="<?php echo $support->id ?>" <?php if ($supported_by == $support->id) { ?> checked="checked"<?php } ?>>
+                                                                                        <label class="radio">
+                                                                                                <input type="radio" name="supported_by" value="<?php echo $support->id ?>" id="<?php echo $support->id ?>" <?php if ($supported_by == $support->id) { ?> checked="checked"<?php } ?>>
                             <?php echo $support->Name ?> Sponsorship
-                                                                              </label> 
+                                                                                          </label> 
                             <?php
                         }
                         ?>

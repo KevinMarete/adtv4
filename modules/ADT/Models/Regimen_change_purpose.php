@@ -16,10 +16,8 @@ class Regimen_change_purpose extends BaseModel {
         return $purposes;
     }
 
-    public function getAllHydrated() {
-        $query = Doctrine_Query::create()->select("*")->from("Regimen_Change_Purpose")->where("Active", "1");
-        $purposes = $query->execute(array(), Doctrine::HYDRATE_ARRAY);
-        return $purposes;
+    public static function getAllHydrated() {
+        return BaseModel::resultSet(DB::table('Regimen_Change_Purpose')->where("Active", "1")->get());
     }
 
     public function getTotalNumber() {

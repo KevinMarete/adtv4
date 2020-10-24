@@ -15,14 +15,7 @@ class Regimen extends BaseModel {
     protected $table = 'regimen';
     protected $fillable = array('Regimen_Code', 'Regimen_Desc', 'Category', 'Type_Of_Service', 'Remarks', 'Enabled', 'Source', 'Optimality', 'Merged_To', 'map');
     protected $with = ['Regimen_Service_Type', 'Regimen_Category', 'Regimen_Drug', 'Sync_Regimen'];
-
-    /* public static function setUp() {
-      $this->setTableName('regimen');
-      $this->hasOne('Regimen_Category as Regimen_Category', array('local' => 'Category', 'foreign' => 'id'));
-      $this->hasOne('Regimen_Service_Type as Regimen_Service_Type', array('local' => 'Type_Of_Service', 'foreign' => 'id'));
-      $this->hasMany('Regimen_Drug as Drugs', array('local' => 'id', 'foreign' => 'Regimen'));
-      $this->hasOne('Sync_Regimen as S_Regimen', array('local' => 'map', 'foreign' => 'id'));
-      } */
+    protected $appends = ['name'];
 
     function Regimen_Category() {
         return $this->hasOne(Regimen_Category::class, 'id', 'category');
@@ -63,6 +56,14 @@ class Regimen extends BaseModel {
         }
         $query = DB::select("SELECT r.id, r.Regimen_Code, r.Regimen_Desc, r.Line, rc.Name as Regimen_Category, rst.Name as Regimen_Service_Type, r.Enabled, r.Merged_To, r.map FROM Regimen r LEFT JOIN Regimen_Category rc ON r.category = rc.id LEFT JOIN Regimen_Service_Type rst ON rst.id = r.type_of_service WHERE $displayed_enabled ORDER BY r.id desc ");
         return BaseModel::resultSet($query);
+    }
+
+    public function getNameAttribute(){
+        return $this->regimen_code.' | '.$this->regimen_desc;
+    }
+
+    public function drugs(){
+        return $this->hasMany(RegimenDrug::class, 'id', 'regimen');
     }
 
     public static function getTotalNumber($source = 0) {
@@ -116,7 +117,7 @@ class Regimen extends BaseModel {
         return $regimens;
     }
 
-    public static function getServiceRegimens($service) {
+    public function getServiceRegimens($service) {
         $sql = ("SELECT regimen.id, category as Category,enabled as Enabled,line as Line,merged_to as Merged_To,optimality as Optimality,regimen_code as Regimen_Code,regimen_desc as Regimen_Desc,remarks as Remarks,source as Source,type_of_service as Type_Of_Service FROM regimen
 			inner join regimen_service_type on type_of_service = regimen_service_type.id 
 			and regimen_service_type.name like'%$service%' ORDER BY type_of_service");
@@ -143,7 +144,7 @@ class Regimen extends BaseModel {
         return $regimens;
     }
 
-    public static function get_patients_regimen_switched() {
+    public function get_patients_regimen_switched() {
         $sql = ("SELECT CONCAT_WS(  ' | ', r2.regimen_code, r2.regimen_desc ) AS from_regimen, CONCAT_WS(  ' | ', r1.regimen_code, r1.regimen_desc ) AS to_regimen, p.patient_number_ccc AS art_no, CONCAT_WS(  ' ', CONCAT_WS(  ' ', p.first_name, p.other_name ) , p.last_name ) AS full_name, pv.dispensing_date, rst.name AS service_type,IF(rcp.name is not null,rcp.name,pv.regimen_change_reason) as regimen_change_reason 
 				FROM patient p 
 				LEFT JOIN regimen_service_type rst ON rst.id = p.service 
