@@ -274,6 +274,7 @@ $routes->get('user_management/edit', '\Modules\ADT\Controllers\User_management::
 $routes->get('user_management/enable/(:any)', '\Modules\ADT\Controllers\User_management::enable/$1');
 $routes->get('user_management/save', '\Modules\ADT\Controllers\User_management::save');
 $routes->post('user_management/profile_update', '\Modules\ADT\Controllers\User_management::profile_update');
+$routes->get('user_management/get_sites/(:any)', '\Modules\ADT\Controllers\User_management::get_sites/$1');
 
 /* Report Management*/
 $routes->group('report_management', ['namespace' => '\Modules\ADT\Controllers'], function ($routes) {

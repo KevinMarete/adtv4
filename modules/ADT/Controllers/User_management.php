@@ -9,6 +9,7 @@ use App\Libraries\Mysqldump;
 use App\Libraries\Encrypt;
 use App\Libraries\Zip;
 use \Modules\ADT\Models\User;
+use \Modules\ADT\Models\User_facility;
 use \Modules\ADT\Models\Facilities;
 use \Modules\ADT\Models\Access_log;
 use \Modules\ADT\Models\Access_level;
@@ -43,8 +44,12 @@ class User_management extends \App\Controllers\BaseController {
         return redirect()->to(base_url('public/login'));
     }
 
-    function edit_() {
-        
+    public function get_sites($user_id = '') {
+        $row = User_facility::where('user_id',$user_id)->first()->toArray();
+        if ($row) {
+            $data = $row['facility'];
+        }
+        echo $data;
     }
 
     public function index() {
@@ -181,8 +186,8 @@ class User_management extends \App\Controllers\BaseController {
             $logged_in = $this->loginUser($username, $encrypted_password);
             //  dd($logged_in);
             $load_access = DB::table('access_level')->where('id', $logged_in->Access_Level ?? 0)->get();
-            if(!isset($logged_in)){
-                $this->session->setFlashdata('wrong_loggedin','Wrong Username / Password');
+            if (!isset($logged_in)) {
+                $this->session->setFlashdata('wrong_loggedin', 'Wrong Username / Password');
                 return redirect()->to(base_url('/public/login'));
             }
             // dd($load_access);
@@ -621,10 +626,10 @@ class User_management extends \App\Controllers\BaseController {
         $key = $this->encrypt->get_key();
         $pass = $key . $pass;
         $user = User::getUserDetail(session()->get('user_id'));
-        
-       
+
+
         $current_password = md5($pass);
-      
+
 
         if ($user[0]['Password'] != $current_password) {
             $this->session->setFlashdata('correct_current_password', 'The current password you provided is not correct.');
