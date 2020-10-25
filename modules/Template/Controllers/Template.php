@@ -1,8 +1,9 @@
 <?php
 namespace Modules\Template\Controllers;
 
+use App\Controllers\BaseController;
 
-class Template extends \CodeIgniter\Controller {
+class Template extends BaseController {
 
 
 
@@ -25,10 +26,10 @@ class Template extends \CodeIgniter\Controller {
         if ($current_url == "recover" || $current_url == "github") {
             return true;
         } else {
-            if ($current_url != "login" && $this->session->userdata("id") == null) {
+            if ($current_url != "login" && $this->session->get("id") == null) {
                 return false;
-            } else if ($current_url == "login" && $this->session->userdata("id") != null) {
-                redirect($this->config->item('module_after_login'));
+            } else if ($current_url == "login" && $this->session->get("id") != null) {
+                return redirect()->to($this->config->item('module_after_login'));
             } else {
                 return true;
             }

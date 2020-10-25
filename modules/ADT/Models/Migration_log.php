@@ -7,7 +7,7 @@ use Illuminate\Database\Capsule\Manager as DB;
 class Migration_log extends BaseModel {
 
     protected $table = 'migration_log';
-    protected $fillable = array('source', 'last_index', 'count');
+    protected $fillable = ['source', 'last_index', 'count', 'ccc_store_sp'];
 
     public static function getAll() {
         $query = DB::table("migration_log")->get();
