@@ -432,7 +432,7 @@ class Order extends BaseController {
 
 	public function create_order($type = null, $order_type = null, $content_array = []) {
         if(empty($type)) $type = $this->uri->getSegment(3);
-        if(empty($type)) $order_type = $this->uri->getSegment(4);
+        if(empty($order_type)) $order_type = $this->uri->getSegment(4);
 		$data['hide_generate'] = 0;
 		$data['hide_save'] = 0;
 		$data['hide_btn'] = 0;
@@ -2722,6 +2722,7 @@ class Order extends BaseController {
 			"code" => $this->post("code"),
 			"stores" => $this->post("stores")
 		];
+		file_put_contents ( "E://Users//kennl//Documents//debug.txt" , PHP_EOL.$this->post("facility_id") , FILE_APPEND);
 
 		$code = $param['code'];
 		$facility_id = $param['facility_id'];

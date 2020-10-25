@@ -163,11 +163,16 @@
                 </div>
             </div>
             <div class="control-group">
-                <label class="control-label" for="sync_facility_category">Category</label>
-                <div class="controls">
-                    <input type="text" id="sync_facility_category" name="category" placeholder="category" required="">
-                </div>
-            </div>
+				<label class="control-label" for="sync_facility_category">Category</label>
+				<div class="controls">
+					<select id="sync_facility_category" name="category" required>
+						<option value="central">Central</option>
+						<option value="standalone">Standalone</option>
+						<option value="satellite">Satellite</option>
+					</select>
+				  	<!-- <input type="text" id="sync_facility_category" name="category" placeholder="category" required=""> -->
+				</div>
+			</div>
             <div class="control-group">
                 <label class="control-label" for="sync_facility_sponsors">Sponsors</label>
                 <div class="controls">
@@ -180,7 +185,7 @@
                     <input type="text" id="sync_facility_services" name="services" placeholder="services">
                 </div>
             </div>
-            <div class="control-group">
+            <!-- <div class="control-group">
                 <label class="control-label" for="sync_facility_ordering">Is Ordering Site?</label>
                 <div class="controls">
                     <select id="sync_facility_ordering" name="ordering">
@@ -197,7 +202,7 @@
                         <option value="1">Yes</option>
                     </select>
                 </div>
-            </div>
+            </div> -->
             <div class="control-group">
                 <label class="control-label" for="sync_facility_parent_id">Parent Facility</label>
                 <div class="controls">
