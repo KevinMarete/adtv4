@@ -189,12 +189,12 @@ class Facilities extends BaseModel {
 
     public static function getParentandSatellites($parent)
     {
-        $query = Doctrine_Query::create()->select("DISTINCT(facilitycode) as code")->from("Facilities")->where("parent = '$parent' OR facilitycode ='$parent' ")->orderBy("name asc");
-        $facilities = $query->execute(array(), Doctrine::HYDRATE_ARRAY);
-        $lists = array();
+        $query = DB::table("facilities")->select(DB::raw("DISTINCT(facilitycode) as code"))->where("parent = '".$parent."' OR facilitycode ='".$parent."' ")->orderBy("name", "asc");
+        $facilities = $query->get();
+        $lists = [];
         if ($facilities) {
             foreach ($facilities as $facility) {
-                $lists[] = $facility['code'];
+                $lists[] = $facility->code;
             }
         }
         return $lists;
