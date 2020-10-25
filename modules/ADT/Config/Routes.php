@@ -250,7 +250,7 @@ $routes->match(['get', 'post'], 'settings_management/getActiveAccessLevels', '\M
 $routes->match(['get', 'post'], 'settings_management/getMenus', '\Modules\ADT\Controllers\Settings_management::getMenus');
 
 /* Auto Management */
-$routes->get('auto_management', '\Modules\ADT\Controllers\Auto_management::index');
+$routes->match(['get', 'post'], 'auto_management', '\Modules\ADT\Controllers\Auto_management::index');
 $routes->get('auto_management/get_viral_load/(:any)', '\Modules\ADT\Controllers\Auto_management::get_viral_load');
 
 /* Facilities */

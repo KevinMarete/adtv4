@@ -231,7 +231,7 @@ class Inventory_management extends \App\Controllers\BaseController {
 
         $consumption = Drug_Stock_Movement::getDrugConsumption($uri->getSegment(2), $facility_code, $uri->getSegment(3), $transaction_type);
         foreach ($consumption as $value) {
-            $three_months_consumption += $value['total_out'];
+            $three_months_consumption += $value->total_out;
         }
 
         // echo "<pre>";print_r($data);die;
