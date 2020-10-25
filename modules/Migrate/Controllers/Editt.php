@@ -1,7 +1,8 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Editt extends MX_Controller {
+use App\Controllers\BaseController;
+
+class Editt extends BaseController {
 	/**
 	 * Migrator main controller.
 	 *
@@ -11,7 +12,6 @@ class Editt extends MX_Controller {
 	var $migration_db = array();
 	public function __construct()
 	{
-		parent::__construct();
 		ini_set("max_execution_time", "100000");
 		ini_set("memory_limit", '2048M');
 		//Load defaults

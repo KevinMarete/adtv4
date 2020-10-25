@@ -1,5 +1,5 @@
 <?php
-$menus = $this -> session -> userdata('menu_items');
+$menus = session()->get('menu_items');
 $current_url = $this -> router -> class;
 $active_link = "";
 
@@ -9,7 +9,7 @@ if ($current_url == $default_home_controller) {
 }
 ?>
 
-<a href="<?php echo site_url($default_home_controller);?>" class="top_menu_link  first_link <?php echo $active_link;?> "><i class="icon-home"></i>Home </a>
+<a href="<?php echo base_url($default_home_controller);?>" class="top_menu_link first_link <?php echo $active_link;?> "><i class="icon-home"></i>Home </a>
 <?php
 //Loop through menus
 if ($menus) {
@@ -22,7 +22,7 @@ if ($menus) {
       $active_link="";	
     }
 ?>
-<a href = "<?php echo site_url($url);?>" class="top_menu_link <?php echo $active_link;?> "> <?php echo $text;?></a>
+<a href = "<?php echo base_url($url);?>" class="top_menu_link <?php echo $active_link;?> "> <?php echo $text;?></a>
 <?php
   }
 }

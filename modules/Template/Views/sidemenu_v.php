@@ -1,5 +1,8 @@
-<?php $side_menus = $this -> session -> userdata('sidemenu_items');?>
-<?php $side_notifications = $this -> session -> userdata('notifications');?>
+<?php 
+$session = session();
+$side_menus = $session->get('sidemenu_items');
+$side_notifications = $session->get('notifications');
+?>
 <div class="sidebar-content">
 	<h3>Quick Links</h3>
 	<ul class="nav nav-list well">
@@ -9,7 +12,7 @@
          $url = $side_menu['url'];
          $text = $side_menu['text'];
     ?>
-	<li><a href="<?php echo site_url($url); ?>" ><?php echo $text; ?></a></li>
+	<li><a href="<?php echo base_url($url); ?>" ><?php echo $text; ?></a></li>
 	<?php
 		}
 	 }
@@ -23,7 +26,7 @@
        	 $url = $notification['url'];
          $text = $notification['text'];
     ?>
-	<li><a href="<?php echo site_url($url); ?>" ><?php echo $text; ?></a></li>
+	<li><a href="<?php echo base_url($url); ?>" ><?php echo $text; ?></a></li>
 	<?php
 		}
 	 }
