@@ -8,6 +8,11 @@
 
 
 $routes->get('migrate/excel', '\Modules\Migrate\Controllers\Excel_migration::index');
+
 $routes->get('migrate/excel/template/(:any)', '\Modules\Migrate\Controllers\Excel_migration::downloadTemplate/$1');
 $routes->post('migrate/excel/upload_file', '\Modules\Migrate\Controllers\Excel_migration::importExcel');
+
+$routes->get('migrate/editt', '\Modules\Migrate\Controllers\Editt::index');
+$routes->get('migrate/access', '\Modules\Migrate\Controllers\Access::index');
+$routes->get('api/settings', '\Modules\Api\Controllers\Api::settings');
 

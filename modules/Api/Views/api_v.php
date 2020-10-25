@@ -1,13 +1,13 @@
 <div class="external-content">
-  <div class="container">
-    <div class="row">
+    <div class="container">
+        <div class="row">
+        </div>
     </div>
-  </div>
-  <div class="browser">
-    <div id="dvContents" class="dvContents">
+    <div class="browser">
+        <div id="dvContents" class="dvContents">
 
-     <?php echo $guidelines_list;?>
+            <?php echo $guidelines_list; ?>
 
-   </div>
- </div>
+        </div>
+    </div>
 </div>

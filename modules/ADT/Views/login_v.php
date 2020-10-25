@@ -56,9 +56,12 @@
             <div class="span12">
                 <div id="signup_form">
                     <div class="short_title" >
-                        Login
+                        Login 
+                        
                     </div>
                     <form class="login-form" action="<?php echo base_url() . '/public/user_management/authenticate' ?>" method="post" style="margin:0 auto " >
+                        <br>
+                            <p style="color:white;"><?php echo $session->getFlashdata('wrong_loggedin');?></p>   
                         <label> <strong >Username</strong>
                             <br>
                                 <input type="text" name="username" class="input-xlarge" id="username" value="" placeholder="username">
@@ -90,7 +93,7 @@
                                                 <input type="submit" class="btn" name="register" id="register" value="Login" >
 
                                                     <div style="margin:auto;width:auto" class="anchor">
-                                                        <strong><a href="<?php echo base_url() . 'user_management/resetPassword' ?>" >Forgot Password?</a></strong>
+<!--                                                        <strong><a href="<?php echo base_url() . 'user_management/resetPassword' ?>" >Forgot Password?</a></strong>-->
                                                     </div>
                                                     </form>
                                                     </div>

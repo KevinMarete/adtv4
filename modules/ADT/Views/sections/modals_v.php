@@ -14,7 +14,7 @@
 <?php $session = session(); ?>
 <!-- ADT UPDATE Modal-->
 <div id="adt_update_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <form action="<?php echo base_url() . 'user_management/profile_update' ?>" method="post" id="ADT_update_frm">
+    <form action="<?php echo base_url() . '/public/user_management/profile_update' ?>" method="post" id="ADT_update_frm">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             <h3 id="myModalLabel">ADT Update Progress</h3>
@@ -54,7 +54,7 @@
 
 <!-- Modal edit user profile-->
 <div id="edit_user_profile" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <form action="<?php echo base_url() . 'user_management/profile_update' ?>" method="post" id="profile_update_frm">
+    <form action="<?php echo base_url() . '/public/user_management/profile_update' ?>" method="post" id="profile_update_frm">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             <h3 id="myModalLabel">User details</h3>
@@ -136,14 +136,14 @@
 <!-- Modal edit user profile end-->
 <!-- Modal edit change password-->
 <div id="user_change_pass" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <form action="<?php echo base_url() . 'user_management/profile_update' ?>" method="post">
+    <form action="<?php echo base_url() . '/public/user_management/profile_update' ?>" method="post">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             <h3 id="myModalLabel">Change password</h3>
         </div>
         <div class="modal-body">
             <input type="hidden" name="base_url" id="base_url" value="<?php echo base_url() ?>" />
-            <form id="fmChangePassword" action="<?php echo base_url() . 'user_management/save_new_password/1' ?>" method="post" class="well">
+            <form id="fmChangePassword" action="<?php echo base_url() . '/public/user_management/save_new_password/1' ?>" method="post" class="well">
                 <span class="message error" id="error_msg_change_pass"></span>
                 <div id="m_loadingDiv" style="display: none"><img style="width: 30px" src="<?php echo base_url() . '/public/images/loading_spin.gif' ?>"></div>
                 <br>
@@ -285,7 +285,7 @@
 
             //Append results to selectbox
             $.each(data, function(i, item) {
-                $(storesDiv).append($("<option></option>").attr("value", item.id).text(item.Name));
+                $(storesDiv).append($("<option></option>").attr("value", item.id).text(item.name));
             });
 
             $(storesDiv).val(ccc_store);
@@ -344,7 +344,7 @@
         $('#downloading').show();
 
         $.ajax({
-            url: "<?= base_url() ?>home_controller/updater/download",
+            url: "<?= base_url() ?>/public/home_controller/updater/download",
             context: document.body
         }).done(function(results) {
             $('#download_status').html(results);
@@ -362,12 +362,12 @@
         $('#updating').show();
 
         $.ajax({
-            url: "<?= base_url() ?>home_controller/updater/update",
+            url: "<?= base_url() ?>/public/home_controller/updater/update",
             context: document.body
         }).done(function(results) {
             $('#download_status').html(results);
             $('#updating').hide();
-            window.location.replace('<?= base_url() ?>user_management/logout/2')
+            window.location.replace('<?= base_url() ?>/public/user_management/logout/2')
             // $('#download_status').show();
             // alert('Download success'+results)
             // $( this ).addClass( "done" );

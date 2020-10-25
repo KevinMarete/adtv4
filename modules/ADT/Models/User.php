@@ -5,24 +5,21 @@ namespace Modules\ADT\Models;
 use App\Models\BaseModel;
 use Illuminate\Database\Capsule\Manager as DB;
 
-class User extends BaseModel
-{
+class User extends BaseModel {
 
     //protected $table = 'users';
     protected $guarded = ['id'];
 
-    protected function _encrypt_password($value)
-    {
+    protected function _encrypt_password($value) {
         $this->_set('Password', md5($value));
     }
-    
-    public function access(){
+
+    public function access() {
         return $this->belongsTo(AccessLevel::class, 'Access_Level', 'id');
     }
 
     //added by dave
-    public function getAccessLevels()
-    {
+    public function getAccessLevels() {
         $levelquery = DB::select("id,access,level FROM access_level");
         return $levelquery;
     }
@@ -33,15 +30,13 @@ class User extends BaseModel
     }
 
     //facilities...
-    public function getFacilityData()
-    {
+    public function getFacilityData() {
         $facilityquery = DB::select("facilitycode,name FROM facilities");
         return $facilityquery;
     }
 
     //get all users
-    public static function getAll()
-    {
+    public static function getAll() {
         $query = DB::select("SELECT u.id AS id, u.name , u.username , u.email_address , u.phone_number , a.level_name, u2.name AS u2name, u.active AS Active FROM users u LEFT JOIN access_level a ON u.access_level = a.id LEFT JOIN users u2 ON u.created_by = u2.id");
         return $query;
     }
@@ -81,17 +76,15 @@ class User extends BaseModel
     public static function getUserDetail($id) {
         $query = DB::table('users')->where('id', $id)->get();
         // $query = Users::find($id) - first();
-        return $query;
+        return BaseModel::resultSet($query);
     }
 
-    public static function getUserID($username)
-    {
+    public static function getUserID($username) {
         $query = DB::select("SELECT u.id , u.name , u.username , u.password, u.access_level, u.facility_code, u.created_by , u.time_created , u.phone_number , u.ccc_store_sp , u.email_address , u.active AS uactive, u.signature, u.map  FROM users u WHERE (u.username = '$username' OR u.email_address = '$username' OR u.phone_number = '$username')");
         return $query[0]['id'];
     }
 
-    public static function getUsersFacility($q = '1')
-    {
+    public static function getUsersFacility($q = '1') {
         $query = DB::select("SELECT u.id , u.name Name, u.username, u.email_address Email_Address , u.phone_number Phone_Number, a.level_name Access, a.indicator Indicator, u2.name AS Creator, u.active AS Active FROM users u LEFT JOIN access_level a ON u.access_level = a.id LEFT JOIN users u2 ON u.created_by = u2.id WHERE $q");
         return $query;
     }
@@ -101,15 +94,14 @@ class User extends BaseModel
         return $query;
     }
 
-    public function getNotificationUsers()
-    {
+    public function getNotificationUsers() {
         $query = DB::select("SELECT Distinct(u.email_address) AS email_address FROM users u LEFT JOIN access_level a ON u.access_level = a.id WHERE (a.level_name LIKE '%facility%' OR a.level_name LIKE '%pharmacist%')");
         return $query;
     }
 
-    public function get_email_account($email_address)
-    {
+    public function get_email_account($email_address) {
         $query = Users::where("email_address", $email_address)->get();
         return $query;
     }
+
 }

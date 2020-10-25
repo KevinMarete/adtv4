@@ -224,7 +224,7 @@ $routes->post('inventory_management/export_adr/(:any)/(:any)', '\Modules\ADT\Con
 
 
 
-$routes->post('user_management/profile_update', '\Modules\ADT\Controllers\Inventory_management::profile_update/$1/$2');
+//$routes->post('user_management/profile_update', '\Modules\ADT\Controllers\Inventory_management::profile_update/$1/$2');
 
 
 
@@ -273,6 +273,7 @@ $routes->get('user_management/get_stores', '\Modules\ADT\Controllers\User_manage
 $routes->get('user_management/edit', '\Modules\ADT\Controllers\User_management::edit_');
 $routes->get('user_management/enable/(:any)', '\Modules\ADT\Controllers\User_management::enable/$1');
 $routes->get('user_management/save', '\Modules\ADT\Controllers\User_management::save');
+$routes->post('user_management/profile_update', '\Modules\ADT\Controllers\User_management::profile_update');
 
 /* Report Management*/
 $routes->group('report_management', ['namespace' => '\Modules\ADT\Controllers'], function ($routes) {

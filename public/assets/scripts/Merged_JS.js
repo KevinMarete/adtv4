@@ -166,7 +166,7 @@ $(document).ready(function () {
     }
 
     $('#btn_submit_change_pass').click(function (event) {
-        var base_url = $('#base_url').val();
+        var base_url = getbaseurl();
         $('.error').css('display', 'none');
         $('#result_confirm').html('');
         event.preventDefault();
