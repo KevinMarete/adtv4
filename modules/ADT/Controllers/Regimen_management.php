@@ -322,7 +322,7 @@ class Regimen_management extends \App\Controllers\BaseController {
     public function getDrugs($regimen) {
         $sql = "select rd.drugcode as drug_id,d.drug as drug_name from drugcode d,regimen_drug rd left join regimen r ON r.id=rd.regimen where (rd.regimen='$regimen' or r.regimen_code='OI') and r.enabled='1' and d.enabled='1' and rd.drugcode=d.id and rd.active='1' group by rd.drugcode order by rd.drugcode desc";
         $query = $this->db->query($sql);
-        $results = $query->result_array();
+        $results = $query->getResultArray();
         if ($results) {
             echo json_encode($results);
         }

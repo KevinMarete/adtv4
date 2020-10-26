@@ -86,7 +86,7 @@ class Visit_management extends \App\Controllers\BaseController {
         $data['settings_view'] = "\Modules\ADT\View\\editclient_v";
         $data['banner_text'] = "Edit Client Sources";
         $data['link'] = "indications";
-        $data['sources'] = Patient_Source::getSource($source_id);
+        $data['sources'] = PatientSource::find($source_id);
         $this->base_params($data);
     }
 

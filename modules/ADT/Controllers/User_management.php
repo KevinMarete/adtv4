@@ -273,7 +273,7 @@ class User_management extends \App\Controllers\BaseController {
                   }
                  */ else if ($logged_in->Active == "1" && $logged_in->Signature != 1 && $load_access[0]->indicator != "system_administrator") {
 
-                    $user_id = Users::getUserID($username);
+                    $user_id = User::getUserID($username);
                     $session->set('user_id', $user_id);
                     $facility_details = Facilities::getCurrentFacility($logged_in->Facility_Code);
                     $data['unactivated'] = true;
@@ -397,7 +397,7 @@ class User_management extends \App\Controllers\BaseController {
         if ($type == 'email') {
             $email = $this->request->getPost("contact_email");
             $user_id_sql = $this->db->query("SELECT id FROM users WHERE Email_Address='$email' LIMIT 1");
-            $arr = $user_id_sql->result_array();
+            $arr = $user_id_sql->getResultArray();
             $count = count($arr);
             $user_id = "";
             if ($count == 0) {
@@ -417,7 +417,7 @@ class User_management extends \App\Controllers\BaseController {
         } else if ($type == 'phone') {
             $phone = $this->request->getPost("contact_phone");
             $user_id_sql = $this->db->query("SELECT id FROM users WHERE Phone_Number='$phone' LIMIT 1");
-            $arr = $user_id_sql->result_array();
+            $arr = $user_id_sql->getResultArray();
             $count = count($arr);
             $user_id = "";
             if ($count == 0) {
@@ -553,6 +553,7 @@ class User_management extends \App\Controllers\BaseController {
                 $build->where('id', $user->id);
                 $build->update($save_data);
             } else {
+                $build = $this->db->table($table);
                 $build->insert($save_data);
             }
         }
