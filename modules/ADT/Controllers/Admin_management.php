@@ -37,7 +37,7 @@ class Admin_management extends \App\Controllers\BaseController {
 
     public function addCounty() {
         $results = Counties::all();
-        $dyn_table = "<table border='1' width='100%' id='county_listing'  cellpadding='5' class='dataTables'>";
+        $dyn_table = "<table border='1' width='100%' id='county_listing' cellpadding='5' class='dataTables'>";
         $dyn_table .= "<thead><tr><th>County Name</th><th> Options</th></tr></thead><tbody>";
         if ($results) {
             foreach ($results as $result) {
@@ -225,7 +225,7 @@ class Admin_management extends \App\Controllers\BaseController {
         if ($results) {
             foreach ($results as $result) {
                 if ($result['id'] != $this->session->get("user_id")) {
-                    if ($result['Active'] == "1") {
+                    if ($result['uactive'] == "1") {
                         $option = "<a href='" . base_url() . "/public/admin_management/disable/users/" . $result['id'] . "' class='red'>Disable</a>";
                     } else {
                         $option = "<a href='" . base_url() . "/public/admin_management/enable/users/" . $result['id'] . "' class='green'>Enable</a>";
@@ -251,13 +251,14 @@ class Admin_management extends \App\Controllers\BaseController {
             foreach ($results as $result) {
                 $user_id = $result->user_id;
                 $activity = $this->dateDiff($result->time_log, date('Y-m-d H:i:s'));
-                $results = $user->getSpecific($user_id);
+                $specific = DB::select("SELECT u.Name,u.Username, a.Level_Name as Access, u.Email_Address, u.Phone_Number, b.Name as Creator,u.Active as Active ".
+                                        "from users as u LEFT JOIN access_level as a ON u.access_level = a.id LEFT JOIN users b ON u.created_by = b.id WHERE u.id = '".$user_id."'");
                 $dyn_table = "<table border='1' width='100%' id='online_listing'  cellpadding='5' class='dataTables'>";
                 $dyn_table .= "<thead><tr><th>Full Name</th><th>UserName</th><th>Access Level</th><th>Email Address</th><th>Activity Duration</th></tr></thead><tbody>";
                 $option = "";
-                if ($results) {
-                    foreach ($results as $result) {
-                        $dyn_table .= "<tr><td>" . $result->Name . "</td><td>" . $result->Username . "</td><td>" . $result->Access . "</td><td>" . $result->Email_Address . "</td><td>" . $activity . "</td></tr>";
+                if ($specific) {
+                    foreach ($specific as $res) {
+                        $dyn_table .= "<tr><td>" . $res->Name . "</td><td>" . $res->Username . "</td><td>" . $res->Access . "</td><td>" . $res->Email_Address . "</td><td>" . $activity . "</td></tr>";
                     }
                 }
             }

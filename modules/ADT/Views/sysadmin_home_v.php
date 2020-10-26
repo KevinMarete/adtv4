@@ -201,7 +201,7 @@
 
 
         if (default_link) {
-            default_link = base_url + "/public/admin_management/" + default_link;
+            default_link = base_url + "admin_management/" + default_link;
             $.blockUI({message: '<h3><img width="30" height="30" src="<?php echo base_url() . '/public/images/loading_spin.gif' ?>" /> Working...</h3>'});
             $("#display_content").load(default_link, function () {
                 $('.dataTables').dataTable({
