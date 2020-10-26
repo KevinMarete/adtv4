@@ -1393,7 +1393,7 @@
                     <tr><td><input type="text" name="transaction_date" id="transaction_date" class="input-large" /></td></tr>
                     <tr><th>Transaction Type</th></tr>
                     <tr><td><select name="transaction_type" id="select_transtype" class="input-large">
-                                <option label="" value="0" selected="">-- Select Type --</option>
+                                <option id="" label="" value="0" selected="">-- Select Type --</option>
                                 <?php
                                 foreach ($transaction_types as $transaction_type) {
 
@@ -1417,7 +1417,7 @@
                                         //Check if transaction type is not issued to
                                         //if($pos===false){
                                         ?>
-                                        <option label="<?php echo $transaction_type['Effect'] ?>"  value="<?php echo $transaction_type['id'] ?>"><?php echo $transaction_type['name'] ?></option>
+                                        <option id="" label="<?php echo $transaction_type['Effect'] ?>"  value="<?php echo $transaction_type['id'] ?>"><?php echo $transaction_type['name'] ?></option>
                                         <?php
                                         //}
                                     } else {
@@ -1427,7 +1427,7 @@
                                         $pos = strpos($trans_name, $findme);
                                         if ($pos === false) {
                                             ?>
-                                            <option label="<?php echo $transaction_type['effect'] ?>" value="<?php echo $transaction_type['id'] ?>"><?php echo $transaction_type['name'] ?></option>
+                                            <option id="" label="<?php echo $transaction_type['effect'] ?>" value="<?php echo $transaction_type['id'] ?>"><?php echo $transaction_type['name'] ?></option>
                                             <?php
                                         }
                                     }

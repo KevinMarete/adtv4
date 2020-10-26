@@ -27,13 +27,13 @@ foreach ($facilities as $facility) {
         font-weight:bold;
     }
 
-    #facility_form{
-        margin-top: 5px;
-        border:1px solid #DDD;
-        padding:20px;
-        margin-left:500px;
-        margin-right:200px;
-    }
+    #facility_form(
+    margin-top: 5px;
+    border:1px solid #DDD;
+    padding:20px;
+    margin-left:500px;
+    margin-right:200px;
+    )
     .submit-button .Save{
         display:none;
     }
@@ -52,11 +52,11 @@ foreach ($facilities as $facility) {
         $("#central_site").attr("value", "<?php echo @$facility['parent']; ?>");
         $("#county").attr("value", "<?php echo @$facility['county']; ?>");
         $("#sms_map").val("<?php echo @$facility['map']; ?>");
-        $("#autobackup").val("<?php echo $facility['autobackup']; ?>");
-        $("#pill_count").val("<?php echo $facility['pill_count']; ?>");
-        $("#medical_number").val("<?php echo $facility['medical_number']; ?>");
-        $("#facility_dhis").val("<?php echo $facility['facility_dhis']; ?>");
-        $("#lost_to_follow_up").val("<?php echo $facility['lost_to_follow_up']; ?>");
+        $("#autobackup").val("<?php echo @$facility['autobackup']; ?>");
+        $("#pill_count").val("<?php echo @$facility['pill_count']; ?>");
+        $("#medical_number").val("<?php echo @$facility['medical_number']; ?>");
+        $("#facility_dhis").val("<?php echo @$facility['facility_dhis']; ?>");
+        $("#lost_to_follow_up").val("<?php echo @$facility['lost_to_follow_up']; ?>");
 
     });
 </script>
@@ -206,27 +206,12 @@ foreach ($facilities as $facility) {
                                 </td>
                             </tr>
 
-                            <?php $supported_by = $facility['supported_by']; ?>
+                            <?php// $supported_by = $facility['supported_by']; ?>
 
                         </table>
                         <p>&nbsp;</p>
                         <hr size="2" style="border-top: 1px solid #000;">
-                        <!--<div class="span3">
-                                <fieldset>
-                                        <legend style="color:red">Client Supported By</legend>
-                                        
-                        <?php foreach ($supporter as $support) {
-                            ?>
-                                                                                        <label class="radio">
-                                                                                                <input type="radio" name="supported_by" value="<?php echo $support->id ?>" id="<?php echo $support->id ?>" <?php if ($supported_by == $support->id) { ?> checked="checked"<?php } ?>>
-                            <?php echo $support->Name ?> Sponsorship
-                                                                                          </label> 
-                            <?php
-                        }
-                        ?>
-
-                                </fieldset>
-                        </div>-->
+             
 
                         <div class="span4">
                             <fieldset>
