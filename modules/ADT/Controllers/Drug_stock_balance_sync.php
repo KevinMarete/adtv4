@@ -29,7 +29,7 @@ class Drug_stock_balance_sync extends \App\Controllers\BaseController {
         $data['banner_text'] = "Syncronization";
         $data['content_view'] = "\Modules\ADT\Views\\sync_drug_balance_v";
         $data['title'] = "Web ADT";
-        $this->load->view("\Modules\ADT\Views\\template", $data);
+        echo view("\Modules\ADT\Views\\template", $data);
     }
 
     public function getDrugs() {

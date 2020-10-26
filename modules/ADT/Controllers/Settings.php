@@ -217,7 +217,7 @@ class Settings extends \App\Controllers\BaseController {
                 "effect" => $effect,
                 "`desc`" => $desc
             );
-            $this->db->insert($data_array);
+            $builder->insert($data_array);
         } else {
             $builder->insert(array("name" => $name, "active" => 1));
             // $this->db->insert($table, );

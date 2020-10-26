@@ -9,10 +9,12 @@ use Modules\ADT\Models\ClinicAppointment;
 use Modules\ADT\Models\DCM_change_log;
 use Modules\ADT\Models\DCM_exit_reason;
 use Modules\ADT\Models\Dose;
+use Modules\ADT\Models\Drug_classification;
 use Modules\ADT\Models\Drugcode;
 use Modules\ADT\Models\DrugInstructions;
 use Modules\ADT\Models\DrugStockBalance;
 use Modules\ADT\Models\Facilities;
+use Modules\ADT\Models\Non_adherence_reasons;
 use Modules\ADT\Models\NonAdherenceReasons;
 use Modules\ADT\Models\OpportunisticInfection;
 use Modules\ADT\Models\Patient;
@@ -22,9 +24,11 @@ use Modules\ADT\Models\PatientStatus;
 use Modules\ADT\Models\PatientVisit;
 use Modules\ADT\Models\PrepReason;
 use Modules\ADT\Models\Regimen;
+use Modules\ADT\Models\Regimen_change_purpose;
 use Modules\ADT\Models\RegimenChangePurpose;
 use Modules\ADT\Models\RegimenDrug;
 use Modules\ADT\Models\Transaction_type;
+use Modules\ADT\Models\Visit_purpose;
 use Modules\ADT\Models\VisitPurpose;
 use Mpdf\Mpdf;
 
@@ -34,6 +38,11 @@ class Dispensement_management extends BaseController {
     var $patient_module;
     var $dispense_module;
     var $appointment_module;
+    var $db;
+
+    public function __construct() {
+        $this->db = \Config\Database::connect();
+    }
 
     public function index() {
     }
@@ -209,7 +218,7 @@ class Dispensement_management extends BaseController {
 
     public function adr($record_no = null) {
         $dated = '';
-        $id = $this->db->table('adr_form')->selectMax('id')->get()->result();
+        $id = $this->db->table('adr_form')->selectMax('id')->get();
         $newid =(int) $id[0]->id + 1;
         if ($_POST) {
             $adr = [
@@ -270,7 +279,7 @@ class Dispensement_management extends BaseController {
                     ];
                     $this->db->table('adr_form_details')->insert($adr_details);
                 }
-                redirect()->to('/public/inventory_management/adr/');
+                redirect()->to(base_url().'/public/inventory_management/adr/');
                 
             } else {
                 echo "No drugs selected";
@@ -285,7 +294,7 @@ class Dispensement_management extends BaseController {
 
         $facility_code = $this->session->get('facility');
 
-        $data = array();
+        $data = [];
         $dispensing_date = "";
         $data['last_regimens'] = "";
         $data['visits'] = "";
@@ -297,54 +306,54 @@ class Dispensement_management extends BaseController {
         // last visit id by patient
         $sql = "select dispensing_date from vw_patient_list vpv,patient_visit pv WHERE pv.patient_id = vpv.ccc_number and vpv.patient_id = $record_no order by dispensing_date desc  limit 1";
         $query = $this->db->query($sql);
-        if ($query->result_array()) {
-            $dispense_date = $query->result_array()[0]['dispensing_date'];
+        if ($query->getResultArray()) {
+            $dispense_date = $query->getResultArray()[0]['dispensing_date'];
         }
 
         // Facility Details
         $sql = "select * from facilities WHERE facilitycode = $facility_code";
         $query = $this->db->query($sql);
-        if ($query->result_array()) {
-            $data['facility_details'] = $query->result_array()[0];
+        if ($query->getResultArray()) {
+            $data['facility_details'] = $query->getResultArray()[0];
         }
 
         $sql = "select * from vw_patient_list WHERE patient_id = $record_no";
         $query = $this->db->query($sql);
-        if ($query->result_array()) {
-            $data['patient_details'] = $query->result_array()[0];
+        if ($query->getResultArray()) {
+            $data['patient_details'] = $query->getResultArray()[0];
         }
 
         //Patient History
 
-        $sql = "select  v_v.dispensing_date,
-		v_v.visit_purpose_name AS visit, 
-		v_v.dose, 
-		v_v.duration, 
-		v_v.patient_visit_id AS record_id, 
-		D.drug, 
-		v_v.quantity, 
-		v_v.current_weight, 
-		R.regimen_desc, 
-		v_v.batch_number, 
-		v_v.pill_count, 
-		v_v.adherence, 
-		v_v.indication, 
-		v_v.frequency, 
-		v_v.user,
-                do.value,
-		v_v.regimen_change_reason AS regimen_change_reason 
-		from v_patient_visits as v_v
-		INNER JOIN regimen as R ON R.id = v_v.current_regimen
-		INNER JOIN drugcode as D ON D.id = v_v.drug_id
-                LEFT JOIN dose as do ON do.id = D.unit
-		WHERE v_v.id = $record_no
-		AND v_v.pv_active = 1
-		AND dispensing_date = '$dispense_date'
-		GROUP BY v_v.drug_id,v_v.dispensing_date
-		ORDER BY v_v.dispensing_date DESC";
+        $sql = "select  v_v.dispensing_date, ".
+		"v_v.visit_purpose_name AS visit, ".
+		"v_v.dose, ".
+		"v_v.duration, ".
+		"v_v.patient_visit_id AS record_id, ".
+		"D.drug, ".
+		"v_v.quantity, ".
+		"v_v.current_weight, ".
+		"R.regimen_desc, ".
+		"v_v.batch_number, ".
+		"v_v.pill_count, ".
+		"v_v.adherence, ".
+		"v_v.indication, ".
+		"v_v.frequency, ".
+		"v_v.user,". 
+               " do.value, ".
+		"v_v.regimen_change_reason AS regimen_change_reason ".
+		"from v_patient_visits as v_v ".
+		"INNER JOIN regimen as R ON R.id = v_v.current_regimen ".
+		"INNER JOIN drugcode as D ON D.id = v_v.drug_id ".
+                "LEFT JOIN dose as do ON do.id = D.unit ".
+		"WHERE v_v.id = ".$record_no.
+		" AND v_v.pv_active = 1 ".
+		"AND dispensing_date = '".$dispense_date."' ".
+		"GROUP BY v_v.drug_id,v_v.dispensing_date ".
+		"ORDER BY v_v.dispensing_date DESC";
 
         $query = $this->db->query($sql);
-        $results = $query->result_array();
+        $results = $query->getResultArray();
         if ($results) {
             $data['patient_visits'] = $results;
         } else {
@@ -359,7 +368,7 @@ class Dispensement_management extends BaseController {
 		where p.id='$record_no' and facility_code='$facility_code'
 		";
         $query = $this->db->query($sql);
-        $results = $query->result_array();
+        $results = $query->getResultArray();
 
         if ($results) {
             $patient_no = $results[0]['patient_number_ccc'];
@@ -369,35 +378,34 @@ class Dispensement_management extends BaseController {
         }
 
 
-        $sql = "SELECT *
-		FROM patient_visit pv
-		left join dose d on pv.dose = d.name
-		left join drugcode dc on pv.drug_id = dc.id
-		WHERE patient_id = '$patient_no'
-		ORDER BY dispensing_date DESC";
+        $sql = "SELECT * FROM patient_visit pv ".
+		"left join dose d on pv.dose = d.name ".
+		"left join drugcode dc on pv.drug_id = dc.id ".
+		"WHERE patient_id = '".$patient_no."' ".
+		"ORDER BY dispensing_date DESC";
 
         $query = $this->db->query($sql);
-        $results = $query->result_array();
+        $results = $query->getResultArray();
 
         $username = ($this->session->get('username'));
         $sql = "select ccc_store_sp from users where Username = '$username'";
         $query = $this->db->query($sql);
-        $store_results = $query->result_array();
+        $store_results = $query->getResultArray();
         if ($store_results) {
             $data['ccc_store'] = $store_results[0]['ccc_store_sp'];
             // $data['ccc_store'] = $this -> session -> get('ccc_store')[0]['id'];
         }
-        $data['diagnosis']= $this->db->get('drug_classification')->result();
-        $data['non_adherence_reasons'] = Non_Adherence_Reasons::getAllHydrated();
-        $data['regimen_changes'] = Regimen_Change_Purpose::getAllHydrated();
-        $data['purposes'] = Visit_Purpose::getAll();
+        $data['diagnosis']= Drug_classification::all();
+        $data['non_adherence_reasons'] = Non_adherence_reasons::where('active', '1')->get()->toArray();
+        $data['regimen_changes'] = Regimen_change_purpose::where('active', '1')->get()->toArray();
+        $data['purposes'] = Visit_purpose::getAll();
         $data['dated'] = $dated;
         $data['patient_id'] = $record_no;
         $data['service_name'] = $service_name;
         $data['purposes'] = Visit_Purpose::getAll();
         $data['patient_appointment'] = $results;
         $data['hide_side_menu'] = 1;
-        $data['content_view'] = "patients/dispense_adr_v";
+        $data['content_view'] = "\Modules\ADT\Views\patients/dispense_adr_v";
         $this->base_params($data);
     }
 

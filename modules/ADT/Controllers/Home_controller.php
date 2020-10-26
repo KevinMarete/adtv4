@@ -13,6 +13,16 @@ use \Modules\ADT\Models\User;
 use \Modules\ADT\Models\User_right;
 use \Modules\ADT\Models\Patient_appointment;
 use \Modules\ADT\Models\CCC_store_service_point;
+use Modules\ADT\Models\Drugcode;
+use Modules\ADT\Models\Opportunistic_infection;
+use Modules\ADT\Models\PatientSource;
+use Modules\ADT\Models\Regimen;
+use Modules\ADT\Models\Regimen_drug;
+use Modules\ADT\Models\RegimenChangePurpose;
+use Modules\ADT\Models\RegimenServiceType;
+use Modules\ADT\Models\Supporter;
+use Modules\ADT\Models\Visit_purpose;
+use Updater as GlobalUpdater;
 
 class Home_controller extends \App\Controllers\BaseController {
 
@@ -96,7 +106,7 @@ class Home_controller extends \App\Controllers\BaseController {
     public function dispensement($user, $period) {
         $results = $this->db->query("SELECT * 
                     FROM `patient_visit` 
-                    WHERE `user`='$user' AND DATEDIFF(CURDATE(),dispensing_date) <= '$period' ORDER BY id DESC")->result_array();
+                    WHERE `user`='$user' AND DATEDIFF(CURDATE(),dispensing_date) <= '$period' ORDER BY id DESC")->getResultArray();
         $dyn_table = "<table border='1' width='100%' id='menu_listing'  cellpadding='5' class='dataTables'>";
         $dyn_table .= "<thead><tr><th>Patient ID</th><th>Batch Number</th><th>Date Dispensed</th></tr></thead><tbody>";
         if ($results) {
@@ -114,12 +124,12 @@ class Home_controller extends \App\Controllers\BaseController {
         $data['over'] = $period;
         $data['user_'] = ucfirst($user);
         $data['content'] = $dyn_table;
-        $data['user'] = $this->session->userdata['full_name'];
-        $this->load->view("template", $data);
+        $data['user'] = $this->session->get('full_name');
+        echo view("\Modules\ADT\Views\\template", $data);
     }
 
     public function inventory($user, $period) {
-        $results = $this->db->query("SELECT dsm.id,dru.drug, dsm.batch_number,dsm.transaction_date,dsm.source,dsm.destination FROM drug_stock_movement dsm LEFT JOIN drugcode dru ON dsm.drug = dru.id WHERE DATEDIFF(CURDATE(),dsm.transaction_date) <= '$period' AND operator='$user' ORDER BY dsm.id DESC")->result_array();
+        $results = $this->db->query("SELECT dsm.id,dru.drug, dsm.batch_number,dsm.transaction_date,dsm.source,dsm.destination FROM drug_stock_movement dsm LEFT JOIN drugcode dru ON dsm.drug = dru.id WHERE DATEDIFF(CURDATE(),dsm.transaction_date) <= '$period' AND operator='$user' ORDER BY dsm.id DESC")->getResultArray();
         $dyn_table = "<table border='1' width='100%' id='menu_listing'  cellpadding='5' class='dataTables'>";
         $dyn_table .= "<thead><tr><th>Drug</th><th>Batch Number</th><th>Transaction Date</th><th>From</th><th>To</th></tr></thead><tbody>";
         if ($results) {
@@ -137,20 +147,20 @@ class Home_controller extends \App\Controllers\BaseController {
         $data['thetitle'] = ucfirst($user) . "'s  Drug Stock Movement activity over last $period days";
         $data['user_'] = ucfirst($user);
         $data['content'] = $dyn_table;
-        $data['user'] = $this->session->userdata['full_name'];
-        $this->load->view("template", $data);
+        $data['user'] = $this->session->get('full_name');
+        echo view("\Modules\ADT\Views\\template", $data);
     }
 
     public function synchronize_patients() {
-        $data['regimens'] = Regimen::getAll();
-        $data['supporters'] = Supporter::getAll();
-        $data['service_types'] = Regimen_Service_Type::getAll();
-        $data['sources'] = Patient_Source::getAll();
+        $data['regimens'] = Regimen::where('source', 0)->orderBy('regimen_desc')->get();
+        $data['supporters'] = Supporter::all();
+        $data['service_types'] = RegimenServiceType::where('active', '1')->get();
+        $data['sources'] = PatientSource::where('active', '1')->get();
         $data['drugs'] = Drugcode::getAll();
-        $data['regimen_change_purpose'] = Regimen_Change_Purpose::getAll();
-        $data['visit_purpose'] = Visit_Purpose::getAll();
-        $data['opportunistic_infections'] = Opportunistic_Infection::getAll();
-        $data['regimen_drugs'] = Regimen_Drug::getAll();
+        $data['regimen_change_purpose'] = RegimenChangePurpose::where('active', '1')->get();
+        $data['visit_purpose'] = Visit_purpose::getAll();
+        $data['opportunistic_infections'] = Opportunistic_infection::where('active', '1')->get();
+        $data['regimen_drugs'] = Regimen_drug::where('source', '0')->where('active', '1')->get();
     }
 
     public function getNotified() {
@@ -163,7 +173,7 @@ class Home_controller extends \App\Controllers\BaseController {
         // find the year (ISO-8601 year number) and the current week
         $year = date('o', $ts);
         $week = date('W', $ts);
-        $facility_code = $this->session->userdata('facility');
+        $facility_code = $this->session->get('facility');
         // print week for the current date
         for ($i = 1; $i <= 6; $i++) {
             // timestamp from ISO week date format
@@ -173,8 +183,8 @@ class Home_controller extends \App\Controllers\BaseController {
 
             $appointment_query = $this->db->query("SELECT COUNT(distinct(patient)) as Total from patient_appointment where appointment='$number_date' and facility='$facility_code'");
             $visit_query = $this->db->query("SELECT COUNT(distinct(patient_id)) as Total from patient_visit where dispensing_date='$number_date' and visit_purpose='2'and facility='$facility_code'");
-            $appointments_on_date = $appointment_query->result_array();
-            $visits_on_date = $visit_query->result_array();
+            $appointments_on_date = $appointment_query->getResultArray();
+            $visits_on_date = $visit_query->getResultArray();
             $notice['Days'][$i - 1] = $string_date;
             $notice['Appointments'][$i - 1] = $appointments_on_date[0]['Total'];
             $notice['Visits'][$i - 1] = $visits_on_date[0]['Total'];
@@ -203,13 +213,13 @@ class Home_controller extends \App\Controllers\BaseController {
     }
 
     public function testlib() {
-        $this->load->library('updater');
+        $updater = new GlobalUpdater();
         $connection = ($this->updater->check_connection());
 
-        $rs = $this->updater->check_ADTrelease();
+        $rs = $updater->check_ADTrelease();
         $rs = (json_decode($rs));
 
-        $adt_downloaded_status = ($this->updater->check_ADTRelease_downloaded());
+        $adt_downloaded_status = ($updater->check_ADTRelease_downloaded());
         var_dump($adt_downloaded_status);
 
 
@@ -219,14 +229,14 @@ class Home_controller extends \App\Controllers\BaseController {
     }
 
     public function updater($process = '') {
-        $this->load->library('updater');
+        $updater = new GlobalUpdater();
         if ($process == 'download') {
-            $download = ($this->updater->download_ADTRelease());
+            $download = ($updater->download_ADTRelease());
             echo 'ADT Release Download Succesful <br />';
         }
 
         if ($process == 'update') {
-            $download = ($this->updater->update_ADT());
+            $download = ($updater->update_ADT());
         }
     }
 
