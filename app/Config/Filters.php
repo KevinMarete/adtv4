@@ -17,7 +17,28 @@ class Filters extends BaseConfig {
     // Always applied before every request
     public $globals = [
         'before' => [
-            'auth' => ['except' => ['login', 'user_management/*']]
+            'auth' => ['except' => 
+                        [
+                            'login', 
+                            'user_management/*', 
+                            'recover',
+                            'check_server',
+                            'check_database',
+                            'start_recovery',
+                            'backup',
+                            'run_backup',
+                            'upload_backup',
+                            'delete_backup',
+                            'download_remote_file',
+                            'api/*',
+                            'setup',
+                            'getfacilities',
+                            'initialize',
+                            'migrate/*',
+                            'github',
+                            'help'
+                        ]
+                    ]
         //'honeypot'
         // 'csrf',
         ],

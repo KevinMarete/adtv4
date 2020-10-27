@@ -18,7 +18,7 @@ class Tables extends \CodeIgniter\Controller {
                 if ($set_options == 1) {
                     $table['options'] = $options;
                 }
-                $table->add_row($table);
+                $table_data_builder->addRow($table);
             } else {
                 $new_table = array();
                 array_unshift($new_table, $counter);
