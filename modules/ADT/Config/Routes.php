@@ -62,6 +62,7 @@ $routes->get('getDrugTransactions/(:any)/(:any)', '\Modules\ADT\Controllers\Inve
 $routes->get('inventory_management/getIsoniazid/(:any)', '\Modules\ADT\Controllers\Inventory_management::getIsoniazid');
 $routes->post('inventory_management/getAllDrugsBatches/(:any)', '\Modules\ADT\Controllers\Inventory_management::getAllDrugsBatches/(:any)');
 $routes->post('inventory_management/getAllBacthDetails', '\Modules\ADT\Controllers\Inventory_management::getAllBacthDetails');
+$routes->get('inventory_management/serverStatus', '\Modules\ADT\Controllers\Inventory_management::serverStatus');
 
 $routes->get('settings_management', '\Modules\ADT\Controllers\Settings_management::index');
 $routes->post('settings/save/(:any)', '\Modules\ADT\Controllers\Settings::save/$1');

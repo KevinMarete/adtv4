@@ -610,15 +610,16 @@ class Inventory_management extends \App\Controllers\BaseController {
         }
 
         $data = [];
-        $pqmp1_data;
         $content_view = '\Modules\ADT\Views\\pqmp_list_v';
 
-        $pqmp1_data = $this->db->query("SELECT p.*,co.county county_name,su.sub_county_name,de.name designation FROM pqms p INNER JOIN counties co ON p.county_id = co.id INNER JOIN sub_counties su ON p.sub_county_id = su.id INNER JOIN designations de ON p.designation_id = de.id");
         if (@$record_no + 0 > 0) {
+            $pqmp1_data = $this->db->query("SELECT p.*,co.county county_name,su.sub_county_name,de.name designation FROM pqms p INNER JOIN counties co ON p.county_id = co.id INNER JOIN sub_counties su ON p.sub_county_id = su.id INNER JOIN designations de ON p.designation_id = de.id");
             $content_view = '\Modules\ADT\Views\\pqmp_v';
             $data['hide_side_menu'] = 0;
         }
-        $data['pqmp_data'] = $pqmp1_data->getResultArray();
+
+        $pqmp_data = $this->db->table('pqms')->orderBy('id', 'desc')->get();
+        $data['pqmp_data'] = $pqmp_data->getResultArray();
         // dd($data['pqmp_data']); 
 
 

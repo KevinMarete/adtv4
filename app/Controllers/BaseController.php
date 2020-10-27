@@ -65,4 +65,29 @@ class BaseController extends Controller {
         return (array) $db->table($table)->select($column)->groupBy($column)->get();
     }
 
+    //ping ppb host
+    function ping($host, $port, $timeout) {
+        $starttime = microtime(true);
+        $file = fsockopen($host, $port, $errno, $errstr, $timeout);
+        $stoptime = microtime(true);
+        $status = 0;
+        if (!$file)
+            $status = -1;  // Site is down
+        else {
+            fclose($file);
+            $status = ($stoptime - $starttime) * 1000;
+            $status = 200;
+        }
+        return $status;
+    }
+
+    function serverStatus() {
+        @$res = $this->ping($this->IP, $this->PORT, $this->TIMEOUT);
+        if ($res === 200) {
+            echo json_encode(['status' => 200]);
+        } else {
+            echo json_encode(['status' => 404]);
+        }
+    }
+
 }
