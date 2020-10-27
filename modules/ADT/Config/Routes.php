@@ -1,8 +1,9 @@
 <?php
-/*Default route*/
+
+/* Default route */
 $routes->get('/', '\Modules\ADT\Controllers\User_management::login');
 
-/*Authentication Routes*/
+/* Authentication Routes */
 // $routes->get('/', '\Modules\ADT\Controllers\System_management::index');
 $routes->get('login', '\Modules\ADT\Controllers\User_management::login');
 $routes->post('user_management/authenticate', '\Modules\ADT\Controllers\User_management::authenticate');
@@ -276,91 +277,91 @@ $routes->get('user_management/save', '\Modules\ADT\Controllers\User_management::
 $routes->post('user_management/profile_update', '\Modules\ADT\Controllers\User_management::profile_update');
 $routes->get('user_management/get_sites/(:any)', '\Modules\ADT\Controllers\User_management::get_sites/$1');
 
-/* Report Management*/
+/* Report Management */
 $routes->group('report_management', ['namespace' => '\Modules\ADT\Controllers'], function ($routes) {
-  $routes->get('/', 'Report_management::index');
+    $routes->get('/', 'Report_management::index');
 
-  //Standard Reports
-  $routes->get('patient_enrolled/(:any)/(:any)/(:any)', 'Report_management::patient_enrolled/$1/$2/$3');
-  $routes->get('getStartedonART/(:any)/(:any)/(:any)', 'Report_management::getStartedonART/$1/$2/$3');
-  $routes->get('graph_patients_enrolled_in_year/(:any)', 'Report_management::graph_patients_enrolled_in_year/$1');
-  $routes->get('cumulative_patients/(:any)', 'Report_management::cumulative_patients/$1');
-  $routes->get('cumulative_patients/(:any)/(:any)', 'Report_management::cumulative_patients/$1/$2');
-  $routes->get('all_service_statistics/(:any)', 'Report_management::all_service_statistics/$1');
-  $routes->get('getFamilyPlanning/(:any)', 'Report_management::getFamilyPlanning/$1');
-  $routes->get('getIndications/(:any)/(:any)', 'Report_management::getIndications/$1/$2');
-  $routes->get('getTBPatients/(:any)/(:any)', 'Report_management::getTBPatients/$1/$2');
-  $routes->get('getnonisoniazidPatients/(:any)', 'Report_management::getnonisoniazidPatients/$1');
-  $routes->get('disclosure_chart/(:any)/(:any)', 'Report_management::disclosure_chart/$1/$2');
-  $routes->get('getADR/(:any)', 'Report_management::getADR/$1');
-  $routes->get('getChronic/(:any)', 'Report_management::getChronic/$1');
-  $routes->get('patients_disclosure/(:any)/(:any)', 'Report_management::patients_disclosure/$1/$2');
-  $routes->get('getisoniazidPatients/(:any)/(:any)', 'Report_management::getisoniazidPatients/$1/$2');
-  $routes->get('getMMDMMS/(:any)', 'Report_management::getMMDMMS/$1');
-  $routes->get('getDrugs', 'Report_management::getDrugs');
-  $routes->get('dispensingReport/(:any)/(:any)', 'Report_management::dispensingReport/$1/$2');
-  $routes->get('getScheduledPatients/(:any)/(:any)/(:any)/(:any)', 'Report_management::getScheduledPatients/$1/$2/$3/$4');
-  $routes->get('getPatientsStartedonDate/(:any)/(:any)', 'Report_management::getPatientsStartedonDate/$1/$2');
-  $routes->get('getPatientMissingAppointments/(:any)/(:any)', 'Report_management::getPatientMissingAppointments/$1/$2');
-  $routes->get('getPatientsforRefill/(:any)/(:any)', 'Report_management::getPatientsforRefill/$1/$2');
-  $routes->get('get_viral_load_results/(:any)/(:any)', 'Report_management::get_viral_load_results/$1/$2');
-  $routes->get('getPatientList/(:any)/(:any)/(:any)', 'Report_management::getPatientList/$1/$2/$3');
-  $routes->get('getScheduledPatients/(:any)/(:any)', 'Report_management::getScheduledPatients/$1/$2');
+    //Standard Reports
+    $routes->get('patient_enrolled/(:any)/(:any)/(:any)', 'Report_management::patient_enrolled/$1/$2/$3');
+    $routes->get('getStartedonART/(:any)/(:any)/(:any)', 'Report_management::getStartedonART/$1/$2/$3');
+    $routes->get('graph_patients_enrolled_in_year/(:any)', 'Report_management::graph_patients_enrolled_in_year/$1');
+    $routes->get('cumulative_patients/(:any)', 'Report_management::cumulative_patients/$1');
+    $routes->get('cumulative_patients/(:any)/(:any)', 'Report_management::cumulative_patients/$1/$2');
+    $routes->get('all_service_statistics/(:any)', 'Report_management::all_service_statistics/$1');
+    $routes->get('getFamilyPlanning/(:any)', 'Report_management::getFamilyPlanning/$1');
+    $routes->get('getIndications/(:any)/(:any)', 'Report_management::getIndications/$1/$2');
+    $routes->get('getTBPatients/(:any)/(:any)', 'Report_management::getTBPatients/$1/$2');
+    $routes->get('getnonisoniazidPatients/(:any)', 'Report_management::getnonisoniazidPatients/$1');
+    $routes->get('disclosure_chart/(:any)/(:any)', 'Report_management::disclosure_chart/$1/$2');
+    $routes->get('getADR/(:any)', 'Report_management::getADR/$1');
+    $routes->get('getChronic/(:any)', 'Report_management::getChronic/$1');
+    $routes->get('patients_disclosure/(:any)/(:any)', 'Report_management::patients_disclosure/$1/$2');
+    $routes->get('getisoniazidPatients/(:any)/(:any)', 'Report_management::getisoniazidPatients/$1/$2');
+    $routes->get('getMMDMMS/(:any)', 'Report_management::getMMDMMS/$1');
+    $routes->get('getDrugs', 'Report_management::getDrugs');
+    $routes->get('dispensingReport/(:any)/(:any)', 'Report_management::dispensingReport/$1/$2');
+    $routes->get('getScheduledPatients/(:any)/(:any)/(:any)/(:any)', 'Report_management::getScheduledPatients/$1/$2/$3/$4');
+    $routes->get('getPatientsStartedonDate/(:any)/(:any)', 'Report_management::getPatientsStartedonDate/$1/$2');
+    $routes->get('getPatientMissingAppointments/(:any)/(:any)', 'Report_management::getPatientMissingAppointments/$1/$2');
+    $routes->get('getPatientsforRefill/(:any)/(:any)', 'Report_management::getPatientsforRefill/$1/$2');
+    $routes->get('get_viral_load_results/(:any)/(:any)', 'Report_management::get_viral_load_results/$1/$2');
+    $routes->get('getPatientList/(:any)/(:any)/(:any)', 'Report_management::getPatientList/$1/$2/$3');
+    $routes->get('getScheduledPatients/(:any)/(:any)', 'Report_management::getScheduledPatients/$1/$2');
 
-  $routes->get('get_pep_reasons_patients/(:any)/(:any)', 'Report_management::get_pep_reasons_patients/$1/$2');
-  $routes->get('get_pep_reasons/(:any)/(:any)', 'Report_management::get_pep_reasons/$1/$2');
-  $routes->get('get_prep_patients/(:any)/(:any)', 'Report_management::get_prep_patients/$1/$2');
-  $routes->get('get_prep_reasons/(:any)/(:any)', 'Report_management::get_prep_reasons/$1/$2');
-  $routes->get('get_prep_reasons_patients/(:any)/(:any)', 'Report_management::get_prep_reasons_patients/$1/$2');
-  //Visting Patients
-  $routes->get('distribution_refill/(:any)', 'Report_management::distribution_refill/$1');
-  $routes->get('getRefillDistributionPatients/(:any)/(:any)', 'Report_management::getRefillDistributionPatients/$1/$2');
-  $routes->get('getPatientsStartedonDateDiffCare/(:any)/(:any)', 'Report_management::getPatientsStartedonDateDiffCare/$1/$2');
-  $routes->get('getScheduledPatientsDiffCare/(:any)/(:any)', 'Report_management::getScheduledPatientsDiffCare/$1/$2');
-  $routes->get('getPatientsOnDiffCare/(:any)/(:any)', 'Report_management::getPatientsOnDiffCare/$1/$2');
-  //Differentiated Care
+    $routes->get('get_pep_reasons_patients/(:any)/(:any)', 'Report_management::get_pep_reasons_patients/$1/$2');
+    $routes->get('get_pep_reasons/(:any)/(:any)', 'Report_management::get_pep_reasons/$1/$2');
+    $routes->get('get_prep_patients/(:any)/(:any)', 'Report_management::get_prep_patients/$1/$2');
+    $routes->get('get_prep_reasons/(:any)/(:any)', 'Report_management::get_prep_reasons/$1/$2');
+    $routes->get('get_prep_reasons_patients/(:any)/(:any)', 'Report_management::get_prep_reasons_patients/$1/$2');
+    //Visting Patients
+    $routes->get('distribution_refill/(:any)', 'Report_management::distribution_refill/$1');
+    $routes->get('getRefillDistributionPatients/(:any)/(:any)', 'Report_management::getRefillDistributionPatients/$1/$2');
+    $routes->get('getPatientsStartedonDateDiffCare/(:any)/(:any)', 'Report_management::getPatientsStartedonDateDiffCare/$1/$2');
+    $routes->get('getScheduledPatientsDiffCare/(:any)/(:any)', 'Report_management::getScheduledPatientsDiffCare/$1/$2');
+    $routes->get('getPatientsOnDiffCare/(:any)/(:any)', 'Report_management::getPatientsOnDiffCare/$1/$2');
+    //Differentiated Care
 
-  $routes->get('patients_nonadherence/(:any)/(:any)', 'Report_management::patients_nonadherence/$1/$2');
-  $routes->get('getAdherence/(:any)/(:any)/(:any)/(:any)', 'Report_management::getAdherence/$1/$2/$3/$4');
-  $routes->get('patients_switched_to_second_line_regimen/(:any)/(:any)', 'Report_management::patients_switched_to_second_line_regimen/$1/$2');
-  //Early Warning Indicators
+    $routes->get('patients_nonadherence/(:any)/(:any)', 'Report_management::patients_nonadherence/$1/$2');
+    $routes->get('getAdherence/(:any)/(:any)/(:any)/(:any)', 'Report_management::getAdherence/$1/$2/$3/$4');
+    $routes->get('patients_switched_to_second_line_regimen/(:any)/(:any)', 'Report_management::patients_switched_to_second_line_regimen/$1/$2');
+    //Early Warning Indicators
 
-  $routes->get('getPatientsforRefillDiffCare/(:any)/(:any)', 'Report_management::getPatientsforRefillDiffCare/$1/$2');
-  $routes->get('patients_who_changed_regimen/(:any)/(:any)', 'Report_management::patients_who_changed_regimen/$1/$2');
-  $routes->get('patients_starting/(:any)/(:any)', 'Report_management::patients_starting/$1/$2');
-  $routes->get('graphical_adherence/(:any)/(:any)/(:any)', 'Report_management::graphical_adherence/$1/$2/$3');
-  $routes->get('patient_consumption/(:any)/(:any)', 'Report_management::patient_consumption/$1/$2');
-  $routes->get('drug_stock_on_hand/(:any)', 'Report_management::drug_stock_on_hand/$1');
-  $routes->get('getMoreHelp/(:any)/(:any)/(:any)', 'Report_management::getMoreHelp/$1/$2/$3');
+    $routes->get('getPatientsforRefillDiffCare/(:any)/(:any)', 'Report_management::getPatientsforRefillDiffCare/$1/$2');
+    $routes->get('patients_who_changed_regimen/(:any)/(:any)', 'Report_management::patients_who_changed_regimen/$1/$2');
+    $routes->get('patients_starting/(:any)/(:any)', 'Report_management::patients_starting/$1/$2');
+    $routes->get('graphical_adherence/(:any)/(:any)/(:any)', 'Report_management::graphical_adherence/$1/$2/$3');
+    $routes->get('patient_consumption/(:any)/(:any)', 'Report_management::patient_consumption/$1/$2');
+    $routes->get('drug_stock_on_hand/(:any)', 'Report_management::drug_stock_on_hand/$1');
+    $routes->get('getMoreHelp/(:any)/(:any)/(:any)', 'Report_management::getMoreHelp/$1/$2/$3');
 
-  $routes->get('get_lost_followup/(:any)/(:any)', 'Report_management::get_lost_followup/$1/$2');
-  $routes->get('get_viral_loadsummary/(:any)', 'Report_management::get_viral_loadsummary/$1');
-  //Drug Inventory
-  $routes->get('drug_consumption/(:any)/(:any)', 'Report_management::drug_consumption/$1/$2');
-  $routes->get('stock_report/(:any)/(:any)/(:any)', 'Report_management::stock_report/$1/$2/$3');
-  $routes->get('getDrugsIssued/(:any)/(:any)/(:any)', 'Report_management::getDrugsIssued/$1/$2/$3');
-  $routes->get('expired_drugs/(:any)', 'Report_management::expired_drugs/$1');
-  $routes->get('expiring_drugs/(:any)', 'Report_management::expiring_drugs/$1');
-  $routes->get('stock_report/(:any)/(:any)/(:any)/(:any)', 'Report_management::stock_report/$1/$2/$3/$4');
-  $routes->get('getFacilityConsumption/(:any)/(:any)', 'Report_management::getFacilityConsumption/$1/$2');
-  $routes->get('getDailyConsumption/(:any)/(:any)', 'Report_management::getDailyConsumption/$1/$2');
-  $routes->get('getMOHForm/(:any)/(:any)/(:any)', 'Report_management::getMOHForm/$1/$2/$3');
-  //MOH Forms
-  $routes->get('getDrugsReceived/(:any)/(:any)/(:any)', 'Report_management::getDrugsReceived/$1/$2/$3');
+    $routes->get('get_lost_followup/(:any)/(:any)', 'Report_management::get_lost_followup/$1/$2');
+    $routes->get('get_viral_loadsummary/(:any)', 'Report_management::get_viral_loadsummary/$1');
+    //Drug Inventory
+    $routes->get('drug_consumption/(:any)/(:any)', 'Report_management::drug_consumption/$1/$2');
+    $routes->get('stock_report/(:any)/(:any)/(:any)', 'Report_management::stock_report/$1/$2/$3');
+    $routes->get('getDrugsIssued/(:any)/(:any)/(:any)', 'Report_management::getDrugsIssued/$1/$2/$3');
+    $routes->get('expired_drugs/(:any)', 'Report_management::expired_drugs/$1');
+    $routes->get('expiring_drugs/(:any)', 'Report_management::expiring_drugs/$1');
+    $routes->get('stock_report/(:any)/(:any)/(:any)/(:any)', 'Report_management::stock_report/$1/$2/$3/$4');
+    $routes->get('getFacilityConsumption/(:any)/(:any)', 'Report_management::getFacilityConsumption/$1/$2');
+    $routes->get('getDailyConsumption/(:any)/(:any)', 'Report_management::getDailyConsumption/$1/$2');
+    $routes->get('getMOHForm/(:any)/(:any)/(:any)', 'Report_management::getMOHForm/$1/$2/$3');
+    //MOH Forms
+    $routes->get('getDrugsReceived/(:any)/(:any)/(:any)', 'Report_management::getDrugsReceived/$1/$2/$3');
 
 
-  //Guidelines
+    //Guidelines
 });
-  $routes->get('load_guidelines_view', 'Report_management::load_guidelines_view');
+$routes->get('load_guidelines_view', 'Report_management::load_guidelines_view');
 
-/*Manual/AutoScript*/
+/* Manual/AutoScript */
 /* Manual/AutoScript */
 $routes->get('auto_management/index/(:any)', '\Modules\ADT\Controllers\Auto_management::index/$1');
 $routes->post('regimen_drug_management/save', '\Modules\ADT\Controllers\Regimen_drug_management::save');
 $routes->get('regimen_drug_management/enable/(:any)', '\Modules\ADT\Controllers\Regimen_drug_management::enable/$1');
 $routes->get('regimen_drug_management/disable/(:any)', '\Modules\ADT\Controllers\Regimen_drug_management::disable/$1');
 
-/*Patients*/
+/* Patients */
 $routes->addRedirect('patient_management', 'public/patients');
 $routes->addRedirect('addpatient_show', 'public/patients/add');
 $routes->get('patients', '\Modules\ADT\Controllers\Patient_management::index');
@@ -443,5 +444,9 @@ $routes->post('order/getPeriodRegimenPatients/(:any)/(:any)', '\Modules\ADT\Cont
 $routes->get('admin_management/inactive_users', '\Modules\ADT\Controllers\Admin_management::inactive_users');
 $routes->get('admin_management/online_users', '\Modules\ADT\Controllers\Admin_management::online_users');
 $routes->get('admin_management/addCounty', '\Modules\ADT\Controllers\Admin_management::addCounty');
+
+
+$routes->get('github', '\Modules\Github\Controllers\Github::index');
+$routes->get('help', '\Modules\Help\Controllers\Help::index');
 
 
