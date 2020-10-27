@@ -439,11 +439,11 @@ class User_management extends \App\Controllers\BaseController {
 
     public function sendPassword($contact, $code = "", $type = "phone") {
 
-//If activation code is to be sent through email
+        //If activation code is to be sent through email
         if ($type == "email") {
 
             $email = trim($contact);
-//setting the connection variables
+            //setting the connection variables
             $config['mailtype'] = "html";
             $config['protocol'] = 'smtp';
             $config['smtp_host'] = 'ssl://smtp.googlemail.com';
@@ -463,16 +463,16 @@ class User_management extends \App\Controllers\BaseController {
 				Web ADT Team
 				");
 
-//success message else show the error
+            //success message else show the error
             if ($this->email->send()) {
                 $data['message'] = 'Email address was sent to <b>' . $email . '</b> <br/>Your Password was Reset';
-//unlink($file);
+                //unlink($file);
                 $this->email->clear(TRUE);
             } else {
-//$data['error'] = $this -> email -> print_debugger();
-//show_error($this -> email -> print_debugger());
+                //$data['error'] = $this -> email -> print_debugger();
+                //show_error($this -> email -> print_debugger());
             }
-//ob_end_flush();
+            //ob_end_flush();
             $data['reset'] = true;
             delete_cookie("actual_page");
             $data['title'] = "webADT | System Login";
@@ -500,13 +500,13 @@ class User_management extends \App\Controllers\BaseController {
         $c_user = 0;
         $e_user = 0;
 
-//Check if username does not already exist
-//If username was changed by the user, check if it exists in the db
+        //Check if username does not already exist
+        //If username was changed by the user, check if it exists in the db
         if (session()->set('username') != $user_name) {
             $username_exist_sql = $this->db->query("SELECT * FROM users WHERE username='$user_name'");
             $c_user = count($username_exist_sql->getResultArray());
         }
-//If email was changed by the user, check if it exists in the db
+        //If email was changed by the user, check if it exists in the db
         if ($this->session->set('Email_Address') != $email) {
             $email_exist_sql = $this->db->query("SELECT * FROM users WHERE Email_Address='$email'");
             $e_user = count($email_exist_sql->getResultArray());
@@ -520,26 +520,115 @@ class User_management extends \App\Controllers\BaseController {
             $data['error'] = "<span class='message error'>The email entered is already in use !</span>";
         }
 
-//Neither email nor username is in use
+        //Neither email nor username is in use
         else if ($e_user == 0 and $c_user == 0) {
-//Update user details
+            //Update user details
             $update_user_sql = $this->db->query("UPDAT users SET Name='$full_name',username='$user_name',Email_Address='$email',Phone_Number='$phone',ccc_store_sp='$store' WHERE id='$user_id'");
             if ($update_user_sql == 1) {
                 $message_success = "<span class='message info'>Your details were successfully updated!<span>";
             }
-//Update session details!
+            //Update session details!
             $session_data = array('username' => $user_name, 'full_name' => $full_name, 'Email_Address' => $email, 'Phone_Number' => $phone, 'ccc_store_id' => $store);
             $this->session->set($session_data);
             $this->session->set("message_user_update_success", $message_success);
         }
 
-//Add/update user ordering sites
+        //Add/update user ordering sites
         $this->save_user_facilities(session()->set('user_id'), $this->request->getPost('profile_user_facilities_holder', TRUE));
 
 
         $previous_url = $this->request->getCookie('actual_page', true);
         //redirect($previous_url);
         return redirect()->to(base_url('public/' . $previous_url));
+    }
+
+    public function base_params($data) {
+        echo view("\Modules\ADT\Views\\template", $data);
+    }
+
+    public function save() {
+        //default password
+        $default_password = '123456';
+
+        $user_data = [
+            'Name' => $this->post('fullname', TRUE),
+            'Username' => $this->post('username', TRUE),
+            'Password' => md5($this->encrypt->get_key() . $default_password),
+            'Access_Level' => $this->post('access_level', TRUE),
+            'Facility_Code' => $this->post('facility', TRUE),
+            'Created_By' => $this->session->get('user_id'),
+            'Time_Created' => date('Y-m-d,h:i:s A'),
+            'Phone_Number' => $this->post('phone', TRUE),
+            'Email_Address' => $this->post('email', TRUE),
+            'Active' => 1,
+            'Signature' => 1
+        ];
+
+        $this->db->table("users")->insert($user_data);
+
+        //Save user facilities
+        $this->save_user_facilities($this->db->insertID(), $this->post('user_facilities_holder', TRUE));
+
+        $this->session->set('msg_success', $this->post('fullname') . ' \' s details were successfully saved! The default password is <strong>' . $default_password . '</strong>');
+        return redirect()->to(base_url('/public/settings_management'));
+    }
+
+    public function edit() {
+        $access_level = $this->session->get('user_indicator');
+        $user_type = "1";
+        $facilities = "";
+        //If user is a super admin, allow him to add only facilty admin and nascop pharmacist
+        if ($access_level == "system_administrator") {
+            $user_type = "indicator='nascop_pharmacist' or indicator='facility_administrator'";
+            $facilities = Facilities::orderBy('name')->get()->toArray();
+        }
+        //If user is a facility admin, allow him to add only facilty users
+        else if ($access_level == "facility_administrator") {
+            $facility_code = $this->session->get('facility');
+            $user_type = "indicator='pharmacist'";
+            $facilities = Facilities::where('facilitycode', $facility_code)->get()->toArray();
+        }
+
+        $user_id = @$_GET['u_id'];
+        $data['users'] = User::where('id', $user_id)->get()->toArray();
+        $data['user_type'] = Access_level::getAll($user_type);
+        echo json_encode($data);
+    }
+
+    public function update() {
+        $user_id = $this->post('user_id');
+        $name = $this->post('fullname');
+        $username = $this->post('username');
+        $access_Level = $this->post('access_level');
+        $phone_number = $this->post('phone');
+        $email_address = $this->post('email');
+        $facility = $this->post('facility');
+
+        $query = $this->db->query("UPDATE users SET Name='$name',Username='$username',Access_Level='$access_Level',Phone_Number='$phone_number',Email_Address='$email_address',Facility_Code='$facility' WHERE id='$user_id'");
+        $this->session->set('msg_success', $this->post('username') . ' \' s details were successfully Updated!');
+        $this->session->setFlashdata('filter_datatable', $this->post('username'));
+        //Filter datatable
+        return redirect()->to(base_url('/public/settings_management'));
+    }
+
+    public function enable($user_id) {
+        $user = User::find($user_id);
+        $user->Active = '1';
+        $user->save();
+        $this->session->set('msg_success', $user->Name . ' was enabled!');
+        $this->session->setFlashdata('filter_datatable', $user->Name);
+        //Filter datatable
+        return redirect()->to(base_url('/public/settings_management'));
+    }
+
+    public function disable($user_id) {
+        $user = User::find($user_id);
+        $user->Active = '0';
+        $user->save();
+        $this->session->set('msg_error', $user->Name . ' was disabled!');
+        $this->session->setFlashdata('filter_datatable', $user->Name);
+        //Filter datatable
+        return redirect()->to(base_url('/public/settings_management'));
     }
 
     public function save_user_facilities($user_id = '', $user_facilites = '') {
