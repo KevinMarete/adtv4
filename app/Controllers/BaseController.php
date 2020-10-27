@@ -51,14 +51,6 @@ class BaseController extends Controller {
         $this->db = \Config\Database::connect();
         service('eloquent');
         $this->uri = service('uri');
-        if (session()->get('user_id')=='') {
-          // echo 'This session'.session()->get('user_id');
-           //header('Location :'.base_url().'/public/login');
-           // return redirect()->to(site_url('/public/login'));
-        }else{
-           return redirect()->to(base_url().'/public/login');
-            
-        }
     }
 
     //shorten field input

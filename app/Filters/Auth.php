@@ -9,9 +9,8 @@ use CodeIgniter\Filters\FilterInterface;
 class Auth implements FilterInterface {
 
     public function before(RequestInterface $request, $arguments = null) {
-        if (empty(session()->get('user_id'))) {
-           // echo 'Sssion '.session()->get('user_id');
-          // return redirect()->to(base_url() . '/public/logout/2');
+        if (!session()->has('user_id')) {
+            return redirect()->to(base_url() . '/public/login');
         }
     }
 

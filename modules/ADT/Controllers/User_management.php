@@ -393,7 +393,7 @@ class User_management extends \App\Controllers\BaseController {
         $encrypted_password = md5($key . $password);
         $timestamp = date("Y-m-d");
 
-//Change the password
+        //Change the password
         if ($type == 'email') {
             $email = $this->request->getPost("contact_email");
             $user_id_sql = $this->db->query("SELECT id FROM users WHERE Email_Address='$email' LIMIT 1");
