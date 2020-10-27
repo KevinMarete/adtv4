@@ -1,55 +1,59 @@
 <?php
 
-if (!defined('BASEPATH'))
-    exit('No direct script access allowed');
+namespace Modules\Api\Models;
 
-class Api_model extends CI_Model {
+use App\Models\BaseModel;
+use Illuminate\Database\Capsule\Manager as DB;
+
+class Api_model extends BaseModel {
+
+    var $db;
 
     function __construct() {
-        parent::__construct();
+        $this->db = \Config\Database::connect();
         // $CI = &get_instance();
         // $CI -> load -> database();
     }
 
     function saveAPIConfig($conf) {
-        $CI = &get_instance();
-        $CI->load->database();
-        $CI->db->query("update api_config set value = 'off' where type='toggle'");
+
+        DB::update("update api_config set value = 'off' where type='toggle'");
 
         foreach ($conf as $key => $val) {
-            $CI->db->where('config', $key);
-            $CI->db->update('api_config', array('value' => $val));
+            // $CI->where('config', $key);
+            // $CI->db->update('api_config', array('value' => $val));
+            DB::update("UPDATE api_config SET value='$val' WHERE config='$key'");
         }
 
         return true;
     }
 
     function savePatientMatching($patient) {
-        $CI = &get_instance();
-        $CI->load->database();
-        $CI->db->insert('api_patient_matching', $patient);
+        // $CI = &get_instance();
+        //$CI->load->database();
+        DB::table('api_patient_matching')->insert($patient);
         return true;
     }
 
     function savePatient($patient, $external_id) {
-
-        $CI = &get_instance();
-        $CI->load->database();
-        $CI->db->insert('patient', $patient);
-        $insert_id = $CI->db->insert_id();
+        $insert_id = DB::table('patient')->insertGetId($patient);
+        //$CI = &get_instance();
+        //$CI->load->database();
+        // $CI->db->insert('patient', $patient);
+        // $insert_id = $CI->db->insert_id();
         // $this->savePatientMatching(array('internal_id'=>$insert_id, 'external_id'=>$external_id));
         return $insert_id;
     }
 
     function updatePatient($patient, $internal_patient_id) {
 
-        $CI = &get_instance();
-        $CI->load->database();
+        //  $CI = &get_instance();
+        // $CI->load->database();
+        $b = $this->db->table('patient');
+        $b->where('id', $internal_patient_id);
+        $b->update($patient);
 
-        $this->db->where('id', $internal_patient_id);
-        $this->db->update('patient', $patient);
-
-        if ($this->db->affected_rows() > 0) {
+        if ($this->db->affectedRows() > 0) {
             $resultable = true;
         } else {
             $resultable = false;
@@ -60,8 +64,8 @@ class Api_model extends CI_Model {
 
     function getPatient($internal_id = null) {
 
-        $CI = &get_instance();
-        $CI->load->database();
+        //$CI = &get_instance();
+        //$CI->load->database();
         $cond = '';
         $query_str = "SELECT p.*,ps.name as patient_status,pso.name as patient_source ,g.name as patient_gender FROM patient p
 		left join patient_status ps on p.current_status = ps.id 
@@ -72,10 +76,10 @@ class Api_model extends CI_Model {
         // do left join in the case of patient created on adt and not already on IL
 
 
-        $query = $CI->db->query($query_str);
+        $query = $this->db->query($query_str);
 
-        if (count($query->result()) > 0) {
-            $returnable = $query->result()[0];
+        if (count($query->getResult()) > 0) {
+            $returnable = $query->getResult()[0];
         } else {
             $returnable = false;
         }
@@ -84,8 +88,8 @@ class Api_model extends CI_Model {
 
     function getPatientbyID($internal_id = null) {
 
-        $CI = &get_instance();
-        $CI->load->database();
+        //$CI = &get_instance();
+        //$CI->load->database();
         $cond = '';
         $query_str = "SELECT p.*,ps.name as patient_status,pso.name as patient_source ,g.name as patient_gender FROM patient p
 		left join patient_status ps on p.current_status = ps.id 
@@ -97,10 +101,10 @@ class Api_model extends CI_Model {
         // do left join in the case of patient created on adt and not already on IL
 
 
-        $query = $CI->db->query($query_str);
+        $query = $this->db->query($query_str);
 
-        if (count($query->result()) > 0) {
-            $returnable = $query->result()[0];
+        if (count($query->getResult()) > 0) {
+            $returnable = $query->getResult()[0];
         } else {
             $returnable = false;
         }
@@ -109,14 +113,14 @@ class Api_model extends CI_Model {
 
     function getPatientExternalID($internal_id = null, $assigning_authority = null) {
 
-        $CI = &get_instance();
-        $CI->load->database();
+        //$CI = &get_instance();
+        //$CI->load->database();
         $cond = (isset($assigning_authority)) ? "and assigning_authority = '$assigning_authority' " : null;
         $query_str = "SELECT external_id as ID, identifier_type as IDENTIFIER_TYPE, assigning_authority as ASSIGNING_AUTHORITY FROM api_patient_matching WHERE internal_id   = '$internal_id' and external_id IS NOT NULL" . $cond;
-        $query = $CI->db->query($query_str);
+        $query = $this->db->query($query_str);
 
-        if (count($query->result()) > 0) {
-            $returnable = $query->result()[0];
+        if (count($query->getResult()) > 0) {
+            $returnable = $query->getResult()[0];
         } else {
             $returnable = false;
             $returnable = array('ID' => '', 'IDENTIFIER_TYPE' => '', 'ASSIGNING_AUTHORITY' => '');
@@ -126,14 +130,14 @@ class Api_model extends CI_Model {
 
     function getPatientInternalID($external_id = null, $assigning_authority = null) {
 
-        $CI = &get_instance();
-        $CI->load->database();
+        //$CI = &get_instance();
+        //$CI->load->database();
         $cond = (isset($assigning_authority)) ? "and assigning_authority = '$assigning_authority' " : null;
         $query_str = "SELECT id FROM api_patient_matching WHERE internal_id   = '$internal_id' and external_id IS NOT NULL" . $cond;
-        $query = $CI->db->query($query_str);
+        $query = $this->db->query($query_str);
 
-        if (count($query->result()) > 0) {
-            $returnable = $query->result()[0];
+        if (count($query->getResult()) > 0) {
+            $returnable = $query->getResult()[0];
         } else {
             $returnable = false;
             $returnable = array('ID' => '', 'IDENTIFIER_TYPE' => '', 'ASSIGNING_AUTHORITY' => '');
@@ -142,17 +146,17 @@ class Api_model extends CI_Model {
     }
 
     function getPatientAppointment($appointment_id = null) {
-        $CI = &get_instance();
-        $CI->load->database();
+        // $CI = &get_instance();
+        // $CI->load->database();
 
         $sql = "SELECT DATE_FORMAT(MIN(pa.appointment), '%Y%m%d') appointment, pa.facility facility_code, p.*
 				FROM patient_appointment pa 
 				LEFT JOIN patient p ON p.patient_number_ccc = pa.patient
 				WHERE pa.id = '$appointment_id'";
-        $query = $CI->db->query($sql);
+        $query = $this->db->query($sql);
 
-        if (count($query->result()) > 0) {
-            $returnable = $query->result()[0];
+        if (count($query->getResult()) > 0) {
+            $returnable = $query->getResult()[0];
         } else {
             $returnable = false;
         }
@@ -160,8 +164,8 @@ class Api_model extends CI_Model {
     }
 
     function getDispensing($order_id = null) {
-        $CI = &get_instance();
-        $CI->load->database();
+        // $CI = &get_instance();
+        // $CI->load->database();
 
         $sql = "SELECT *, dpd.strength as drug_strength, pv.id visit_id, DATE_FORMAT(timecreated, '%Y%m%d%h%i%s') timecreated, pv.duration disp_duration, TRIM(d.drug) drugcode, pv.quantity disp_quantity, pv.dose disp_dose
 				FROM patient_visit pv 
@@ -171,10 +175,11 @@ class Api_model extends CI_Model {
 				INNER JOIN patient p ON p.patient_number_ccc = pv.patient_id
 				INNER JOIN drugcode d ON d.id = pv.drug_id
 				WHERE dp.id = '$order_id'";
-        $query = $CI->db->query($sql);
 
-        if (count($query->result()) > 0) {
-            $returnable = $query->result();
+        $query = $this->db->query($sql);
+
+        if (count($query->getResult()) > 0) {
+            $returnable = $query->getResult();
         } else {
             $returnable = false;
         }
@@ -182,13 +187,13 @@ class Api_model extends CI_Model {
     }
 
     function getUsers($merchantemail = null) {
-        $CI = &get_instance();
-        $CI->load->database();
+        //$CI = &get_instance();
+        //$CI->load->database();
 
         $query = $CI->db->query("SELECT * FROM user");
 
-        if (count($query->result()) > 0) {
-            $returnable = $query->result();
+        if (count($query->getResult()) > 0) {
+            $returnable = $query->getResult();
         } else {
             $returnable = false;
         }
@@ -201,21 +206,22 @@ class Api_model extends CI_Model {
         $patient = $appointment['patient'];
         $appointment = $appointment['appointment'];
 
-        $CI = &get_instance();
-        $CI->load->database();
-        $query = $CI->db->query("update patient set $appointment_col = '$appointment' where patient_number_ccc = '$patient'");
-        $CI->db->insert("$appointment_tbl", $appointment);
-        $insert_id = $CI->db->insert_id();
+        //$CI = &get_instance();
+        //$CI->load->database();
+        $query = $this->db->query("update patient set $appointment_col = '$appointment' where patient_number_ccc = '$patient'");
+        $b = $this->db->table($appointment_tbl);
+        $b->insert($appointment);
+        $insert_id = $b->getInsertID();
         return $insert_id;
     }
 
     function saveDrugPrescription($prescription, $prescription_details) {
         $pe_details = array();
-        $CI = &get_instance();
-        $CI->load->database();
-        $CI->db->insert('drug_prescription', $prescription);
-
-        $insert_id = $CI->db->insert_id();
+        //$CI = &get_instance();
+        //$CI->load->database();
+        $b = $this->db->table('drug_prescription');
+        $b->insert($prescription);
+        $insert_id = $db->getInsertID();
         foreach ($prescription_details as $details) {
             # code...
             $pe_details = array(
@@ -229,19 +235,19 @@ class Api_model extends CI_Model {
                 'quantity_prescribed' => $details->QUANTITY_PRESCRIBED,
                 'prescription_notes' => $details->PRESCRIPTION_NOTES
             );
-            $CI->db->insert('drug_prescription_details', $pe_details);
+            $b->insert($pe_details);
         }
         return $pe_details;
     }
 
     function getRegimen($regimenCode) {
-        $CI = &get_instance();
-        $CI->load->database();
+        // $CI = &get_instance();
+        //$CI->load->database();
 
-        $query = $CI->db->query("SELECT * FROM regimen WHERE lower(regimen_code) = lower('$regimenCode')");
+        $query = $this->db->query("SELECT * FROM regimen WHERE lower(regimen_code) = lower('$regimenCode')");
 
-        if (count($query->result()) > 0) {
-            $returnable = $query->result()[0];
+        if (count($query->getResult()) > 0) {
+            $returnable = $query->getResult()[0];
         } else {
             $returnable = false;
         }
@@ -249,13 +255,13 @@ class Api_model extends CI_Model {
     }
 
     function getActivePatientStatus() {
-        $CI = &get_instance();
-        $CI->load->database();
+        //$CI = &get_instance();
+        //$CI->load->database();
 
-        $query = $CI->db->query("SELECT * FROM patient_status WHERE lower(Name) = 'active'");
+        $query = $this->db->query("SELECT * FROM patient_status WHERE lower(Name) = 'active'");
 
-        if (count($query->result()) > 0) {
-            $returnable = $query->result()[0];
+        if (count($query->getResult()) > 0) {
+            $returnable = $query->getResult()[0];
         } else {
             $returnable = false;
         }

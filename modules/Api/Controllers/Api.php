@@ -740,29 +740,29 @@ class Api extends \CodeIgniter\Controller {
     }
 
     public function init_api_values() {
-//        $CI = &get_instance();
-//        $CI->load->database();
-//
-//        $sql = "SELECT * FROM api_config";
-//        $query = $CI->db->query($sql);
-//        $api_config = $query->result_array();
-//
-//        $conf = array();
-//        foreach ($api_config as $ob) {
-//            $conf[$ob['config']] = $ob['value'];
-//        }
-//
-//        $this->api = ($conf['api_status'] == 'on') ? TRUE : FALSE;
-//        $this->patient_module = ($conf['api_patients_module'] == 'on') ? TRUE : FALSE;
-//        $this->dispense_module = ($conf['api_dispense_module'] == 'on') ? TRUE : FALSE;
-//        $this->appointment_module = ($conf['api_appointments_module'] == 'on') ? TRUE : FALSE;
-//        $this->adt_url = (strlen($conf['api_adt_url']) > 2) ? $conf['api_adt_url'] : FALSE;
-//        $this->adt_port = (strlen($conf['api_adt_port']) > 1) ? $conf['api_adt_port'] : FALSE;
-//        $this->il_ip = (strlen($conf['api_il_ip']) > 1) ? $conf['api_il_ip'] : FALSE;
-//        $this->il_port = (strlen($conf['api_il_port']) > 1) ? $conf['api_il_port'] : FALSE;
-//        $this->logging = $conf['api_logging'] == 'on' ? TRUE : FALSE;
-//
-//        return $api_config;
+        $CI = &get_instance();
+        $CI->load->database();
+
+        $sql = "SELECT * FROM api_config";
+        $query = $CI->db->query($sql);
+        $api_config = $query->result_array();
+
+        $conf = array();
+        foreach ($api_config as $ob) {
+            $conf[$ob['config']] = $ob['value'];
+        }
+
+        $this->api = ($conf['api_status'] == 'on') ? TRUE : FALSE;
+        $this->patient_module = ($conf['api_patients_module'] == 'on') ? TRUE : FALSE;
+        $this->dispense_module = ($conf['api_dispense_module'] == 'on') ? TRUE : FALSE;
+        $this->appointment_module = ($conf['api_appointments_module'] == 'on') ? TRUE : FALSE;
+        $this->adt_url = (strlen($conf['api_adt_url']) > 2) ? $conf['api_adt_url'] : FALSE;
+        $this->adt_port = (strlen($conf['api_adt_port']) > 1) ? $conf['api_adt_port'] : FALSE;
+        $this->il_ip = (strlen($conf['api_il_ip']) > 1) ? $conf['api_il_ip'] : FALSE;
+        $this->il_port = (strlen($conf['api_il_port']) > 1) ? $conf['api_il_port'] : FALSE;
+        $this->logging = $conf['api_logging'] == 'on' ? TRUE : FALSE;
+
+        return $api_config;
     }
 
     public function parseCCC($ccc, $mfl_code = false) {
