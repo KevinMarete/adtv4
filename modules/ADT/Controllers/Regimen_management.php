@@ -55,7 +55,7 @@ class Regimen_management extends \App\Controllers\BaseController {
 
         $regimens = Regimen::getAllHydrated($source, $access_level);
 
-        $tmpl = array('table_open' => '<table id="regimen_setting" class="table table-bordered table-hover table-striped setting_table">');
+        $tmpl = array('table_open' => '<table id="regimen_setting HIDECOLUMN" class="table table-bordered table-hover table-striped setting_table">');
         $this->table->setTemplate($tmpl);
         $this->table->setHeading('id', 'Regimen', 'Line', 'Regimen Category', 'Type Of Service', 'Options');
         foreach ($regimens as $regimen) {

@@ -16,6 +16,8 @@ use \Modules\ADT\Models\Transaction_type;
 use \Modules\ADT\Models\Counties;
 use Illuminate\Database\Capsule\Manager as DB;
 
+
+
 class Report_management extends \App\Controllers\BaseController
 {
 
@@ -4070,7 +4072,7 @@ class Report_management extends \App\Controllers\BaseController
     $table .= "</tbody></table>";
 
 
-    $this->mpdf = new \Mpdf\Mpdf([
+    $this->mpdf = new Mpdf\Mpdf([
       'format' => 'A3-L',
       'mode' => 'utf-8',
       'orientation' => 'L'
