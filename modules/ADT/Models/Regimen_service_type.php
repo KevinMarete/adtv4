@@ -12,16 +12,16 @@ class Regimen_service_type extends BaseModel {
     protected $fillable = array('Name', 'Active');
 
     public static function getAll() {
-        return DB::table('Regimen_Service_Type')->where("Active", "1")->get();
+        return DB::table('regimen_service_type')->where("Active", "1")->get();
     }
 
     public static function getHydratedAll() {
-        $query = DB::table('Regimen_Service_Type')->where("Active", "1")->get();
+        $query = DB::table('regimen_service_type')->where("Active", "1")->get();
         return BaseModel::resultSet($query);
     }
 
     public static function getTotalNumber() {
-        $query = DB::select("SELECT count(*) as Total_Types FROM Regimen_Service_Type");
+        $query = DB::select("SELECT count(*) as Total_Types FROM regimen_service_type");
         return BaseModel::resultSet($query)[0]['Total_Types'];
     }
 

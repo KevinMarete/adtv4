@@ -11,18 +11,18 @@ class Patient_Source extends BaseModel {
     protected $fillable = array('Name', 'Active');
 
     public function getAll() {
-        $query = Doctrine_Query::create()->select("*")->from("Patient_Source")->where("Active", "1");
+        $query = Doctrine_Query::create()->select("*")->from("patient_source")->where("active", "1");
         $sources = $query->execute();
         return $sources;
     }
 
     public function getSources() {
-        $query = DB::table('Patient_Source')->where('active', '1')->get();
+        $query = DB::table('patient_source')->where('active', '1')->get();
         return BaseModel::resultSet($query);
     }
 
     public function getTotalNumber() {
-        $query = DB::select("SELECT count(*) as Total_Sources FROM Patient_Source");
+        $query = DB::select("SELECT count(*) as Total_Sources FROM patient_source");
         return $query[0]->Total_Sources;
     }
 
@@ -33,17 +33,17 @@ class Patient_Source extends BaseModel {
     }
 
     public static function getThemAll() {
-        $query = DB::table('Patient_Source')->get();
+        $query = DB::table('patient_source')->get();
         return $query;
     }
 
     public static function getSource($id) {
-        $query = DB::table('Patient_Source')->where('id', $id)->get();
+        $query = DB::table('patient_source')->where('id', $id)->get();
         return $query[0];
     }
 
     public function getItems() {
-        $query = DB::table('Patient_Source')->select('id', 'Name')->where('active', '1')->orderby("Name asc");
+        $query = DB::table('patient_source')->select('id', 'name')->where('active', '1')->orderby("name asc");
         return BaseModel::resultSet($query);
     }
 

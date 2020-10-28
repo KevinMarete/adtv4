@@ -22,7 +22,7 @@ class Patient_appointment extends BaseModel {
       } */
 
     public static function getAllScheduled($timestamp) {
-        $query = DB::table("Patient_Appointment")->where('appointment',$timestamp)->get();
+        $query = DB::table("patient_appointment")->where('appointment',$timestamp)->get();
         return $query;
     }
 

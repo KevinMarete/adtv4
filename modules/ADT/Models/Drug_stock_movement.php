@@ -49,21 +49,21 @@ class Drug_stock_movement extends BaseModel {
       } */
 
     public function getTotalTransactions($facility) {
-        $query = Doctrine_Query::create()->select("count(*) as Total_Transactions")->from("Drug_Stock_Movement")->where("Facility= '$facility'");
+        $query = Doctrine_Query::create()->select("count(*) as Total_Transactions")->from("drug_stock_movement")->where("Facility= '$facility'");
         //echo $query->getSQL();
         $total = $query->execute();
         return $total[0]['Total_Transactions'];
     }
 
     public function getPagedTransactions($offset, $items, $machine_code, $drug, $facility, $transaction_date, $timestamp) {
-        $query = Doctrine_Query::create()->select("dm2.*")->from("Drug_Stock_Movement dm2")->where("dm2.Machine_Code = '$machine_code' and dm2.Facility='$facility' and dm2.Timestamp>$timestamp");
+        $query = Doctrine_Query::create()->select("dm2.*")->from("drug_stock_movement dm2")->where("dm2.Machine_Code = '$machine_code' and dm2.Facility='$facility' and dm2.Timestamp>$timestamp");
         //echo $query->getSQL();
         $drug_transactions = $query->execute(array(), Doctrine::HYDRATE_ARRAY);
         return $drug_transactions;
     }
 
     public function getPagedFacilityTransactions($offset, $items, $facility) {
-        $query = Doctrine_Query::create()->select("*")->from("Drug_Stock_Movement")->where("Facility='$facility'")->offset($offset)->limit($items);
+        $query = Doctrine_Query::create()->select("*")->from("drug_stock_movement")->where("Facility='$facility'")->offset($offset)->limit($items);
         $drug_transactions = $query->execute(array(), Doctrine::HYDRATE_ARRAY);
         return $drug_transactions;
     }
@@ -80,7 +80,7 @@ class Drug_stock_movement extends BaseModel {
             $where = "and ds.source='$facility'  and ds.source=ds.destination";
         }
 
-        $query = Doctrine_Query::create()->select("*")->from("Drug_Stock_Movement ds")->where("ds.Facility='$facility' and ds.drug='$drug_id' $where")->orderBy("ds.id desc");
+        $query = Doctrine_Query::create()->select("*")->from("drug_stock_movement ds")->where("ds.Facility='$facility' and ds.drug='$drug_id' $where")->orderBy("ds.id desc");
         $drug_transactions = $query->execute();
         return $drug_transactions;
     }

@@ -85,7 +85,7 @@ class Drugcode extends BaseModel {
     }
 
     public static function getNonMappedDrugs() {
-        $query = DB::select("SELECT d.*,du.Name as drug_unit from drugcode d left Join Drug_Unit du ON d.unit = du.id WHERE d.Enabled = '1' AND d.map='' OR d.map='0' order By drug asc ");
+        $query = DB::select("SELECT d.*,du.Name as drug_unit from drugcode d left Join drug_unit du ON d.unit = du.id WHERE d.Enabled = '1' AND d.map='' OR d.map='0' order By drug asc ");
         return BaseModel::resultSet($query);
     }
 

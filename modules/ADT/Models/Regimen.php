@@ -34,17 +34,17 @@ class Regimen extends BaseModel {
     }
 
     public static function getAll($source = 0) {
-        $query = DB::select("SELECT * from Regimen where Source =  $source  or Source ='0' order By Regimen_Desc asc");
+        $query = DB::select("SELECT * from regimen where Source =  $source  or Source ='0' order By Regimen_Desc asc");
         return $query;
     }
 
     public static function getAllEnabled($source = 0) {
-        $query = DB::select("SELECT * from Regimen where enabled ='1' order By Regimen_Code asc");
+        $query = DB::select("SELECT * from regimen where enabled ='1' order By Regimen_Code asc");
         return $query;
     }
 
     public static function getAllObjects($source = 0) {
-        $query = DB::select("SELECT * from Regimen where Source =  $source  or Source ='0' order By Regimen_Code asc");
+        $query = DB::select("SELECT * from regimen where Source =  $source  or Source ='0' order By Regimen_Code asc");
         return $query;
     }
 
@@ -54,7 +54,7 @@ class Regimen extends BaseModel {
         } else {
             $displayed_enabled = "r.Source='$source' or r.Source='0' AND r.Enabled='1'";
         }
-        $query = DB::select("SELECT r.id, r.Regimen_Code, r.Regimen_Desc, r.Line, rc.Name as Regimen_Category, rst.Name as Regimen_Service_Type, r.Enabled, r.Merged_To, r.map FROM Regimen r LEFT JOIN Regimen_Category rc ON r.category = rc.id LEFT JOIN Regimen_Service_Type rst ON rst.id = r.type_of_service WHERE $displayed_enabled ORDER BY r.id desc ");
+        $query = DB::select("SELECT r.id, r.Regimen_Code, r.Regimen_Desc, r.Line, rc.Name as Regimen_Category, rst.Name as Regimen_Service_Type, r.Enabled, r.Merged_To, r.map FROM regimen r LEFT JOIN regimen_category rc ON r.category = rc.id LEFT JOIN regimen_service_type rst ON rst.id = r.type_of_service WHERE $displayed_enabled ORDER BY r.id desc ");
         return BaseModel::resultSet($query);
     }
 
@@ -85,12 +85,12 @@ class Regimen extends BaseModel {
     }
 
     public static function getRegimen($id) {
-        $query = DB::table('Regimen')->where('id', $id)->get();
+        $query = DB::table('regimen')->where('id', $id)->get();
         return $query[0];
     }
 
     public static function getHydratedRegimen($id) {
-         return BaseModel::resultSet(DB::table('Regimen')->where('id', $id)->get());
+         return BaseModel::resultSet(DB::table('regimen')->where('id', $id)->get());
       
     }
 
