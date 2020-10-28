@@ -92,7 +92,7 @@ class Notification_management extends \App\Controllers\BaseController {
         $overall_total = 0;
         $error_array = [];
         $data['facility_code'] = session()->get('facility');
-        $query = "SELECT * FROM Facilities where facilitycode=" . $data['facility_code'];
+        $query = "SELECT * FROM facilities where facilitycode=" . $data['facility_code'];
         $query = $db->query($query);
 
         $cs = $query->getResultArray()[0]['ccc_separator'];
