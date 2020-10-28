@@ -6,7 +6,7 @@ use App\Models\BaseModel;
 use App\Models\Sync_regimen_category;
 use Illuminate\Database\Capsule\Manager as DB;
 
-class Sync_regimen extends BaseModel {
+class Sync_Regimen extends BaseModel {
 
     protected $table = 'sync_regimen';
     protected $fillable = array('name', 'code', 'old_code', 'description', 'category_id', 'Active');
