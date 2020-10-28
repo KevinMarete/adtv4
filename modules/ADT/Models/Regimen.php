@@ -5,7 +5,7 @@ namespace Modules\ADT\Models;
 use App\Models\BaseModel;
 use App\Models\User;
 use \Modules\ADT\Models\Regimen_category;
-use \Modules\ADT\Models\Regimen_Service_Type;
+use \Modules\ADT\Models\RegimenServiceType;
 use \Modules\ADT\Models\Regimen_Drug;
 use \Modules\ADT\Models\Sync_Regimen;
 use Illuminate\Database\Capsule\Manager as DB;
@@ -22,7 +22,7 @@ class Regimen extends BaseModel {
     }
 
     function Regimen_Service_Type() {
-        return $this->hasOne(Regimen_Service_Type::class, 'id', 'type_of_service');
+        return $this->hasOne(RegimenServiceType::class, 'id', 'type_of_service');
     }
 
     function Regimen_Drug() {
