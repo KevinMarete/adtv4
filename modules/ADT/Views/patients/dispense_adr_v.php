@@ -100,12 +100,7 @@
                 <tr>
                     <td> <label><span class='astericks'>*</span>PATIENT’S NAME/ INITIALS </label>
                         <?php
-                        $patient = $patient_details['first_name'] . ' ' . $patient_details['last_name'];
-                        $expl = explode(' ',$patient);
-                        $new_patient = '';
-                        foreach ($expl as $e){
-                            $new_patient .= $e[0].'.';
-                        }
+                        $new_patient = (trim($patient_details['first_name'])[0] ?? '') . '.' . (trim($patient_details['last_name'])[0] ?? '');
                         ?>
                         <input type="text" name="patientname" id="patientname" value="<?= rtrim($new_patient,'.'); ?>" class="validate[required] f-input">
                     </td>

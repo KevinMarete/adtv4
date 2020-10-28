@@ -46,12 +46,14 @@ class Excel_migration extends BaseController {
         $reader->setReadDataOnly(true);
         $spreadsheet = $reader->load($file);
         $worksheet = $spreadsheet->getActiveSheet();
-        $data = array_chunk($worksheet->toArray(), 100);
+        $all_data = $worksheet->toArray();
+        array_shift($all_data);
+        $data = array_chunk($all_data, 100);
 
         // Patient list
         if($upload_type == 'patient_list'){
             foreach($data as $chunk){
-                $this->importPatientHistory($chunk, $facilty_code);
+                $this->importPatientList($chunk, $facilty_code);
             }
 
             $this->session->setFlashdata('msg', 'Patient data has been uploaded successfully.');
@@ -60,7 +62,7 @@ class Excel_migration extends BaseController {
         // Patient history
         else if($upload_type == 'patient_history'){
             foreach($data as $chunk){
-                $this->importPatientList($chunk, $facilty_code);
+                $this->importPatientHistory($chunk, $facilty_code);
             }
 
             $this->session->setFlashdata('msg', 'Patient history import has not been implemented yet.');
@@ -119,8 +121,8 @@ class Excel_migration extends BaseController {
                 'differentiated_care' => $this->getDifferentiatedCare(trim($row[27]))
             ];
         }
-
         DB::table('patient')->insert($insert_data);
+
     }
 
     function getSex($value){
@@ -162,8 +164,8 @@ class Excel_migration extends BaseController {
     }
 
     function getStatus($value){
-        $result = '';
-        if(!empty($value)){
+        $result = '1';
+        if(!empty($value) || $value == 'NULL'){
             if(strtolower($value) == 'active') $result = 1;
             else if(strtolower($value) == 'lost' || strtolower($value) == 'lost - not care-ended') $result = 5;
             if(strtolower($value) == 'transfer' || strtolower($value) == 'referred to another facility') $result = 8;

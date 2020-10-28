@@ -202,14 +202,13 @@ if ($user_is_administrator) {
 
         </script>
         <?php
-//Load tableTools for datatables printing and exporting
+        //Load tableTools for datatables printing and exporting
         if (isset($report_title)) {
             ?>
             <style type="text/css" title="currentStyle">
                 @import "<?php echo base_url() . '/public/assets/styles/datatable/demo_page.css'; ?>";
                 @import "<?php echo base_url() . '/public/assets/styles/datatable/demo_table.css'; ?>";
                 @import "<?php echo base_url() . '/public/assets/styles/datatable/TableTools.css' ?>";
-                ";
             </style>
             <script type="text/javascript" charset="utf-8" src="<?php echo base_url() . '/public/assets/Scripts/datatable/ZeroClipboard.js' ?>"></script>
             <script type="text/javascript" charset="utf-8"  src="<?php echo base_url() . '/public/assets/Scripts/datatable/TableTools.js' ?>"></script>
@@ -318,7 +317,7 @@ if ($user_is_administrator) {
 
 
         <?php
-//Load validation settings for reports
+        //Load validation settings for reports
         if (isset($reports) || isset($report_title)) {
             ?>
             <style type="text/css">
@@ -523,9 +522,9 @@ if ($user_is_administrator) {
                         <?php
                     }
                     echo view($content_view);
-//Load modals view
+                    //Load modals view
                     echo view('\Modules\ADT\Views\sections\\modals_v');
-//Load modals view end
+                    //Load modals view end
                     ?>
                 </div>
             </div>
