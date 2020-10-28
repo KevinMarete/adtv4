@@ -55,7 +55,7 @@ class Inventory_management extends \App\Controllers\BaseController {
     function getIsoniazid($patientid = null) {
         $patientid = $this->uri->getSegment(3);
         $ids = [];
-        $res = Drugcode::where('drug', 'like', '%ISONIAZID%')->get();
+        $res = Drugcode::where('drug', 'like', "'%ISONIAZID%'")->get();
         foreach ($res as $i){
             $ids[] = $i->id;
         }
