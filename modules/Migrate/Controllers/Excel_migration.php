@@ -164,7 +164,7 @@ class Excel_migration extends BaseController {
     }
 
     function getStatus($value){
-        $result = 'active';
+        $result = '1';
         if(!empty($value) || $value == 'NULL'){
             if(strtolower($value) == 'active') $result = 1;
             else if(strtolower($value) == 'lost' || strtolower($value) == 'lost - not care-ended') $result = 5;

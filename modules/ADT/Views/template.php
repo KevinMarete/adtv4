@@ -548,10 +548,10 @@ if ($user_is_administrator) {
                     <div class="row-fluid">
                         <div id="footer_text2" class="span12" style="text-align:center">
                             Government of Kenya &copy; <?php echo date('Y'); ?>.
-                            All Rights Reserved . <strong>Web-ADT version 3.5.0</strong>
-                            <?php //if (str_replace('.', '', $update_available->release) + 0 > '3.4.2') { ?>
+                            All Rights Reserved . <strong>Web-ADT version <?= config('Adt_config')->adt_version ?></strong>
+                            <?php if ($session->get('update_available')) { ?>
                             <a class="badge badge-warning blinking" href="#adt_update_modal" data-toggle="modal">New Update available</div>
-                        <?php // } ?>
+                        <?php } ?>
                     </div>  
                 </div>
         </div>
