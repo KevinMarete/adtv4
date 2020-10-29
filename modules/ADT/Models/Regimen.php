@@ -4,7 +4,7 @@ namespace Modules\ADT\Models;
 
 use App\Models\BaseModel;
 use App\Models\User;
-use \Modules\ADT\Models\Regimen_category;
+use \Modules\ADT\Models\RegimenCategory;
 use \Modules\ADT\Models\RegimenServiceType;
 use \Modules\ADT\Models\RegimenDrug;
 use \Modules\ADT\Models\Sync_Regimen;
@@ -18,7 +18,7 @@ class Regimen extends BaseModel {
     protected $appends = ['name'];
 
     function Regimen_Category() {
-        return $this->hasOne(Regimen_Category::class, 'id', 'category');
+        return $this->hasOne(RegimenCategory::class, 'id', 'category');
     }
 
     function Regimen_Service_Type() {
