@@ -32,12 +32,12 @@ class Drug_unit extends BaseModel {
     }
 
    public static function getTotalNumber() {
-        $query = DB::select("SELECT count(*) as Total_Units FROM Drug_Unit");
+        $query = DB::select("SELECT count(*) as Total_Units FROM drug_unit");
         return $query[0]->Total_Units;
     }
 
    public static function getPagedDrugUnits($offset, $items) {
-        $query = Doctrine_Query::create()->select("*")->from("Drug_Unit")->offset($offset)->limit($items);
+        $query = Doctrine_Query::create()->select("*")->from("drug_unit")->offset($offset)->limit($items);
         $drug_units = $query->execute();
         return $drug_units;
     }

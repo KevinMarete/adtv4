@@ -36,7 +36,7 @@ class Facilities extends BaseModel {
 
     public function getDistrictFacilities($district)
     {
-        $query = Doctrine_Query::create()->select("facilitycode,name")->from("Facilities")->where("District = '" . $district . "'");
+        $query = Doctrine_Query::create()->select("facilitycode,name")->from("facilities")->where("District = '" . $district . "'");
         $facilities = $query->execute();
         return $facilities;
     }
@@ -58,9 +58,9 @@ class Facilities extends BaseModel {
     public static function getTotalNumber($district = 0)
     {
         if ($district == 0) {
-            $query = DB::select("SELECT COUNT(*) as Total_Facilities FROM Facilities");
+            $query = DB::select("SELECT COUNT(*) as Total_Facilities FROM facilities");
         } else if ($district > 0) {
-            $query = DB::select("SELECT COUNT(*) as Total_Facilities FROM Facilities WHERE district = '$district'");
+            $query = DB::select("SELECT COUNT(*) as Total_Facilities FROM facilities WHERE district = '$district'");
         }
         return $query[0]->Total_Facilities;
     }
@@ -98,17 +98,17 @@ class Facilities extends BaseModel {
     }
 
     public static function getAll() {
-        $query = DB::table('Facilities')->get();
+        $query = DB::table('facilities')->get();
         return BaseModel::resultSet($query);
     }
 
     public static function getFacilities() {
-        $query = DB::table('Facilities')->select('facilitycode', 'name')->orderBy("name")->get();
+        $query = DB::table('facilities')->select('facilitycode', 'name')->orderBy("name")->get();
         return BaseModel::resultSet($query);
     }
 
     public static function getSatellites($parent) {
-        $query = DB::select("SELECT id,facilitycode,name FROM Facilities  where parent = '$parent' AND facilitycode !='$parent' order By  name asc");
+        $query = DB::select("SELECT id,facilitycode,name FROM facilities  where parent = '$parent' AND facilitycode !='$parent' order By  name asc");
         return BaseModel::resultSet($query);
     }
 
@@ -121,7 +121,7 @@ class Facilities extends BaseModel {
         */
 
         $db = \Config\Database::connect();
-        $builder = $db->table('Facilities')->where('facilitycode', $id);
+        $builder = $db->table('facilities')->where('facilitycode', $id);
         $query = $builder->get();
 
         return $query->getRow();

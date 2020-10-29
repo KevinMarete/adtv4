@@ -7,6 +7,7 @@ use \Modules\Tables\Controllers\Tables;
 use \Modules\Template\Controllers\Template;
 use App\Libraries\Mysqldump;
 use App\Libraries\Zip;
+use \Modules\Api\Models\Api_model;
 
 class Api extends \CodeIgniter\Controller {
 
@@ -30,6 +31,7 @@ class Api extends \CodeIgniter\Controller {
     var $session;
     var $db;
     var $table;
+    var $api_model;
 
     public function __construct() {
         ini_set("max_execution_time", "100000");
@@ -40,10 +42,13 @@ class Api extends \CodeIgniter\Controller {
         $this->session = \Config\Services::session();
         $this->db = \Config\Database::connect();
         $this->table = new \CodeIgniter\View\Table();
+        $this->api_model = new Api_model();
+        
         // $this->load->model('api_model');
     }
 
     public function index() {
+        
         // "PATIENT_SOURCE":string"HBCT/VCT/OPD/MCH/TB-CLINIC/IPD-CHILD/IPD-ADULT/CCC/SELF-TEST"
 // @marital status non existent in ADT... but needed in IQCare
         // Patient source -- HB

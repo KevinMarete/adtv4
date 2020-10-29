@@ -7,11 +7,11 @@ use Illuminate\Database\Capsule\Manager as DB;
 
 class Drug_source extends BaseModel {
 
-    protected $table = 'Drug_Source';
+    protected $table = 'drug_source';
     protected $fillable = array('name', 'active');
 
     public static function getAll() {
-        $res = DB::table("Drug_Source")->where("Active", "1")->get();
+        $res = DB::table("drug_source")->where("Active", "1")->get();
         return json_decode(json_encode($res), true);
     }
 
@@ -21,20 +21,20 @@ class Drug_source extends BaseModel {
     }
 
     public function getAllHydrate() {
-        $query = Doctrine_Query::create()->select("*")->from("Drug_Source")->where("Active=1")->orderBy("id ASC");
+        $query = Doctrine_Query::create()->select("*")->from("drug_source")->where("Active=1")->orderBy("id ASC");
         //return $query->getSqlQuery();
         $destinations = $query->execute(array(), Doctrine::HYDRATE_ARRAY);
         return $destinations;
     }
 
     public function getTotalNumber() {
-        $query = Doctrine_Query::create()->select("count(*) as Total_Sources")->from("Drug_Source")->where("Active='1'");
+        $query = Doctrine_Query::create()->select("count(*) as Total_Sources")->from("drug_source")->where("Active='1'");
         $total = $query->execute();
         return $total[0]['Total_Sources'];
     }
 
     public function getPagedSources($offset, $items) {
-        $query = Doctrine_Query::create()->select("Name,Active")->from("Drug_Source")->where("Active='1'")->offset($offset)->limit($items);
+        $query = Doctrine_Query::create()->select("Name,Active")->from("drug_source")->where("Active='1'")->offset($offset)->limit($items);
         $ois = $query->execute();
         return $ois;
     }
@@ -46,9 +46,9 @@ class Drug_source extends BaseModel {
 
     public static function getThemAll($access_level = "") {
         if ($access_level = "" || $access_level == "facility_administrator") {
-            $query = DB::table("Drug_Source")->get();
+            $query = DB::table("drug_source")->get();
         } else {
-            $query = DB::table("Drug_Source")->where("Active", "1")->get();
+            $query = DB::table("drug_source")->where("Active", "1")->get();
         }
         return $query;
     }

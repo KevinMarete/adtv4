@@ -27,7 +27,7 @@ class Regimen_drug extends BaseModel {
             $displayed_enabled = "AND Enabled='1'";
         }
 
-        $query = Doctrine_Query::create()->select("*")->from("Regimen_Drug")->where('Source = "' . $source . '" or Source ="0"' . $displayed_enabled);
+        $query = Doctrine_Query::create()->select("*")->from("regimen_drug")->where('Source = "' . $source . '" or Source ="0"' . $displayed_enabled);
         $regimen_drugs = $query->execute();
         return $regimen_drugs;
     }

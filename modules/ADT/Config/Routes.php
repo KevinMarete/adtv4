@@ -2,6 +2,7 @@
 
 /* Default route */
 $routes->get('/', '\Modules\ADT\Controllers\User_management::login');
+$routes->post('initialize', '\Modules\Setup\Controllers\Setup::initialize');
 
 /* Authentication Routes */
 // $routes->get('/', '\Modules\ADT\Controllers\System_management::index');
@@ -448,6 +449,7 @@ $routes->get('admin_management/addCounty', '\Modules\ADT\Controllers\Admin_manag
 
 
 $routes->get('github', '\Modules\Github\Controllers\Github::index');
+$routes->get('help', '\Modules\Help\Controllers\Help::index');
 $routes->get('help', '\Modules\Help\Controllers\Help::index');
 
 

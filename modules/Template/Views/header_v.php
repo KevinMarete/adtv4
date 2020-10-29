@@ -30,14 +30,14 @@
 <script src="<?php echo base_url().'/public/assets/scripts/jquery-1.10.2.min.js'?>" type="text/javascript"></script>
 <script src="<?php echo base_url().'/public/assets/scripts/jquery.cookie-1.3.1.js'?>" type="text/javascript"></script>
 <script src="<?php echo base_url().'/public/assets/scripts/jquery.steps.js'?>" type="text/javascript"></script>
-<script src="<?php echo base_url().'/public/assets/scripts/jquery-migrate-1.2.1.min.js'?>" type="text/javascript"></script>
+<!--<script src="<?php echo base_url().'/public/assets/scripts/jquery-migrate-1.2.1.min.js'?>" type="text/javascript"></script>-->
 <script src="<?php echo base_url().'/public/assets/scripts/jquery-ui/jquery-ui.min.js'?>" type="text/javascript"></script>
 <script src="<?php echo base_url().'/public/assets/scripts/bootstrap/bootstrap.min.js'?>" type="text/javascript"></script>
 <script src="<?php echo base_url().'/public/assets/scripts/datatable/jquery.dataTables.min.js'?>" type="text/javascript"></script>
 <script src="<?php echo base_url().'/public/assets/scripts/nascop.js'?>" type="text/javascript"></script>
 <!--<script src="<?php //echo base_url().'/public/assets/scripts/datatable/dataTables.bootstrap.js'?>" type="text/javascript"></script>-->
 <!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
-<script src="<?php echo base_url().'/public/lib/fileuploader/js/vendor/jquery.ui.widget.js';?>"></script>
+<!--<script src="<?php echo base_url().'/public/lib/fileuploader/js/vendor/jquery.ui.widget.js';?>"></script>-->
 <!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
 <script src="<?php echo base_url().'/public/lib/fileuploader/js/jquery.iframe-transport.js';?>"></script>
 <!-- The basic File Upload plugin -->

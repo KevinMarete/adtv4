@@ -17,7 +17,7 @@ class Regimen_change_purpose extends BaseModel {
     }
 
     public static function getAllHydrated() {
-        return BaseModel::resultSet(DB::table('Regimen_Change_Purpose')->where("Active", "1")->get());
+        return BaseModel::resultSet(DB::table('Regimen_Change_Purpose')->where("active", "1")->get());
     }
 
     public function getTotalNumber() {
@@ -27,7 +27,7 @@ class Regimen_change_purpose extends BaseModel {
     }
 
     public function getPagedPurposes($offset, $items) {
-        $query = Doctrine_Query::create()->select("Name")->from("Regimen_Change_Purpose")->offset($offset)->limit($items);
+        $query = Doctrine_Query::create()->select("Name")->from("regimen_change_purpose")->offset($offset)->limit($items);
         $purpose = $query->execute();
         return $purpose;
     }
@@ -42,7 +42,7 @@ class Regimen_change_purpose extends BaseModel {
     }
 
     public static function getSource($id) {
-        $query = DB::table('Regimen_Change_Purpose')->where('id', $id)->get();
+        $query = DB::table('regimen_change_purpose')->where('id', $id)->get();
         return $query[0];
     }
 

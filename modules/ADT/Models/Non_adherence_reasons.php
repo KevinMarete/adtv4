@@ -16,30 +16,30 @@ class Non_adherence_reasons extends BaseModel {
     }
 
     public static function getAllHydrated() {
-        return BaseModel::resultSet(DB::table('Non_Adherence_Reasons')->where("Active", "1")->get());
+        return BaseModel::resultSet(DB::table('non_adherence_reasons')->where("Active", "1")->get());
     }
 
     public static function getThemAll($access_level = "") {
         if ($access_level = "" || $access_level == "facility_administrator") {
-            $query = DB::table('Non_Adherence_Reasons')->get();
+            $query = DB::table('non_adherence_reasons')->get();
         } else {
-            $query = DB::table('Non_Adherence_Reasons')->where("Active", "1")->get();
+            $query = DB::table('non_adherence_reasons')->where("Active", "1")->get();
         }
         return $query;
     }
 
     public static function getSource($id) {
-        $query = DB::table('Non_Adherence_Reasons')->where("id", $id)->get();
+        $query = DB::table('non_adherence_reasons')->where("id", $id)->get();
         return $query[0];
     }
 
     public function getTotalNumber() {
-        $query = DB::select("SELECT count(*) as Total_Purposes FROM Non_Adherence_Reasons");
+        $query = DB::select("SELECT count(*) as Total_Purposes FROM non_adherence_reasons");
         return $query[0]->Total_Purposes;
     }
 
     public function getPagedPurposes($offset, $items) {
-        $query = Doctrine_Query::create()->select("Name")->from("Non_Adherence_Reasons")->offset($offset)->limit($items);
+        $query = Doctrine_Query::create()->select("Name")->from("non_adherence_reasons")->offset($offset)->limit($items);
         $purpose = $query->execute();
         return $purpose;
     }

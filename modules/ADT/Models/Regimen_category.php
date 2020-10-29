@@ -16,14 +16,13 @@ class Regimen_Category extends BaseModel {
     }
 
     public static function getAll() {
-        $query = DB::table('Regimen_Category')->where("Active", "1")->orderBy("Name", "asc")->get();
+        $query = DB::table('regimen_category')->where("active", "1")->orderBy("name", "asc")->get();
         return $query;
     }
 
     public static function getAllHydrate() {
-        $query = DB::table('Regimen_Category')->where("Active", "1")->get();
+        $query = DB::table('regimen_category')->where("Active", "1")->get();
         return BaseModel::resultSet($query);
     }
 
 }
-
