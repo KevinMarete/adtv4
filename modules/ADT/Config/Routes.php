@@ -2,6 +2,7 @@
 
 /* Default route */
 $routes->get('/', '\Modules\ADT\Controllers\User_management::login');
+$routes->post('initialize', '\Modules\Setup\Controllers\Setup::initialize');
 
 /* Authentication Routes */
 // $routes->get('/', '\Modules\ADT\Controllers\System_management::index');

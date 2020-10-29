@@ -5,6 +5,8 @@ namespace Modules\Setup\Controllers;
 use \Modules\Tables\Controllers\Tables;
 use \Modules\Template\Controllers\Template;
 
+use DB;
+
 class Setup extends \CodeIgniter\Controller {
 
     public function index($message = '') {
@@ -53,9 +55,10 @@ class Setup extends \CodeIgniter\Controller {
         $result = $db->query($sql);
         $old_facility_code = $result->getResultArray()[0]['Facility_Code'];
 
-        //Update all users to mflcode
-        $sql = "
-		INSERT INTO users (id, Name, Username, Password, Access_Level, Facility_Code, Created_By, Time_Created, Phone_Number, Email_Address, Active, Signature, map, ccc_store_sp) VALUES(2,	'Demo User',	'user',	'1a7a4c2f236042c4f8cfd79ec9ff2094',	'3',	'$mflcode',	'1',	'2014-09-24',	' 736262781',	'kevomarete@gmail.com',	'1',	'1',	0,	2);
+        $presence = DB::table('users')->where('Username', 'user')->first();
+        if (count($presence > 0)) {
+            //Update all users to mflcode
+            $sql = "REPLACE INTO users (id, Name, Username, Password, Access_Level, Facility_Code, Created_By, Time_Created, Phone_Number, Email_Address, Active, Signature, map, ccc_store_sp) VALUES(2,	'Demo User',	'user',	'1a7a4c2f236042c4f8cfd79ec9ff2094',	'3',	'$mflcode',	'1',	'2014-09-24',	' 736262781',	'kevomarete@gmail.com',	'1',	'1',	0,	2);
 
 			UPDATE users SET Facility_Code = $mflcode  WHERE Facility_Code = $old_facility_code;
 			UPDATE drug_stock_movement SET facility = $mflcode  WHERE facility = $old_facility_code;
@@ -69,13 +72,18 @@ class Setup extends \CodeIgniter\Controller {
 			UPDATE drug_stock_balance set facility_code = $mflcode where facility_code = $old_facility_code; 
 		";
 
-        foreach (explode(';', $sql) as $q) {
-            $db->query($q);
+            foreach (explode(';', $sql) as $q) {
+                $db->query($q);
+            }
+            //Redirect with message
+            $message = '<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong>Success!</strong> Facility initialized to MFLCODE: ' . $mflcode . ' <br /> User Login user:user</div>';
+            $session->setFlashdata('init_msg', $message);
+            return redirect()->to(base_url('public/setup'));
+        } else {
+            $message = '<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong>Facility already Initialized</strong></div>';
+            $session->setFlashdata('init_msg', $message);
+            return redirect()->to(base_url('public/setup'));
         }
-        //Redirect with message
-        $message = '<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong>Success!</strong> Facility initialized to MFLCODE: ' . $mflcode . ' <br /> User Login user:user</div>';
-        $session->setFlashdata('init_msg', $message);
-        return redirect()->to(base_url('public/setup'));
     }
 
     public function template($data) {
