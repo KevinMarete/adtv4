@@ -578,7 +578,7 @@ class Dispensement_management extends BaseController {
                 . "and pv.patient_id=p.patient_number_ccc "
                 . "and facility='$facility_code'";
         $results = DB::select($sql);
-        //print_r($results);
+        
         if ($results) {
             $data['results'] = $results;
             //Get expriry date the batch
@@ -602,8 +602,7 @@ class Dispensement_management extends BaseController {
         } else {
             $data['results'] = "";
         }
-        $purpose = new VisitPurpose();
-        $data['purposes'] = $purpose->getAll();
+        $data['purposes'] = VisitPurpose::where('Active', '1')->get()->toArray();
         $data['record'] = $record_no;
         $data['ccc_id'] = $ccc_id;
         $data['regimens'] = Regimen::orderBy('regimen_code')->get()->toArray();
