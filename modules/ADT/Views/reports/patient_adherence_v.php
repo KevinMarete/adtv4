@@ -601,9 +601,9 @@
 			<br>
 			<br>
 			Between
-			<input type="text" id="start_date" value="<?php echo $from; ?>">
+			<input type="text" id="start_date" value="<?php echo $from; ?>" autocomplete="off">
 			and
-			<input type="text" id="end_date" value="<?php echo $to; ?>">
+			<input type="text" id="end_date" value="<?php echo $to; ?>" autocomplete="off">
 		</h4>
 		<hr size="1" style="width:80%">
 		<table align="center" class="table table-condensed" style="width:50%">

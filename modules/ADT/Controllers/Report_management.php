@@ -4,7 +4,6 @@ namespace Modules\ADT\Controllers;
 
 use \Modules\Tables\Controllers\Tables;
 use \Modules\Template\Controllers\Template;
-use App\Libraries\mPDF;
 use App\Libraries\PHPExcel;
 use App\Libraries\PHPExcel_IOFactory;
 use \Modules\ADT\Models\CCC_store_service_point;
@@ -15,8 +14,7 @@ use \Modules\ADT\Models\Patient;
 use \Modules\ADT\Models\Transaction_type;
 use \Modules\ADT\Models\Counties;
 use Illuminate\Database\Capsule\Manager as DB;
-
-
+use Mpdf\Mpdf;
 
 class Report_management extends \App\Controllers\BaseController
 {
@@ -4072,7 +4070,7 @@ class Report_management extends \App\Controllers\BaseController
     $table .= "</tbody></table>";
 
 
-    $this->mpdf = new Mpdf\Mpdf([
+    $this->mpdf = new Mpdf([
       'format' => 'A3-L',
       'mode' => 'utf-8',
       'orientation' => 'L'

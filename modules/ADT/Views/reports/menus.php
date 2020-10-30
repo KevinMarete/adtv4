@@ -14,11 +14,11 @@
 		</tr>
 		<tr>
 			<td><strong class="label">From: </strong></td>
-			<td><input type="text"name="date_range_from" id="date_range_from"></td>
+			<td><input type="text"name="date_range_from" id="date_range_from" autocomplete="off"></td>
 		</tr>
 		<tr>
 			<td><strong class="label">To: </strong></td>
-			<td><input type="text"name="date_range_to" id="date_range_to"></td>
+			<td><input type="text"name="date_range_to" id="date_range_to" autocomplete="off"></td>
 		</tr>
 		
 	</table>
@@ -40,12 +40,12 @@
 		<tr>
 			<td><strong class="label">From: </strong></td>
 			<td>
-				<input type="text"name="donor_date_range_from" id="donor_date_range_from">
+				<input type="text"name="donor_date_range_from" id="donor_date_range_from" autocomplete="off">
 			</td>
 		</tr>
 		<tr>
 			<td><strong class="label">To: </strong></td>
-			<td><input type="text"name="donor_date_range_to" id="donor_date_range_to"></td>
+			<td><input type="text"name="donor_date_range_to" id="donor_date_range_to" autocomplete="off"></td>
 		</tr>
 	</table>
 	<br>
@@ -58,7 +58,7 @@
 		<tr>
 			<td><strong class="label">Select Date </strong></td>
 			<td>
-				<input type="text"name="filter_date" id="single_date_filter">
+				<input type="text"name="filter_date" id="single_date_filter" autocomplete="off">
 			</td>
 		</tr>
 	</table>
@@ -72,7 +72,7 @@
 		<tr>
 			<td><strong class="label">Report Year: </strong></td>
 			<td>
-				<input type="text"name="filter_year" id="single_year_filter">
+				<input type="text"name="filter_year" id="single_year_filter" autocomplete="off">
 			</td>
 		</tr>
 	</table>

@@ -1,7 +1,4 @@
 <?php
-if (!session()->get('user_id')) {
-	redirect("User_Management/login");
-}
 if (!isset($link)) {
 	$link = null;
 }

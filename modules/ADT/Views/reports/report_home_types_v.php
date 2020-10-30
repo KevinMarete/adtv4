@@ -284,11 +284,11 @@ $ccc_stores = session()->get("ccc_store");
                 <tr>
                     <td><label>From : </label></td>
                     <td>
-                        <input type="text" name="donor_date_range_from" id="donor_date_range_from" class="input-medium donor_input_dates_from">
+                        <input type="text" name="donor_date_range_from" id="donor_date_range_from" class="input-medium donor_input_dates_from" autocomplete="off">
                     </td>
                     <td><label>To : </label></td>
                     <td>
-                        <input type="text" name="donor_date_range_to" id="donor_date_range_to" class="input-medium donor_input_dates_to">
+                        <input type="text" name="donor_date_range_to" id="donor_date_range_to" class="input-medium donor_input_dates_to" autocomplete="off">
                     </td>
                 </tr>
                 <tr>
@@ -321,7 +321,7 @@ $ccc_stores = session()->get("ccc_store");
                 <tr>
                     <td><label>Select Date : </label></td>
                     <td>
-                        <input type="text" name="filter_date" id="single_date_filter" class="input-medium input_dates" />
+                        <input type="text" name="filter_date" id="single_date_filter" class="input-medium input_dates"  autocomplete="off"/>
                     </td>
                     <td>
                         <input type="button" id="generate_single_date_report" class="btn btn-warning generate_btn" value="Generate Report">
@@ -349,11 +349,11 @@ $ccc_stores = session()->get("ccc_store");
                         </select></td>
                     <td>
                     <td><label>From: </label></td>
-                    <td><input type="text" name="date_range_from" id="date_range_from" class="input-medium input_dates_from"></td>
+                    <td><input type="text" name="date_range_from" id="date_range_from" class="input-medium input_dates_from" autocomplete="off"></td>
                     </td>
                     <td><label>To: </label></td>
                     <td>
-                        <input type="text" name="date_range_to" id="date_range_to" class="input-medium input_dates_to">
+                        <input type="text" name="date_range_to" id="date_range_to" class="input-medium input_dates_to" autocomplete="off">
                     </td>
                     <td class="service_report_type_title" style="display: none;">
                         <select name="gender_type" id="report_gender">
@@ -423,7 +423,7 @@ $ccc_stores = session()->get("ccc_store");
                             ?>
                         </select></td>
                     <td>
-                        <input class="_green" name="reporting_period" id="reporting_period" type="text" placeholder="Select Period">
+                        <input class="_green" name="reporting_period" id="reporting_period" type="text" placeholder="Select Period" autocomplete="off">
                         <input name="date_range_from" id="period_start_date" type="hidden">
                         <input name="date_range_to" id="period_end_date" type="hidden">
                     </td>
@@ -437,7 +437,7 @@ $ccc_stores = session()->get("ccc_store");
                 <tr>
                     <td class="show_report_type"><label>Select Period :</label></td>
                     <td>
-                        <input class="_green month_period" name="month_period" id="month_period" type="text" placeholder="Select Period">
+                        <input class="_green month_period" name="month_period" id="month_period" type="text" placeholder="Select Period" autocomplete="off">
                         <input name="date_range_from" id="month_start_date" type="hidden">
                         <input name="date_range_to" id="month_end_date" type="hidden">
                     </td>
