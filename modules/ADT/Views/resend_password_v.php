@@ -1,8 +1,8 @@
 <!DOCTYPE html >
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" manifest="/ADT/offline.appcache">
 <head>
-	<?php 
-        $this -> load -> view('sections/head');
+	<?php
+        echo view('\Modules\ADT\Views\\sections/head');
 	?>
 </head>
 <body>
@@ -12,17 +12,17 @@
                 <div class="row-fluid">
                 	<div class="span12">
 	                	<ul class="breadcrumb">
-						  <li><a href="<?php echo base_url().'user_management/login'; ?>">Login</a> <span class="divider">/</span></li>
+						  <li><a href="<?php echo base_url().'/public/login'; ?>">Login</a> <span class="divider">/</span></li>
 						  <li class="active">Forgot Password</li>
 						</ul>
 				    </div>
                 </div>
 	            <!--Forgot Password Form-->
-                <form class="form" action="<?php echo base_url().'user_management/resend_password'?>" method="POST">
+                <form class="form" action="<?php echo base_url().'/public/user_management/resend_password'?>" method="POST">
 				    <fieldset>
 					    <legend>
 						    <?php
-	                           echo $this->session->flashdata("notification");
+	                           echo session()->getFlashdata("notification");
 						    ?>
 					        Find your ADT account Enter your email.
                         </legend>

@@ -278,6 +278,7 @@ $routes->get('user_management/enable/(:any)', '\Modules\ADT\Controllers\User_man
 $routes->get('user_management/save', '\Modules\ADT\Controllers\User_management::save');
 $routes->post('user_management/profile_update', '\Modules\ADT\Controllers\User_management::profile_update');
 $routes->get('user_management/get_sites/(:any)', '\Modules\ADT\Controllers\User_management::get_sites/$1');
+$routes->post('user_management/resend_password', '\Modules\ADT\Controllers\User_management::resendPassword');
 
 /* Report Management */
 $routes->group('report_management', ['namespace' => '\Modules\ADT\Controllers'], function ($routes) {

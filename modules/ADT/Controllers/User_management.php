@@ -166,15 +166,14 @@ class User_management extends \App\Controllers\BaseController {
     public function authenticate() {
         helper(['form', 'url']);
         $db = \Config\Database::connect();
-        $data = array();
+        $data = [];
         $session = session();
-        //$validated = $this->_submit_validate();
-
 
         $input = $this->validate([
             'username' => 'trim|required|min_length[2]|max_length[30]',
             'password' => 'trim|required|min_length[2]|max_length[30]',
         ]);
+        
         if ($input) {
             $username = $_POST["username"];
             $password = $_POST["password"];
@@ -184,18 +183,18 @@ class User_management extends \App\Controllers\BaseController {
             $key = $encrypt->get_key();
             $encrypted_password = $key . $password;
             $logged_in = $this->loginUser($username, $encrypted_password);
-            //  dd($logged_in);
-            $load_access = DB::table('access_level')->where('id', $logged_in->Access_Level ?? 0)->get();
+            $load_access = DB::table('access_level')->where('id', $logged_in['user']->Access_Level ?? 0)->get();
             if (!isset($logged_in)) {
-                $this->session->setFlashdata('wrong_loggedin', 'Wrong Username / Password');
-                return redirect()->to(base_url('/public/login'));
+                $this->session->set('m_error_msg', 'Invalid Credentials. Please try again');
+                return redirect()->to(base_url('public/home'));
             }
             // dd($load_access);
             //This code checks if the credentials are valid
             if ($logged_in == false) {
                 $data['invalid'] = true;
                 $data['title'] = "System Login";
-                echo view("\Modules\ADT\Views\\login_v", $data);
+                $this->session->set('m_error_msg', 'Invalid Credentials. Please try again');
+                return redirect()->to(base_url('public/home'));
             }      //Check if credentials are valid for username not password
             else if (isset($logged_in["attempt"]) && $logged_in["attempt"] == "attempt" && $load_access[0]->indicator != "system_administrator") {
 
@@ -204,54 +203,21 @@ class User_management extends \App\Controllers\BaseController {
                     $data['inactive'] = true;
                     $data['title'] = "System Login";
                     $data['login_attempt'] = "<p class='error'>The Account has been deactivated. Seek help from the Facility Administrator</p>";
-                    echo view("\Modules\ADT\Views\\login_v", $data);
+                    $this->session->set('m_error_msg', 'The Account has been deactivated. Seek help from the Facility Administrator');
+                    return redirect()->to(base_url('public/home'));
                 } else {
                     $data['invalid'] = false;
                     $data['title'] = "System Login";
                     $data['login_attempt'] = "enter the correct password!</p>";
-                    echo view("\Modules\ADT\Views\\login_v", $data);
-                    /*
-                     *
-                      //Check if there is a login attempt
-                      if (!$this -> session -> userdata($username . '_login_attempt')) {
-
-                      $login_attempt = 1;
-                      $this -> session -> set($username . '_login_attempt', $login_attempt);
-                      $fail = $this -> session -> userdata($username . '_login_attempt');
-                      $data['login_attempt'] = "(Attempt: " . $fail . " )";
-                      } else {
-
-                      //Check if login Attempt is below 4
-                      if ($this -> session -> userdata($username . '_login_attempt') && $this -> session -> userdata($username . '_login_attempt') <= 4) {
-                      $login_attempt = $this -> session -> userdata($username . '_login_attempt');
-                      $login_attempt++;
-                      $this -> session -> set($username . '_login_attempt', $login_attempt);
-                      $fail = $this -> session -> userdata($username . '_login_attempt');
-                      $data['login_attempt'] = "(Attempt: " . $fail . " )";
-                      }
-
-                      if ($this -> session -> userdata($username . '_login_attempt') > 4) {
-                      $fail = $this -> session -> userdata($username . '_login_attempt');
-                      $data['login_attempt'] = "<p class='error'>The Account has been deactivated. Seek help from the Facility Administrator</p>";
-                      $this -> session -> set($username . '_login_attempt', 0);
-                      $this -> load -> database();
-                      $query = $this -> db -> query("UPDATE users SET Active='0' WHERE(username='$username' or email_address='$username' or phone_number='$username')");
-                      //Log Denied User in denied_log
-                      $new_denied_log = new Denied_Log();
-                      $new_denied_log -> ip_address = $_SERVER['REMOTE_ADDR'];
-                      $new_denied_log -> location = $this -> getIPLocation();
-                      $new_denied_log -> user_id = Users::getUserID($username);
-                      $new_denied_log -> save();
-
-                      }
-                      }
-                     *
-                     */
+                    $this->session->set('m_error_msg', 'Invalid Credentials. Please try again');
+                    return redirect()->to(base_url('public/home'));
                 }
+
             } else if (isset($logged_in["attempt"]) && $logged_in["attempt"] == "attempt" && $load_access[0]->indicator == "system_administrator") {
                 $data['title'] = "System Login";
                 $data['invalid'] = true;
-                echo view("\Modules\ADT\Views\\login_v", $data);
+                $this->session->set('m_error_msg', 'Invalid Credentials. Please try again');
+                return redirect()->to(base_url('public/home'));
             } else {
                 //If the credentials are valid, continue
                 $today_time = strtotime(date("Y-m-d"));
@@ -260,7 +226,8 @@ class User_management extends \App\Controllers\BaseController {
                 if ($logged_in->Active == "0" && $logged_in->Access->Indicator != "system_administrator") {
                     $data['inactive'] = true;
                     $data['title'] = "System Login";
-                    echo view("\Modules\ADT\Views\\login_v", $data);
+                    $this->session->set('m_error_msg', 'The Account is not active. Seek help from the Administrator');
+                    return redirect()->to(base_url('public/home'));
                 }
                 /*
                   else if (($today_time - $create_time) > (90 * 24 * 3600) && $logged_in -> Access -> Indicator != "system_administrator") {
@@ -278,7 +245,8 @@ class User_management extends \App\Controllers\BaseController {
                     $facility_details = Facilities::getCurrentFacility($logged_in->Facility_Code);
                     $data['unactivated'] = true;
                     $data['title'] = "System Login";
-                    echo view("\Modules\ADT\Views\\login_v", $data);
+                    $this->session->set('m_error_msg', 'Your Account Has Not Been Activated.<br/>Please Check your Email to Activate Account');
+                    return redirect()->to(base_url('public/home'));
                 }
                 //looks good. Continue!
                 else {
@@ -339,11 +307,11 @@ class User_management extends \App\Controllers\BaseController {
                 }
             }
         } else { //Not validated
-            $data = array();
+            $data = [];
             $data['title'] = "System Login";
             $data['validation'] = $this->validator;
             $data['stores'] = CCC_store_service_point::where('active', '1')->get();
-            echo view("\Modules\ADT\Views\\login_v", $data);
+            return redirect()->back()->withInput();
         }
     }
 
@@ -375,7 +343,7 @@ class User_management extends \App\Controllers\BaseController {
 
     public function resetPassword() {
         $data['title'] = "Reset Password";
-        $this->load->view('resend_password_v', $data);
+        echo view('\Modules\ADT\Views\\resend_password_v', $data);
     }
 
     public function resendPassword() {
@@ -476,7 +444,7 @@ class User_management extends \App\Controllers\BaseController {
             $data['reset'] = true;
             delete_cookie("actual_page");
             $data['title'] = "webADT | System Login";
-            $this->load->view("login_v", $data);
+            echo view("login_v", $data);
         }
     }
 
