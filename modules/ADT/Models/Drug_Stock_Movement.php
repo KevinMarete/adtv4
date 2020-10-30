@@ -9,31 +9,7 @@ class Drug_Stock_Movement extends BaseModel {
 
     protected $table = 'drug_stock_movement';
 
-    /* public function setTableDefinition() {
-      $this -> hasColumn('Machine_Code', 'varchar', 10);
-      $this -> hasColumn('Drug', 'varchar', 10);
-      $this -> hasColumn('Transaction_Date', 'varchar', 10);
-      $this -> hasColumn('Batch_Number', 'varchar', 100);
-      $this -> hasColumn('Transaction_Type', 'varchar', 10);
-      $this -> hasColumn('Source', 'varchar', 10);
-      $this -> hasColumn('Destination', 'varchar', 10);
-      $this -> hasColumn('Source_Destination', 'int', 11);
-      $this -> hasColumn('Expiry_date', 'varchar', 10);
-      $this -> hasColumn('Packs', 'varchar', 10);
-      $this -> hasColumn('Quantity', 'int', 15);
-      $this -> hasColumn('Quantity_Out', 'int', 15);
-      $this -> hasColumn('Balance', 'real', 15);
-      $this -> hasColumn('Unit_Cost', 'varchar', 10);
-      $this -> hasColumn('Amount', 'varchar', 10);
-      $this -> hasColumn('Remarks', 'text');
-      $this -> hasColumn('Operator', 'varchar', 10);
-      $this -> hasColumn('Order_Number', 'varchar', 10);
-      $this -> hasColumn('Facility', 'varchar', 10);
-      $this -> hasColumn('Machine_Code', 'varchar', 10);
-      $this -> hasColumn('Merged_From', 'varchar', 50);
-      $this -> hasColumn('Timestamp', 'varchar', 50);
-      $this -> hasColumn('ccc_store_sp', 'int', 11);
-      }
+    /*
 
       public function setUp() {
       $this -> setTableName('drug_stock_movement');
@@ -47,6 +23,42 @@ class Drug_Stock_Movement extends BaseModel {
       $this -> hasOne('transaction_type as Transaction_Object', array('local' => 'Transaction_Type', 'foreign' => 'id'));
       $this -> hasOne('CCC_store_service_point as store', array('local' => 'ccc_store_sp', 'foreign' => 'id'));
       } */
+
+    public function drug_obj(){
+        return $this->belongsTo(Drugcode::class, 'drug');
+    }
+
+    public function destination_obj(){
+        return $this->belongsTo(Drug_destination::class, 'destination');
+    }
+
+    public function destination_trans_obj(){
+        return $this->belongsTo(Drug_destination::class, 'Source_Destination');
+    }
+
+    public function source_obj(){
+        return $this->belongsTo(Drug_source::class, 'source');
+    }
+
+    public function source_trans_obj(){
+        return $this->belongsTo(Drug_source::class, 'Source_Destination');
+    }
+
+    public function facility_obj(){
+        return $this->belongsTo(Facilities::class, 'facility', 'facilitycode');
+    }
+
+    public function facility_trans_obj(){
+        return $this->belongsTo(Facilities::class, 'facility', 'facilitycode');
+    }
+
+    public function transaction_type_obj(){
+        return $this->belongsTo(Transaction_type::class, 'transaction_type');
+    }
+
+    public function store(){
+        return $this->belongsTo(CCC_store_service_point::class, 'ccc_store_sp');
+    }
 
     public function getTotalTransactions($facility) {
         $query = Doctrine_Query::create()->select("count(*) as Total_Transactions")->from("drug_stock_movement")->where("Facility= '$facility'");

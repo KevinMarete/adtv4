@@ -254,11 +254,9 @@ class Inventory_management extends \App\Controllers\BaseController {
         $this->base_params($data);
     }
 
-    public function getDrugTransactions($drug_id = '4', $ccc_id = '2') {
+    public function getDrugTransactions($drug_id = '', $ccc_id = '') {
         $db = \Config\Database::connect();
-        $uri = $this->request->uri;
-        $drug_id = $uri->getSegment(3);
-        $ccc_id = $uri->getSegment(4);
+
         /* Added Limit as there are issues */
         ini_set("memory_limit", -1);
         $iDisplayStart = @$_GET['iDisplayStart'];
@@ -267,35 +265,33 @@ class Inventory_management extends \App\Controllers\BaseController {
         $iSortingCols = @$_GET['iSortingCols'];
         $sSearch = @$_GET['sSearch'];
         $sEcho = @$_GET['sEcho'];
-
         $where = "";
-        $builder = DB::table('drug_stock_movement as ds');
 
         //columns
         $aColumns = [
-            'Order_Number',
-            'Transaction_Date',
-            't.name as Transaction_Type',
+            'order_number',
+            'transaction_date',
+            't.name as transaction_type',
             't.effect',
-            'Batch_Number',
+            'batch_number',
             'd.name as destination_name',
             's.name as source_name',
             'source_destination',
-            'Expiry_Date',
-            'Pack_Size',
-            'Packs',
-            'ds.Quantity',
-            'ds.Quantity_Out',
-            'Machine_Code',
-            'Unit_Cost',
-            'Amount'
+            'expiry_date',
+            'pack_size',
+            'packs',
+            'ds.quantity',
+            'ds.quantity_out',
+            'machine_code',
+            'unit_cost',
+            'amount'
         ];
 
-        $count = 0;
+        $builder = $db->table("drug_stock_movement as ds");
 
         // Paging
         if (isset($iDisplayStart) && $iDisplayLength != '-1') {
-            $builder->limit($this->db->escapeString($iDisplayLength), $this->db->escapeString($iDisplayStart));
+            $builder->limit($iDisplayLength, $iDisplayStart);
         }
 
         // Ordering
@@ -306,30 +302,29 @@ class Inventory_management extends \App\Controllers\BaseController {
                 $sSortDir = @$_GET['sSortDir_' . $i];
 
                 if ($bSortable == 'true') {
-                    $builder->orderBy($aColumns[intval($this->db->escapeString($iSortCol))], $this->db->escapeString($sSortDir));
+                    $builder->orderBy($aColumns[intval($iSortCol)], $sSortDir);
                 }
             }
         }
-        //Filtering
         if (isset($sSearch) && !empty($sSearch)) {
             $column_count = 0;
             //new columns
-            $newColumns = ['Order_Number',
-                'Transaction_Date',
+            $newColumns = ['order_number',
+                'transaction_date',
                 't.name',
                 't.effect',
-                'Batch_Number',
+                'batch_number',
                 'd.name',
                 's.name',
                 'source_destination',
-                'Expiry_Date',
-                'Pack_Size',
-                'Packs',
-                'ds.Quantity',
-                'ds.Quantity_Out',
-                'Machine_Code',
-                'Unit_Cost',
-                'Amount'];
+                'expiry_date',
+                'pack_size',
+                'packs',
+                'ds.quantity',
+                'ds.quantity_out',
+                'machine_code',
+                'unit_cost',
+                'amount'];
             for ($i = 0; $i < count($newColumns); $i++) {
                 $bSearchable = @$_GET['bSearchable_' . $i];
 
@@ -347,81 +342,68 @@ class Inventory_management extends \App\Controllers\BaseController {
         }
 
         //data
-        // $builder->table("drug_stock_movement ds");
-        $builder->select(DB::raw('SQL_CALC_FOUND_ROWS ' . str_replace(' , ', ' ', implode(', ', $aColumns)), false));
-        $builder->select('effect');
-        $builder->leftJoin("drugcode as dc", "dc.id", "=", "ds.drug");
-        $builder->leftJoin("transaction_type as t", "t.id", "=", "ds.transaction_type");
-        $builder->leftJoin("drug_source as s", "s.id", "=", "ds.source_destination");
-        $builder->leftJoin("drug_destination as d", "d.id", "=", "ds.source_destination");
+        $builder->select('ds.*, t.name as transaction_type_name, s.name as source_name, d.name as destination_name, t.effect, dc.pack_size');
+        $builder->join("drugcode as dc", "dc.id = ds.drug", "left");
+        $builder->join("transaction_type as t", "t.id = ds.transaction_type", "left");
+        $builder->join("drug_source as s", "s.id = ds.source_destination", "left");
+        $builder->join("drug_destination as d", "d.id = ds.source_destination", "left");
         $builder->where("ds.drug", $drug_id);
         $builder->where("ds.ccc_store_sp", $ccc_id);
+        //Filtering
         //search sql clause
         if ($where != "") {
             $where .= ")";
-            $builder->where(DB::ra($where));
+            $builder->where($where);
         }
         $builder->orderBy('ds.id', 'desc');
         $rResult = $builder->get();
 
         // Data set length after filtering
-        // $res = $this->db->query('SELECT FOUND_ROWS() AS found_rows')->getResult();
-        $iFilteredTotal = count($rResult);
+        $iFilteredTotal = $builder->countAll();
 
         // Total data set length
-        $qb = DB::table("drug_stock_movement as ds");
-        $qb->select("ds.*");
-        // $qb->table("drug_stock_movement ds");
-        $qb->leftJoin("drugcode as dc", "dc.id", "=", "ds.drug");
-        $qb->leftJoin("transaction_type as t", "t.id", "=", "ds.transaction_type");
-        $qb->leftJoin("drug_source as s", "s.id", "=", "ds.source_destination");
-        $qb->leftJoin("drug_destination as d", "d.id", "=", "ds.source_destination");
-        $qb->where("ds.drug", $drug_id);
-        $qb->where("ds.ccc_store_sp", $ccc_id);
-        // $total = $this->db->getResult();
-        $iTotal = $qb->count();
-        $rResult = $qb->get();
+        $iTotal = Drug_Stock_Movement::where(['drug'=>$drug_id, 'ccc_store_sp'=>$ccc_id])->count();
         // Output
         $output = ['sEcho' => intval($sEcho),'iTotalRecords' => $iTotal,'iTotalDisplayRecords' => $iFilteredTotal, 'aaData' => []];
 
         //loop through data to change transaction type
-        foreach ($rResult as $drug_transaction) {
+        foreach ($rResult->getResult() as $drug_transaction) {
             $row = [];
             if ($drug_transaction->effect == 1) {
                 //quantity_out & source (means adds stock to system)
-                $transaction_type = $drug_transaction->Transaction_Type;
-                $qty = $drug_transaction->Quantity;
+                $transaction_type = $drug_transaction->transaction_type_name;
+                $qty = $drug_transaction->quantity;
                 if ($drug_transaction->source_name != "" || $drug_transaction->source_name != 0) {
-                    $transaction_type = $drug_transaction->Transaction_Type . " (" . $drug_transaction->source_name . ")";
-                } else if (!is_numeric($drug_transaction->source_destination)) {
-                    $transaction_type = $drug_transaction->Transaction_Type . " (" . $drug_transaction->source_destination . ")";
+                    $transaction_type = $drug_transaction->transaction_type_name . " (" . $drug_transaction->source_name . ")";
+                } else if (!is_numeric($drug_transaction->Source_Destination)) {
+                    $transaction_type = $drug_transaction->transaction_type_name . " (" . $drug_transaction->Source_Destination . ")";
                 }
             } else {
                 //quantity & destination (means removes stock from system)
-                $transaction_type = $drug_transaction->Transaction_Type;
-                $qty = $drug_transaction->Quantity_Out;
+                $transaction_type = $drug_transaction->transaction_type_name;
+                $qty = $drug_transaction->quantity_out;
                 if ($drug_transaction->destination_name != "" || $drug_transaction->destination_name != 0) {
-                    $transaction_type = $drug_transaction->Transaction_Type . " (" . $drug_transaction->destination_name . ")";
-                } else if (!is_numeric($drug_transaction->source_destination)) {
-                    $transaction_type = $drug_transaction->Transaction_Type . " (" . $drug_transaction->source_destination . ")";
+                    $transaction_type = $drug_transaction->transaction_type_name . " (" . $drug_transaction->destination_name . ")";
+                } else if (!is_numeric($drug_transaction->Source_Destination)) {
+                    $transaction_type = $drug_transaction->transaction_type_name . " (" . $drug_transaction->Source_Destination . ")";
                 }
             }
 
-            $row[] = $drug_transaction->Order_Number;
-            $row[] = date('d-M-Y', strtotime($drug_transaction->Transaction_Date));
+            $row[] = $drug_transaction->order_number;
+            $row[] = date('d-M-Y', strtotime($drug_transaction->transaction_date));
             $row[] = $transaction_type;
-            $row[] = $drug_transaction->Batch_Number;
-            $row[] = date('d-M-Y', strtotime($drug_transaction->Expiry_Date));
-            $row[] = $drug_transaction->Pack_Size;
-            $row[] = $drug_transaction->Packs;
+            $row[] = $drug_transaction->batch_number;
+            $row[] = date('d-M-Y', strtotime($drug_transaction->expiry_date));
+            $row[] = $drug_transaction->pack_size;
+            $row[] = $drug_transaction->packs;
             $row[] = $qty;
-            if (!empty($drug_transaction->Machine_Code)) {
-                $row[] = number_format($drug_transaction->Machine_Code);
+            if (!empty($drug_transaction->machine_code)) {
+                $row[] = number_format($drug_transaction->machine_code);
             } else {
                 $row[] = "";
             }
-            $row[] = $drug_transaction->Unit_Cost;
-            $row[] = $drug_transaction->Amount;
+            $row[] = $drug_transaction->unit_cost;
+            $row[] = $drug_transaction->amount;
             $output['aaData'][] = $row;
         }
         echo json_encode($output, JSON_PRETTY_PRINT);
@@ -442,7 +424,6 @@ class Inventory_management extends \App\Controllers\BaseController {
 
         $drug_source = Drug_Source::getAll();
         $facility_detail = facilities::getSupplier($facility_code);
-        // dd($facility_detail);
         $drug_destination = Drug_Destination::getAll();
         //Check facility type(satelitte, standalone or central)
         $facility_type = Facilities::getType($facility_code);
