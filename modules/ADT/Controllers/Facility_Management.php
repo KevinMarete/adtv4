@@ -152,6 +152,7 @@ class Facility_Management extends \App\Controllers\BaseController {
             echo view("\Modules\ADT\Views\\facility_v", $data);
         } else {
             $data['facilities'] = Facilities::where('facilitycode', $source)->get()->toArray();
+            //d( $data['facilities']);
             //$data['facilities'] = Facilities::getCurrentFacility($source);
             echo view("\Modules\ADT\Views\\facility_user_v", $data);
         }

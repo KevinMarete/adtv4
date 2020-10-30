@@ -7,8 +7,7 @@ namespace Config;
  *
  * @package Config
  */
-class Database extends \CodeIgniter\Database\Config
-{
+class Database extends \CodeIgniter\Database\Config {
 
     /**
      * The directory that holds the Migrations
@@ -43,10 +42,10 @@ class Database extends \CodeIgniter\Database\Config
         'DBDebug' => (ENVIRONMENT !== 'production'),
         'cacheOn' => false,
         'cacheDir' => '',
-        //'charset' => 'utf8mb4',
-        //'DBCollat' => 'utf8mb4_general_ci',
-        'charset' => 'latin1',
-        'DBCollat' => 'latin1_swedish_ci',
+        'charset' => 'utf8mb4',
+        'DBCollat' => 'utf8mb4_general_ci',
+        //'charset' => 'latin1',
+        //'DBCollat' => 'latin1_swedish_ci',
         'swapPre' => '',
         'encrypt' => false,
         'compress' => false,
@@ -85,8 +84,7 @@ class Database extends \CodeIgniter\Database\Config
 
     //--------------------------------------------------------------------
 
-    public function __construct()
-    {
+    public function __construct() {
         parent::__construct();
 
         // Ensure that we always set the database group to 'tests' if
