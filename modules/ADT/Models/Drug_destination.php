@@ -11,7 +11,7 @@ class Drug_destination extends BaseModel {
     protected $fillable = array('name', 'active');
 
     public static function getAll() {
-        return DB::table("Drug_Source")->where("active", "1")->get();
+        return DB::table("drug_source")->where("active", "1")->get();
     }
 
     public function getAllHydrate() {

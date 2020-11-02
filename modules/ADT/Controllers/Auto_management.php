@@ -6,6 +6,7 @@ use App\Libraries\Ftp;
 use \Modules\Tables\Controllers\Tables;
 use \Modules\ADT\Models\Migration_log;
 use \Modules\ADT\Models\Facilities;
+use Illuminate\Database\Capsule\Manager as DB;
 
 class Auto_management extends \App\Controllers\BaseController {
 
@@ -768,12 +769,8 @@ class Auto_management extends \App\Controllers\BaseController {
         if ($ccc_no) {
             $patient_no = $mflcode . '/' . $ccc_no;
         }
-        $this->db->select('*');
-        $this->db->where('patient_ccc_number', $patient_no);
-        $this->db->from('patient_viral_load');
-        $this->db->order_by('test_date', 'desc');
-        $query = $this->db->get();
-        $result = $query->getResultArray();
+
+        $result = DB::table('patient_viral_load')->where('patient_ccc_number', $patient_no)->orderBy('test_date', 'desc')->get();
         echo json_encode($result);
     }
 

@@ -499,7 +499,7 @@
 				</legend>
 				<!--history table-->
 				<div class="table-responsive">
-					<table  id="dispensing_history" class="table table-bordered table-hover table-condensed">
+					<table id="dispensing_history" class="table table-bordered table-hover table-condensed">
 						<thead>
 							<tr>
 								<th>Date</th>

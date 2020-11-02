@@ -55,7 +55,7 @@ class Inventory_management extends \App\Controllers\BaseController {
     function getIsoniazid($patientid = null) {
         $patientid = $this->uri->getSegment(3);
         $ids = [];
-        $res = DB::select(DB::raw("SELECT * FROM drugcode WHERE drug LIKE '%ISONIAZID%'"))->get();
+        $res = DB::select(DB::raw("SELECT * FROM drugcode WHERE drug LIKE '%ISONIAZID%'"));
         foreach ($res as $i){
             $ids[] = $i->id;
         }
@@ -422,7 +422,7 @@ class Inventory_management extends \App\Controllers\BaseController {
         }
 
 
-        $drug_source = Drug_Source::getAll();
+        $drug_source = Drug_source::getAll();
         $facility_detail = facilities::getSupplier($facility_code);
         $drug_destination = Drug_Destination::getAll();
         //Check facility type(satelitte, standalone or central)

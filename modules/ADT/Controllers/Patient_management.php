@@ -105,7 +105,7 @@ class Patient_management extends BaseController {
             $patient_no = $mflcode . '/' . $ccc_no;
         }
 
-        $results = PatientViralLoad::where('patient_ccc_number', $patient_no)->orderBy('test_date', 'desc')->first()->toArray();
+        $results = PatientViralLoad::where('patient_ccc_number', $patient_no)->orderBy('test_date', 'desc')->first();
         echo json_encode($results);
     }
 
@@ -1940,10 +1940,11 @@ class Patient_management extends BaseController {
                         v_v.adherence, 
                         v_v.user, 
                         IF(v_v.differentiated_care = '1','YES','NO') AS differentiated_care, 
-                        v_v.regimen_change_reason AS regimen_change_reason 
+                        rcp.name AS regimen_change_reason 
                 from v_patient_visits as v_v
                 INNER JOIN regimen as R ON R.id = v_v.regimen_id
-                INNER JOIN drugcode as D ON D.id = v_v.drug_id
+                INNER JOIN drugcode as D ON D.id = v_v.drug_id 
+                LEFT JOIN regimen_change_purpose as rcp on v_v.regimen_change_reason = rcp.id
                 WHERE v_v.id = $patient_id
                 AND v_v.pv_active = 1
                 GROUP BY v_v.drug_id,v_v.dispensing_date
@@ -2133,7 +2134,6 @@ class Patient_management extends BaseController {
     }
 
     public function get_patients($status = null) {
-        $status = $this->uri->getSegment(2) ?? null;
         $filter = "";
         if ($status != NULL) {
             if ($status == 'inactive') {

@@ -11,11 +11,12 @@ class Visit_purpose extends BaseModel {
     protected $fillable = array('Name', 'Active');
 
     public static function getAll($service = 'null') {
-        $query = DB::table('visit_purpose')->where("active", "1")->get()->toArray();
+        $purposes=[];
+        $purposes = Visit_purpose::where("Active", "1")->get()->toArray();
         if ($service == 'prep') {
             $prep_purposes = [];
-            foreach ($query as $purpose) {
-                if ($purpose['Name'] == 'Start' || $purpose['Name'] == 'Routine Refill' || $purpose['Name'] == 'Restart') {
+            foreach ($purposes as $purpose) {
+                if ($purpose['name'] == 'Start' || $purpose['name'] == 'Routine Refill' || $purpose['name'] == 'Restart') {
                     $prep_purposes[] = $purpose;
                 }
             }

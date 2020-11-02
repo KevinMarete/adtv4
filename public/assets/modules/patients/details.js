@@ -254,15 +254,16 @@ function getViralLoad() {
     var table = '';
 
     $.getJSON(link, function (data) {
-        if (data.length == 0) {
+        if (data && data.items && data.items.length == 0) {
             table += '<tr><td colspan="3">No Data Available</td></tr>';
         }
-
-        $.each(data, function (i, vldata) {
-            table += '<tr><td>' + vldata.date_collected + '</td><td>' + vldata.test_date + '</td><td>' + vldata.result + '</td><td>' + vldata.justification + '</td></tr>';
-        });
-        $("#viral_load_data tbody").empty();
-        $("#viral_load_data tbody").append(table);
+        else {
+            $.each(data, function (i, vldata) {
+                table += '<tr><td>' + vldata.date_collected + '</td><td>' + vldata.test_date + '</td><td>' + vldata.result + '</td><td>' + vldata.justification + '</td></tr>';
+            });
+            $("#viral_load_data tbody").empty();
+            $("#viral_load_data tbody").append(table);
+        }        
     });
 }
 

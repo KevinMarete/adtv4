@@ -93,7 +93,7 @@ class Drugcode_management extends \App\Controllers\BaseController {
         }
 
         $data['drugcodes'] = $this->table->generate();
-        $data['suppliers'] = Drug_Source::getAllHydrated();
+        $data['suppliers'] = Drug_source::getAllHydrated();
         $data['classifications'] = Drug_Classification::getAllHydrated($access_level, "0");
         $query = $this->db->query("SELECT s.id,CONCAT_WS('] ',CONCAT_WS(' [',s.name,s.abbreviation),CONCAT_WS(' | ',s.strength,s.formulation)) as name,s.packsize
                                        FROM sync_drug s 

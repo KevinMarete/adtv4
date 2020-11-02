@@ -254,7 +254,7 @@ $routes->match(['get', 'post'], 'settings_management/getMenus', '\Modules\ADT\Co
 
 /* Auto Management */
 $routes->match(['get', 'post'], 'auto_management', '\Modules\ADT\Controllers\Auto_management::index');
-$routes->get('auto_management/get_viral_load/(:any)', '\Modules\ADT\Controllers\Auto_management::get_viral_load');
+$routes->get('auto_management/get_viral_load/(:any)', '\Modules\ADT\Controllers\Auto_management::get_viral_load/$1');
 
 /* Facilities */
 $routes->get('facility_management', '\Modules\ADT\Controllers\Facility_Management::index');
@@ -377,7 +377,7 @@ $routes->get('patient/enable/(:any)', '\Modules\ADT\Controllers\Patient_manageme
 $routes->get('patient/edit/(:any)', '\Modules\ADT\Controllers\Patient_management::edit');
 $routes->post('patient/update/(:any)', '\Modules\ADT\Controllers\Patient_management::update');
 $routes->get('get-patients', '\Modules\ADT\Controllers\Patient_management::get_patients');
-$routes->get('get-patients/(:any)', '\Modules\ADT\Controllers\Patient_management::get_patients');
+$routes->get('get-patients/(:any)', '\Modules\ADT\Controllers\Patient_management::get_patients/$1');
 $routes->get('patient/load_view/(:any)/(:any)', '\Modules\ADT\Controllers\Patient_management::load_view');
 $routes->get('patient/load_patient/(:any)', '\Modules\ADT\Controllers\Patient_management::load_patient');
 $routes->get('patient/get_visits/(:any)', '\Modules\ADT\Controllers\Patient_management::get_visits');
@@ -393,6 +393,7 @@ $routes->get('patient/viewDetails/(:any)', '\Modules\ADT\Controllers\Patient_man
 $routes->get('patient/requiredFields/(:any)', '\Modules\ADT\Controllers\Patient_management::requiredFields');
 $routes->match(['get', 'post'], 'patient/get_patient_details', '\Modules\ADT\Controllers\Patient_management::get_patient_details');
 $routes->match(['get', 'post'], 'patient/getAppointments/(:any)', '\Modules\ADT\Controllers\Patient_management::getAppointments');
+$routes->match(['get', 'post'], 'patient/getWhoStage', '\Modules\ADT\Controllers\Patient_management::getWhoStage');
 
 /* Dispensement */
 $routes->get('dispensement_management/dispense/(:any)', '\Modules\ADT\Controllers\Dispensement_management::dispense');

@@ -384,7 +384,7 @@ class Regimen_management extends \App\Controllers\BaseController {
         } else {
 
             if ($age == '') {
-                $regimens = Regimen::getRegimens();
+                $regimens = Regimen::orderBy('regimen_code')->get()->toArray();
             } else {
                 if ($age < 15) {
                     //paediatric regimens

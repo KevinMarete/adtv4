@@ -205,8 +205,7 @@ class Dispensement_management extends BaseController {
 
         $data['non_adherence_reasons'] = NonAdherenceReasons::where('active', '1')->get()->toArray();
         $data['regimen_changes'] = RegimenChangePurpose::where('active', '1')->get()->toArray();
-        $purposes = new VisitPurpose();
-        $data['purposes'] = $purposes->getAll($service_name);
+        $data['purposes'] = Visit_purpose::getAll($service_name);
         $data['dated'] = $dated;
         $data['patient_id'] = $record_no;
         $data['service_name'] = $service_name;;
@@ -923,7 +922,7 @@ class Dispensement_management extends BaseController {
         $patient = @$_POST['patient'];
         $expiry_date = @$_POST['expiry'];
         $ccc_id = @$_POST["ccc_id"];
-        $differentiated_care = ($_POST["differentiated_care"] =='on') ? 1 : 0 ;
+        $differentiated_care = ($this->post("differentiated_care") =='on') ? 1 : 0 ;
 
         //Define source and destination
         $source = $facility;
@@ -1132,7 +1131,8 @@ class Dispensement_management extends BaseController {
             } //end foreach
             $file_name = 'assets/download/' . $patient_name . '(Labels).pdf';
             $this->mpdf->Output($file_name, 'F');
-            return $this->response->download($file_name, null);
+            echo base_url() .'/public/'. $file_name;
+            // return $this->response->download($file_name, null);
         } else {
             echo 0;
         }

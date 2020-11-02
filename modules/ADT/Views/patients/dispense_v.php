@@ -48,14 +48,12 @@
                                         $ccc_storeid = $session->get('ccc_store_id');
                                         if ($value->id === $ccc_storeid) {
                                             $selected = "selected";
-                                            echo "<option value='" . $value->id . "' " . $selected . ">" . $value->name . "</option>";
                                         }
+                                        echo "<option value='" . $value->id . "' " . $selected . ">" . $value->name . "</option>";
                                     }
                                 }
                                 echo "</select>";
                             }
-
-                            //$session->set_userdata('ccc_store',$name);
                             ?>
                         </div>
                     </div>
@@ -318,26 +316,24 @@
                         <th>Duration</th>
                         <th style="width:5%">Qty. disp</th>
                         <th style="width:8%">Stock on Hand</th>
-                        <!--                        <th>Brand Name</th>-->
                         <th>Indication</th>
                         <th>Comment</th>
                         <th>Missed Pills</th>
-                        <th style="">Action</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr drug_row="0">
                         <td><select name="drug[]" class="drug input-large span3"></select></td>
                         <td>
-                            <input type="text" name="unit[]" class="unit input-small" style="" readonly="" />
-                            <input type="hidden" name="comment[]" class="comment input-small" style="" readonly="" />
+                            <input type="text" name="unit[]" class="unit input-small" readonly="" />
+                            <input type="hidden" name="comment[]" class="comment input-small" readonly="" />
                         </td>
                         <td><select name="batch[]" class="batch input-small next_pill span2"></select></td>
                         <td>
                             <input type="text" name="expiry[]" name="expiry" class="expiry input-small expiry_date" readonly="" size="15"/>
                         </td>
                         <td class="dose_col">
-                           <!-- <select name="dose[]" class="next_pill input-small dose  span2"></select></td>-->
                             <input  name="dose[]" list="dose" class="input-small next_pill dose icondose doselist"> 
                             <datalist id="dose" class="dose"><select name="dose1[]" class="dose"></select></datalist> 
                         </td>
