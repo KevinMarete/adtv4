@@ -2696,7 +2696,6 @@ class Order extends BaseController {
             "code" => $this->post("code"),
             "stores" => $this->post("stores")
         ];
-        file_put_contents("E://Users//kennl//Documents//debug.txt", PHP_EOL . $this->post("facility_id"), FILE_APPEND);
 
         $code = $param['code'];
         $facility_id = $param['facility_id'];

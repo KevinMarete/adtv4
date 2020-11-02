@@ -259,7 +259,7 @@ class User_management extends \App\Controllers\BaseController {
                     $check = substr($phone, 0);
                     $phone = str_replace('+254', '', $phone);
                     $load_access = DB::table('access_level')->where('id', $logged_in->Access_Level)->get();
-                    $session_data = array(
+                    $session_data = [
                         'user_id' => $logged_in->id,
                         'user_indicator' => $load_access[0]->indicator,
                         'facility_name' => $facility_details[0]['name'],
@@ -285,7 +285,7 @@ class User_management extends \App\Controllers\BaseController {
                         'medical_number' => ((@$facility_details[0]['medical_number']) !== null) ? 1 : 0,
                         'facility_dhis' => ((@$facility_details[0]['facility_dhis']) !== "0") ? 1 : 0,
                         'autobackup' => ((@$facility_details[0]['autobackup']) !== null) ? @$facility_details[0]['autobackup'] : 0
-                    );
+                    ];
 
                     $session->set($session_data);
 
