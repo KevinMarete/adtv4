@@ -526,7 +526,7 @@ class Order extends BaseController {
                 $code = $this->getActualCode($order_type, $type);
           
                 $facilities = Sync_facility::getId($facility, $order_type);
-                $duplicate = $this->check_duplicate($code, $period_start, $period_end, $facilities['id'], $type);
+                $duplicate = $this->check_duplicate($code, $period_start, $period_end, $facilities, $type);
                 $data['commodities'] = Sync_drug::getActiveList();
                 $data['duplicate'] = $duplicate;
             }
