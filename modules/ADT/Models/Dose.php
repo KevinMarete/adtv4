@@ -37,17 +37,17 @@ class Dose extends BaseModel {
     }
 
     public static function getDose($id) {
-        $query = DB::table('Dose')->where('id', $id)->get();
+        $query = DB::table('dose')->where('id', $id)->get();
         return $query[0];
     }
 
     public static function getDoseHydrated($id) {
-        $query = DB::table('Dose')->where('id', $id)->get();
+        $query = DB::table('dose')->where('id', $id)->get();
         return BaseModel::resultSet($query);
     }
 
     public function getDoseLabel($name) {
-        $query = DB::table('Dose')->where('name', $name)->get();
+        $query = DB::table('dose')->where('name', $name)->get();
         return $query[0];
     }
 
