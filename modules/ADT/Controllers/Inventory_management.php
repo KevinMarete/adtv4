@@ -16,7 +16,7 @@ use \Modules\ADT\Models\Access_log;
 use \Modules\ADT\Models\Transaction_type;
 use \Modules\ADT\Models\Drug_source;
 use \Modules\ADT\Models\Drugcode;
-use \Modules\ADT\Models\Drug_destination;
+use \Modules\ADT\Models\Drug_Destination;
 use \Modules\ADT\Models\CCC_store_service_point;
 use \Modules\ADT\Models\Drug_Stock_Movement;
 use \Modules\ADT\Models\Regimen_Change_Purpose;
