@@ -15,10 +15,10 @@ class Order_settings extends BaseController {
     var $table;
     var $session;
 
-	function __construct() {
+    function __construct() {
         $this->session = session();
-		$this->session->set("link_id", "/public/listing/sync_drug");
-		$this->session->set("linkSub", "/public/order_settings/listing/sync_drug");
+        $this->session->set("link_id", "/public/listing/sync_drug");
+        $this->session->set("linkSub", "/public/order_settings/listing/sync_drug");
         $this->session->set("linkTitle", "Settings Management");
         $this->table = new \CodeIgniter\View\Table();
         $this->session = \Config\Services::session();
@@ -27,40 +27,40 @@ class Order_settings extends BaseController {
 
     public function listing($table = "") {
         //Setup parameters
-		$access_level = $this->session->get('user_indicator');
+        $access_level = $this->session->get('user_indicator');
         $seperator = ' | ';
-		$exclude_columns = ['Active'];
-		$params = [
-			'sync_drug' => [
-				'columns' => ['ID', 'Name', 'Abbreviation', 'Strength', 'Packsize', 'Formulation', 'Options'],
-				'query' => 'SELECT id, name, abbreviation, strength, packsize, formulation, Active FROM sync_drug'
+        $exclude_columns = ['Active'];
+        $params = [
+            'sync_drug' => [
+                'columns' => ['ID', 'Name', 'Abbreviation', 'Strength', 'Packsize', 'Formulation', 'Options'],
+                'query' => 'SELECT id, name, abbreviation, strength, packsize, formulation, Active FROM sync_drug'
             ],
-			'sync_regimen' => [
-				'columns' => ['ID','Code', 'Name', 'Options'],
-				'query' => 'SELECT id, code, name, Active FROM sync_regimen'
+            'sync_regimen' => [
+                'columns' => ['ID', 'Code', 'Name', 'Options'],
+                'query' => 'SELECT id, code, name, Active FROM sync_regimen'
             ],
-			'sync_regimen_category' => [
-				'columns' => ['ID', 'Name', 'Active'],
-				'query' => 'SELECT id, name, Active FROM sync_regimen_category'
+            'sync_regimen_category' => [
+                'columns' => ['ID', 'Name', 'Active'],
+                'query' => 'SELECT id, name, Active FROM sync_regimen_category'
             ],
-			'sync_facility' => [
-				'columns' => ['ID', 'Name', 'Code', 'Category', 'Keph Level', 'Active'],
-				'query' => 'SELECT id, name, code, category, keph_level, Active FROM sync_facility'
+            'sync_facility' => [
+                'columns' => ['ID', 'Name', 'Code', 'Category', 'Keph Level', 'Active'],
+                'query' => 'SELECT id, name, code, category, keph_level, Active FROM sync_facility'
             ]
         ];
 
-		//Initialize table library
-		$tmpl = ['table_open' => '<table class="setting_table table table-bordered table-striped">'];
-		$this->table->setTemplate($tmpl);
-		$this->table->setHeading($params[$table]['columns']);
+        //Initialize table library
+        $tmpl = ['table_open' => '<table class="setting_table table table-bordered table-striped">'];
+        $this->table->setTemplate($tmpl);
+        $this->table->setHeading($params[$table]['columns']);
 
-		//Load table data
+        //Load table data
         $query = $this->db->query($params[$table]['query']);
         $results = $query->getResultArray();
 
         //Append data to table
         foreach ($results as $result) {
-			$row = [];
+            $row = [];
             foreach ($result as $index => $value) {
                 if ($index == 'Active') {
                     $edit_link = anchor('#' . $table . '_form', 'Edit', array('id' => $result['id'], 'table' => $table, 'role' => 'button', 'class' => 'edit_setting', 'data-toggle' => 'modal'));

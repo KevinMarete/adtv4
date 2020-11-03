@@ -27,15 +27,15 @@ use Illuminate\Database\Capsule\Manager as DB;
 
 class Regimen_management extends \App\Controllers\BaseController {
 
-	protected $session;
+    protected $session;
     var $db;
     var $table;
 
     function __construct() {
-		$this->session = session();
-		$this->session->set("link_id", "index");
-		$this->session->set("linkSub", "regimen_management");
-		$this->session->set("linkTitle", "Regimen Management");
+        $this->session = session();
+        $this->session->set("link_id", "index");
+        $this->session->set("linkSub", "regimen_management");
+        $this->session->set("linkTitle", "Regimen Management");
         $this->db = \Config\Database::connect();
         $this->table = new \CodeIgniter\View\Table();
     }
@@ -57,7 +57,7 @@ class Regimen_management extends \App\Controllers\BaseController {
 
         $tmpl = array('table_open' => '<table id="regimen_setting HIDECOLUMN" class="table table-bordered table-hover table-striped setting_table">');
         $this->table->setTemplate($tmpl);
-        $this->table->setHeading('id', 'Regimen', 'Line', 'Regimen Category', 'Type Of Service', 'Options');
+        $this->table->setHeading('Regimen', 'Line', 'Regimen Category', 'Type Of Service', 'Options');
         foreach ($regimens as $regimen) {
             $links = "";
             $drug = $regimen['id'];
@@ -111,7 +111,7 @@ class Regimen_management extends \App\Controllers\BaseController {
             } else {
                 $regimen_code = $regimen['Regimen_Desc'];
             }
-            $this->table->addRow($regimen['id'], $checkbox . "" . $regimen_code . " " . $mapped, $regimen['Line'], $regimen['Regimen_Category'], $regimen['Regimen_Service_Type'], $links);
+            $this->table->addRow($checkbox . "" . $regimen_code . " " . $mapped, $regimen['Line'], $regimen['Regimen_Category'], $regimen['Regimen_Service_Type'], $links);
         }
         $data['access_level'] = $access_level;
         $data['regimens'] = $this->table->generate();
@@ -235,9 +235,9 @@ class Regimen_management extends \App\Controllers\BaseController {
             $regimens_to_disable = implode(",", $regimens);
             $the_query = "UPDATE regimen SET enabled='0' WHERE id IN($regimens_to_disable);";
             if ($this->db->query($the_query)) {
-				$this->session->set('msg_success','The selected regimens were successfully disabled!');
+                $this->session->set('msg_success', 'The selected regimens were successfully disabled!');
             } else {
-				$this->session->set('msg_error', 'One or more of the selected regimens were not disabled!');
+                $this->session->set('msg_error', 'One or more of the selected regimens were not disabled!');
             }
         } else {
             $query = $this->db->query("UPDATE regimen SET enabled='0'WHERE id='$regimen_id'");
@@ -280,7 +280,7 @@ class Regimen_management extends \App\Controllers\BaseController {
     }
 
     public function unmerge($drugcode) {
-       // $this->load->database();
+        // $this->load->database();
         //First Query that umerges the regimen
         $the_query = "UPDATE regimen SET merged_to='' WHERE id='$drugcode';";
         $this->db->query($the_query);
@@ -303,21 +303,21 @@ class Regimen_management extends \App\Controllers\BaseController {
         $results = Regimen::getRegimen($drugcode);
         session()->set('message_counter', '1');
         session()->set('msg_error', $results->regimen_code . ' was Unmerged');
-         return redirect()->to(base_url() . '/public/settings_management');
+        return redirect()->to(base_url() . '/public/settings_management');
     }
 
-	public function getRegimenLine($service=false,$pmtct_oi=FALSE) {
+    public function getRegimenLine($service = false, $pmtct_oi = FALSE) {
         $service = $this->uri->getSegment(3);
         $pmtct_oi = $this->uri->getSegment(4) ?? false;
-		if($pmtct_oi){
-			$regimens = Regimen::whereHas('regimen_service_type', function($query){
-                $query->where('name', 'like', '%pmtct%')->orWhere('name', 'like', '%oi%');
-            })->where('enabled', '1')->orderBy('regimen_code')->get()->toArray();
-		}else{
-			$regimens = Regimen::where('enabled', '1')->where('type_of_service', $service)->orderBy('regimen_code')->get()->toArray();
-		}
-		echo json_encode($regimens);
-	}
+        if ($pmtct_oi) {
+            $regimens = Regimen::whereHas('regimen_service_type', function($query) {
+                        $query->where('name', 'like', '%pmtct%')->orWhere('name', 'like', '%oi%');
+                    })->where('enabled', '1')->orderBy('regimen_code')->get()->toArray();
+        } else {
+            $regimens = Regimen::where('enabled', '1')->where('type_of_service', $service)->orderBy('regimen_code')->get()->toArray();
+        }
+        echo json_encode($regimens);
+    }
 
     public function getDrugs($regimen) {
         $sql = "select rd.drugcode as drug_id,d.drug as drug_name from drugcode d,regimen_drug rd left join regimen r ON r.id=rd.regimen where (rd.regimen='$regimen' or r.regimen_code='OI') and r.enabled='1' and d.enabled='1' and rd.drugcode=d.id and rd.active='1' group by rd.drugcode order by rd.drugcode desc";
@@ -330,22 +330,22 @@ class Regimen_management extends \App\Controllers\BaseController {
 
     public function getAllDrugs($regimen = null) {
 
-		$cond = ($regimen == null) ? "UNION SELECT id as drug_id,drug as drug_name FROM drugcode" : "  WHERE (rd.regimen='$regimen' or r.regimen_code LIKE '%oi%') ".
-		"AND (d.drug !='NULL') GROUP BY d.id ORDER BY d.drug ASC" ;
-		$sql = "SELECT rd.drugcode as drug_id, d.drug as drug_name ". 
-		"FROM regimen_drug rd ".
-		"LEFT JOIN regimen r ON r.id=rd.regimen ".
-		"LEFT JOIN drugcode d ON d.id=rd.drugcode ".$cond;
+        $cond = ($regimen == null) ? "UNION SELECT id as drug_id,drug as drug_name FROM drugcode" : "  WHERE (rd.regimen='$regimen' or r.regimen_code LIKE '%oi%') " .
+                "AND (d.drug !='NULL') GROUP BY d.id ORDER BY d.drug ASC";
+        $sql = "SELECT rd.drugcode as drug_id, d.drug as drug_name " .
+                "FROM regimen_drug rd " .
+                "LEFT JOIN regimen r ON r.id=rd.regimen " .
+                "LEFT JOIN drugcode d ON d.id=rd.drugcode " . $cond;
 
-		$results = DB::select($sql);
-		if ($results) {
-			echo json_encode($results);
-		}
-	}
-	
-	public function getNonMappedRegimens($param='0'){
-		$data = array();
-		$query = $this->db->query("SELECT s.id,s.code,s.name,sr.Name as category_name,s.category_id
+        $results = DB::select($sql);
+        if ($results) {
+            echo json_encode($results);
+        }
+    }
+
+    public function getNonMappedRegimens($param = '0') {
+        $data = array();
+        $query = $this->db->query("SELECT s.id,s.code,s.name,sr.Name as category_name,s.category_id
 			FROM sync_regimen s 
 			LEFT JOIN sync_regimen_category sr ON sr.id = s.category_id
 			WHERE s.Active = '1'
