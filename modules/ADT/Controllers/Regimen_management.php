@@ -20,7 +20,7 @@ use \Modules\ADT\Models\Drug_destination;
 use \Modules\ADT\Models\Regimen;
 use \Modules\ADT\Models\Regimen_Category;
 use \Modules\ADT\Models\Regimen_service_type;
-use \Modules\ADT\Models\Sync_regimen;
+use \Modules\ADT\Models\Sync_Regimen;
 use \Modules\ADT\Models\CCC_store_service_point;
 use \Modules\ADT\Models\Drug_Stock_Movement;
 use Illuminate\Database\Capsule\Manager as DB;
