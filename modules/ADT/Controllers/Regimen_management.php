@@ -18,7 +18,7 @@ use \Modules\ADT\Models\Drug_source;
 use \Modules\ADT\Models\Drugcode;
 use \Modules\ADT\Models\Drug_destination;
 use \Modules\ADT\Models\Regimen;
-use \Modules\ADT\Models\Regimen_Category;
+use \Modules\ADT\Models\RegimenCategory;
 use \Modules\ADT\Models\Regimen_service_type;
 use \Modules\ADT\Models\Sync_regimen;
 use \Modules\ADT\Models\CCC_store_service_point;
