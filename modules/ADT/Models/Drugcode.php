@@ -59,7 +59,7 @@ class Drugcode extends BaseModel {
     }
 
     public static function getAllEnabled($source = 0, $access_level = "") {
-        $query = DB::select("SELECT id,Drug,Pack_Size,Safety_Quantity,Quantity,Duration,Enabled,Merged_To from Drugcode where enabled='1' order By Drug asc");
+        $query = DB::select("SELECT id,Drug,Pack_Size,Safety_Quantity,Quantity,Duration,Enabled,Merged_To from drugcode where enabled='1' order By Drug asc");
         return BaseModel::resultSet($query);
     }
 
@@ -76,12 +76,12 @@ class Drugcode extends BaseModel {
     }
 
     public static function getBrands() {
-        $query = DB::table('Drugcode')->where('enabled', '1')->get();
+        $query = DB::table('drugcode')->where('enabled', '1')->get();
         return $query;
 
     }
     public static function getEnabledDrugs() {
-        return BaseModel::resultSet(DB::table('Drugcode')->where('enabled', '1')->get());
+        return BaseModel::resultSet(DB::table('drugcode')->where('enabled', '1')->get());
     }
 
     public static function getNonMappedDrugs() {

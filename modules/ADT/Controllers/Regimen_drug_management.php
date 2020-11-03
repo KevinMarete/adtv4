@@ -119,7 +119,7 @@ class Regimen_drug_management extends \App\Controllers\BaseController {
     public function disable($regimen_drug_id) {
         //$this->load->database();
         $query = $this->db->query("UPDATE regimen_drug SET active='0'WHERE id='$regimen_drug_id'");
-       // $results = Drugcode::find($regimen_drug_id)->first();
+        // $results = Drugcode::find($regimen_drug_id)->first();
         //$this -> session -> set_userdata('message_counter', '2');
         echo 'Drug was disabled!';
     }
