@@ -11,17 +11,17 @@ use App\Libraries\Mysqldump;
 use App\Libraries\Encrypt;
 use App\Libraries\Zip;
 use \Modules\ADT\Models\Drugcode;
-use \Modules\ADT\Models\Drug_source;
+use \Modules\ADT\Models\Drug_source; 
 use \Modules\ADT\Models\Drug_unit;
-use \Modules\ADT\Models\Drug_classification;
+use \Modules\ADT\Models\Drug_classification; 
 use \Modules\ADT\Models\Sync_drug;
-use \Modules\ADT\Models\Drug_instructions;
-use \Modules\ADT\Models\Generic_name;
-use \Modules\ADT\Models\Supporter;
-use \Modules\ADT\Models\Dose;
-use Illuminate\Database\Capsule\Manager as DB;
+use \Modules\ADT\Models\Drug_instructions; 
+use \Modules\ADT\Models\Generic_name; 
+use \Modules\ADT\Models\Supporter; 
+use \Modules\ADT\Models\Dose; 
+use Illuminate\Database\Capsule\Manager as DB;  
 
-class Drugcode_management extends \App\Controllers\BaseController {
+class Drugcode_management extends \App\Controllers\BaseController { 
 
     var $db;
     var $table;
@@ -33,7 +33,7 @@ class Drugcode_management extends \App\Controllers\BaseController {
         session()->set("linkTitle", "Drug Code Management");
         $this->db = \Config\Database::connect();
         $this->table = new \CodeIgniter\View\Table();
-        $this->session = \Config\Services::session();
+        $this->session = \Config\Services::session(); 
     }
 
     public function index() {
