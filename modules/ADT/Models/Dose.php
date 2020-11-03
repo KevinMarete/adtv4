@@ -21,12 +21,12 @@ class Dose extends BaseModel {
     }
 
     public static function getAllActive() {
-        $query = DB::table('Dose')->where('active', '1')->orderBy('name', 'asc')->get();
+        $query = DB::table('dose')->where('active', '1')->orderBy('name', 'asc')->get();
         return BaseModel::resultSet($query);
     }
 
     public function getTotalNumber() {
-        $query = DB::select("SELECT count(*) as Total_Doses FROM Dose");
+        $query = DB::select("SELECT count(*) as Total_Doses FROM dose");
         return $query[0]->Total_Doses;
     }
 
