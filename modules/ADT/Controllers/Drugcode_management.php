@@ -13,7 +13,7 @@ use App\Libraries\Zip;
 use \Modules\ADT\Models\Drugcode;
 use \Modules\ADT\Models\Drug_source; 
 use \Modules\ADT\Models\Drug_unit;
-use \Modules\ADT\Models\Drug_classification; 
+use \Modules\ADT\Models\Drug_Classification; 
 use \Modules\ADT\Models\Sync_drug;
 use \Modules\ADT\Models\Drug_instructions; 
 use \Modules\ADT\Models\Generic_name; 
@@ -94,7 +94,7 @@ class Drugcode_management extends \App\Controllers\BaseController {
 
         $data['drugcodes'] = $this->table->generate();
         $data['suppliers'] = Drug_source::getAllHydrated();
-        $data['classifications'] = Drug_classification::getAllHydrated($access_level, "0");
+        $data['classifications'] = Drug_Classification::getAllHydrated($access_level, "0");
         $query = $this->db->query("SELECT s.id,CONCAT_WS('] ',CONCAT_WS(' [',s.name,s.abbreviation),CONCAT_WS(' | ',s.strength,s.formulation)) as name,s.packsize
                                        FROM sync_drug s 
                                        WHERE s.id NOT IN(SELECT dc.map
