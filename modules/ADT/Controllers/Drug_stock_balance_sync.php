@@ -362,9 +362,9 @@ class Drug_stock_balance_sync extends \App\Controllers\BaseController {
                 $builder = $this->db->table('drug_stock_movement');
                 $builder->insert($insert_data);
                 //$last_insert_id = $builder->getInsertID();
-
                 //update running_balance in machine code column
-                $sql = "UPDATE drug_stock_movement SET machine_code='$drug_balance' WHERE id=(SELECT MAX(id) FROM drug_stock_movement)";
+                $id = $this->db->query("SELECT MAX(id) FROM drug_stock_movement")[0]->id;
+                $sql = "UPDATE drug_stock_movement SET machine_code='$drug_balance' WHERE id='$id'";
                 $this->db->query($sql);
             }
         }
