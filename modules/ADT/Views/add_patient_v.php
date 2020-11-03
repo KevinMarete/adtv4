@@ -23,28 +23,70 @@
 
 	</style>
 	<script type="text/javascript">
-			function setCCC(service) {
+			function setCCC(service, from_click = false) {
 				if (service=='ART'){
 					$('#patient_number').val('<?=$facility_code. $cs;?>');
 					$('#patient_number').attr('maxlength','11');
+					$("#service > option").each(function() {
+            			if(this.text.toUpperCase()==="ART"){
+            				$(this).attr("selected","selected");    
+            			}
+            		}); 
 				}
 				if (service=='PREP'){
+					$("#service > option").each(function() {
+            			if(this.text.toUpperCase()==="PREP"){
+            				$(this).attr("selected","selected");    
+            			}
+            		});
+					$("#current_status > option").each(function() {
+            			if(this.text.toUpperCase()==="LOST TO FOLLOW-UP"){
+            				$(this).text("Discontinued");    
+            			}
+            		}); 
 					$('#patient_number').val('PREP<?=$cs.$facility_code. $cs;?>');
 					$('#patient_number').attr('maxlength','16');
+					$('#disclosure').css("display","none");
+				}
+				else{
+					$('#disclosure').css("display","block");
+					$("#current_status > option").each(function() {
+            			if(this.text.toUpperCase()==="DISCONTINUED"){
+            				$(this).text("Lost to follow-up");    
+            			}
+            		}); 
 				}
 				if (service=='PEP'){
+					$("#service > option").each(function() {
+            			if(this.text.toUpperCase()==="PEP"){
+            				$(this).attr("selected","selected");    
+            			}
+            		}); 
 					$('#patient_number').val('PEP<?=$cs.$facility_code. $cs;?>');
 					$('#patient_number').attr('maxlength','15');
 				}
 				if (service=='HEP'){
+					$("#service > option").each(function() {
+            			if(this.text.toUpperCase()==="HEP"){
+            				$(this).attr("selected","selected");    
+            			}
+            		}); 
 					$('#patient_number').val('HEP<?=$cs.$facility_code. $cs;?>');
 					$('#patient_number').attr('maxlength','15');
 				}
 
 				if (service=='HEI'){
+					$("#service > option").each(function() {
+            			if(this.text.toUpperCase()==="HEI"){
+            				$(this).attr("selected","selected");    
+            			}
+            		}); 
 					$('#patient_number').val('<?=$facility_code. $cs.date('Y').$cs;?>');
 					$('#patient_number').attr('maxlength','16');
-				}			
+				}
+
+				// Load regimens if a service type was clicked in the first items
+				if(from_click)  $("#service").trigger('change');	
 			}
 		$(document).ready(function(){
 
@@ -158,8 +200,10 @@
 					if ($('#age_in_years').val()>=15){
 						$('.status_hidden').css("display","block");
 						$('.match_hidden').css("display","none");
+						$('#partner_status').attr("required", "true").addClass("validate[required]");
 					}else if($('#age_in_years').val()<15){
 						$('.match_hidden').css("display","block");
+						$('#partner_status').removeAttr("required").removeClass("validate[required]");
 					}
 					var yearDiff = today.getFullYear() - dob.getFullYear();
 					var y1 = today.getFullYear();
@@ -263,6 +307,7 @@
 		   		$('#pep_reason').addClass("validate[required]");
 		   		$("#who_listing").hide();
 		   		$("#drug_prophylax").css("display","none");
+				setCCC('PEP');
 		   	}
 		   	else if(service_line_text == "oi only"){
 		   		$("#service_started").val("");
@@ -279,7 +324,9 @@
 		   		$("#pep_reason").val(0);
 		   		$("#who_listing").hide();
 		   		$("#who_stage").val(0);
-		   		$("#drug_prophylax").css("display","none");
+				$("#drug_prophylax").css("display","none");
+				$('#patient_number').attr('maxlength','16');
+				setCCC('PREP');
 		   	}
 		   	else{
 		   		if(service_line_text == "pmtct" && $("#age_in_years").val() < 2){
@@ -291,6 +338,15 @@
 		   		$("#who_listing").show();
 		   		$("#who_stage").val(0);
 		   	}
+			if(service_line_text == "art"){
+				setCCC('ART');
+			}
+			if(service_line_text == "hep"){
+				setCCC('HEP');
+			}
+			if(service_line_text == "hei"){
+				setCCC('HEI');
+			}
 
 		   	$.ajax({
 		   		url: link,
@@ -315,7 +371,13 @@
 
 		   	if(prep_test_answer == 1){
 		   		$("#prep_test_date_view").show();
+				$('#prep_test_date').prop('required',true);
+				$('#prep_test_date').addClass("validate[required]");
 		   	}
+			else {
+				$('#prep_test_date').prop('required',false);
+				$('#prep_test_date').removeClass("validate[required]");
+			}
 		   });
 
 		   $("#prep_test_date").datepicker({
@@ -336,7 +398,7 @@
 		   	if(prep_test_result == 1){
 		   		bootbox.alert("<h4>Incorrect Regimen</h4>\n\<hr/><center>Patient Should Be started on ART Service</center>");
 		   		$("#service option:contains(ART)").attr('selected', 'selected');
-		   		$("#service").trigger('change')
+		   		$("#service").trigger('change');
 		   	}
 		   });
 
@@ -655,6 +717,16 @@
 				pregnant.val(0);
 				breastfeeding.val(0)
 			}
+
+			/// Make family planning compulsory if female and >= 15
+			if(age_in_years >= 15 && gender == 'female'){
+				$('#family_planning').attr('required', 'true').addClass("validate[required]");
+				// $('#family_planning').addClass("validate[required]");
+				$('#family_planning_astericks').css("display","inline-block");
+			}else{
+				$('#family_planning').removeAttr('required').removeClass("validate[required]");
+				$('#family_planning_astericks').css("display","none");
+			}
 		}
 
 	</script>
@@ -703,7 +775,7 @@
 								</select>
 							</div>
 							<div class="max-row" id="facility-service">
-								<a href="javascript:;;" onclick="setCCC('ART')">ART</a> | <a href="javascript:;;" onclick="setCCC('PREP')">PREP</a> | <a href="javascript:;;" onclick="setCCC('HEI')">HEI</a> | <a href="javascript:;;" onclick="setCCC('PEP')">PEP</a> | <a href="javascript:;;" onclick="setCCC('HEP')">HEP</a>
+								<a href="javascript:;;" onclick="setCCC('ART', true)">ART</a> | <a href="javascript:;;" onclick="setCCC('PREP', true)">PREP</a> | <a href="javascript:;;" onclick="setCCC('HEI', true)">HEI</a> | <a href="javascript:;;" onclick="setCCC('PEP', true)">PEP</a> | <a href="javascript:;;" onclick="setCCC('HEP', true)">HEP</a>
 							</div>
 						<div class="max-row">
 							<div class="mid-row">
@@ -733,7 +805,7 @@
 						<div class="max-row">
 							<div class="mid-row">
 								<label><span class='astericks'>*</span>Date of Birth</label>
-								<input type="text"name="dob" id="dob" class="validate[required]">
+								<input type="text"name="dob" id="dob" class="validate[required]" autocomplete="off">
 							</div>
 							<div class="mid-row">
 								<label> Place of Birth </label>
@@ -852,13 +924,12 @@
 							</legend>
 							<div class="max-row status_hidden">
 								<label  id="tstatus"><span class='astericks'>*</span> Partner Status</label>
-								<select name="partner_status" id="partner_status" class="validate[required]">
+								<select name="partner_status" id="partner_status" class="validate[required]" required>
 									<option value="">--Select--</option>
 									<option value="0" >No Partner</option>
-									<option value="1" > Concordant</option>
-									<option value="2" > Discordant</option>
+									<option value="1" > HIV Positive</option>
+									<option value="2" > HIV Negative</option>
 									<option value="3" > Unknown</option>
-									<option value="4" > Negative</option>
 								</select>
 
 
@@ -918,9 +989,10 @@
 								<textarea name="other_drugs" id="other_drugs"></textarea>
 							</div>
 							<div class="max-row">
-								<label>Drugs Allergies/ADR</label>
+								<label><span class='astericks'>*</span>Drugs Allergies/ADR</label>
 								<input type="hidden" id="drug_allergies_holder" name="drug_allergies_holder" />
-								<select name="drug_allergies" id="drug_allergies"  multiple="multiple" style="width:400px;">
+								<select name="drug_allergies" id="drug_allergies" multiple="multiple" style="width:400px;" required class="validate[required]">
+									<option value="-0-">None</option>
 									<?php
 									foreach($drugs as $drug){
 										echo "<option value='-".$drug['id']."-'>"." ".$drug['drug']."</option>";
@@ -1010,7 +1082,7 @@
 							</legend>
 							<div class="max-row">
 								<label><span class='astericks'>*</span>Date Patient Enrolled</label>
-								<input type="text" name="enrolled" id="enrolled" value="" class="validate[required]">
+								<input type="text" name="enrolled" id="enrolled" value="" class="validate[required]" autocomplete="off">
 							</div>
 							<div class="max-row">
 								<label><span class='astericks'>*</span>Current Status</label>
@@ -1029,7 +1101,7 @@
 							</div>
 							<div class="max-row">
 								<label><span class='astericks'>*</span>Type of Service</label>
-								<select name="service" id="service" class="validate[required]">
+								<select name="service" id="service" class="validate[required]" required>
 									<option value="">--Select--</option>
 									<?php
 									foreach($service_types as $service_type){
@@ -1076,7 +1148,7 @@
 					</div>
 					<div class="mid-row" id="prep_test_date_view" style="display:none">
 						<label>Test Date</label>
-						<input type="text" name="prep_test_date" id="prep_test_date">
+						<input type="text" name="prep_test_date" id="prep_test_date" autocomplete="off">
 					</div>
 					<div class="mid-row" id="prep_test_result_view" style="display:none">
 						<label>Was the Test Positive?</label>
@@ -1089,7 +1161,7 @@
 
 				<div class="max-row">
 					<label id="start_of_regimen"><span class='astericks'>*</span>Start Regimen </label>
-					<select name="regimen" id="regimen" class="validate[required] start_regimen" >
+					<select name="regimen" id="regimen" class="validate[required] start_regimen" required>
 						<option value="">--Select One--</option>
 
 					</select>
@@ -1097,7 +1169,7 @@
 				</div>
 				<div class="max-row" id="servicestartedcontent">
 					<label id="date_service_started">Start Regimen Date</label>
-					<input type="text" name="service_started" id="service_started" value="">
+					<input type="text" name="service_started" id="service_started" value="" autocomplete="off">
 				</div>
 				<div class="max-row" id="who_listing">
 					<label>WHO Stage</label>
@@ -1125,22 +1197,22 @@
 				<div class="max-row" id="isoniazid_view">
 					<div class="mid-row" id="isoniazid_start_date_view">
 						<label>Isoniazid Start Date</label>
-						<input type="text" name="iso_start_date" id="iso_start_date"  style="color:red"/>
+						<input type="text" name="iso_start_date" id="iso_start_date"  style="color:red" autocomplete="off"/>
 					</div>
 					<div class="mid-row" id="isoniazid_end_date_view">
 						<label> Isoniazid End Date</label>
-						<input  type="text"name="iso_end_date" id="iso_end_date" style="color:red">
+						<input  type="text"name="iso_end_date" id="iso_end_date" style="color:red" autocomplete="off">
 					</div>								
 				</div>
 
 				<div class="max-row" id="rifa_isoniazid_view">
 					<div class="mid-row" id="rifa_isoniazid_start_date_view">
 						<label>Rifapentine/Isoniazid Start Date</label>
-						<input type="text" name="rifa_iso_start_date" id="rifa_iso_start_date"  style="color:red"/>
+						<input type="text" name="rifa_iso_start_date" id="rifa_iso_start_date"  style="color:red" autocomplete="off"/>
 					</div>
 					<div class="mid-row" id="rifa_isoniazid_end_date_view">
 						<label>Rifapentine/Isoniazid End Date</label>
-						<input  type="text"name="rifa_iso_end_date" id="rifa_iso_end_date" style="color:red">
+						<input  type="text"name="rifa_iso_end_date" id="rifa_iso_end_date" style="color:red" autocomplete="off">
 					</div>								
 				</div>
 

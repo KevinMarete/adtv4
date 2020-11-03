@@ -32,35 +32,77 @@ foreach($results as $result){
 
 	</style>
 	<script type="text/javascript">
-			function setCCC(service) {
+			function setCCC(service, from_click = false) {
 				if (service=='ART'){
 					$('#patient_number').val('<?=$facility_code. $cs;?>');
 					$('#patient_number').attr('maxlength','11');
+					$("#service > option").each(function() {
+            			if(this.text.toUpperCase()==="ART"){
+            				$(this).attr("selected","selected");    
+            			}
+            		});
 				}
 				if (service=='PREP'){
+					$("#service > option").each(function() {
+            			if(this.text.toUpperCase()==="PREP"){
+            				$(this).attr("selected","selected");    
+            			}
+            		});
+					$("#current_status > option").each(function() {
+            			if(this.text.toUpperCase()==="LOST TO FOLLOW-UP"){
+            				$(this).text("Discontinued");    
+            			}
+            		}); 
 					$('#patient_number').val('PREP<?=$cs.$facility_code. $cs;?>');
 					$('#patient_number').attr('maxlength','16');
+					$('#disclosure').css("display","none");
+				}
+				else{
+					$('#disclosure').css("display","block");
+					$("#current_status > option").each(function() {
+            			if(this.text.toUpperCase()==="DISCONTINUED"){
+            				$(this).text("Lost to follow-up");    
+            			}
+            		}); 
 				}
 				if (service=='PEP'){
+					$("#service > option").each(function() {
+            			if(this.text.toUpperCase()==="PEP"){
+            				$(this).attr("selected","selected");    
+            			}
+            		}); 
 					$('#patient_number').val('PEP<?=$cs.$facility_code. $cs;?>');
 					$('#patient_number').attr('maxlength','15');
 				}
 				if (service=='HEP'){
+					$("#service > option").each(function() {
+            			if(this.text.toUpperCase()==="HEP"){
+            				$(this).attr("selected","selected");    
+            			}
+            		}); 
 					$('#patient_number').val('HEP<?=$cs.$facility_code. $cs;?>');
 					$('#patient_number').attr('maxlength','15');
 				}
 
 				if (service=='HEI'){
+					$("#service > option").each(function() {
+            			if(this.text.toUpperCase()==="HEI"){
+            				$(this).attr("selected","selected");    
+            			}
+            		}); 
 					$('#patient_number').val('<?=$facility_code. $cs.date('Y').$cs;?>');
 					$('#patient_number').attr('maxlength','16');
-				}			
+				}
+
+				// Load regimens if a service type was clicked in the first items
+				if(from_click)  $("#service").trigger('change');				
 			}
 		$(document).ready(function() {
 			var facilityAdultAge = parseInt(<?php echo $facility_adult_age;?>)
 			$("#drug_prophylaxis").trigger("multiselectclick");
-	    //Function to Check Patient Numner exists
-	    var base_url = "<?php echo base_url();?>";
-	    $("#patient_number").change(function() {
+			//Function to Check Patient Numner exists
+			var base_url = "<?php echo base_url();?>";
+			$("#patient_number").change(function() {
 	    		var patient_no=$("#patient_number").val();
 				// -- do regex check on patient ccc number 
 				var CCC_check = new RegExp('^[0-9]{5}<?=$cs;?>[0-9]{5}');
@@ -764,7 +806,8 @@ foreach($results as $result){
 	    		$("#drug_prophylax").hide();
 	    		$("#drug_prophylax").val(0);
 	    		$("#service_started").val("");
-	    		$('#prep_reason').removeClass("validate[required]");
+				$('#prep_reason').removeClass("validate[required]");
+				setCCC('PEP');
 	    	} else if (selected_text == "PREP") {
 	    		$("#prep_reason_listing").show();
 	    		$('#prep_reason').addClass("validate[required]");
@@ -775,8 +818,18 @@ foreach($results as $result){
 	    		$("#who_stage").val(0);
 	    		$("#drug_prophylax").hide();
 	    		$("#drug_prophylax").val(0);
-	    		$("#service_started").val("");
-	    	}
+				$("#service_started").val("");
+				setCCC('PREP');
+			}
+			if(service_line_text == "art"){
+				setCCC('ART');
+			}
+			if(service_line_text == "hep"){
+				setCCC('HEP');
+			}
+			if(service_line_text== "hei"){
+				setCCC('HEI');
+			}
 	    	$.ajax({
 	    		url: link,
 	    		type: 'POST',
@@ -803,8 +856,14 @@ foreach($results as $result){
 	    	$("#prep_test_result").val(0);
 
 	    	if (prep_test_answer == 1) {
-	    		$("#prep_test_date_view").show();
+				$("#prep_test_date_view").show();
+				$('#prep_test_date').prop('required',true);
+				$('#prep_test_date').addClass("validate[required]");
 	    	}
+			else {
+				$('#prep_test_date').prop('required',false);
+				$('#prep_test_date').removeClass("validate[required]");
+			}
 	    });
 
 	    $("#prep_test_date").datepicker({
@@ -825,7 +884,7 @@ foreach($results as $result){
 	    	if (prep_test_result == 1) {
 	    		bootbox.alert("<h4>Incorrect Regimen</h4>\n\<hr/><center>Patient Should Be started on ART Service</center>");
 	    		$("#service option:contains(ART)").attr('selected', 'selected');
-	    		$("#service").trigger('change')
+	    		$("#service").trigger('change');
 	    	}
 	    });
 
@@ -1066,7 +1125,7 @@ function getAge(dateString) {
 									</select>
 								</div>
 								<div class="max-row" id="facility-service">
-								<a href="javascript:;;" onclick="setCCC('ART')">ART</a> | <a href="javascript:;;" onclick="setCCC('PREP')">PREP</a> | <a href="javascript:;;" onclick="setCCC('HEI')">HEI</a> | <a href="javascript:;;" onclick="setCCC('PEP')">PEP</a> | <a href="javascript:;;" onclick="setCCC('HEP')">HEP</a>
+								<a href="javascript:;;" onclick="setCCC('ART', true)">ART</a> | <a href="javascript:;;" onclick="setCCC('PREP', true)">PREP</a> | <a href="javascript:;;" onclick="setCCC('HEI', true)">HEI</a> | <a href="javascript:;;" onclick="setCCC('PEP', true)">PEP</a> | <a href="javascript:;;" onclick="setCCC('HEP', true)">HEP</a>
 							</div>
 							<div class="max-row">
 								<div class="mid-row">
@@ -1097,7 +1156,7 @@ function getAge(dateString) {
 							<div class="max-row">
 								<div class="mid-row">
 									<label><span class='astericks'>*</span>Date of Birth</label>
-									<input type="text"name="dob" id="dob" class="validate[required]">
+									<input type="text"name="dob" id="dob" class="validate[required]" autocomplete="off">
 								</div>
 								<div class="mid-row">
 									<label> Place of Birth </label>
@@ -1239,8 +1298,8 @@ function getAge(dateString) {
 										<select name="partner_status" id="partner_status" class="validate[required]" >
 											<option value="">--Select--</option>
 											<option value="0">No Partner</option>
-											<option value="1" > Concordant</option>
-											<option value="2" > Discordant</option>
+											<option value="1" > HIV Positive</option>
+											<option value="2" > HIV Negative</option>
 											<option value="3" > Unknown</option>
 										</select>
 
@@ -1304,6 +1363,7 @@ function getAge(dateString) {
 									<label>Drugs Allergies/ADR</label>
 									<input type="hidden" id="drug_allergies_holder" name="drug_allergies_holder" />
 									<select name="drug_allergies" id="drug_allergies"  multiple="multiple" style="width:400px;">
+										<option value="-0-">None</option>
 										<?php
 										foreach($drugs as $drug){
 											echo "<option value='-".$drug['id']."-'>"." ".$drug['drug']."</option>";
@@ -1393,7 +1453,7 @@ function getAge(dateString) {
 								<div class="max-row">
 									<div class="mid-row">
 										<label> Date of Next Appointment</label>
-										<input type="text" name="next_appointment_date" id="next_appointment_date"  style="color:red"/>
+										<input type="text" name="next_appointment_date" id="next_appointment_date"  style="color:red" autocomplete="off"/>
 										<input type="hidden" name="prev_appointment_date" id="prev_appointment_date" />
 									</div>
 									<div class="mid-row">
@@ -1405,7 +1465,7 @@ function getAge(dateString) {
 								<div class="max-row">
 									<div class="mid-row">
 										<label> Date of Next Clinical Appointment</label>
-										<input type="text" name="next_clinical_appointment_date" id="next_clinical_appointment_date"  style="color:red"/>
+										<input type="text" name="next_clinical_appointment_date" id="next_clinical_appointment_date"  style="color:red" autocomplete="off"/>
 										<input type="hidden" name="prev_clinical_appointment_date" id="prev_clinical_appointment_date" />
 									</div>
 									<div class="mid-row">
@@ -1423,7 +1483,7 @@ function getAge(dateString) {
 								</legend>
 								<div class="max-row">
 									<label><span class='astericks'>*</span>Date Patient Enrolled</label>
-									<input type="text" name="enrolled" id="enrolled" value="" class="validate[required]">
+									<input type="text" name="enrolled" id="enrolled" value="" class="validate[required]" autocomplete="off">
 								</div>
 								<div class="max-row">
 									<label><span class='astericks'>*</span>Current Status</label>
@@ -1438,7 +1498,7 @@ function getAge(dateString) {
 								</div>
 								<div class="max-row">
 									<label class="status_started" >Date of Status Change</label>
-									<input type="text" name="status_started" id="status_started" value="" >
+									<input type="text" name="status_started" id="status_started" value="" autocomplete="off" >
 								</div>
 								<div class="max-row">
 									<label><span class='astericks'>*</span>Type of Service</label>
@@ -1486,7 +1546,7 @@ function getAge(dateString) {
 						</div>
 						<div class="mid-row" id="prep_test_date_view" style="display:none">
 							<label>Test Date</label>
-							<input type="text" name="prep_test_date" id="prep_test_date">
+							<input type="text" name="prep_test_date" id="prep_test_date" autocomplete="off">
 						</div>
 						<div class="mid-row" id="prep_test_result_view" style="display:none">
 							<label>Was the Test Positive?</label>
@@ -1509,7 +1569,7 @@ function getAge(dateString) {
 					</div>
 					<div class="max-row" id="servicestartedcontent">
 						<label id="date_service_started">Start Regimen Date</label>
-						<input type="text" name="service_started" id="service_started" value="">
+						<input type="text" name="service_started" id="service_started" value="" autocomplete="off">
 					</div>
 					<div class="max-row">
 						<label style="color:red;font-weight:bold;">Current Regimen</label>
@@ -1549,11 +1609,22 @@ function getAge(dateString) {
 					<div class="max-row" id="isoniazid_view">
 						<div class="mid-row" id="isoniazid_start_date_view">
 							<label class="">Isoniazid Start Date</label>
-							<input type="text" name="iso_start_date" id="iso_start_date" class="validate[required]" style="color:red"/>
+							<input type="text" name="iso_start_date" id="iso_start_date" class="validate[required]" style="color:red" autocomplete="off"/>
 						</div>
 						<div class="mid-row" id="isoniazid_end_date_view">
 							<label > Isoniazid End Date</label>
-							<input  type="text"name="iso_end_date" id="iso_end_date" style="color:red">
+							<input  type="text"name="iso_end_date" id="iso_end_date" style="color:red" autocomplete="off">
+						</div>								
+					</div>
+
+					<div class="max-row" id="rifa_isoniazid_view">
+						<div class="mid-row" id="rifa_isoniazid_start_date_view">
+							<label>Rifapentine/Isoniazid Start Date</label>
+							<input type="text" name="rifa_iso_start_date" id="rifa_iso_start_date"  style="color:red" autocomplete="off"/>
+						</div>
+						<div class="mid-row" id="rifa_isoniazid_end_date_view">
+							<label>Rifapentine/Isoniazid End Date</label>
+							<input  type="text"name="rifa_iso_end_date" id="rifa_iso_end_date" style="color:red" autocomplete="off">
 						</div>								
 					</div>
 
