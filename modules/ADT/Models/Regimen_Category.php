@@ -24,5 +24,9 @@ class Regimen_Category extends BaseModel {
         $query = DB::table('regimen_category')->where("Active", "1")->get();
         return BaseModel::resultSet($query);
     }
+    
+    public function git(){
+        
+    }
 
 }
