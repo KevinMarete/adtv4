@@ -5,7 +5,7 @@ namespace Modules\ADT\Models;
 use App\Models\BaseModel;
 use Illuminate\Database\Capsule\Manager as DB;
 
-class Drug_destination extends BaseModel {
+class Drug_Destination extends BaseModel {
 
     protected $table = 'drug_destination';
     protected $fillable = array('name', 'active');
