@@ -167,7 +167,7 @@ if ($user_is_administrator) {
                 /*Perform auto update when online*/
                 var status = navigator.onLine;
                 if (status) {
-                    autoUpdate();
+                  //  autoUpdate();
                 }
                 //Load scripts for system search
                 jQuery.getScript("<?php echo base_url(); ?>/public/assets/scripts/settings.js")
