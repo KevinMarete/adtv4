@@ -6,7 +6,7 @@ use App\Models\BaseModel;
 use App\Models\User;
 use \Modules\ADT\Models\RegimenCategory;
 use \Modules\ADT\Models\RegimenServiceType;
-use \Modules\ADT\Models\RegimenDrug;
+use \Modules\ADT\Models\Regimen_Drug;
 use \Modules\ADT\Models\Sync_Regimen;
 use Illuminate\Database\Capsule\Manager as DB;
 
@@ -26,7 +26,7 @@ class Regimen extends BaseModel {
     }
 
     function Regimen_Drug() {
-        return $this->hasMany(RegimenDrug::class, 'regimen');
+        return $this->hasMany(Regimen_Drug::class, 'regimen');
     }
 
     function Sync_Regimen() {

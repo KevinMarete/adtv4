@@ -18,13 +18,14 @@ use \Modules\ADT\Models\Drug_source;
 use \Modules\ADT\Models\Drugcode;
 use \Modules\ADT\Models\Drug_destination;
 use \Modules\ADT\Models\Regimen;
-use \Modules\ADT\Models\Regimen_drug;
+use \Modules\ADT\Models\Regimen_Drug;
 use \Modules\ADT\Models\Regimen_Category;
 use \Modules\ADT\Models\Regimen_service_type;
 use \Modules\ADT\Models\Sync_regimen;
 use \Modules\ADT\Models\CCC_store_service_point;
 use \Modules\ADT\Models\Drug_Stock_Movement;
 use Illuminate\Database\Capsule\Manager as DB;
+use Dump;
 
 class Regimen_drug_management extends \App\Controllers\BaseController {
 
@@ -56,10 +57,6 @@ class Regimen_drug_management extends \App\Controllers\BaseController {
         $data['scripts'] = array("jquery-ui.js");
         //SELECT * from Regimen where Source =  $source  or Source ='0' order By Regimen_Desc asc
         $data['regimens'] = Regimen::where('source', $source)->orWhere('source', '0')->get();
-        foreach ($data['regimens'] as $i => $rd) {
-            //dd($rd->Regimen_Drug[$i]->Drugcode->drug);
-        };
-
         $data['regimens_enabled'] = Regimen::getAllEnabled($source);
         $data['regimen_categories'] = Regimen_Category::getAll();
         $data['regimen_service_types'] = Regimen_Service_Type::getAll();

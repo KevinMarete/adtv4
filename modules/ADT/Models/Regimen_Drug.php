@@ -10,7 +10,7 @@ use \Modules\ADT\Models\Drugcode;
 use \Modules\ADT\Models\Sync_Regimen;
 use Illuminate\Database\Capsule\Manager as DB;
 
-class Regimen_drug extends BaseModel {
+class Regimen_Drug extends BaseModel {
 
     protected $table = 'regimen_drug';
     protected $fillable = array('Regimen', 'Drugcode', 'Source', 'Active', 'Merged_From', 'Regimen_Merged_From');

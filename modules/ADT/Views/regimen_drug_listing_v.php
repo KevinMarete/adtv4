@@ -37,7 +37,7 @@
 </style>
 <script type="text/javascript">
     // regimen_drug_management/disable
-        new_base="<?php echo base_url().'/public/';?>"
+    new_base = "<?php echo base_url() . '/public/'; ?>"
     function toggleDrugRegimen(regimen_drug) {
 
         if ($('.reg_drug_name_' + regimen_drug).hasClass('enabled')) {
@@ -118,7 +118,9 @@
                                         </div>
                                         <div><hr size='1'></div>
                                         <?php
+                                      
                                         foreach ($regimen->Regimen_Drug as $k => $drug) {
+                                           
                                             ?>
                                             <div class="row-fluid">
                                                 <?php
@@ -129,13 +131,13 @@
                                                     ?>
                                                     <div class="span8 reg_drug_name_<?= $drug_id . ' ' . $class; ?> f_left"><?php echo $drug->Drugcode->drug ?? 'N/A'; ?></div>
                                                     <div class="span4 reg_drug_name f_right"><?php
-                                    if ($drug->active == 1) {
-                                        echo "<input type='checkbox' onClick='toggleDrugRegimen($drug_id)' checked>";
-                                    } else {
-                                        $drug_id = $drug->id;
-                                        echo "<input type='checkbox' onClick='toggleDrugRegimen($drug_id)'>";
-                                    }
-                                                    ?>
+                                                        if ($drug->active == 1) {
+                                                            echo "<input type='checkbox' onClick='toggleDrugRegimen($drug_id)' checked>";
+                                                        } else {
+                                                            $drug_id = $drug->id;
+                                                            echo "<input type='checkbox' onClick='toggleDrugRegimen($drug_id)'>";
+                                                        }
+                                                        ?>
                                                     </div>
                                                     <?php
                                                 }
@@ -169,7 +171,7 @@
         $attributes = array(
             'class' => 'input_form',
             'onsubmit' => 'return process_drugs()');
-        echo form_open(base_url().'/public/regimen_drug_management/save', $attributes);
+        echo form_open(base_url() . '/public/regimen_drug_management/save', $attributes);
         ?>
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
