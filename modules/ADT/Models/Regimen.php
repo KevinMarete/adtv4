@@ -94,7 +94,7 @@ class Regimen extends BaseModel {
     }
 
     public static function getNonMappedRegimens() {
-        $query = DB::select(" SELECT *  from Regimen where Enabled = '1' AND map='' OR map='0' order By Regimen_Code asc");
+        $query = DB::select(" SELECT *  from regimen where Enabled = '1' AND map='' OR map='0' order By Regimen_Code asc");
         return $query;
     }
 
