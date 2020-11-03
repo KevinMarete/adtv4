@@ -11,11 +11,14 @@ if (!$session->get('user_id') && $content_view != '\Modules\ADT\Views\\resend_pa
 if (!isset($link)) {
     $link = null;
 }
+
+
+
 //Code to loop through all the menus available to this user!
 //Fet the current domain
 $menus = $session->get('menu_items');
 //$current = $this->router->class;
-$current = 'home_controller';
+$current = $request->uri->getSegment(1);
 $counter = 0;
 
 $ccc_stores = $session->get('ccc_store');
@@ -262,10 +265,14 @@ if ($user_is_administrator) {
                         </div>
                     </div>
                     <div class="nav-collapse collapse" style="float: right">
-                        <?php if ($menus) { ?>
+                        
+                        <?php
+                        
+                        //echo $current;
+                        if ($menus) { ?>
                             <ul class="nav nav_header" style="margin: 0 !important;">
                                 <li><a href="<?php echo base_url('/public/home'); ?>" class="top_menu_link  first_link <?php
-                                    if ($current == "public/home") {
+                                    if ($current == "home") {
                                         echo " top_menu_active ";
                                     }
                                     ?>"><i class="icon-home"></i> HOME </a></li>
@@ -279,7 +286,9 @@ if ($user_is_administrator) {
                                         <li><a href ="<?php echo $update_link; ?>" target="_blank" class="top_menu_link"><?php echo strtoupper($menu['text']); ?></a></li>
                                         <?php
                                     } else {
+                                     
                                         ?>
+                                        
                                         <li> <a href = "<?php echo base_url('/public/' . $menu['url']); ?>" class="top_menu_link <?php
                                             if ($current == $menu['url'] || $menu['url'] == $link) {
                                                 echo " top_menu_active ";
@@ -290,6 +299,7 @@ if ($user_is_administrator) {
                                         $counter++;
                                     }
                                 }
+                              
                                 ?>
                                 <li class="dropdown" id="div_profile" >
                                     <a href="#" class="dropdown-toggle top_menu_link" data-toggle="dropdown"><i class="icon-user icon-black"></i> PROFILE   <span class="caret"></span></a>
