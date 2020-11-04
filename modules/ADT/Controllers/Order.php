@@ -893,8 +893,8 @@ class Order extends BaseController {
                 //insert map
                 $main_array['id'] = $id;
                 $main_array['status'] = $status;
-                $main_array['created'] = $created;
-                $main_array['updated'] = $updated;
+                $main_array['created'] = $created ?? date('Y-m-d H:i:s');;
+                $main_array['updated'] = $updated ?? date('Y-m-d H:i:s');
                 $main_array['code'] = $code;
                 $main_array['period_begin'] = $period_begin;
                 $main_array['period_end'] = $period_end;
