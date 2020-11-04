@@ -213,8 +213,8 @@ if ($user_is_administrator) {
                 @import "<?php echo base_url() . '/public/assets/styles/datatable/demo_table.css'; ?>";
                 @import "<?php echo base_url() . '/public/assets/styles/datatable/TableTools.css' ?>";
             </style>
-            <script type="text/javascript" charset="utf-8" src="<?php echo base_url() . '/public/assets/Scripts/datatable/ZeroClipboard.js' ?>"></script>
-            <script type="text/javascript" charset="utf-8"  src="<?php echo base_url() . '/public/assets/Scripts/datatable/TableTools.js' ?>"></script>
+            <script type="text/javascript" charset="utf-8" src="<?php echo base_url() . '/public/assets/scripts/datatable/ZeroClipboard.js' ?>"></script>
+            <script type="text/javascript" charset="utf-8"  src="<?php echo base_url() . '/public/assets/scripts/datatable/TableTools.js' ?>"></script>
 
             <?php
         }

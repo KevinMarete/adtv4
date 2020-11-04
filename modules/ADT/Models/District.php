@@ -14,4 +14,9 @@ class District extends BaseModel {
         return BaseModel::resultSet($query);
     }
 
+    public static function getID($name) {
+		$district = District::where('name', 'like', '%'.$name.'%')->first();
+		return $district->id ?? 0;
+	}
+
 }

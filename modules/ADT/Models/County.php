@@ -7,4 +7,9 @@ class County extends BaseModel {
     protected $table = 'counties';
     protected $guarded = ['id'];
 
+    public static function getTypeID($name) {
+        $county = County::where('county', 'like', '%'.$name.'%')->first();
+		return $county->id ?? 0;
+	}
+
 }
