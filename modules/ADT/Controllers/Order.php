@@ -898,8 +898,8 @@ class Order extends BaseController {
                 $main_array['code'] = $code;
                 $main_array['period_begin'] = $period_begin;
                 $main_array['period_end'] = $period_end;
-                $main_array['reports_expected'] = $reports_expected;
-                $main_array['reports_actual'] = $reports_actual;
+                $main_array['reports_expected'] = empty(trim($reports_expected)) ? null : $reports_expected;
+                $main_array['reports_actual'] = empty(trim($reports_actual)) ? null : $reports_actual;
                 $main_array['services'] = $services;
                 $main_array['sponsors'] = $sponsors;
                 $main_array['art_adult'] = $art_adult;
