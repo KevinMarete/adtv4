@@ -7,11 +7,12 @@ use Illuminate\Database\Capsule\Manager as DB;
 use \Modules\ADT\Models\Sync_facility;
 
 class Notification_management extends \App\Controllers\BaseController {
+
     var $db;
     var $session;
 
     function __construct() {
-		$this->session = session();
+        $this->session = session();
         $this->db = \Config\Database::connect();
     }
 
@@ -346,8 +347,9 @@ class Notification_management extends \App\Controllers\BaseController {
 
     public function error_generator() {
         $array_text = '';
-        $array_text = $this->input->post("array_text", true);
+        $array_text = $this->request->getPost("array_text");
         $error_list = $this->error_notification(true);
+
         $id_list = "";
         $access_level = $this->session->get('user_indicator');
         if (!empty($error_list)) {
@@ -372,12 +374,12 @@ class Notification_management extends \App\Controllers\BaseController {
                 $patient_name = strtoupper(trim($r['first_name'] . " " . $r['other_name'] . " " . $r['last_name']));
                 $id = $r['id'];
                 $link = "";
-                $link = '<a href="' . base_url() . '/public/patient_management/viewDetails/' . $id . '">Detail</a> | <a href="' . base_url() . 'patient_management/edit/' . $id . '">Edit</a> ' . $link;
+                $link = '<a href="' . base_url() . '/public/patient/load_view/details/' . $id . '">Detail</a> | <a href="' . base_url() . '/public/patient/edit/' . $id . '">Edit</a> ' . $link;
                 if ($access_level == "facility_administrator") {
                     if ($r['Active'] == 1) {
-                        $link .= '| <a href="' . base_url() . '/public/patient_management/disable/' . $id . '" class="red">Disable</a>';
+                        $link .= '| <a href="' . base_url() . '/public/patient/disable/' . $id . '" class="red">Disable</a>';
                     } else {
-                        $link .= '| <a href="' . base_url() . '/public/patient_management/enable/' . $id . '" class="green">Enable</a>';
+                        $link .= '| <a href="' . base_url() . '/public/patient/enable/' . $id . '" class="green">Enable</a>';
                     }
                 }
                 $appointment = "";
@@ -496,7 +498,7 @@ class Notification_management extends \App\Controllers\BaseController {
     }
 
     public function ontime_notification($display_array = false) {
-         $db = \Config\Database::connect();
+        $db = \Config\Database::connect();
         $sql = "SELECT 
 					p.id,
 					p.patient_number_ccc as ccc_no,
@@ -549,7 +551,7 @@ class Notification_management extends \App\Controllers\BaseController {
     }
 
     public function missed_appointments_notification($display_array = false) {
-         $db = \Config\Database::connect();
+        $db = \Config\Database::connect();
         $sql = "SELECT 
 					p.id,
 					p.patient_number_ccc as ccc_no,
@@ -638,21 +640,21 @@ class Notification_management extends \App\Controllers\BaseController {
         //get lost to followup patients whose appointment is 90 days from today
 
 
-        $sql = "SELECT a.id, UPPER(CONCAT_WS(' ',CONCAT_WS(' ',a.first_name,a.other_name),a.last_name)) as patient_name,b.id as drug_prescriptionid, ".
-		"b.order_number,b.order_physician,b.notes,b.timecreated".
-		" from patient a".
-		" INNER JOIN".
-		"(SELECT dp.* FROM drug_prescription dp ,drug_prescription_details dpd ".
-				"left join drug_prescription_details_visit  dpdv on dpdv.drug_prescription_details_id  = dpd.id ".
-				"WHERE  dp.id = dpd.drug_prescriptionid ".
-        "and dp.id not in (SELECT dp.id ".
-        "FROM drug_prescription_details_visit dpdv, drug_prescription_details dpd ,drug_prescription dp ".
-        "where ".
-        "dpd.id = dpdv.drug_prescription_details_id ".
-        "and dpd.drug_prescriptionid = dp.id ".
-        "and dpdv.visit_id > 0 ".
-        "group by id) GROUP BY patient, order_number ORDER BY timecreated DESC ) b on a.patient_number_ccc = b.patient ".
-		"group by order_number order by timecreated desc";
+        $sql = "SELECT a.id, UPPER(CONCAT_WS(' ',CONCAT_WS(' ',a.first_name,a.other_name),a.last_name)) as patient_name,b.id as drug_prescriptionid, " .
+                "b.order_number,b.order_physician,b.notes,b.timecreated" .
+                " from patient a" .
+                " INNER JOIN" .
+                "(SELECT dp.* FROM drug_prescription dp ,drug_prescription_details dpd " .
+                "left join drug_prescription_details_visit  dpdv on dpdv.drug_prescription_details_id  = dpd.id " .
+                "WHERE  dp.id = dpd.drug_prescriptionid " .
+                "and dp.id not in (SELECT dp.id " .
+                "FROM drug_prescription_details_visit dpdv, drug_prescription_details dpd ,drug_prescription dp " .
+                "where " .
+                "dpd.id = dpdv.drug_prescription_details_id " .
+                "and dpd.drug_prescriptionid = dp.id " .
+                "and dpdv.visit_id > 0 " .
+                "group by id) GROUP BY patient, order_number ORDER BY timecreated DESC ) b on a.patient_number_ccc = b.patient " .
+                "group by order_number order by timecreated desc";
 
         $query = $db->query($sql);
         $results = $query->getResultArray();
@@ -674,7 +676,7 @@ class Notification_management extends \App\Controllers\BaseController {
         if (!$patients) {
             $patients = [];
         }
-        
+
         $tmpl = ['table_open' => '<table class="table table-bordered table-hover table-condensed table-striped defaulter_table" >'];
         $table->setTemplate($tmpl);
         $table->setHeading($columns);
@@ -703,7 +705,7 @@ class Notification_management extends \App\Controllers\BaseController {
         if (!$patients) {
             $patients = [];
         }
-        
+
         $tmpl = ['table_open' => '<table class="table table-bordered table-hover table-condensed table-striped defaulter_table" >'];
         $table->setTemplate($tmpl);
         $table->setHeading($columns);
@@ -732,7 +734,7 @@ class Notification_management extends \App\Controllers\BaseController {
         if (!$patients) {
             $patients = [];
         }
-        
+
         $tmpl = ['table_open' => '<table class="table table-bordered table-hover table-condensed table-striped defaulter_table" >'];
         $table->setTemplate($tmpl);
         $table->setHeading($columns);
@@ -761,7 +763,7 @@ class Notification_management extends \App\Controllers\BaseController {
         if (!$patients) {
             $patients = [];
         }
-        
+
         $tmpl = ['table_open' => '<table class="table table-bordered table-hover table-condensed table-striped defaulter_table" >'];
         $table->setTemplate($tmpl);
         $table->setHeading($columns);
@@ -790,7 +792,7 @@ class Notification_management extends \App\Controllers\BaseController {
         if (!$patients) {
             $patients = [];
         }
-        
+
         $tmpl = ['table_open' => '<table class="table table-bordered table-hover table-condensed table-striped dataTables" >'];
         $table->setTemplate($tmpl);
         $table->setHeading($columns);

@@ -13,6 +13,7 @@ $routes->get('logout/(:any)', '\Modules\ADT\Controllers\User_management::logout/
 
 /* Notification Management */
 $routes->get('error_notification', '\Modules\ADT\Controllers\Notification_management::error_notification');
+$routes->get('error_notification/(:any)', '\Modules\ADT\Controllers\Notification_management::error_notification/$1');
 $routes->get('reporting_notification', '\Modules\ADT\Controllers\Notification_management::reporting_notification');
 $routes->get('defaulter_notification', '\Modules\ADT\Controllers\Notification_management::defaulter_notification');
 $routes->get('missed_appointments_notification', '\Modules\ADT\Controllers\Notification_management::missed_appointments_notification');
