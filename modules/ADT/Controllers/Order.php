@@ -942,10 +942,10 @@ class Order extends BaseController {
                             $maps_item[$regimen_counter]['maps_id'] = $id;
                         }
                         if ($patient_numbers_male[$regimen_counter] > 0 && $regimens[$regimen_counter] != 0 && trim($regimens[$regimen_counter]) != '') {
-                            $maps_item[$regimen_counter]['male'] = $patient_numbers_male[$regimen_counter];
+                            $maps_item[$regimen_counter]['male'] = $patient_numbers_male[$regimen_counter] ?? 0;
                         }
                         if ($patient_numbers_female[$regimen_counter] > 0 && $regimens[$regimen_counter] != 0 && trim($regimens[$regimen_counter]) != '') {
-                            $maps_item[$regimen_counter]['female'] = $patient_numbers_female[$regimen_counter];
+                            $maps_item[$regimen_counter]['female'] = $patient_numbers_female[$regimen_counter] ?? 0;
                         }
                         $regimen_counter++;
                     }
