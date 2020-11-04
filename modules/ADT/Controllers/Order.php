@@ -942,10 +942,10 @@ class Order extends BaseController {
                             $maps_item[$regimen_counter]['maps_id'] = $id;
                         }
                         if ($patient_numbers_male[$regimen_counter] > 0 && $regimens[$regimen_counter] != 0 && trim($regimens[$regimen_counter]) != '') {
-                            $maps_item[$regimen_counter]['male'] = $patient_numbers_male[$regimen_counter] ?? 0;
+                            $maps_item[$regimen_counter]['male'] = empty($patient_numbers_male[$regimen_counter]) ? 0 : $patient_numbers_male[$regimen_counter];
                         }
                         if ($patient_numbers_female[$regimen_counter] > 0 && $regimens[$regimen_counter] != 0 && trim($regimens[$regimen_counter]) != '') {
-                            $maps_item[$regimen_counter]['female'] = $patient_numbers_female[$regimen_counter] ?? 0;
+                            $maps_item[$regimen_counter]['female'] = empty($patient_numbers_female[$regimen_counter]) ? 0 : $patient_numbers_female[$regimen_counter];
                         }
                         $regimen_counter++;
                     }
@@ -964,7 +964,6 @@ class Order extends BaseController {
                     }
                     $logs = Maps_log::where('maps_id', $id)->get()->toArray();
 
-                    $log_array['id'] = "";
                     $log_array['description'] = $status;
                     $log_array['created'] = date('Y-m-d H:i:s');
                     $log_array['user_id'] = $this->session->get("user_id");
@@ -974,7 +973,6 @@ class Order extends BaseController {
 
                     $main_array['ownMaps_log'] = $logs;
                 } else {
-                    $log_array['id'] = "";
                     $log_array['description'] = $status;
                     $log_array['created'] = date('Y-m-d H:i:s');
                     $log_array['user_id'] = $this->session->get("user_id");
