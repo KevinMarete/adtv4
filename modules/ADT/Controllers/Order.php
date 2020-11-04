@@ -932,8 +932,8 @@ class Order extends BaseController {
                     foreach ($regimens as $regimen) {
                         //Check if any patient numbers have been reported for this regimen
                         if ($patient_numbers[$regimen_counter] > 0 && $regimens[$regimen_counter] != 0 && trim($regimens[$regimen_counter]) != '') {
-                            if ($id == "") {
-                                $maps_item[$regimen_counter]['id'] = "";
+                            if (empty(trim($id))) {
+                                unset($maps_item[$regimen_counter]['id']);
                             } else {
                                 $maps_item[$regimen_counter]['id'] = $item_id[$regimen_counter];
                             }
