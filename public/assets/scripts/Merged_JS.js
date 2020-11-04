@@ -273,9 +273,9 @@ function auto_logout() {
 
 //Function to get data for ordering(Cdrr)
 function getPeriodDrugBalance(count, start_date, facility_id, code, total, drugs, stores) {
-    var base_url = getbaseurl();
+    var base_url = getBaseUrlLinux();
     var drug = drugs[count];
-    var link = 'https://adt-test.nascop.org/ADTv4/public/order/getItems';
+    var link = base_url + 'order/getItems';
     $.ajax({
         url: link,
         type: 'POST',
@@ -648,6 +648,10 @@ function getbaseurl() {
     var _href = href.substr(href.lastIndexOf('/') + 1);
     var base_url = base_url + '/ADTv4/public/';
     return base_url;
+}
+
+function getBaseUrlLinux(){
+    return location.protocol + "//" + location.host+'/ADTv4/public/';
 }
 
 /*
