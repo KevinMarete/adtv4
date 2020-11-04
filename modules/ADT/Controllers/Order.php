@@ -747,26 +747,26 @@ class Order extends BaseController {
                 //insert cdrr
                 $main_array['id'] = $id;
                 $main_array['status'] = strtolower($status);
-                $main_array['created'] = $created;
-                $main_array['updated'] = $updated;
-                $main_array['code'] = $code;
-                $main_array['period_begin'] = $period_begin;
-                $main_array['period_end'] = $period_end;
-                $main_array['comments'] = $comments;
+                $main_array['created'] = empty($created) ? null : $created;
+                $main_array['updated'] = empty($updated) ? null : $updated;
+                $main_array['code'] = empty($code) ? null : $code;
+                $main_array['period_begin'] = empty($period_begin) ? null : $period_begin;
+                $main_array['period_end'] = empty($period_end) ? null : $period_end;
+                $main_array['comments'] = empty($comments) ? null : $comments;
                 $main_array['reports_expected'] = null;
                 $main_array['reports_actual'] = null;
                 if ($code == "D-CDRR") {//Aggregated
                     $reports_expected = $this->post('central_rate');
                     $reports_actual = $this->post('actual_report');
-                    $main_array['reports_expected'] = $reports_expected;
-                    $main_array['reports_actual'] = $reports_actual;
+                    $main_array['reports_expected'] = empty($reports_expected) ? null : $reports_expected;
+                    $main_array['reports_actual'] = empty($reports_actual) ? null : $reports_actual;
                 }
-                $main_array['services'] = $services;
-                $main_array['sponsors'] = $sponsors;
-                $main_array['non_arv'] = $none_arv;
+                $main_array['services'] = empty($services) ? null : $services;
+                $main_array['sponsors'] = empty($sponsors) ? null : $sponsors;
+                $main_array['non_arv'] = empty($none_arv) ? null : $none_arv;
                 $main_array['delivery_note'] = null;
                 $main_array['order_id'] = 0;
-                $main_array['facility_id'] = $facility_id;
+                $main_array['facility_id'] = empty($facility_id) ? null : $facility_id;
 
                 //insert cdrr_items
                 $commodity_counter = 0;
@@ -774,8 +774,8 @@ class Order extends BaseController {
 
                 foreach ($commodities as $commodity) {
                     if (trim($resupply[$commodity_counter]) != '') {
-                        if ($id == "") {
-                            $cdrr_array[$commodity_counter]['id'] = "";
+                        if (empty($id)) {
+                            unset($cdrr_array[$commodity_counter]['id']);
                         } else {
                             $cdrr_array[$commodity_counter]['id'] = $item_id[$commodity_counter];
                         }
@@ -829,7 +829,6 @@ class Order extends BaseController {
                     }
                     $logs = Cdrr_log::where('cdrr_id', $id)->get()->toArray();
 
-                    $log_array['id'] = "";
                     $log_array['description'] = $status;
                     $log_array['created'] = date('Y-m-d H:i:s');
                     $log_array['user_id'] = $this->session->get("user_id");
@@ -839,7 +838,6 @@ class Order extends BaseController {
 
                     $main_array['ownCdrr_log'] = $logs;
                 } else {
-                    $log_array['id'] = "";
                     $log_array['description'] = $status;
                     $log_array['created'] = date('Y-m-d H:i:s');
                     $log_array['user_id'] = $this->session->get("user_id");
