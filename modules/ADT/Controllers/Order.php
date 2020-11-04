@@ -524,7 +524,7 @@ class Order extends BaseController {
                 $period_start = date('Y-m-01', strtotime(date('Y-m-d') . "-1 month"));
                 $period_end = date('Y-m-t', strtotime(date('Y-m-d') . "-1 month"));
                 $code = $this->getActualCode($order_type, $type);
-          
+
                 $facilities = Sync_facility::getId($facility, $order_type);
                 $duplicate = $this->check_duplicate($code, $period_start, $period_end, $facilities, $type);
                 $data['commodities'] = Sync_drug::getActiveList();
@@ -1032,8 +1032,8 @@ class Order extends BaseController {
             unset($response[$params[$type]['logs_column']]);
 
             //Get id
-            $response['id'] = $id;
-            $id = DB::table($type)->insertGetId($response);
+           // $response['id'] = $id;
+            $id = DB::table($type)->insert($response);
 
             $response = [$params[$type]['items_column'] => $items, $params[$type]['logs_column'] => $logs];
             foreach ($response as $index => $main) {
