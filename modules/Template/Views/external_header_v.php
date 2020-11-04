@@ -7,7 +7,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-             <a class="navbar-brand" href="<?= base_url() ?>/public/recover">ADT Tools</a> 
+             <a class="navbar-brand" href="<?= base_url() ?>/public">ADTv<?php echo config('Adt_config')->adt_version;?> Tools</a> 
 
         </div>
         <div id="navbar" class="navbar-collapse collapse">
