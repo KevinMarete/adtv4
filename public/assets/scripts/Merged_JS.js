@@ -275,7 +275,7 @@ function auto_logout() {
 function getPeriodDrugBalance(count, start_date, facility_id, code, total, drugs, stores) {
     var base_url = getbaseurl();
     var drug = drugs[count];
-    var link = base_url + 'order/getItems';
+    var link = 'https://adt-test.nascop.org/ADTv4/public/order/getItems';
     $.ajax({
         url: link,
         type: 'POST',
