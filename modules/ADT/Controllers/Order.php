@@ -1032,8 +1032,8 @@ class Order extends BaseController {
             unset($response[$params[$type]['logs_column']]);
 
             //Get id
-           // $response['id'] = $id;
-            $id = DB::table($type)->insert($response);
+            $response['id'] = $id;
+            $id = DB::table($type)->insertGetId($response);
 
             $response = [$params[$type]['items_column'] => $items, $params[$type]['logs_column'] => $logs];
             foreach ($response as $index => $main) {
