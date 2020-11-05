@@ -747,26 +747,26 @@ class Order extends BaseController {
                 //insert cdrr
                 $main_array['id'] = $id;
                 $main_array['status'] = strtolower($status);
-                $main_array['created'] = $created;
-                $main_array['updated'] = $updated;
-                $main_array['code'] = $code;
-                $main_array['period_begin'] = $period_begin;
-                $main_array['period_end'] = $period_end;
-                $main_array['comments'] = $comments;
+                $main_array['created'] = empty($created) ? null : $created;
+                $main_array['updated'] = empty($updated) ? null : $updated;
+                $main_array['code'] = empty($code) ? null : $code;
+                $main_array['period_begin'] = empty($period_begin) ? null : $period_begin;
+                $main_array['period_end'] = empty($period_end) ? null : $period_end;
+                $main_array['comments'] = empty($comments) ? null : $comments;
                 $main_array['reports_expected'] = null;
                 $main_array['reports_actual'] = null;
                 if ($code == "D-CDRR") {//Aggregated
                     $reports_expected = $this->post('central_rate');
                     $reports_actual = $this->post('actual_report');
-                    $main_array['reports_expected'] = $reports_expected;
-                    $main_array['reports_actual'] = $reports_actual;
+                    $main_array['reports_expected'] = empty($reports_expected) ? null : $reports_expected;
+                    $main_array['reports_actual'] = empty($reports_actual) ? null : $reports_actual;
                 }
-                $main_array['services'] = $services;
-                $main_array['sponsors'] = $sponsors;
-                $main_array['non_arv'] = $none_arv;
+                $main_array['services'] = empty($services) ? null : $services;
+                $main_array['sponsors'] = empty($sponsors) ? null : $sponsors;
+                $main_array['non_arv'] = empty($none_arv) ? null : $none_arv;
                 $main_array['delivery_note'] = null;
                 $main_array['order_id'] = 0;
-                $main_array['facility_id'] = $facility_id;
+                $main_array['facility_id'] = empty($facility_id) ? null : $facility_id;
 
                 //insert cdrr_items
                 $commodity_counter = 0;
@@ -774,8 +774,8 @@ class Order extends BaseController {
 
                 foreach ($commodities as $commodity) {
                     if (trim($resupply[$commodity_counter]) != '') {
-                        if ($id == "") {
-                            $cdrr_array[$commodity_counter]['id'] = "";
+                        if (empty($id)) {
+                            unset($cdrr_array[$commodity_counter]['id']);
                         } else {
                             $cdrr_array[$commodity_counter]['id'] = $item_id[$commodity_counter];
                         }
@@ -829,7 +829,6 @@ class Order extends BaseController {
                     }
                     $logs = Cdrr_log::where('cdrr_id', $id)->get()->toArray();
 
-                    $log_array['id'] = "";
                     $log_array['description'] = $status;
                     $log_array['created'] = date('Y-m-d H:i:s');
                     $log_array['user_id'] = $this->session->get("user_id");
@@ -839,7 +838,6 @@ class Order extends BaseController {
 
                     $main_array['ownCdrr_log'] = $logs;
                 } else {
-                    $log_array['id'] = "";
                     $log_array['description'] = $status;
                     $log_array['created'] = date('Y-m-d H:i:s');
                     $log_array['user_id'] = $this->session->get("user_id");
@@ -898,32 +896,32 @@ class Order extends BaseController {
                 $main_array['code'] = $code;
                 $main_array['period_begin'] = $period_begin;
                 $main_array['period_end'] = $period_end;
-                $main_array['reports_expected'] = $reports_expected;
-                $main_array['reports_actual'] = $reports_actual;
-                $main_array['services'] = $services;
-                $main_array['sponsors'] = $sponsors;
-                $main_array['art_adult'] = $art_adult;
-                $main_array['art_child'] = $art_child;
-                $main_array['new_male'] = $new_male;
-                $main_array['revisit_male'] = $revisit_male;
-                $main_array['new_female'] = $new_female;
-                $main_array['revisit_female'] = $revisit_female;
-                $main_array['new_pmtct'] = $new_pmtct;
-                $main_array['revisit_pmtct'] = $revisit_pmtct;
-                $main_array['total_infant'] = $total_infant;
-                $main_array['pep_adult'] = $pep_adult;
-                $main_array['pep_child'] = $pep_child;
-                $main_array['total_adult'] = $total_adult;
-                $main_array['total_child'] = $total_child;
-                $main_array['diflucan_adult'] = $diflucan_adult;
-                $main_array['diflucan_child'] = $diflucan_child;
-                $main_array['new_cm'] = $new_cm;
-                $main_array['revisit_cm'] = $revisit_cm;
-                $main_array['new_oc'] = $new_oc;
-                $main_array['revisit_oc'] = $revisit_oc;
-                $main_array['comments'] = $comments;
-                $main_array['report_id'] = $report_id;
-                $main_array['facility_id'] = $facility_id;
+                $main_array['reports_expected'] = empty(trim($reports_expected)) ? null : $reports_expected;
+                $main_array['reports_actual'] = empty(trim($reports_actual)) ? null : $reports_actual;
+                $main_array['services'] = empty(trim($services)) ? null : $services;
+                $main_array['sponsors'] = empty(trim($sponsors)) ? null : $sponsors;
+                $main_array['art_adult'] = empty(trim($art_adult)) ? null : $art_adult;
+                $main_array['art_child'] = empty(trim($art_child)) ? null : $art_child;
+                $main_array['new_male'] = empty(trim($new_male)) ? null : $new_male;
+                $main_array['revisit_male'] = empty(trim($revisit_male)) ? null : $revisit_male;
+                $main_array['new_female'] = empty(trim($new_female)) ? null : $new_female;
+                $main_array['revisit_female'] = empty(trim($revisit_female)) ? null : $revisit_female;
+                $main_array['new_pmtct'] = empty(trim($new_pmtct)) ? null : $new_pmtct;
+                $main_array['revisit_pmtct'] = empty(trim($revisit_pmtct)) ? null : $revisit_pmtct;
+                $main_array['total_infant'] = empty(trim($total_infant)) ? null : $total_infant;
+                $main_array['pep_adult'] = empty(trim($pep_adult)) ? null : $pep_adult;
+                $main_array['pep_child'] = empty(trim($pep_child)) ? null : $pep_child;
+                $main_array['total_adult'] = empty(trim($total_adult)) ? null : $total_adult;
+                $main_array['total_child'] = empty(trim($total_child)) ? null : $total_child;
+                $main_array['diflucan_adult'] = empty(trim($diflucan_adult)) ? null : $diflucan_adult;
+                $main_array['diflucan_child'] = empty(trim($diflucan_child)) ? null : $diflucan_child;
+                $main_array['new_cm'] = empty(trim($new_cm)) ? null : $new_cm;
+                $main_array['revisit_cm'] = empty(trim($revisit_cm)) ? null : $revisit_cm;
+                $main_array['new_oc'] = empty(trim($new_oc)) ? null : $new_oc;
+                $main_array['revisit_oc'] = empty(trim($revisit_oc)) ? null : $revisit_oc;
+                $main_array['comments'] = empty(trim($comments)) ? null : $comments;
+                $main_array['report_id'] = empty(trim($report_id)) ? null : $report_id;
+                $main_array['facility_id'] = empty(trim($facility_id)) ? null : $facility_id;
                 //Insert maps_item
                 $maps_item = [];
                 $regimen_counter = 0;
@@ -932,8 +930,8 @@ class Order extends BaseController {
                     foreach ($regimens as $regimen) {
                         //Check if any patient numbers have been reported for this regimen
                         if ($patient_numbers[$regimen_counter] > 0 && $regimens[$regimen_counter] != 0 && trim($regimens[$regimen_counter]) != '') {
-                            if ($id == "") {
-                                $maps_item[$regimen_counter]['id'] = "";
+                            if (empty(trim($id))) {
+                                unset($maps_item[$regimen_counter]['id']);
                             } else {
                                 $maps_item[$regimen_counter]['id'] = $item_id[$regimen_counter];
                             }
@@ -942,10 +940,10 @@ class Order extends BaseController {
                             $maps_item[$regimen_counter]['maps_id'] = $id;
                         }
                         if ($patient_numbers_male[$regimen_counter] > 0 && $regimens[$regimen_counter] != 0 && trim($regimens[$regimen_counter]) != '') {
-                            $maps_item[$regimen_counter]['male'] = $patient_numbers_male[$regimen_counter];
+                            $maps_item[$regimen_counter]['male'] = empty($patient_numbers_male[$regimen_counter]) ? 0 : $patient_numbers_male[$regimen_counter];
                         }
                         if ($patient_numbers_female[$regimen_counter] > 0 && $regimens[$regimen_counter] != 0 && trim($regimens[$regimen_counter]) != '') {
-                            $maps_item[$regimen_counter]['female'] = $patient_numbers_female[$regimen_counter];
+                            $maps_item[$regimen_counter]['female'] = empty($patient_numbers_female[$regimen_counter]) ? 0 : $patient_numbers_female[$regimen_counter];
                         }
                         $regimen_counter++;
                     }
@@ -964,7 +962,6 @@ class Order extends BaseController {
                     }
                     $logs = Maps_log::where('maps_id', $id)->get()->toArray();
 
-                    $log_array['id'] = "";
                     $log_array['description'] = $status;
                     $log_array['created'] = date('Y-m-d H:i:s');
                     $log_array['user_id'] = $this->session->get("user_id");
@@ -974,7 +971,6 @@ class Order extends BaseController {
 
                     $main_array['ownMaps_log'] = $logs;
                 } else {
-                    $log_array['id'] = "";
                     $log_array['description'] = $status;
                     $log_array['created'] = date('Y-m-d H:i:s');
                     $log_array['user_id'] = $this->session->get("user_id");
