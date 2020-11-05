@@ -1,7 +1,7 @@
 $(function () {
     //Get data from hidden element in form
     // var base_url = $("#hidden_data").data("baseurl");
-    var base_url = getBaseUrlLinux();
+    let base_url = getBaseUrlLinux();
     var patient_id = $("#hidden_data").data("patient");
     var patient_status = $("#hidden_data").data("status");
     var relations_msg = $("#hidden_data").data("message");
