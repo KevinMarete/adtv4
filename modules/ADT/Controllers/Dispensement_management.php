@@ -217,7 +217,7 @@ class Dispensement_management extends BaseController {
 
     public function adr($record_no = null) {
         $dated = '';
-        $id = $this->db->table('adr_form')->selectMax('id')->get();
+        $id = $this->db->table('adr_form')->selectMax('id')->get()->getResult();
         $newid =(int) $id[0]->id + 1;
         if ($_POST) {
             $adr = [
