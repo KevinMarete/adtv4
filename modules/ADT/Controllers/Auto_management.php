@@ -81,7 +81,7 @@ class Auto_management extends \App\Controllers\BaseController {
             //function to run_migrations
             $message .= $this->run_migrations();
             //function to auto_backup
-            $message .= $this->auto_backup();
+            //$message .= $this->auto_backup();
             //function to get viral load data
             $message .= $this->updateViralLoad();
 
