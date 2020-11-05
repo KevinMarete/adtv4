@@ -15,6 +15,7 @@ use \Modules\ADT\Models\Transaction_type;
 use \Modules\ADT\Models\Counties;
 use Illuminate\Database\Capsule\Manager as DB;
 use Mpdf\Mpdf;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class Report_management extends \App\Controllers\BaseController
 {
@@ -7102,7 +7103,7 @@ class Report_management extends \App\Controllers\BaseController
 
     $inputFileType = 'Excel5';
     $inputFileName = $_SERVER['DOCUMENT_ROOT'] . '/ADTv4/public/assets/templates/moh_forms/' . $template . '.xls';      
-    $objReader = \PHPExcel_IOFactory::createReader($inputFileType);
+    $objReader = IOFactory::createReader($inputFileType);
     $objPHPExcel = $objReader->load($inputFileName);
 
     /* Delete all files in export folder */
@@ -7155,7 +7156,7 @@ class Report_management extends \App\Controllers\BaseController
     $period_start = date("F-Y", strtotime($period_start));
     $original_filename = "MOH " . $type . " form for (" . $period_start . ").xls";
     $filename = $dir . "/" . urldecode($original_filename);
-    $objWriter = new \PHPExcel_Writer_Excel5($objPHPExcel);
+    $objWriter = IOFactory::createWriter($objPHPExcel, "xls");
     $objWriter->save($filename);
     $objPHPExcel->disconnectWorksheets();
     unset($objPHPExcel);
