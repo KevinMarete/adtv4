@@ -119,11 +119,11 @@ class Auto_management extends \App\Controllers\BaseController {
         ];
         $message = "";
         foreach ($values as $transaction => $column) {
-            $sql = "UPDATE drug_stock_movement dsm ".
-		 		"LEFT JOIN transaction_type t ON t.id=dsm.transaction_type ".
-		 		"SET dsm.source_destination=IF(dsm.".$column."=dsm.facility,'1',dsm.".$column.") ".
-		 		"WHERE t.name LIKE '%".$transaction."%' ".
-		 		"AND(dsm.source_destination IS NULL OR dsm.source_destination='' OR dsm.source_destination='0')";
+            $sql = "UPDATE drug_stock_movement dsm " .
+                    "LEFT JOIN transaction_type t ON t.id=dsm.transaction_type " .
+                    "SET dsm.source_destination=IF(dsm." . $column . "=dsm.facility,'1',dsm." . $column . ") " .
+                    "WHERE t.name LIKE '%" . $transaction . "%' " .
+                    "AND(dsm.source_destination IS NULL OR dsm.source_destination='' OR dsm.source_destination='0')";
             $this->db->query($sql);
             $count = $this->db->affectedRows();
             $message .= $count . " " . $transaction . " transactions missing source_destination(" . $column . ") have been updated!<br/>";
@@ -136,8 +136,8 @@ class Auto_management extends \App\Controllers\BaseController {
 
     public function updateCCC_Store() {
         $facility_code = $this->session->get("facility");
-        $sql = "UPDATE drug_stock_movement dsm SET ccc_store_sp='1' WHERE dsm.source !=dsm.destination ".
-		 	"AND ccc_store_sp='2' AND (dsm.source='".$facility_code."' OR dsm.destination='".$facility_code."')";
+        $sql = "UPDATE drug_stock_movement dsm SET ccc_store_sp='1' WHERE dsm.source !=dsm.destination " .
+                "AND ccc_store_sp='2' AND (dsm.source='" . $facility_code . "' OR dsm.destination='" . $facility_code . "')";
         $this->db->query($sql);
         $count = $this->db->affectedRows();
         $message = "(" . $count . ") transactions changed from main pharmacy to main store!<br/>";
@@ -162,9 +162,9 @@ class Auto_management extends \App\Controllers\BaseController {
     public function update_current_regimen() {
         $count = 1;
         //Get all patients without current regimen and who are not active
-        $sql_get_current_regimen = "SELECT p.id,p.patient_number_ccc, p.current_regimen ,ps.name FROM patient p ".
-		 	"INNER JOIN patient_status ps ON ps.id = p.current_status ".
-		 	"WHERE current_regimen = '' AND ps.name != 'active'";
+        $sql_get_current_regimen = "SELECT p.id,p.patient_number_ccc, p.current_regimen ,ps.name FROM patient p " .
+                "INNER JOIN patient_status ps ON ps.id = p.current_status " .
+                "WHERE current_regimen = '' AND ps.name != 'active'";
         $query = $this->db->query($sql_get_current_regimen);
         $result_array = $query->getResultArray();
         if ($result_array) {
@@ -346,38 +346,38 @@ class Auto_management extends \App\Controllers\BaseController {
         //Rename the prophylaxis cotrimoxazole
         $fixes[] = "UPDATE drug_prophylaxis SET name='cotrimoxazole' WHERE name='cotrimozazole'";
         //Remove start_regimen_date in OI only patients records
-        $fixes[] = "UPDATE patient p LEFT JOIN regimen_service_type rst ON p.service=rst.id ".
-		"SET p.start_regimen_date='' ".
-		"WHERE rst.name LIKE '%oi%' AND p.start_regimen_date IS NOT NULL";
+        $fixes[] = "UPDATE patient p LEFT JOIN regimen_service_type rst ON p.service=rst.id " .
+                "SET p.start_regimen_date='' " .
+                "WHERE rst.name LIKE '%oi%' AND p.start_regimen_date IS NOT NULL";
         //Update status_change_date for lost_to_follow_up patients @180
         $fixes[] = "UPDATE patient p,(SELECT p.id,CASE WHEN p.nextappointment != '' THEN INTERVAL $days_to_lost_followup DAY + p.nextappointment ELSE CASE WHEN p.start_regimen_date != '' THEN INTERVAL $days_to_lost_followup DAY + p.start_regimen_date ELSE INTERVAL $days_to_lost_followup DAY + p.date_enrolled END END AS choosen_date FROM patient p LEFT JOIN patient_status ps ON ps.id = p.current_status WHERE ps.Name LIKE '%lost%' AND p.status_change_date = '') as test SET p.status_change_date=test.choosen_date WHERE p.id=test.id";
         //Update patients without service lines ie Pep end status should have pep as a service line
-        $fixes[] = "UPDATE patient p LEFT JOIN patient_status ps ON ps.id=p.current_status, ".
-		"(SELECT id FROM regimen_service_type WHERE name LIKE '%pep%') as rs ".
-		"SET p.service=rs.id WHERE ps.name LIKE '%pep end%' AND p.service=''";
+        $fixes[] = "UPDATE patient p LEFT JOIN patient_status ps ON ps.id=p.current_status, " .
+                "(SELECT id FROM regimen_service_type WHERE name LIKE '%pep%') as rs " .
+                "SET p.service=rs.id WHERE ps.name LIKE '%pep end%' AND p.service=''";
         //Updating patients without service lines ie PMTCT status should have PMTCT as a service line
-        $fixes[] = "UPDATE patient p LEFT JOIN patient_status ps ON ps.id=p.current_status, ".
-		"(SELECT id FROM regimen_service_type WHERE name LIKE '%pmtct%') as rs ".
-		"SET p.service=rs.id WHERE ps.name LIKE '%pmtct end%' AND p.service=''";
+        $fixes[] = "UPDATE patient p LEFT JOIN patient_status ps ON ps.id=p.current_status, " .
+                "(SELECT id FROM regimen_service_type WHERE name LIKE '%pmtct%') as rs " .
+                "SET p.service=rs.id WHERE ps.name LIKE '%pmtct end%' AND p.service=''";
         //Remove ??? in drug instructions
         $fixes[] = "UPDATE drug_instructions SET name=REPLACE(name, '?', '.') WHERE name LIKE '%?%'";
         $facility_code = $this->session->get("facility");
         //Auto Update Supported and supplied columns for satellite facilities
-        $fixes[] = "UPDATE facilities f, (SELECT facilitycode,supported_by,supplied_by FROM facilities ".
-		"WHERE facilitycode='".$facility_code."') as temp ".
-		"SET f.supported_by=temp.supported_by, f.supplied_by=temp.supplied_by ".
-		"WHERE f.parent='".$facility_code."' AND f.parent !=f.facilitycode";
+        $fixes[] = "UPDATE facilities f, (SELECT facilitycode,supported_by,supplied_by FROM facilities " .
+                "WHERE facilitycode='" . $facility_code . "') as temp " .
+                "SET f.supported_by=temp.supported_by, f.supplied_by=temp.supplied_by " .
+                "WHERE f.parent='" . $facility_code . "' AND f.parent !=f.facilitycode";
         //Auto Update to trim other_drugs,adr and other_illnesses
-        $fixes[] = "UPDATE patient p SET p.other_drugs = TRIM(Replace(Replace(Replace(p.other_drugs,'\t',''),'\n',''),'\r','')), ".
-		"p.other_illnesses = TRIM(Replace(Replace(Replace(p.other_illnesses,'\t',''),'\n',''),'\r','')), ".
-		"p.adr = TRIM(Replace(Replace(Replace(p.adr,'\t',''),'\n',''),'\r',''))";
+        $fixes[] = "UPDATE patient p SET p.other_drugs = TRIM(Replace(Replace(Replace(p.other_drugs,'\t',''),'\n',''),'\r','')), " .
+                "p.other_illnesses = TRIM(Replace(Replace(Replace(p.other_illnesses,'\t',''),'\n',''),'\r','')), " .
+                "p.adr = TRIM(Replace(Replace(Replace(p.adr,'\t',''),'\n',''),'\r',''))";
         //Update status_change_date if blank and start_regimen_date exist
         $fixes[] = "UPDATE patient p SET p.status_change_date = p.start_regimen_date WHERE p.status_change_date = ''";
         //Update status to "lost_to_followup" if there is no appointment_date and start_regimen_date is over 180 days
-        $fixes[] = "UPDATE patient p LEFT JOIN patient_status ps ON ps.id = p.current_status, ".
-					"(SELECT id FROM patient_status WHERE name LIKE '%lost%' LIMIT 1) ps1 ".
-					"SET p.current_status = ps1.id ".
-					"WHERE p.nextappointment = '' AND ps.Name LIKE '%active%' AND (p.start_regimen_date = '' OR  DATEDIFF(CURDATE(), p.start_regimen_date) >= 180)";
+        $fixes[] = "UPDATE patient p LEFT JOIN patient_status ps ON ps.id = p.current_status, " .
+                "(SELECT id FROM patient_status WHERE name LIKE '%lost%' LIMIT 1) ps1 " .
+                "SET p.current_status = ps1.id " .
+                "WHERE p.nextappointment = '' AND ps.Name LIKE '%active%' AND (p.start_regimen_date = '' OR  DATEDIFF(CURDATE(), p.start_regimen_date) >= 180)";
         //Execute fixes
         $total = 0;
         foreach ($fixes as $fix) {
@@ -773,7 +773,13 @@ class Auto_management extends \App\Controllers\BaseController {
         for ($key = 2; $key < count($proc_files); $key++) {
             if (!(in_array($proc_files[$key], $procs))) {
                 $mysql_bin = str_replace("\\", "\\\\", $mysql_home);
-                $mysql_con = $mysql_bin . ' -u ' . $username . ' -P' . $port . ' -h ' . $hostname . ' ' . $database . ' < ' . $file_path . '' . $proc_files[$key];
+
+                if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+                    $mysql_con = $mysql_bin . ' -u ' . $username . ' -P' . $port . ' -h ' . $hostname . ' ' . $database . ' < ' . $file_path . '' . $proc_files[$key];
+                } else {
+                    $mysql_con = 'mysql -u ' . $username . '-p ' . $password . '-P' . $port . ' -h ' . $hostname . ' ' . $database . ' < ' . $file_path . '' . $proc_files[$key];
+                }
+
 
                 if (!exec($mysql_con)) {
                     $data = array(
