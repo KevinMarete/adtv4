@@ -92,7 +92,7 @@ class Patient_management extends BaseController {
         $data['banner_text'] = "Patient Merging Listing";
 
         $this->session->set("link_id", "merge_list");
-        $this->session->set("linkSub",  "patient_management/merge_list");
+        $this->session->set("linkSub", "patient_management/merge_list");
 
         echo view("\Modules\ADT\Views\\patient_merging_v", $data);
     }
@@ -344,17 +344,17 @@ class Patient_management extends BaseController {
             $link = "";
             if ($access_level == "facility_administrator") {
                 if ($aRow['Active'] == 1) {
-                    $link = '| <a href="' . base_url() . '/public/patient/disable/' . $id . '" class="red actual">Disable</a>';
+                    $link = ' | <a href="' . base_url() . '/public/patient/disable/' . $id . '" class="red actual"> Disable </a>';
                 } else {
-                    $link = '| <a href="' . base_url() . '/public/patient/enable/' . $id . '" class="green actual">Enable</a>';
+                    $link = ' | <a href="' . base_url() . '/public/patient/enable/' . $id . '" class="green actual"> Enable </a>';
                 }
             }
 
             if ($aRow['Active'] == 1) {
-                $row[] = '<a href="' . base_url() . '/public/patient/viewDetails/' . $id . '">Detail</a> | <a href="' . base_url() . 'patient/edit/' . $id . '">Edit</a> ' . $link;
+                $row[] = ' <a href="' . base_url() . '/public/patient/viewDetails/' . $id . '"> Detail </a> | <a href="' . base_url() . 'patient/edit/' . $id . '"> Edit </a> ' . $link;
             } else {
                 $link = str_replace("|", "", $link);
-                $link .= '| <a href="' . base_url() . '/public/patient/delete/' . $id . '" class="red actual">Delete</a>';
+                $link .= ' | <a href="' . base_url() . '/public/patient/delete/' . $id . '" class="red actual"> Delete </a>';
                 $row[] = $link;
             }
 
@@ -1604,8 +1604,6 @@ class Patient_management extends BaseController {
         ob_clean(); //Removes spaces
         return $this->response->download($filename, $data);
     }
-    
-    
 
     public function getPatientMergeList() {
         $iDisplayStart = $this->request->getGet('iDisplayStart');
@@ -1711,9 +1709,8 @@ class Patient_management extends BaseController {
             $row[] = $links;
             $msg['aaData'][] = $row;
         }
-        echo  json_encode($msg);
+        echo json_encode($msg);
     }
-
 
     public function merge() {
         //Handle the array with all patients that are to be merged
@@ -2192,7 +2189,7 @@ class Patient_management extends BaseController {
                         if (strtolower($patient->status) != 'active') {
                             $link = '<a href="' . base_url() . '/public/patient/load_view/details/' . $id . '">Detail</a> | <a href="' . base_url() . '/public/patient/edit/' . $id . '">Edit</a> ' . $link;
                         } else {
-                            $link = '<a href="' . base_url() . '/public/dispensement_management/dispense/' . $id . '">Dispense</a>|<a href="' . base_url() . '/public/patient/load_view/details/' . $id . '">Detail</a> | <a href="' . base_url() . '/public/patient/edit/' . $id . '">Edit</a> ' . $link;
+                            $link = '<a href="' . base_url() . '/public/dispensement_management/dispense/' . $id . '">Dispense</a> | <a href="' . base_url() . '/public/patient/load_view/details/' . $id . '">Detail</a> | <a href="' . base_url() . '/public/patient/edit/' . $id . '"> Edit </a> ' . $link;
                         }
                     } else {
                         $link = str_replace("|", "", $link);

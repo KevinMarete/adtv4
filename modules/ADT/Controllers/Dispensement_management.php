@@ -9,7 +9,7 @@ use Modules\ADT\Models\ClinicAppointment;
 use Modules\ADT\Models\DCM_change_log;
 use Modules\ADT\Models\DCM_exit_reason;
 use Modules\ADT\Models\Dose;
-use Modules\ADT\Models\Drug_classification;
+use Modules\ADT\Models\Drug_Classification;
 use Modules\ADT\Models\Drugcode;
 use Modules\ADT\Models\DrugInstructions;
 use Modules\ADT\Models\DrugStockBalance;
@@ -394,7 +394,7 @@ class Dispensement_management extends BaseController {
             $data['ccc_store'] = $store_results[0]['ccc_store_sp'];
             // $data['ccc_store'] = $this -> session -> get('ccc_store')[0]['id'];
         }
-        $data['diagnosis']= Drug_classification::all();
+        $data['diagnosis']= Drug_Classification::all();
         $data['non_adherence_reasons'] = Non_adherence_reasons::where('active', '1')->get()->toArray();
         $data['regimen_changes'] = Regimen_change_purpose::where('active', '1')->get()->toArray();
         $data['purposes'] = Visit_purpose::getAll();
