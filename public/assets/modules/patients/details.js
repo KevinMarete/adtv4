@@ -1,6 +1,7 @@
 $(function () {
     //Get data from hidden element in form
-    var base_url = $("#hidden_data").data("baseurl");
+    // var base_url = $("#hidden_data").data("baseurl");
+    var base_url = getBaseUrlLinux();
     var patient_id = $("#hidden_data").data("patient");
     var patient_status = $("#hidden_data").data("status");
     var relations_msg = $("#hidden_data").data("message");
@@ -27,11 +28,11 @@ $(function () {
     }
 
     //Define resources for requests
-    var page_url = base_url + "/public/patient/load_form/patient_details";
-    var patient_url = base_url + "/public/patient/load_patient/" + patient_id;
-    var visits_url = base_url + "/public/patient/get_visits/" + patient_id;
-    var summary_url = base_url + "/public/patient/load_summary/" + patient_id;
-    var spinner_url = base_url + "/public/assets/images/loading_spin.gif";
+    var page_url = base_url + "patient/load_form/patient_details";
+    var patient_url = base_url + "patient/load_patient/" + patient_id;
+    var visits_url = base_url + "patient/get_visits/" + patient_id;
+    var summary_url = base_url + "patient/load_summary/" + patient_id;
+    var spinner_url = base_url + "assets/images/loading_spin.gif";
 
     //Load Page Data(form.js) then load Patient Data(details.js) after that sanitize form (details.js)
     getPageData(page_url).always(function () {
@@ -136,7 +137,7 @@ function getPatientData(url) {
 
 function checkGuardian(age) {
     var age = parseInt(age)
-    var facility_age_url = base_url + "/dispensement/getFacililtyAge";
+    var facility_age_url = base_url + "dispensement/getFacililtyAge";
     $.getJSON(facility_age_url, function (data) {
         var adult_age = parseInt(data[0].adult_age);
         if (age < adult_age) {
@@ -250,7 +251,7 @@ function sanitizeForm() {
 
 function getViralLoad() {
     var patient_no = $("#patient_number_ccc").val();
-    var link = base_url + "/auto_management/get_viral_load/" + patient_no;
+    var link = base_url + "auto_management/get_viral_load/" + patient_no;
     var table = '';
 
     $.getJSON(link, function (data) {
@@ -270,7 +271,7 @@ function getViralLoad() {
 function getDispensing() {
     var patient_no = $("#patient_number_ccc").val();
     patient_no = patient_no.toString().trim();
-    var link = base_url + "/patient/getSixMonthsDispensing/" + patient_no;
+    var link = base_url + "patient/getSixMonthsDispensing/" + patient_no;
     $.ajax({
         url: link,
         type: 'POST',
@@ -284,7 +285,7 @@ function getDispensing() {
 function getRegimenChange() {
     var patient_no = $("#patient_number_ccc").val();
     patient_no = patient_no.toString().trim();
-    var link = base_url + "/patient/getRegimenChange/" + patient_no;
+    var link = base_url + "patient/getRegimenChange/" + patient_no;
     $.ajax({
         url: link,
         type: 'POST',
@@ -298,7 +299,7 @@ function getRegimenChange() {
 function getAppointmentHistory() {
     var patient_no = $("#patient_number_ccc").val();
     patient_no = patient_no.toString().trim();
-    var link = base_url + "/patient/getAppointmentHistory/" + patient_no;
+    var link = base_url + "patient/getAppointmentHistory/" + patient_no;
     $.ajax({
         url: link,
         type: 'POST',
@@ -313,7 +314,7 @@ function getAppointmentHistory() {
 
 
 function getViralResult(ccc_no) {
-    var data_source = base_url + "/patient/get_Last_vl_result/" + ccc_no;
+    var data_source = base_url + "patient/get_Last_vl_result/" + ccc_no;
     $("#viral_load_date").text('N/A');
     $("#viral_load_result").text('N/A');
     $.getJSON(data_source, function (data) {
@@ -327,7 +328,7 @@ function getViralResult(ccc_no) {
 }
 
 function get_patient_prescriptions(ccc_no) {
-    var data_source = base_url + "/dispensement/getPrescriptions/" + ccc_no;
+    var data_source = base_url + "dispensement/getPrescriptions/" + ccc_no;
     var patient_id = $("#hidden_data").data("patient");
 
     $.getJSON(data_source, function (data) {
@@ -344,10 +345,14 @@ function get_patient_prescriptions(ccc_no) {
                     '<td>' + val.prescription_notes + '</td><tr>');
 
             $('#dispense_prescription_btn').show();
-            $('#dispense_prescription_btn').attr('href', base_url + '/dispensement/dispense/' + patient_id + '?pid=' + val.drug_prescriptionid);
+            $('#dispense_prescription_btn').attr('href', base_url + 'dispensement/dispense/' + patient_id + '?pid=' + val.drug_prescriptionid);
         });
 
-        $('#prescriptions_data table').append('<a id="dispense_btn" class="btn btn-default" href="' + base_url + '/public/dispensement/dispense/' + patient_id + '"><strong>Dispense to Patient</strong></a>');
+        $('#prescriptions_data table').append('<a id="dispense_btn" class="btn btn-default" href="' + base_url + 'dispensement/dispense/' + patient_id + '"><strong>Dispense to Patient</strong></a>');
     });
 
+}
+
+function getBaseUrlLinux(){
+    return location.protocol + "//" + location.host+'/ADTv4/public/';
 }
