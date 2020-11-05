@@ -692,7 +692,7 @@ if(isset($results)){
 			
 		function getDispensing(){
 				var patient_no=$("#patient_number").val();
-				var link=base_url+"/public/patient/getSixMonthsDispensing/"+patient_no;
+				var link=base_url+"public/patient/getSixMonthsDispensing/"+patient_no;
 				$.ajax({
 					url: link,
 					type: 'POST',
@@ -706,7 +706,7 @@ if(isset($results)){
 			
 			function getRegimenChange(){
 				var patient_no=$("#patient_number").val();
-				var link=base_url+"/public/patient/getRegimenChange/"+patient_no;
+				var link=base_url+"public/patient/getRegimenChange/"+patient_no;
 				$.ajax({
 					url: link,
 					type: 'POST',
@@ -720,7 +720,7 @@ if(isset($results)){
 			
 			function getAppointmentHistory(){
 				var patient_no=$("#patient_number").val();
-				var link=base_url+"/public/patient/getAppointmentHistory/"+patient_no;
+				var link=base_url+"public/patient/getAppointmentHistory/"+patient_no;
 				$.ajax({
 					url: link,
 					type: 'POST',

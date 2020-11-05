@@ -465,7 +465,7 @@ class Patient_management extends BaseController {
         $data['drugs'] = Drugcode::where('enabled', '1')->orderBy('drug')->get()->toArray();
         $data['regimens'] = Regimen::orderBy('regimen_code')->get();
         $data['who_stages'] = WhoStage::all()->toArray();
-        $data['content_view'] = '\Modules\ADT\Views\patient_details_v';
+        $data['content_view'] = '\Modules\ADT\Views\patient_details_';
         //Hide side menus
         $data['hide_side_menu'] = '1';
         $this->base_params($data);
