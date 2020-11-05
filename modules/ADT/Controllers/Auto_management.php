@@ -767,14 +767,15 @@ class Auto_management extends \App\Controllers\BaseController {
         $database = $db->database;
 
         //removed password flag RETURN
-
-        $mysql_home = realpath($_SERVER['MYSQL_HOME']) . "\mysql";
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+            $mysql_home = realpath($_SERVER['MYSQL_HOME']) . "\mysql";
+        }
 
         for ($key = 2; $key < count($proc_files); $key++) {
             if (!(in_array($proc_files[$key], $procs))) {
-                $mysql_bin = str_replace("\\", "\\\\", $mysql_home);
 
                 if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+                    $mysql_bin = str_replace("\\", "\\\\", $mysql_home);
                     $mysql_con = $mysql_bin . ' -u ' . $username . ' -P' . $port . ' -h ' . $hostname . ' ' . $database . ' < ' . $file_path . '' . $proc_files[$key];
                 } else {
                     $mysql_con = 'mysql -u ' . $username . '-p ' . $password . '-P' . $port . ' -h ' . $hostname . ' ' . $database . ' < ' . $file_path . '' . $proc_files[$key];
