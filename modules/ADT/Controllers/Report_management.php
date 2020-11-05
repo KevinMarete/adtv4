@@ -7103,7 +7103,7 @@ class Report_management extends \App\Controllers\BaseController
 
     $inputFileType = 'Excel5';
     $inputFileName = $_SERVER['DOCUMENT_ROOT'] . '/ADTv4/public/assets/templates/moh_forms/' . $template . '.xls';      
-    $objReader = IOFactory::createReader($inputFileType);
+    $objReader = IOFactory::createReader($inputFileType, "xls");
     $objPHPExcel = $objReader->load($inputFileName);
 
     /* Delete all files in export folder */
