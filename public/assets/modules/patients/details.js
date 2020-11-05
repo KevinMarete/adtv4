@@ -272,7 +272,7 @@ function getDispensing() {
     patient_no = patient_no.toString().trim();
 
     $.ajax({
-        url: base_url + "patient/getSixMonthsDispensing/" + patient_no,
+        url: "../../../patient/getSixMonthsDispensing/" + patient_no,
         type: 'POST',
         success: function (data) {
             $("#patient_pill_count>tbody").empty();
