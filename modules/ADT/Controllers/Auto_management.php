@@ -776,7 +776,7 @@ class Auto_management extends \App\Controllers\BaseController {
 
                 if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
                     $mysql_bin = str_replace("\\", "\\\\", $mysql_home);
-                    $mysql_con = $mysql_bin . ' -u ' . $username . ' -P' . $port . ' -h ' . $hostname . ' ' . $database . ' < ' . $file_path . '' . $proc_files[$key];
+                    $mysql_con = $mysql_bin . ' -u ' . $username . '-p '.$password . ' -P' . $port . ' -h ' . $hostname . ' ' . $database . ' < ' . $file_path . '' . $proc_files[$key];
                 } else {
                     $mysql_con = 'mysql -u ' . $username . '-p ' . $password . '-P' . $port . ' -h ' . $hostname . ' ' . $database . ' < ' . $file_path . '' . $proc_files[$key];
                 }
