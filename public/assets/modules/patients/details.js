@@ -1,7 +1,7 @@
 $(function () {
     //Get data from hidden element in form
     // var base_url = $("#hidden_data").data("baseurl");
-    let base_url = getBaseUrlLinux();
+    base_url = getBaseUrlLinux();
     var patient_id = $("#hidden_data").data("patient");
     var patient_status = $("#hidden_data").data("status");
     var relations_msg = $("#hidden_data").data("message");
@@ -257,23 +257,22 @@ function getViralLoad() {
     $.getJSON(link, function (data) {
         if (data && data.items && data.items.length == 0) {
             table += '<tr><td colspan="3">No Data Available</td></tr>';
-        }
-        else {
+        } else {
             $.each(data, function (i, vldata) {
                 table += '<tr><td>' + vldata.date_collected + '</td><td>' + vldata.test_date + '</td><td>' + vldata.result + '</td><td>' + vldata.justification + '</td></tr>';
             });
             $("#viral_load_data tbody").empty();
             $("#viral_load_data tbody").append(table);
-        }        
+        }
     });
 }
 
 function getDispensing() {
     var patient_no = $("#patient_number_ccc").val();
     patient_no = patient_no.toString().trim();
-    var link = base_url + "patient/getSixMonthsDispensing/" + patient_no;
+
     $.ajax({
-        url: link,
+        url: base_url + "patient/getSixMonthsDispensing/" + patient_no,
         type: 'POST',
         success: function (data) {
             $("#patient_pill_count>tbody").empty();
@@ -285,9 +284,9 @@ function getDispensing() {
 function getRegimenChange() {
     var patient_no = $("#patient_number_ccc").val();
     patient_no = patient_no.toString().trim();
-    var link = base_url + "patient/getRegimenChange/" + patient_no;
+
     $.ajax({
-        url: link,
+        url: base_url + "patient/getRegimenChange/" + patient_no,
         type: 'POST',
         success: function (data) {
             $("#patient_regimen_history>tbody").empty();
@@ -299,9 +298,8 @@ function getRegimenChange() {
 function getAppointmentHistory() {
     var patient_no = $("#patient_number_ccc").val();
     patient_no = patient_no.toString().trim();
-    var link = base_url + "patient/getAppointmentHistory/" + patient_no;
     $.ajax({
-        url: link,
+        url: base_url + "patient/getAppointmentHistory/" + patient_no,
         type: 'POST',
         success: function (data) {
             $("#patient_appointment_history>tbody").empty();
@@ -353,6 +351,6 @@ function get_patient_prescriptions(ccc_no) {
 
 }
 
-function getBaseUrlLinux(){
-    return location.protocol + "//" + location.host+'/ADTv4/public/';
+function getBaseUrlLinux() {
+    return location.protocol + "//" + location.host + '/ADTv4/public/';
 }
