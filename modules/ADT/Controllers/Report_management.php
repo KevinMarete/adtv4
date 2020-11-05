@@ -7103,7 +7103,7 @@ class Report_management extends \App\Controllers\BaseController
 
     $inputFileType = 'Excel5';
     $inputFileName = $_SERVER['DOCUMENT_ROOT'] . '/ADTv4/public/assets/templates/moh_forms/' . $template . '.xls';      
-    $objReader = IOFactory::createReader($inputFileType, "xls");
+    $objReader = IOFactory::createReader($inputFileType, "Xlsx");
     $objPHPExcel = $objReader->load($inputFileName);
 
     /* Delete all files in export folder */
@@ -7156,7 +7156,7 @@ class Report_management extends \App\Controllers\BaseController
     $period_start = date("F-Y", strtotime($period_start));
     $original_filename = "MOH " . $type . " form for (" . $period_start . ").xls";
     $filename = $dir . "/" . urldecode($original_filename);
-    $objWriter = IOFactory::createWriter($objPHPExcel, "xls");
+    $objWriter = IOFactory::createWriter($objPHPExcel, "Xlsx");
     $objWriter->save($filename);
     $objPHPExcel->disconnectWorksheets();
     unset($objPHPExcel);
