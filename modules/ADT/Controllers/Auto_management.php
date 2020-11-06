@@ -648,10 +648,11 @@ class Auto_management extends \App\Controllers\BaseController {
 
                 return $returnable . 'disabled<br/>';
             }
-        }
-    }
+        } 
+    } 
 
-    public function updateSms() {
+    public function updateSms() { 
+        echo '';
         $alert = "";
         $facility_name = $this->session->get('facility_name');
         $facility_phone = $this->session->get("facility_phone");
