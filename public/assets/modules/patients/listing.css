@@ -15,3 +15,6 @@ select{
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+td[title~="Disable"]{
+	text-overflow: clip;
+}

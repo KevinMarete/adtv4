@@ -115,29 +115,6 @@ class Patient_management extends BaseController {
         $this->base_params($data);
     }
 
-    // TODO
-    // public function get_addpatient_data(){
-    //     $data = [];
-    //     $data['facility_code'] = $this->session->get('facility');
-    //     $sql = "SELECT * FROM facilities where facilitycode=".$data['facility_code'];
-    //     $query = $this->db->query($sql);
-    //     $data['cs'] = $query->result_array()[0]['ccc_separator'];
-    //     $data['districts'] = District::getPOB();
-    //     $data['genders'] = Gender::getAll();
-    //     $data['statuses'] = Patient_Status::getStatus();
-    //     $data['sources'] = Patient_Source::getSources();
-    //     $data['drug_prophylaxis'] = Drug_Prophylaxis::getAll();
-    //     $data['service_types'] = Regimen_Service_Type::getHydratedAll();
-    //     $data['facilities'] = Facilities::getAll();
-    //     $data['family_planning'] = Family_Planning::getAll();
-    //     $data['other_illnesses'] = Other_Illnesses::getAll();
-    //     $data['pep_reasons'] = Pep_Reason::getActive();
-    //     $data['prep_reasons'] = Prep_Reason::getActive();
-    //     $data['drugs'] = Drugcode::getAllEnabled();
-    //     $data['who_stages'] = Who_Stage::getAllHydrated();
-    //     echo json_encode($data);
-    // }
-
     public function addpatient_show() {
         $data = [];
         $data['facility_code'] = $this->session->get('facility');
@@ -569,6 +546,17 @@ class Patient_management extends BaseController {
     }
 
     public function save() {
+        // Check for duplicate ccc
+        $ccc = trim($this->post('patient_number'));
+        if(empty($ccc)){
+            $this->session->set('patient_error', 'Patient CCC cannot be empty');
+            return redirect()->to(base_url('/public/patients/add'));
+        }
+        if(Patient::where('patient_number_ccc', $ccc)->exists()){
+            $this->session->set('patient_error', 'Patient CCC already exists');
+            return redirect()->to(base_url('/public/patients/add'));
+        }
+
         $this->init_api_values();
         $family_planning = "";
         $other_illness_listing = "";
