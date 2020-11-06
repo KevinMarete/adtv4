@@ -30,7 +30,16 @@
                 }
                 $session->remove('msg_save_transaction');
             }
+            if($session->get("patient_error")){ ?>
+                <div class="alert alert-danger">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <?= $session->get("patient_error") ?>
+                </div> 	
+            <?php 
+            $session->remove("patient_error");
+            }
             ?>
+            
         </div>
     </div>
 
