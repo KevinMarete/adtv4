@@ -28,6 +28,7 @@ class Filters extends BaseConfig {
                             'backup',
                             'run_backup',
                             'upload_backup',
+                            'upload_backup/*',
                             'delete_backup',
                             'download_remote_file',
                             'api/*',

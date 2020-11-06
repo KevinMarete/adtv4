@@ -263,11 +263,16 @@ class Backup extends \CodeIgniter\Controller {
             $count = mysql_num_rows($result);
             if ($count == 0) {
                 $real_name = $this->uncompress_zip($file_path);
-                $mysql_home = realpath($_SERVER['MYSQL_HOME']) . "\mysql";
-                $file_path = "\"" . realpath($_SERVER['MYSQL_HOME']) . "\\" . $real_name . "\"";
-                $recovery_status = true;
-                $mysql_bin = str_replace("\\", "\\\\", $mysql_home);
-                $mysql_con = $mysql_bin . ' -u ' . $username . ' -p' . $password . ' -h ' . $hostname . ' ' . $current_db . ' < ' . $file_path;
+
+                if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+                    $mysql_home = realpath($_SERVER['MYSQL_HOME']) . "\mysql";
+                    $file_path = "\"" . realpath($_SERVER['MYSQL_HOME']) . "\\" . $real_name . "\"";
+                    $mysql_bin = str_replace("\\", "\\\\", $mysql_home);
+                    $mysql_con = $mysql_bin . '' . ' -u ' . $username . ' -h ' . $hostname . ' -P ' . $port . ' ' . $current_db . ' > ' . $file_path;
+                } else {
+                    $mysql_con = 'mysql' . ' -u ' . $username . ' -h ' . $hostname . ' -P ' . $port . '-p ' . $password . '  ' . $current_db . ' > ' . $file_path;
+                }
+
                 exec($mysql_con);
             }
         }
@@ -309,15 +314,23 @@ class Backup extends \CodeIgniter\Controller {
         $result = $db->query($sql);
         $facility_code = $result->getResultArray()[0]['Facility_Code'];
 
-        $mysql_home = realpath($_SERVER['MYSQL_HOME']) . "\mysqldump";
+
 // $outer_file = "webadt_" . date('d-M-Y h-i-sa') . ".sql";
 //$outer_file = $facility_code . "_" . date('YmdHis') . '_v3.4.2' . $this->config->item('adt_version') . ".sql";
-        $outer_file = $facility_code . "_" . date('YmdHis') . '_v3.5.0.sql';
+        $outer_file = $facility_code . "_" . date('YmdHis') . '_v4.0.sql';
         $file_path = "\"" . $file_path . "//" . $outer_file . "\"";
-        $mysql_bin = str_replace("//", "////", $mysql_home);
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+            $mysql_home = realpath($_SERVER['MYSQL_HOME']) . "\mysqldump";
+            $mysql_bin = str_replace("//", "////", $mysql_home);
+        }
 
-        //$mysql_con = $mysql_bin . '' . ' -u ' . $username . ' -p' . $password . ' -h ' . $hostname . ' -P ' . $port . ' ' . $current_db . ' > ' . $file_path;
-        $mysql_con = $mysql_bin . '' . ' -u ' . $username . ' -h ' . $hostname . ' -P ' . $port . ' ' . $current_db . ' > ' . $file_path;
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+            $mysql_bin = str_replace("\\", "\\\\", $mysql_home);
+            $mysql_con = $mysql_bin . '' . ' -u ' . $username . ' -h ' . $hostname . ' -P ' . $port . ' ' . $current_db . ' > ' . $file_path;
+        } else {
+            $mysql_con = 'mysqldump -u ' . $username . '-p ' . $password . '-P' . $port . ' -h ' . $hostname . ' ' . $current_db . ' > ' . $file_path;
+        }
+
         exec($mysql_con);
 
         $error_message = "<div class='alert-success'><button type='button' class='close' data-dismiss='alert'>&times;</button><strong>Backup!</strong> Database Backup Successful. $outer_file </div>";
@@ -327,7 +340,6 @@ class Backup extends \CodeIgniter\Controller {
             $this->delete_file(str_replace('"', "", $file_path));
 
             echo "Backup Success - " . $outer_file . '.zip';
-            die;
         } else {
             echo "Error: Backup Not successful";
         }
@@ -368,10 +380,10 @@ class Backup extends \CodeIgniter\Controller {
 
         $sql = "SELECT Facility_Code from users limit 1";
         $result = $db->query($sql);
-        $facility_code = $result->getResultArray()[0]['Facility_Code'];      
+        $facility_code = $result->getResultArray()[0]['Facility_Code'];
 
-       $file_path = FCPATH . 'backup_db/' . explode('/', $remote_path)[0];       
-      
+        $file_path = FCPATH . 'backup_db/' . explode('/', $remote_path)[0];
+
 
         if ($this->connect_ftp()) {
             $ftp->download('/backups/' . $facility_code . '/' . $remote_path, $file_path, 'FTP_BINARY');
@@ -384,7 +396,9 @@ class Backup extends \CodeIgniter\Controller {
         }
     }
 
-    public function upload_backup($file_name = null) {
+    public function upload_backup() {
+        $file_name = $this->request->getPost('file_name');
+
 
 
         ini_set('upload_max_filesize', '10M');
@@ -393,15 +407,16 @@ class Backup extends \CodeIgniter\Controller {
         ini_set('max_execution_time', 300);
         set_time_limit(0);
 
+
         $ftp = new \Ftp();
         $ftp->connect($this->ftp_config);
 
 
-        $file_name = (isset($file_name)) ? $file_name : $_POST['file_name'];
-        if (strpos(strtolower($file_name), 'beta') !== false) {
-            echo "Cannot upload Backup for BETA version of ADT. Please install latest releases";
-            die;
-        }
+//        $file_name = (isset($file_name)) ? $file_name : $_POST['file_name'];
+//        if (strpos(strtolower($file_name), 'beta') !== false) {
+//            echo "Cannot upload Backup for BETA version of ADT. Please install latest releases";
+//            die;
+//        }
 
         $file_path = FCPATH . 'backup_db/' . $file_name;
 
@@ -418,6 +433,8 @@ class Backup extends \CodeIgniter\Controller {
 
         $this->connect_ftp();
 
+
+
         $db = \Config\Database::connect();
 
         $sql = "SELECT Facility_Code from users limit 1";
@@ -432,6 +449,8 @@ class Backup extends \CodeIgniter\Controller {
         }
         $uploaded_backups = $ftp->list_files($this->ftp_root . $facility_code . '/');
 
+
+
         if (!in_array($this->ftp_root . $facility_code . '/' . $file_name, $uploaded_backups)) {
 // $this->ftp->upload($file_path,$this->ftp_root.$facility_code.'/'.$file_name, 'ascii', 0775);
 
@@ -443,6 +462,7 @@ class Backup extends \CodeIgniter\Controller {
             curl_setopt($ch, CURLOPT_INFILESIZE, filesize($enc_file_path));
             curl_exec($ch);
             $error_no = curl_errno($ch);
+
             curl_close($ch);
 // var_dump($error_no);die;
             if ($error_no == 0) {

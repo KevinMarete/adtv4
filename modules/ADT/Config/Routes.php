@@ -453,6 +453,5 @@ $routes->get('admin_management/addCounty', '\Modules\ADT\Controllers\Admin_manag
 
 $routes->get('github', '\Modules\Github\Controllers\Github::index');
 $routes->get('help', '\Modules\Help\Controllers\Help::index');
-$routes->get('help', '\Modules\Help\Controllers\Help::index');
 
 

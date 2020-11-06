@@ -59,6 +59,7 @@ class Auto_management extends \App\Controllers\BaseController {
             $this->db->query($sql);
 
             //function to update destination column to 1 in drug_stock_movement table for issued transactions that have name 'pharm'
+            //function to update destination column to 1 in drug_stock_movement table for issued transactions that have name 'pharm'
             $message .= $this->updateIssuedTo();
             //function to update source_destination column in drug_stock_movement table where it is zero
             $message .= $this->updateSourceDestination();
@@ -81,10 +82,9 @@ class Auto_management extends \App\Controllers\BaseController {
             //function to run_migrations
             $message .= $this->run_migrations();
             //function to auto_backup
-            //$message .= $this->auto_backup();
+            $message .= $this->auto_backup();
             //function to get viral load data
             $message .= $this->updateViralLoad();
-
             //finally update the log file for auto_update 
             if (session()->get("curl_error") == '') {
                 $sql = "UPDATE migration_log SET  count = 1 WHERE source='auto_update'";
@@ -610,18 +610,44 @@ class Auto_management extends \App\Controllers\BaseController {
 
         if ($autobackup == 1) {
             // check if auto backup is set
-            $backup_result = file_get_contents(base_url() . '/public/run_backup');
-            if (strpos($backup_result, 'Error') !== false) {
-                $returnable .= 'Backup:Failed, Upload:Failed';
+            $backup_result = base_url() . '/public/run_backup';
+
+            $postRequest = array(
+                'backup' => 'true'
+            );
+
+            $cURLConnection = curl_init($backup_result);
+            curl_setopt($cURLConnection, CURLOPT_POSTFIELDS, $postRequest);
+            curl_setopt($cURLConnection, CURLOPT_RETURNTRANSFER, true);
+
+            $apiResponse = curl_exec($cURLConnection);
+            curl_close($cURLConnection);
+
+            $file = explode('-', str_replace(' ', '', $apiResponse));
+
+            if ($file[0] == 'BackupSuccess') {
+                $backup_result_ = base_url() . '/public/upload_backup';
+
+
+                $postRequest = array(
+                    'file_name' => $file[1]
+                );
+
+                $cURLConnection = curl_init($backup_result_);
+                curl_setopt($cURLConnection, CURLOPT_POSTFIELDS, $postRequest);
+                curl_setopt($cURLConnection, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($cURLConnection, CURLOPT_VERBOSE, true);
+
+                $apiResponse2 = curl_exec($cURLConnection);
+                if ($apiResponse2 == 'File uploaded succesfully.') {
+                    return $returnable .= 'Backup:Success,<br />Upload Success<br>';
+                } else {
+                    return $returnable .= 'Error:Backup Could not be processed<br>';
+                }
             } else {
 
-                $upload_result = file_get_contents(base_url() . '/public/upload_backup/' . str_replace(" ", "", explode('-', $backup_result)[1]));
-                $returnable .= 'Backup:Success, ';
-                $returnable .= $upload_result . '<br />';
+                return $returnable . 'disabled<br/>';
             }
-            return $returnable;
-        } else {
-            return $returnable . 'disabled<br/>';
         }
     }
 
@@ -776,7 +802,7 @@ class Auto_management extends \App\Controllers\BaseController {
 
                 if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
                     $mysql_bin = str_replace("\\", "\\\\", $mysql_home);
-                    $mysql_con = $mysql_bin . ' -u ' . $username . '-p '.$password . ' -P' . $port . ' -h ' . $hostname . ' ' . $database . ' < ' . $file_path . '' . $proc_files[$key];
+                    $mysql_con = $mysql_bin . ' -u ' . $username . '-p ' . $password . ' -P' . $port . ' -h ' . $hostname . ' ' . $database . ' < ' . $file_path . '' . $proc_files[$key];
                 } else {
                     $mysql_con = 'mysql -u ' . $username . '-p ' . $password . '-P' . $port . ' -h ' . $hostname . ' ' . $database . ' < ' . $file_path . '' . $proc_files[$key];
                 }
