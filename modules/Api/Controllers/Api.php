@@ -8,6 +8,8 @@ use \Modules\Template\Controllers\Template;
 use App\Libraries\Mysqldump;
 use App\Libraries\Zip;
 use \Modules\Api\Models\Api_model;
+use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Client;
 
 class Api extends \CodeIgniter\Controller {
 
@@ -725,27 +727,19 @@ class Api extends \CodeIgniter\Controller {
     function tcpILRequest($request_type, $request) {
         $this->init_api_values();
 
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $this->il_ip);
 
-        curl_setopt_array($ch, array(
-            CURLOPT_POST => TRUE,
-            CURLOPT_RETURNTRANSFER => TRUE,
-            CURLOPT_HTTPHEADER => array(
-                'Content-Type: application/json'
-            ),
-            CURLOPT_POSTFIELDS => $request
-        ));
+        $client = new Client();
+        $response = $client->post($this->il_i, [
+            'debug' => TRUE,
+            'body' => $request,
+            'headers' => [
+                'Content-Type' => 'application/json',
+            ]
+        ]);
 
-
-        $json_data = curl_exec($ch);
-        if (empty($json_data)) {
-            $message = "cURL Error: " . curl_error($ch) . "<br/>";
-            echo $message;
-        } else {
-            print_r(curl_getinfo($ch));
-        }
-        
+        $body = $response->getBody();
+        print_r(json_decode((string) $body));
+        die;
     }
 
     function writeLog($logtype, $msg) {
