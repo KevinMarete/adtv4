@@ -745,12 +745,12 @@ class Api extends \CodeIgniter\Controller {
     }
 
     public function init_api_values() {
-        $CI = &get_instance();
-        $CI->load->database();
+      //  $CI = &get_instance();
+       // $CI->load->database();
 
         $sql = "SELECT * FROM api_config";
-        $query = $CI->db->query($sql);
-        $api_config = $query->result_array();
+        $query = $this->db->query($sql);
+        $api_config = $query->getResultArray();
 
         $conf = array();
         foreach ($api_config as $ob) {
