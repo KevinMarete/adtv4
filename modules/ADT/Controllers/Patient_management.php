@@ -707,7 +707,7 @@ class Patient_management extends BaseController {
         if ($this->api && $this->patient_module) {
             // post to IL via API
             $api = new Api();
-            $api->getPatient($new_patient->patient_number_ccc, 'ADT^A04');
+            $api->getPatient($new_patient->patient_number_ccc, 'ADD');
             // /> POST TO IL VIA API
         }
 

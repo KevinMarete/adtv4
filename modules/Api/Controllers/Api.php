@@ -721,37 +721,18 @@ class Api extends \CodeIgniter\Controller {
     }
 
     function tcpILRequest($request_type, $request) {
-        $client = \Config\Services::curlrequest();
-
-        // $response = $client->setBody($request)->request('POST', $this->il_ip, ['http_errors' => false]);
-
-        // var_dump($this->il_ip);
         $this->init_api_values();
-        // echo "sending tcp request";
-        // $fp = fsockopen($this->il_ip, $this->il_port, $errno, $errstr, 30);
-        // if (!$fp) {
-        //     echo "$errstr ($errno)<br />\n";
-        // } else {
-        //     fwrite($fp, '|~~' . $request . '~~|');
-        //     fclose($fp);
-        //     print date('H:i:s');
-        // }
 
-
+        $headers = array(
+            'Content-Type: application/json',
+            'Accept: application/json'
+        );
         $cURLConnection = curl_init($this->il_ip);
         curl_setopt($cURLConnection, CURLOPT_POSTFIELDS, $request);
         curl_setopt($cURLConnection, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($cURLConnection, CURLOPT_HEADER, $headers);
 
         $apiResponse = curl_exec($cURLConnection);
-        // if(!curl_error($cURLConnection)){
-            file_put_contents ( "/var/www/html/ADTv4/public/debug.txt" , PHP_EOL.json_encode(curl_getinfo($cURLConnection)) , FILE_APPEND);
-            file_put_contents ( "/var/www/html/ADTv4/public/debug.txt" , PHP_EOL.'' , FILE_APPEND);
-            file_put_contents ( "/var/www/html/ADTv4/public/debug.txt" , PHP_EOL.json_encode($apiResponse) , FILE_APPEND);
-            // print_r(curl_getinfo($cURLConnection));
-            log_message('debug', json_encode(curl_getinfo($cURLConnection)));
-            log_message('debug', '========');
-            log_message('debug', json_encode($apiResponse));
-        // }
         curl_close($cURLConnection);
     }
 
