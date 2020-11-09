@@ -748,6 +748,9 @@ class Api extends \CodeIgniter\Controller {
             file_put_contents ( "/var/www/html/ADTv4/public/debug.txt" , PHP_EOL.'' , FILE_APPEND);
             file_put_contents ( "/var/www/html/ADTv4/public/debug.txt" , PHP_EOL.json_encode($apiResponse) , FILE_APPEND);
             // print_r(curl_getinfo($cURLConnection));
+            log_message('debug', json_encode(curl_getinfo($cURLConnection)));
+            log_message('debug', '========');
+            log_message('debug', json_encode($apiResponse));
         // }
         curl_close($cURLConnection);
     }
