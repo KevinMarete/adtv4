@@ -106,16 +106,16 @@ class Api extends \CodeIgniter\Controller {
     }
 
     function processPatientRegistration($patient) {
-// internal & external patient ID matching
-// 		$EXTERNAL_PATIENT_ID = $patient->PATIENT_IDENTIFICATION->EXTERNAL_PATIENT_ID->ID;
-// 		$ASSIGNING_AUTHORITY = $patient->PATIENT_IDENTIFICATION->EXTERNAL_PATIENT_ID->ASSIGNING_AUTHORITY;
-// 		$internal_patient = $this->api_model->getPatient(null,$EXTERNAL_PATIENT_ID);
-// // getPatientInternalID($external_id,$ASSIGNING_AUTHORITY)
-// 		if ($internal_patient){
-// 			echo "Patient already exists";
-// 			die;
-// 		}
-// internal identification is an array of objects
+        // internal & external patient ID matching
+        // 		$EXTERNAL_PATIENT_ID = $patient->PATIENT_IDENTIFICATION->EXTERNAL_PATIENT_ID->ID;
+        // 		$ASSIGNING_AUTHORITY = $patient->PATIENT_IDENTIFICATION->EXTERNAL_PATIENT_ID->ASSIGNING_AUTHORITY;
+        // 		$internal_patient = $this->api_model->getPatient(null,$EXTERNAL_PATIENT_ID);
+        // // getPatientInternalID($external_id,$ASSIGNING_AUTHORITY)
+        // 		if ($internal_patient){
+        // 			echo "Patient already exists";
+        // 			die;
+        // 		}
+        // internal identification is an array of objects
         $identification = array();
         foreach ($patient->PATIENT_IDENTIFICATION->INTERNAL_PATIENT_ID as $id) {
             $identification[$id->IDENTIFIER_TYPE] = $id->ID;
@@ -146,9 +146,9 @@ class Api extends \CodeIgniter\Controller {
         // $patient_matching = $EXTERNAL_PATIENT_ID = $patient->PATIENT_IDENTIFICATION->EXTERNAL_PATIENT_ID;
         $ENROLLMENT_DATE = $patient->PATIENT_VISIT->HIV_CARE_ENROLLMENT_DATE;
 
-// $patient->PATIENT_VISIT->VISIT_DATE;
-// $patient->PATIENT_VISIT->PATIENT_TYPE;
-// $patient->PATIENT_VISIT->PATIENT_SOURCE;
+        // $patient->PATIENT_VISIT->VISIT_DATE;
+        // $patient->PATIENT_VISIT->PATIENT_TYPE;
+        // $patient->PATIENT_VISIT->PATIENT_SOURCE;
 
         $patient = array(
             'facility_code' => $SENDING_FACILITY,
@@ -517,8 +517,13 @@ class Api extends \CodeIgniter\Controller {
         echo "<pre>";
         echo(json_encode($patient, JSON_PRETTY_PRINT));
         $this->writeLog('PATIENT ' . $msg_type . ' ' . $message_type, json_encode($patient));
+<<<<<<< HEAD
         //$this->tcpILRequest(null, json_encode($patient));
         //$this->getObservation($pat->patient_number_ccc);
+=======
+        $this->tcpILRequest(null, json_encode($patient));
+        // $this->getObservation($pat->patient_number_ccc);
+>>>>>>> 8f00cced963e281732cce201e73a2f7aa10b3c17
     }
 
     public function getObservation($patient_id) {
@@ -547,7 +552,7 @@ class Api extends \CodeIgniter\Controller {
             'PATIENT_NAME' => array('FIRST_NAME' => $pat->first_name, 'MIDDLE_NAME' => $pat->last_name, 'LAST_NAME' => $pat->other_name)
         );
 
-// construct & send observation (obx ) message
+        // construct & send observation (obx ) message
         $observations['OBSERVATION_RESULT'] = array(
             array(
                 'SET_ID' => 1,
@@ -722,17 +727,19 @@ class Api extends \CodeIgniter\Controller {
     }
 
     function tcpILRequest($request_type, $request) {
-        var_dump($this->il_ip);
         $this->init_api_values();
-        // echo "sending tcp request";
-        $fp = fsockopen($this->il_ip, $this->il_port, $errno, $errstr, 30);
-        if (!$fp) {
-            echo "$errstr ($errno)<br />\n";
-        } else {
-            fwrite($fp, '|~~' . $request . '~~|');
-            fclose($fp);
-            print date('H:i:s');
-        }
+
+        $headers = array(
+            'Content-Type: application/json',
+            'Accept: application/json'
+        );
+        $cURLConnection = curl_init($this->il_ip);
+        curl_setopt($cURLConnection, CURLOPT_POSTFIELDS, $request);
+        curl_setopt($cURLConnection, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($cURLConnection, CURLOPT_HEADER, $headers);
+
+        $apiResponse = curl_exec($cURLConnection);
+        curl_close($cURLConnection);
     }
 
     function writeLog($logtype, $msg) {
