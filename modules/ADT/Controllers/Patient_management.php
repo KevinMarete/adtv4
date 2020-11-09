@@ -30,6 +30,7 @@ use Modules\ADT\Models\RegimenServiceType;
 use Modules\ADT\Models\ReportingFacility;
 use Modules\ADT\Models\VisitPurpose;
 use Modules\ADT\Models\WhoStage;
+use Modules\Api\Controllers\Api;
 
 ob_start();
 
@@ -705,7 +706,8 @@ class Patient_management extends BaseController {
 
         if ($this->api && $this->patient_module) {
             // post to IL via API
-            file_get_contents(base_url() . 'tools/api/getPatient/' . $auto_id . '/ADD');
+            $api = new Api();
+            $api->getPatient($new_patient->patient_number_ccc, 'ADT^A04');
             // /> POST TO IL VIA API
         }
 
@@ -1620,7 +1622,7 @@ class Patient_management extends BaseController {
             for ($i = 0; $i < count($aColumns); $i++) {
                 $bSearchable = $this->request->getGet('bSearchable_' . $i);
 
-// Individual column filtering
+                // Individual column filtering
                 if (isset($bSearchable) && $bSearchable == 'true') {
                     if ($column_count == 0) {
                         $where .= "(";
@@ -1636,8 +1638,8 @@ class Patient_management extends BaseController {
         //data
         $query = DB::table("patient")->select(DB::raw('SQL_CALC_FOUND_ROWS ' . str_replace(' , ', ' ', implode(', ', $aColumns)), false))
                 ->where("facility_code", $facility_code);
-//        $this->db->from("patient p");
-//        $this->db->where("p.facility_code", $facility_code);
+       // $this->db->from("patient p");
+      //  $this->db->where("p.facility_code", $facility_code);
         //search sql clause
         if ($where != "") {
             $where .= ")";

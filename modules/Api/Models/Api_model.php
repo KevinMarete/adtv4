@@ -96,7 +96,7 @@ class Api_model extends BaseModel {
 		left join patient_source pso on p.source = pso.id
 		left join gender g on g.id = p.gender
 
-		WHERE p.id   = '$internal_id' ";
+		WHERE p.patient_number_ccc   = '$internal_id' ";
 
         // do left join in the case of patient created on adt and not already on IL
 
