@@ -43,12 +43,12 @@ class Api extends \CodeIgniter\Controller {
         $this->db = \Config\Database::connect();
         $this->table = new \CodeIgniter\View\Table();
         $this->api_model = new Api_model();
-        
+
         // $this->load->model('api_model');
     }
 
     public function index() {
-        
+
         // "PATIENT_SOURCE":string"HBCT/VCT/OPD/MCH/TB-CLINIC/IPD-CHILD/IPD-ADULT/CCC/SELF-TEST"
 // @marital status non existent in ADT... but needed in IQCare
         // Patient source -- HB
@@ -475,7 +475,7 @@ class Api extends \CodeIgniter\Controller {
 
     public function getPatient($patient_id, $msg_type) {
         $pat = $this->api_model->getPatientbyID($patient_id);
-       
+
 
         $message_type = ($msg_type == 'ADD') ? 'ADT^A04' : 'ADT^A08';
         $patient['MESSAGE_HEADER'] = array(
@@ -514,16 +514,12 @@ class Api extends \CodeIgniter\Controller {
             'PATIENT_SOURCE' => 'CCC',
             'HIV_CARE_ENROLLMENT_DATE' => date('Ymd', strtotime($pat->date_enrolled))
         );
-        echo "<pre>";
-        echo(json_encode($patient, JSON_PRETTY_PRINT));
+        //echo "<pre>";
+        //echo(json_encode($patient, JSON_PRETTY_PRINT));
         $this->writeLog('PATIENT ' . $msg_type . ' ' . $message_type, json_encode($patient));
-<<<<<<< HEAD
-        //$this->tcpILRequest(null, json_encode($patient));
-        //$this->getObservation($pat->patient_number_ccc);
-=======
+
         $this->tcpILRequest(null, json_encode($patient));
         // $this->getObservation($pat->patient_number_ccc);
->>>>>>> 8f00cced963e281732cce201e73a2f7aa10b3c17
     }
 
     public function getObservation($patient_id) {
@@ -729,17 +725,27 @@ class Api extends \CodeIgniter\Controller {
     function tcpILRequest($request_type, $request) {
         $this->init_api_values();
 
-        $headers = array(
-            'Content-Type: application/json',
-            'Accept: application/json'
-        );
-        $cURLConnection = curl_init($this->il_ip);
-        curl_setopt($cURLConnection, CURLOPT_POSTFIELDS, $request);
-        curl_setopt($cURLConnection, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($cURLConnection, CURLOPT_HEADER, $headers);
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $this->il_ip);
 
-        $apiResponse = curl_exec($cURLConnection);
-        curl_close($cURLConnection);
+        curl_setopt_array($ch, array(
+            CURLOPT_POST => TRUE,
+            CURLOPT_RETURNTRANSFER => TRUE,
+            CURLOPT_HTTPHEADER => array(
+                'Content-Type: application/json'
+            ),
+            CURLOPT_POSTFIELDS => $request
+        ));
+
+
+        $json_data = curl_exec($ch);
+        if (empty($json_data)) {
+            $message = "cURL Error: " . curl_error($ch) . "<br/>";
+            echo $message;
+        } else {
+            print_r(curl_getinfo($ch));
+        }
+        
     }
 
     function writeLog($logtype, $msg) {
@@ -753,8 +759,8 @@ class Api extends \CodeIgniter\Controller {
     }
 
     public function init_api_values() {
-      //  $CI = &get_instance();
-       // $CI->load->database();
+        //  $CI = &get_instance();
+        // $CI->load->database();
 
         $sql = "SELECT * FROM api_config";
         $query = $this->db->query($sql);
