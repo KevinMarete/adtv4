@@ -729,8 +729,8 @@ class Api extends \CodeIgniter\Controller {
 
 
         $client = new Client();
-        $response = $client->post($this->il_i, [
-            'debug' => TRUE,
+        $response = $client->post($this->il_ip, [
+            'debug' => FALSE,
             'body' => $request,
             'headers' => [
                 'Content-Type' => 'application/json',

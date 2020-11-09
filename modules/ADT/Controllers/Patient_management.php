@@ -549,11 +549,11 @@ class Patient_management extends BaseController {
     public function save() {
         // Check for duplicate ccc
         $ccc = trim($this->post('patient_number'));
-        if(empty($ccc)){
+        if (empty($ccc)) {
             $this->session->set('patient_error', 'Patient CCC cannot be empty');
             return redirect()->to(base_url('/public/patients/add'));
         }
-        if(Patient::where('patient_number_ccc', $ccc)->exists()){
+        if (Patient::where('patient_number_ccc', $ccc)->exists()) {
             $this->session->set('patient_error', 'Patient CCC already exists');
             return redirect()->to(base_url('/public/patients/add'));
         }
@@ -945,7 +945,9 @@ class Patient_management extends BaseController {
 
         if ($this->api && $this->patient_module) {
             // post to IL via API
-            file_get_contents(base_url() . '/public/tools/api/getPatient/' . $record_id . '/EDIT');
+            $api = new Api();
+            $api->getPatient($data['patient_number_ccc'], 'EDIT');
+            // file_get_contents(base_url() . '/public/tools/api/getPatient/' . $record_id . '/EDIT');
             // /> POST TO IL VIA API
         }
 
@@ -1638,8 +1640,8 @@ class Patient_management extends BaseController {
         //data
         $query = DB::table("patient")->select(DB::raw('SQL_CALC_FOUND_ROWS ' . str_replace(' , ', ' ', implode(', ', $aColumns)), false))
                 ->where("facility_code", $facility_code);
-       // $this->db->from("patient p");
-      //  $this->db->where("p.facility_code", $facility_code);
+        // $this->db->from("patient p");
+        //  $this->db->where("p.facility_code", $facility_code);
         //search sql clause
         if ($where != "") {
             $where .= ")";
