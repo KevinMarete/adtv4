@@ -87,16 +87,14 @@ class Api_model extends BaseModel {
     }
 
     function getPatientbyID($internal_id = null) {
-
-        //$CI = &get_instance();
-        //$CI->load->database();
+     
         $cond = '';
         $query_str = "SELECT p.*,ps.name as patient_status,pso.name as patient_source ,g.name as patient_gender FROM patient p
 		left join patient_status ps on p.current_status = ps.id 
 		left join patient_source pso on p.source = pso.id
 		left join gender g on g.id = p.gender
 
-		WHERE p.id   = '$internal_id' ";
+		WHERE p.patient_number_ccc   = '$internal_id' ";
 
         // do left join in the case of patient created on adt and not already on IL
 
@@ -106,7 +104,7 @@ class Api_model extends BaseModel {
         if (count($query->getResult()) > 0) {
             $returnable = $query->getResult()[0];
         } else {
-            $returnable = false;
+            $returnable = 'Not Found';
         }
         return $returnable;
     }

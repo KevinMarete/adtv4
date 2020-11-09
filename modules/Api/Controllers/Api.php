@@ -475,6 +475,7 @@ class Api extends \CodeIgniter\Controller {
 
     public function getPatient($patient_id, $msg_type) {
         $pat = $this->api_model->getPatientbyID($patient_id);
+       
 
         $message_type = ($msg_type == 'ADD') ? 'ADT^A04' : 'ADT^A08';
         $patient['MESSAGE_HEADER'] = array(
@@ -516,8 +517,8 @@ class Api extends \CodeIgniter\Controller {
         echo "<pre>";
         echo(json_encode($patient, JSON_PRETTY_PRINT));
         $this->writeLog('PATIENT ' . $msg_type . ' ' . $message_type, json_encode($patient));
-        $this->tcpILRequest(null, json_encode($patient));
-        $this->getObservation($pat->patient_number_ccc);
+        //$this->tcpILRequest(null, json_encode($patient));
+        //$this->getObservation($pat->patient_number_ccc);
     }
 
     public function getObservation($patient_id) {
