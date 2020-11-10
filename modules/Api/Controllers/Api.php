@@ -736,7 +736,6 @@ class Api extends BaseController {
 
         $result = array();
 
-<<<<<<< HEAD
         /* Execute Shell Command To Ping Target */
         $cmd_result = shell_exec('ping -c 1 -w 1 ' . 'https://iltest.kenyahmis.org');
 
@@ -772,20 +771,6 @@ class Api extends BaseController {
         } else {
             $this->db->table('il_jobs')->insert($dataoff);
         }
-=======
-        $client = new Client();
-        $response = $client->post($this->il_ip, [
-            'debug' => FALSE,
-            'body' => $request,
-            'headers' => [
-                'Content-Type' => 'application/json',
-            ]
-        ]);
-
-        $body = $response->getBody();
-        // print_r(json_decode((string) $body));
-        // die;
->>>>>>> 9b400ce8817f45dcfdd18b10e24ad1020425111a
     }
 
     function writeLog($logtype, $msg) {
