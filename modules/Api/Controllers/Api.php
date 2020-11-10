@@ -11,6 +11,7 @@ use App\Libraries\Zip;
 use \Modules\Api\Models\Api_model;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Client;
+use Illuminate\Database\Capsule\Manager as DB;
 
 class Api extends BaseController {
 
@@ -116,6 +117,16 @@ class Api extends BaseController {
         // getPatientInternalID($external_id,$ASSIGNING_AUTHORITY)
         if ($internal_patient) {
             echo "Patient already exists";
+            die;
+        }
+        // Checking duplicate external ID
+        $exists = DB::table('api_patient_matching')->where('external_id', $patient->PATIENT_IDENTIFICATION->EXTERNAL_PATIENT_ID->ID)->get();
+        if(count($exists) > 0){
+            return 'Duplicate external ID';
+            die;
+        }
+        if ($internal_patient) {
+            return "Patient already exists";
             die;
         }
         // internal identification is an array of objects
