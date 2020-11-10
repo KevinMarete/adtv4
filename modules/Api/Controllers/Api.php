@@ -638,56 +638,56 @@ class Api extends \CodeIgniter\Controller {
         $pats = $this->api_model->getDispensing($order_id);
         $message_type = 'RDS^O13';
 
-        $dispense['MESSAGE_HEADER'] = array(
+        $dispense['MESSAGE_HEADER'] = [
             'SENDING_APPLICATION' => "ADT",
-            'SENDING_FACILITY' => $pats[0]->facility_code,
+            'SENDING_FACILITY' => empty($pats[0]->facility_code) ? '' : $pats[0]->facility_code,
             'RECEIVING_APPLICATION' => "IL",
-            'RECEIVING_FACILITY' => $pats[0]->facility_code,
+            'RECEIVING_FACILITY' => empty($pats[0]->facility_code) ? '' : $pats[0]->facility_code,
             'MESSAGE_DATETIME' => date('Ymdhis'),
             'SECURITY' => "",
             'MESSAGE_TYPE' => $message_type,
             'PROCESSING_ID' => "P"
-        );
-        $dispense['PATIENT_IDENTIFICATION'] = array(
-            'EXTERNAL_PATIENT_ID' => array('ID' => $pats[0]->external_id, 'IDENTIFIER_TYPE' => "GODS_NUMBER", 'ASSIGNING_AUTHORITY' => "MPI"),
+        ];
+        $dispense['PATIENT_IDENTIFICATION'] = [
+            'EXTERNAL_PATIENT_ID' => ['ID' => empty($pats[0]->external_id) ? '' : $pats[0]->external_id, 'IDENTIFIER_TYPE' => "GODS_NUMBER", 'ASSIGNING_AUTHORITY' => "MPI"],
             'INTERNAL_PATIENT_ID' => [
-                array('ID' => $pats[0]->patient_number_ccc, 'IDENTIFIER_TYPE' => "CCC_NUMBER", 'ASSIGNING_AUTHORITY' => "CCC")
+                ['ID' => empty($pats[0]->patient_number_ccc) ? '' : $pats[0]->patient_number_ccc, 'IDENTIFIER_TYPE' => "CCC_NUMBER", 'ASSIGNING_AUTHORITY' => "CCC"]
             ],
-            'PATIENT_NAME' => array('FIRST_NAME' => $pats[0]->first_name, 'MIDDLE_NAME' => $pats[0]->other_name, 'LAST_NAME' => $pats[0]->last_name)
-        );
-        $dispense['COMMON_ORDER_DETAILS'] = array(
+            'PATIENT_NAME' => ['FIRST_NAME' => empty($pats[0]->first_name) ? '' : $pats[0]->first_name, 'MIDDLE_NAME' => empty($pats[0]->other_name) ? '' : $pats[0]->other_name, 'LAST_NAME' => empty($pats[0]->last_name) ? '' : $pats[0]->last_name]
+        ];
+        $dispense['COMMON_ORDER_DETAILS'] = [
             'ORDER_CONTROL' => "NW",
-            'PLACER_ORDER_NUMBER' => array('NUMBER' => $pats[0]->order_number, 'ENTITY' => "IQCARE"),
-            'FILLER_ORDER_NUMBER' => array('NUMBER' => $pats[0]->visit_id, 'ENTITY' => "ADT"),
+            'PLACER_ORDER_NUMBER' => ['NUMBER' => empty($pats[0]->order_number) ? '' : $pats[0]->order_number, 'ENTITY' => "IQCARE"],
+            'FILLER_ORDER_NUMBER' => ['NUMBER' => empty($pats[0]->visit_id) ? '' : $pats[0]->visit_id, 'ENTITY' => "ADT"],
             'ORDER_STATUS' => "NW",
-            'ORDERING_PHYSICIAN' => array('FIRST_NAME' => $pats[0]->order_physician, 'MIDDLE_NAME' => "", 'LAST_NAME' => "", 'PREFIX' => "DR"),
-            'TRANSACTION_DATETIME' => $pats[0]->timecreated,
-            'NOTES' => $pats[0]->notes
-        );
+            'ORDERING_PHYSICIAN' => ['FIRST_NAME' => empty($pats[0]->order_physician) ? '' : $pats[0]->order_physician, 'MIDDLE_NAME' => "", 'LAST_NAME' => "", 'PREFIX' => "DR"],
+            'TRANSACTION_DATETIME' => empty($pats[0]->timecreated) ? '' : $pats[0]->timecreated,
+            'NOTES' => empty($pats[0]->notes) ? '' : $pats[0]->notes
+        ];
 
         /* Loop Drugs */
         foreach ($pats as $key => $pat) {
-            $dispense['PHARMACY_ENCODED_ORDER'][$key] = array(
-                'DRUG_NAME' => $pat->drug_name,
+            $dispense['PHARMACY_ENCODED_ORDER'][$key] = [
+                'DRUG_NAME' => empty($pat->drug_name) ? '' : $pat->drug_name,
                 'CODING_SYSTEM' => "NASCOP_CODES",
-                'STRENGTH' => $pat->drug_strength,
-                'DOSAGE' => $pat->dosage,
-                'FREQUENCY' => $pat->frequency,
-                'DURATION' => $pat->disp_duration,
-                'QUANTITY_PRESCRIBED' => $pat->quantity_prescribed,
-                'PRESCRIPTION_NOTES' => $pat->prescription_notes
-            );
-            $dispense['PHARMACY_DISPENSE'][$key] = array(
-                'DRUG_NAME' => $pat->drug_name,
+                'STRENGTH' => empty($pat->drug_strength) ? '' : $pat->drug_strength,
+                'DOSAGE' => empty($pat->dosage) ? '' : $pat->dosage,
+                'FREQUENCY' => empty($pat->frequency) ? '' : $pat->frequency,
+                'DURATION' => empty($pat->disp_duration) ? '' : $pat->disp_duration,
+                'QUANTITY_PRESCRIBED' => empty($pat->quantity_prescribed) ? '' : $pat->quantity_prescribed,
+                'PRESCRIPTION_NOTES' => empty($pat->prescription_notes) ? '' : $pat->prescription_notes
+            ];
+            $dispense['PHARMACY_DISPENSE'][$key] = [
+                'DRUG_NAME' => empty($pat->drug_name) ? '' : $pat->drug_name,
                 'CODING_SYSTEM' => "NASCOP_CODES",
-                'ACTUAL_DRUGS' => $pat->drugcode,
-                'STRENGTH' => $pat->drug_strength,
-                'DOSAGE' => $pat->disp_dose,
-                'FREQUENCY' => $pat->frequency,
-                'DURATION' => $pat->disp_duration,
-                'QUANTITY_DISPENSED' => $pat->disp_quantity,
-                'DISPENSING_NOTES' => $pat->comment
-            );
+                'ACTUAL_DRUGS' => empty($pat->drugcode) ? '' : $pat->drugcode,
+                'STRENGTH' => empty($pat->drug_strength) ? '' : $pat->drug_strength,
+                'DOSAGE' => empty($pat->disp_dose) ? '' : $pat->disp_dose,
+                'FREQUENCY' => empty($pat->frequency) ? '' : $pat->frequency,
+                'DURATION' => empty($pat->disp_duration) ? '' : $pat->disp_duration,
+                'QUANTITY_DISPENSED' => empty($pat->disp_quantity) ? '' : $pat->disp_quantity,
+                'DISPENSING_NOTES' => empty($pat->comment) ? '' : $pat->comment
+            ];
         }
 
         echo "<pre>";
