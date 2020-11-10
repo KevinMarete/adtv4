@@ -30,6 +30,7 @@ use Modules\ADT\Models\RegimenDrug;
 use Modules\ADT\Models\Transaction_type;
 use Modules\ADT\Models\Visit_purpose;
 use Modules\ADT\Models\VisitPurpose;
+use Modules\Api\Controllers\Api;
 use Mpdf\Mpdf;
 
 class Dispensement_management extends BaseController {
@@ -191,7 +192,7 @@ class Dispensement_management extends BaseController {
             $data['prescription'] = $ps;
             // find if possible regimen from prescription
             foreach ($ps as $key => $p) {
-                $drugname = $p['drug_name'];
+                $drugname = $p->drug_name;
                 $r_query = Regimen::where('regimen_code', 'like', '%'.$drugname.'%')->first();
                 if ($r_query) {
                     $data['prescription_regimen_id'] = $r_query['id'];
@@ -860,10 +861,10 @@ class Dispensement_management extends BaseController {
                 $chk_result = DB::select($chk_reg_drug_sql);
                 if ($chk_result) {
                     //Is an ARV
-                    $this->db->insert('drug_prescription_details_visit', array('drug_prescription_details_id' => $this->getPrescription($prescription)['arv_prescription'], 'visit_id' => $visit_id));
+                    $this->db->table('drug_prescription_details_visit')->insert(array('drug_prescription_details_id' => $this->getPrescription($prescription)['arv_prescription'], 'visit_id' => $visit_id));
                 } else {
                     //Is an OI
-                    $this->db->insert('drug_prescription_details_visit', array('drug_prescription_details_id' => $this->getPrescription($prescription)['oi_prescription'], 'visit_id' => $visit_id));
+                    $this->db->table('drug_prescription_details_visit')->insert(array('drug_prescription_details_id' => $this->getPrescription($prescription)['oi_prescription'], 'visit_id' => $visit_id));
                 }
             }
 
@@ -893,6 +894,14 @@ class Dispensement_management extends BaseController {
             $query = $this->db->query($q);
             $result = Patient_appointment::where('patient', $patient)->where('appointment', $next_appointment_date)->first();
             $appointment_id = $result->id;
+
+            if ($this->api && $this->dispense_module) {
+                // post to IL via API
+                $api = new Api();
+                $api->getDispensing($prescription);
+                $api->getAppointment($appointment_id);
+                // /> POST TO IL VIA API
+            }
 
             //file_get_contents(base_url() . 'tools/api/getdispensing/' . $prescription);
             //file_get_contents(base_url() . 'tools/api/getappointment/' . $appointment_id);
@@ -1186,11 +1195,11 @@ class Dispensement_management extends BaseController {
         $data = $ps;
         // find if possible regimen from prescription
         foreach ($ps as $key => $p) {
-            $drugname = $p['drug_name'];
+            $drugname = $p->drug_name;
             $rs = Regimen::where('regimen_code', 'like', '%'.$drugname.'%')->first();
             if ($rs) {
-                $data[$key]['prescription_regimen_id'] = $rs->id;
-                $arv_prescription = $p['id'];
+                $data[$key]->prescription_regimen_id = $rs->id;
+                $arv_prescription = $p->id;
                 $data['arv_prescription'] = $arv_prescription;
                 //Get oi_prescription(s)
                 $sql = "SELECT dpd.id from drug_prescription dp,drug_prescription_details dpd where ".

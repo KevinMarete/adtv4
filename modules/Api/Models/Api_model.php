@@ -165,7 +165,7 @@ class Api_model extends BaseModel {
         // $CI = &get_instance();
         // $CI->load->database();
 
-        $sql = "SELECT *, dpd.strength as drug_strength, pv.id visit_id, DATE_FORMAT(timecreated, '%Y%m%d%h%i%s') timecreated, pv.duration disp_duration, TRIM(d.drug) drugcode, pv.quantity disp_quantity, pv.dose disp_dose
+        $sql = "SELECT *, dpd.strength as drug_strength, pv.id visit_id, DATE_FORMAT(timecreated, '%Y%m%d%h%i%s') timecreated, pv.duration disp_duration, TRIM(d.drug) drugcode, pv.quantity disp_quantity, pv.dose disp_dose, dpd.prescription_number
 				FROM patient_visit pv 
 				INNER JOIN drug_prescription_details_visit dpdv ON dpdv.visit_id = pv.id
 				INNER JOIN drug_prescription_details dpd ON dpd.id = dpdv.drug_prescription_details_id
@@ -225,7 +225,7 @@ class Api_model extends BaseModel {
                 'quantity_prescribed' => $details->QUANTITY_PRESCRIBED,
                 'prescription_notes' => $details->PRESCRIPTION_NOTES
             ];
-            DB::table('drug_prescription')->insert($pe_details);
+            DB::table('drug_prescription_details')->insert($pe_details);
         }
         return $pe_details;
     }

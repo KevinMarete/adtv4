@@ -2,6 +2,7 @@
 
 namespace Modules\Api\Controllers;
 
+use App\Controllers\BaseController;
 use App\Libraries\Ftp;
 use \Modules\Tables\Controllers\Tables;
 use \Modules\Template\Controllers\Template;
@@ -11,7 +12,7 @@ use \Modules\Api\Models\Api_model;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Client;
 
-class Api extends \CodeIgniter\Controller {
+class Api extends BaseController {
 
     /**
      * Migrator main controller.
@@ -668,6 +669,7 @@ class Api extends \CodeIgniter\Controller {
         /* Loop Drugs */
         foreach ($pats as $key => $pat) {
             $dispense['PHARMACY_ENCODED_ORDER'][$key] = [
+                'PRESCRIPTION_NUMBER' => empty($pat->prescription_number) ? '' : $pat->prescription_number,
                 'DRUG_NAME' => empty($pat->drug_name) ? '' : $pat->drug_name,
                 'CODING_SYSTEM' => "NASCOP_CODES",
                 'STRENGTH' => empty($pat->drug_strength) ? '' : $pat->drug_strength,
@@ -678,6 +680,7 @@ class Api extends \CodeIgniter\Controller {
                 'PRESCRIPTION_NOTES' => empty($pat->prescription_notes) ? '' : $pat->prescription_notes
             ];
             $dispense['PHARMACY_DISPENSE'][$key] = [
+                'PRESCRIPTION_NUMBER' => empty($pat->prescription_number) ? '' : $pat->prescription_number,
                 'DRUG_NAME' => empty($pat->drug_name) ? '' : $pat->drug_name,
                 'CODING_SYSTEM' => "NASCOP_CODES",
                 'ACTUAL_DRUGS' => empty($pat->drugcode) ? '' : $pat->drugcode,
