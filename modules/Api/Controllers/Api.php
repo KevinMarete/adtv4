@@ -52,7 +52,7 @@ class Api extends \CodeIgniter\Controller {
     public function index() {
 
         // "PATIENT_SOURCE":string"HBCT/VCT/OPD/MCH/TB-CLINIC/IPD-CHILD/IPD-ADULT/CCC/SELF-TEST"
-// @marital status non existent in ADT... but needed in IQCare
+        // @marital status non existent in ADT... but needed in IQCare
         // Patient source -- HB
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // API workflow 
@@ -86,13 +86,13 @@ class Api extends \CodeIgniter\Controller {
                     break;
             }
 
-// 			API Process
-// 1. Get message
-// 2. decode message to PHP Array
-// 3. Validate Message origin & type of message
-// 4. Parse parameters
-// 5. Action | [save,update]
-// 6. Response
+			// API Process
+            // 1. Get message
+            // 2. decode message to PHP Array
+            // 3. Validate Message origin & type of message
+            // 4. Parse parameters
+            // 5. Action | [save,update]
+            // 6. Response
 
             die;
         }
@@ -407,7 +407,7 @@ class Api extends \CodeIgniter\Controller {
         $pe = array();
 
 
-// PHARMACY_ENCODED_ORDER
+        // PHARMACY_ENCODED_ORDER
 
         $pe_order = array();
         foreach ($order->PHARMACY_ENCODED_ORDER as $eo) {
@@ -430,9 +430,9 @@ class Api extends \CodeIgniter\Controller {
         $res = $this->api_model->saveDrugPrescription($pe, $pe_order);
         $this->writeLog('res ', json_encode($res));
 
-# @todo check if order exists
-# if doesn't exist, create new order .
-# else update 
+        # @todo check if order exists
+        # if doesn't exist, create new order .
+        # else update 
     }
 
     public function getAppointment($appointment_id) {
@@ -802,11 +802,11 @@ class Api extends \CodeIgniter\Controller {
     }
 
     public function settings() {
-//        if ($_POST) {
-//            if ($this->api_model->saveAPIConfig($_POST)) {
-//                $data['message'] = 'Settings Saved successfully';
-//            }
-//        }
+        // if ($_POST) {
+        //     if ($this->api_model->saveAPIConfig($_POST)) {
+        //         $data['message'] = 'Settings Saved successfully';
+        //     }
+        // }
 
         $data['api_config'] = $this->init_api_values();
         $data['active_menu'] = 8;

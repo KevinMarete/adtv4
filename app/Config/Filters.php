@@ -37,7 +37,9 @@ class Filters extends BaseConfig {
                             'initialize',
                             'migrate/*',
                             'github',
-                            'help'
+                            'help',
+                            'api',
+                            'api/*'
                         ]
                     ]
         //'honeypot'
