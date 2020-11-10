@@ -110,14 +110,14 @@ class Api extends BaseController {
 
     function processPatientRegistration($patient) {
         // internal & external patient ID matching
-        // 		$EXTERNAL_PATIENT_ID = $patient->PATIENT_IDENTIFICATION->EXTERNAL_PATIENT_ID->ID;
-        // 		$ASSIGNING_AUTHORITY = $patient->PATIENT_IDENTIFICATION->EXTERNAL_PATIENT_ID->ASSIGNING_AUTHORITY;
-        // 		$internal_patient = $this->api_model->getPatient(null,$EXTERNAL_PATIENT_ID);
-        // // getPatientInternalID($external_id,$ASSIGNING_AUTHORITY)
-        // 		if ($internal_patient){
-        // 			echo "Patient already exists";
-        // 			die;
-        // 		}
+        $INTERNAL_PATIENT_ID = $patient->PATIENT_IDENTIFICATION->INTERNAL_PATIENT_ID[0]->ID;
+        $ASSIGNING_AUTHORITY = $patient->PATIENT_IDENTIFICATION->EXTERNAL_PATIENT_ID->ASSIGNING_AUTHORITY;
+        $internal_patient = $this->api_model->getPatient($INTERNAL_PATIENT_ID);
+        // getPatientInternalID($external_id,$ASSIGNING_AUTHORITY)
+        if ($internal_patient) {
+            echo "Patient already exists";
+            die;
+        }
         // internal identification is an array of objects
         $identification = array();
         foreach ($patient->PATIENT_IDENTIFICATION->INTERNAL_PATIENT_ID as $id) {
@@ -153,7 +153,7 @@ class Api extends BaseController {
         // $patient->PATIENT_VISIT->PATIENT_TYPE;
         // $patient->PATIENT_VISIT->PATIENT_SOURCE;
 
-        $patient = array(
+        $new_patient = [
             'facility_code' => $SENDING_FACILITY,
             // 'dob'=>$DATE_OF_BIRTH,
             'dob' => substr($DATE_OF_BIRTH, 0, 4) . '-' . substr($DATE_OF_BIRTH, 4, 2) . '-' . substr($DATE_OF_BIRTH, -2),
@@ -180,9 +180,9 @@ class Api extends BaseController {
             'date_enrolled' => substr($ENROLLMENT_DATE, 0, 4) . '-' . substr($ENROLLMENT_DATE, 4, 2) . '-' . substr($ENROLLMENT_DATE, -2),
             'current_status' => $this->api_model->getActivePatientStatus()->id,
             'weight' => ' '
-        );
-        $this->writeLog('msg', json_encode($patient));
-        $internal_patient_id = $this->api_model->savePatient($patient, $EXTERNAL_PATIENT_ID);
+        ];
+        $this->writeLog('msg', json_encode($new_patient));
+        $internal_patient_id = $this->api_model->savePatient($new_patient, $INTERNAL_PATIENT_ID);
         $this->writeLog('internal_patient_id ', json_encode($internal_patient_id));
         // $patient_matching = $EXTERNAL_PATIENT_ID = $patient->PATIENT_IDENTIFICATION->EXTERNAL_PATIENT_ID->ID;
 
@@ -733,12 +733,13 @@ class Api extends BaseController {
             'payload' => $request,
             'attempts' => 0
         ];
-
+        
         $host = 'https://iltest.kenyahmis.org';
         $port = 80;
         $waitTimeoutInSeconds = 1;
         if ($fp = fsockopen($host, $port, $errCode, $errStr, $waitTimeoutInSeconds)) {
             $client = new Client();
+
             $response = $client->post($this->il_ip, [
                 'debug' => FALSE,
                 'body' => $request,
@@ -763,6 +764,7 @@ class Api extends BaseController {
         } else {
             $this->db->table('il_jobs')->insert($dataoff);
         }
+
         fclose($fp);
     }
 
