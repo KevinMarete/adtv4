@@ -261,8 +261,8 @@
 
                             <div id="prescription_div">
                                 <div style="background: #f7e9e9;">
-                                    Ordering Physician: <?= $prescription[0]['order_physician']; ?>
-                                    <span class="pull-right"> <?= $prescription[0]['timecreated']; ?></span>
+                                    Ordering Physician: <?= $prescription[0]->order_physician; ?>
+                                    <span class="pull-right"> <?= $prescription[0]->timecreated; ?></span>
 
                                 </div>
 
@@ -280,14 +280,14 @@
                                     <tbody>
                                         <?php foreach ($prescription as $ps) { ?>
                                             <tr>
-                                                <td> <?= $ps['drug_name'] . ' '; ?></td>
-                                                <td> <?= $ps['strength'] . ' '; ?></td>
-                                                <td> <?= $ps['dosage'] . ' '; ?></td>
-                                                <td> <?= $ps['frequency'] . ' '; ?></td>
-                                                <td> <?= $ps['duration'] . ' '; ?></td>
-                                                <td> <?= $ps['quantity_prescribed'] . ' '; ?></td>
-                                                <td> <?= $ps['prescription_notes'] . ' '; ?></td>
-                                                <td> <?= $ps['dispense_status'] . ' '; ?></td>
+                                                <td> <?= $ps->drug_name . ' '; ?></td>
+                                                <td> <?= $ps->strength . ' '; ?></td>
+                                                <td> <?= $ps->dosage . ' '; ?></td>
+                                                <td> <?= $ps->frequency . ' '; ?></td>
+                                                <td> <?= $ps->duration . ' '; ?></td>
+                                                <td> <?= $ps->quantity_prescribed . ' '; ?></td>
+                                                <td> <?= $ps->prescription_notes . ' '; ?></td>
+                                                <td> <?= $ps->dispense_status . ' '; ?></td>
                                             </tr>    
                                         <?php } ?>
                                     </tbody>
@@ -428,7 +428,7 @@
             }
         });
 <?php if (count($prescription) > 0 && $api) { ?>
-            $('#current_regimen').val($("#current_regimen option:contains(<?= $prescription[0]['drug_name']; ?>)").val());
+            $('#current_regimen').val($("#current_regimen option:contains(<?= $prescription[0]->drug_name; ?>)").val());
 <?php } ?>
         $('#ccc_store_id').val(<?= $session->get('ccc_store_id'); ?>);
         $('#ccc_store_id').attr('readonly', 'true');

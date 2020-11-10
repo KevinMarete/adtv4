@@ -1,0 +1,1 @@
+ALTER TABLE `drug_prescription_details` ADD `prescription_number` TEXT NULL AFTER `drug_prescriptionid`//

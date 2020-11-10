@@ -803,7 +803,7 @@ class Notification_management extends \App\Controllers\BaseController {
             $edit_link = "<a href='" . base_url() . "/public/patient_management/edit/" . $patient['id'] . "'>Edit</a>";
             // $disable_link="<a href='".base_url()."patient_management/disable/".$patient['id']."' class='red'>Disable</a>";
             $patient['links'] = $dispense_link;
-            unset($patient['id']);
+            // unset($patient['id']);
             unset($patient['drug_prescriptionid']);
             $table->addRow($patient);
         }
