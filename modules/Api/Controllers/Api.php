@@ -727,20 +727,50 @@ class Api extends BaseController {
 
     function tcpILRequest($request_type, $request) {
         $this->init_api_values();
-
-
         $client = new Client();
-        $response = $client->post($this->il_ip, [
-            'debug' => FALSE,
-            'body' => $request,
-            'headers' => [
-                'Content-Type' => 'application/json',
-            ]
-        ]);
+        $dataoff = [
+            'datetime' => date('Y-m-d H:i:s'),
+            'payload' => $request,
+            'attempts' => 0
+        ];
 
-        $body = $response->getBody();
-        print_r(json_decode((string) $body));
-        die;
+        $result = array();
+
+        /* Execute Shell Command To Ping Target */
+        $cmd_result = shell_exec('ping -c 1 -w 1 ' . 'https://iltest.kenyahmis.org');
+
+        /* Get Results From Ping */
+        $result = explode(',', $cmd_result);
+
+        /* Return Server Status */
+        if (eregi('0 received', $result[1])) {
+            $this->db->table('il_jobs')->insert($dataoff);
+        } elseif (eregi('1 received', $result[1])) {
+
+            $response = $client->post($this->il_ip, [
+                'debug' => FALSE,
+                'body' => $request,
+                'headers' => [
+                    'Content-Type' => 'application/json',
+                ]
+            ]);
+
+            $body = $response->getBody();
+
+            if ($body->msg == 'successfully received by the Interoperability Layer (IL)') {
+                $dataon = [
+                    'datetime' => date('Y-m-d H:i:s'),
+                    'payload' => $request,
+                    'il_response' => $body->msg
+                ];
+                $this->db->table('il_processed_jobs')->insert($dataon);
+            } else {
+
+                $this->db->table('il_jobs')->insert($dataoff);
+            }
+        } else {
+            $this->db->table('il_jobs')->insert($dataoff);
+        }
     }
 
     function writeLog($logtype, $msg) {
