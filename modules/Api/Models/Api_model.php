@@ -67,19 +67,19 @@ class Api_model extends BaseModel {
         //$CI = &get_instance();
         //$CI->load->database();
         $cond = '';
-        $query_str = "SELECT p.*,ps.name as patient_status,pso.name as patient_source ,g.name as patient_gender FROM patient p
-		left join patient_status ps on p.current_status = ps.id 
-		left join patient_source pso on p.source = pso.id
-		left join gender g on g.id = p.gender
-		WHERE p.patient_number_ccc   = '$internal_id' ";
+        $query_str = "SELECT p.*,ps.name as patient_status,pso.name as patient_source ,g.name as patient_gender FROM patient p ".
+		"left join patient_status ps on p.current_status = ps.id ".
+		"left join patient_source pso on p.source = pso.id ".
+		"left join gender g on g.id = p.gender ".
+		"WHERE p.patient_number_ccc = '".$internal_id."' ";
 
         // do left join in the case of patient created on adt and not already on IL
 
 
-        $query = $this->db->query($query_str);
+        $query = DB::select($query_str);
 
-        if (count($query->getResult()) > 0) {
-            $returnable = $query->getResult()[0];
+        if (count($query) > 0) {
+            $returnable = $query[0];
         } else {
             $returnable = false;
         }
@@ -204,25 +204,17 @@ class Api_model extends BaseModel {
         $patient = $appointment['patient'];
         $appointment = $appointment['appointment'];
 
-        //$CI = &get_instance();
-        //$CI->load->database();
         $query = $this->db->query("update patient set $appointment_col = '$appointment' where patient_number_ccc = '$patient'");
-        $b = $this->db->table($appointment_tbl);
-        $b->insert($appointment);
-        $insert_id = $b->getInsertID();
+        $insert_id = DB::table($appointment_tbl)->insertGetId($appointment);
         return $insert_id;
     }
 
     function saveDrugPrescription($prescription, $prescription_details) {
-        $pe_details = array();
-        //$CI = &get_instance();
-        //$CI->load->database();
-        $b = $this->db->table('drug_prescription');
-        $b->insert($prescription);
-        $insert_id = $db->getInsertID();
+        $pe_details = [];
+        $insert_id = DB::table('drug_prescription')->insertGetId($prescription);
         foreach ($prescription_details as $details) {
             # code...
-            $pe_details = array(
+            $pe_details = [
                 'drug_prescriptionid' => $insert_id,
                 'drug_name' => $details->DRUG_NAME,
                 'coding_system' => $details->CODING_SYSTEM,
@@ -232,16 +224,13 @@ class Api_model extends BaseModel {
                 'duration' => $details->DURATION,
                 'quantity_prescribed' => $details->QUANTITY_PRESCRIBED,
                 'prescription_notes' => $details->PRESCRIPTION_NOTES
-            );
-            $b->insert($pe_details);
+            ];
+            DB::table('drug_prescription')->insert($pe_details);
         }
         return $pe_details;
     }
 
     function getRegimen($regimenCode) {
-        // $CI = &get_instance();
-        //$CI->load->database();
-
         $query = $this->db->query("SELECT * FROM regimen WHERE lower(regimen_code) = lower('$regimenCode')");
 
         if (count($query->getResult()) > 0) {
@@ -253,9 +242,6 @@ class Api_model extends BaseModel {
     }
 
     function getActivePatientStatus() {
-        //$CI = &get_instance();
-        //$CI->load->database();
-
         $query = $this->db->query("SELECT * FROM patient_status WHERE lower(Name) = 'active'");
 
         if (count($query->getResult()) > 0) {
