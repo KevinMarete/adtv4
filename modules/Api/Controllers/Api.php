@@ -273,7 +273,7 @@ class Api extends BaseController {
         $internal_patient = $this->api_model->getPatient($ccc_no);
 
         if (!$internal_patient) {
-            writeLog('ORU Error ', "patient does not exist. Can't process observation");
+            $this->writeLog('ORU Error ', "patient does not exist. Can't process observation");
             die;
         }
 
@@ -631,7 +631,7 @@ class Api extends BaseController {
 
         //echo "<pre>";
         //echo(json_encode($observations, JSON_PRETTY_PRINT));
-        $this->writeLog('PATIENT ' . @$msg_type . ' ' . $message_type, json_encode($observations));
+        $this->writeLog('PATIENT ' . $message_type, json_encode($observations));
         $this->tcpILRequest(null, json_encode($observations));
     }
 
@@ -736,6 +736,7 @@ class Api extends BaseController {
 
         $result = array();
 
+<<<<<<< HEAD
         /* Execute Shell Command To Ping Target */
         $cmd_result = shell_exec('ping -c 1 -w 1 ' . 'https://iltest.kenyahmis.org');
 
@@ -771,6 +772,20 @@ class Api extends BaseController {
         } else {
             $this->db->table('il_jobs')->insert($dataoff);
         }
+=======
+        $client = new Client();
+        $response = $client->post($this->il_ip, [
+            'debug' => FALSE,
+            'body' => $request,
+            'headers' => [
+                'Content-Type' => 'application/json',
+            ]
+        ]);
+
+        $body = $response->getBody();
+        // print_r(json_decode((string) $body));
+        // die;
+>>>>>>> 9b400ce8817f45dcfdd18b10e24ad1020425111a
     }
 
     function writeLog($logtype, $msg) {
