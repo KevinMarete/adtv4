@@ -1,4 +1,4 @@
-<?php
+<?php 
 /* Default route */
 $routes->get('api', '\Modules\Api\Controllers\Api::index');
 $routes->get('api/settings', '\Modules\Api\Controllers\Api::settings');
