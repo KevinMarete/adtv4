@@ -468,9 +468,7 @@ class Api extends \CodeIgniter\Controller {
         'APPOINTMENT_HONORED' => "N"
         )];
 
-        echo "<pre>";
-        echo(json_encode($appoint, JSON_PRETTY_PRINT));
-        echo "</pre>";
+        
         $this->writeLog('APPOINTMENT SCHEDULE SIU^S12 ', json_encode($appoint));
         $this->tcpILRequest(null, json_encode($appoint));
     }
@@ -521,7 +519,7 @@ class Api extends \CodeIgniter\Controller {
         $this->writeLog('PATIENT ' . $msg_type . ' ' . $message_type, json_encode($patient));
 
         $this->tcpILRequest(null, json_encode($patient));
-        // $this->getObservation($pat->patient_number_ccc);
+        $this->getObservation($pat->patient_number_ccc);
     }
 
     public function getObservation($patient_id) {
@@ -630,9 +628,9 @@ class Api extends \CodeIgniter\Controller {
             )
         );
 
-        echo "<pre>";
-        echo(json_encode($observations, JSON_PRETTY_PRINT));
-        $this->writeLog('PATIENT ' . $msg_type . ' ' . $message_type, json_encode($observations));
+        //echo "<pre>";
+        //echo(json_encode($observations, JSON_PRETTY_PRINT));
+        $this->writeLog('PATIENT ' . @$msg_type . ' ' . $message_type, json_encode($observations));
         $this->tcpILRequest(null, json_encode($observations));
     }
 
