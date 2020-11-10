@@ -735,10 +735,16 @@ class Api extends BaseController {
         ];
         
         $host = 'https://iltest.kenyahmis.org';
-        $port = 80;
-        $waitTimeoutInSeconds = 1;
-        if ($fp = fsockopen($host, $port, $errCode, $errStr, $waitTimeoutInSeconds)) {
-            $client = new Client();
+        
+        $test_client = new Client(['verify'=>false]);
+        try {
+            $response = $test_client->get($host);
+            $result = $response->getStatusCode();
+        } catch (\Exception $e) {
+            $result = 0;
+        }
+        
+        if ($result == 200) {
 
             $response = $client->post($this->il_ip, [
                 'debug' => FALSE,
@@ -748,13 +754,12 @@ class Api extends BaseController {
                 ]
             ]);
 
-            $body = $response->getBody();
-
-            if ($body->msg == 'successfully received by the Interoperability Layer (IL)') {
+            $m_body = json_decode($response->getBody());
+            if ($m_body->msg == 'successfully received by the Interoperability Layer (IL)') {
                 $dataon = [
                     'datetime' => date('Y-m-d H:i:s'),
                     'payload' => $request,
-                    'il_response' => $body->msg
+                    'il_response' => $m_body->msg
                 ];
                 $this->db->table('il_processed_jobs')->insert($dataon);
             } else {
@@ -764,8 +769,6 @@ class Api extends BaseController {
         } else {
             $this->db->table('il_jobs')->insert($dataoff);
         }
-
-        fclose($fp);
     }
 
     function writeLog($logtype, $msg) {

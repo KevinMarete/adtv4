@@ -821,13 +821,13 @@ foreach($results as $result){
 				$("#service_started").val("");
 				setCCC('PREP');
 			}
-			if(service_line_text == "art"){
+			if(service_line == "art"){
 				setCCC('ART');
 			}
-			if(service_line_text == "hep"){
+			if(service_line == "hep"){
 				setCCC('HEP');
 			}
-			if(service_line_text== "hei"){
+			if(service_line== "hei"){
 				setCCC('HEI');
 			}
 	    	$.ajax({

@@ -377,6 +377,7 @@ $routes->get('patient/disable/(:any)', '\Modules\ADT\Controllers\Patient_managem
 $routes->get('patient/enable/(:any)', '\Modules\ADT\Controllers\Patient_management::enable/$1');
 $routes->get('patient/edit/(:any)', '\Modules\ADT\Controllers\Patient_management::edit');
 $routes->post('patient/update/(:any)', '\Modules\ADT\Controllers\Patient_management::update');
+$routes->post('patient/update_visit', '\Modules\ADT\Controllers\Patient_management::update_visit');
 $routes->get('get-patients', '\Modules\ADT\Controllers\Patient_management::get_patients');
 $routes->get('get-patients/(:any)', '\Modules\ADT\Controllers\Patient_management::get_patients/$1');
 $routes->get('patient/load_view/(:any)/(:any)', '\Modules\ADT\Controllers\Patient_management::load_view');
