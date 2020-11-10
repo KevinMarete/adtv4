@@ -739,8 +739,8 @@ class Api extends BaseController {
         ]);
 
         $body = $response->getBody();
-        print_r(json_decode((string) $body));
-        die;
+        // print_r(json_decode((string) $body));
+        // die;
     }
 
     function writeLog($logtype, $msg) {
