@@ -38,6 +38,7 @@ class Filters extends BaseConfig {
                             'migrate/*',
                             'github',
                             'help',
+                            'api',
                             'api/*'
                         ]
                     ]
