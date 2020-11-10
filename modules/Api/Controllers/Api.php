@@ -273,7 +273,7 @@ class Api extends BaseController {
         $internal_patient = $this->api_model->getPatient($ccc_no);
 
         if (!$internal_patient) {
-            writeLog('ORU Error ', "patient does not exist. Can't process observation");
+            $this->writeLog('ORU Error ', "patient does not exist. Can't process observation");
             die;
         }
 
@@ -631,7 +631,7 @@ class Api extends BaseController {
 
         //echo "<pre>";
         //echo(json_encode($observations, JSON_PRETTY_PRINT));
-        $this->writeLog('PATIENT ' . @$msg_type . ' ' . $message_type, json_encode($observations));
+        $this->writeLog('PATIENT ' . $message_type, json_encode($observations));
         $this->tcpILRequest(null, json_encode($observations));
     }
 

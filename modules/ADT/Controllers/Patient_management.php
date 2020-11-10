@@ -947,7 +947,6 @@ class Patient_management extends BaseController {
             // post to IL via API
             $api = new Api();
             $api->getPatient($data['patient_number_ccc'], 'EDIT');
-            // file_get_contents(base_url() . '/public/tools/api/getPatient/' . $record_id . '/EDIT');
             // /> POST TO IL VIA API
         }
 
