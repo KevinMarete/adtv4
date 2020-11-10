@@ -29,8 +29,6 @@ class Api_model extends BaseModel {
     }
 
     function savePatientMatching($patient) {
-        // $CI = &get_instance();
-        //$CI->load->database();
         DB::table('api_patient_matching')->insert($patient);
         return true;
     }
