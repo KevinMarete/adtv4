@@ -734,20 +734,11 @@ class Api extends BaseController {
             'attempts' => 0
         ];
 
-        $result = array();
-
-<<<<<<< HEAD
-        /* Execute Shell Command To Ping Target */
-        $cmd_result = shell_exec('ping -c 1 -w 1 ' . 'https://iltest.kenyahmis.org');
-
-        /* Get Results From Ping */
-        $result = explode(',', $cmd_result);
-
-        /* Return Server Status */
-        if (eregi('0 received', $result[1])) {
-            $this->db->table('il_jobs')->insert($dataoff);
-        } elseif (eregi('1 received', $result[1])) {
-
+        $host = 'https://iltest.kenyahmis.org';
+        $port = 80;
+        $waitTimeoutInSeconds = 1;
+        if ($fp = fsockopen($host, $port, $errCode, $errStr, $waitTimeoutInSeconds)) {
+            $client = new Client();
             $response = $client->post($this->il_ip, [
                 'debug' => FALSE,
                 'body' => $request,
@@ -772,20 +763,7 @@ class Api extends BaseController {
         } else {
             $this->db->table('il_jobs')->insert($dataoff);
         }
-=======
-        $client = new Client();
-        $response = $client->post($this->il_ip, [
-            'debug' => FALSE,
-            'body' => $request,
-            'headers' => [
-                'Content-Type' => 'application/json',
-            ]
-        ]);
-
-        $body = $response->getBody();
-        // print_r(json_decode((string) $body));
-        // die;
->>>>>>> 9b400ce8817f45dcfdd18b10e24ad1020425111a
+        fclose($fp);
     }
 
     function writeLog($logtype, $msg) {
