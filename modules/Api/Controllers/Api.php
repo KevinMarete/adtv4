@@ -86,7 +86,7 @@ class Api extends \CodeIgniter\Controller {
                     break;
             }
 
-			// API Process
+            // API Process
             // 1. Get message
             // 2. decode message to PHP Array
             // 3. Validate Message origin & type of message
@@ -468,7 +468,7 @@ class Api extends \CodeIgniter\Controller {
         'APPOINTMENT_HONORED' => "N"
         )];
 
-        
+
         $this->writeLog('APPOINTMENT SCHEDULE SIU^S12 ', json_encode($appoint));
         $this->tcpILRequest(null, json_encode($appoint));
     }
