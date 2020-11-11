@@ -8,6 +8,7 @@ use \Modules\Tables\Controllers\Tables;
 use \Modules\Template\Controllers\Template;
 use App\Libraries\Mysqldump;
 use App\Libraries\Zip;
+use CodeIgniter\HTTP\Response;
 use \Modules\Api\Models\Api_model;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Client;
@@ -116,15 +117,15 @@ class Api extends BaseController {
         $internal_patient = $this->api_model->getPatient($INTERNAL_PATIENT_ID);
         // getPatientInternalID($external_id,$ASSIGNING_AUTHORITY)
         if ($internal_patient) {
-            return json_encode(['error'=>"Patient already exists"]);
+            return $this->response->setStatusCode(409, 'Patient already exists');
             die;
         }
-        // Checking duplicate external ID
-        $exists = DB::table('api_patient_matching')->where('external_id', $patient->PATIENT_IDENTIFICATION->EXTERNAL_PATIENT_ID->ID)->get();
-        if(count($exists) > 0){
-            return 'Duplicate external ID';
-            die;
-        }
+        // // Checking duplicate external ID
+        // $exists = DB::table('api_patient_matching')->where('external_id', $patient->PATIENT_IDENTIFICATION->EXTERNAL_PATIENT_ID->ID)->get();
+        // if(count($exists) > 0){
+        //     return 'Duplicate external ID';
+        //     die;
+        // }
         // internal identification is an array of objects
         $identification = array();
         foreach ($patient->PATIENT_IDENTIFICATION->INTERNAL_PATIENT_ID as $id) {
@@ -191,7 +192,6 @@ class Api extends BaseController {
         $this->writeLog('msg', json_encode($new_patient));
         $internal_patient_id = $this->api_model->savePatient($new_patient, $INTERNAL_PATIENT_ID);
         $this->writeLog('internal_patient_id ', json_encode($internal_patient_id));
-        // $patient_matching = $EXTERNAL_PATIENT_ID = $patient->PATIENT_IDENTIFICATION->EXTERNAL_PATIENT_ID->ID;
 
         $patient_matching = array(
             'internal_id' => $internal_patient_id,
