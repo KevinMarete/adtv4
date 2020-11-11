@@ -112,7 +112,10 @@ class Api extends BaseController {
 
     function processPatientRegistration($patient) {
         // internal & external patient ID matching
-        $INTERNAL_PATIENT_ID = $patient->PATIENT_IDENTIFICATION->INTERNAL_PATIENT_ID[0]->ID;
+        foreach ($patient->PATIENT_IDENTIFICATION->INTERNAL_PATIENT_ID as $id) {
+            $identification[$id->IDENTIFIER_TYPE] = $id->ID;
+        }
+        $INTERNAL_PATIENT_ID = ($identification['CCC_NUMBER']);
         $ASSIGNING_AUTHORITY = $patient->PATIENT_IDENTIFICATION->EXTERNAL_PATIENT_ID->ASSIGNING_AUTHORITY;
         $internal_patient = $this->api_model->getPatient($INTERNAL_PATIENT_ID);
         // getPatientInternalID($external_id,$ASSIGNING_AUTHORITY)
@@ -127,7 +130,7 @@ class Api extends BaseController {
         //     die;
         // }
         // internal identification is an array of objects
-        $identification = array();
+        $identification = [];
         foreach ($patient->PATIENT_IDENTIFICATION->INTERNAL_PATIENT_ID as $id) {
             $identification[$id->IDENTIFIER_TYPE] = $id->ID;
         }
