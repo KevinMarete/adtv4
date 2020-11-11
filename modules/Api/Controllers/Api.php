@@ -132,22 +132,22 @@ class Api extends BaseController {
         $LAST_NAME = $patient->PATIENT_IDENTIFICATION->PATIENT_NAME->LAST_NAME;
 
 
-        $MOTHER_NAME = $patient->PATIENT_IDENTIFICATION->MOTHER_NAME;
-        $DATE_OF_BIRTH = $patient->PATIENT_IDENTIFICATION->DATE_OF_BIRTH;
-        $SEX = ( $patient->PATIENT_IDENTIFICATION->SEX == 'M') ? 1 : 2;
-        $VILLAGE = $patient->PATIENT_IDENTIFICATION->PATIENT_ADDRESS->PHYSICAL_ADDRESS->VILLAGE;
+        $MOTHER_NAME = empty($patient->PATIENT_IDENTIFICATION->MOTHER_NAME) ? '' : $patient->PATIENT_IDENTIFICATION->MOTHER_NAME;
+        $DATE_OF_BIRTH = empty($patient->PATIENT_IDENTIFICATION->DATE_OF_BIRTH) ? '' : $patient->PATIENT_IDENTIFICATION->DATE_OF_BIRTH;
+        $SEX = empty($patient->PATIENT_IDENTIFICATION->SEX) ? '' : (($patient->PATIENT_IDENTIFICATION->SEX) == 'M' ? 1 : 2);
+        $VILLAGE = empty($patient->PATIENT_IDENTIFICATION->PATIENT_ADDRESS->PHYSICAL_ADDRESS->VILLAGE) ? '' : $patient->PATIENT_IDENTIFICATION->PATIENT_ADDRESS->PHYSICAL_ADDRESS->VILLAGE;
         // var_dump($patient);die;
-        $WARD = $patient->PATIENT_IDENTIFICATION->PATIENT_ADDRESS->PHYSICAL_ADDRESS->WARD;
-        $SUB_COUNTY = $patient->PATIENT_IDENTIFICATION->PATIENT_ADDRESS->PHYSICAL_ADDRESS->SUB_COUNTY;
-        $COUNTY = $patient->PATIENT_IDENTIFICATION->PATIENT_ADDRESS->PHYSICAL_ADDRESS->COUNTY;
-        $POSTAL_ADDRESS = $patient->PATIENT_IDENTIFICATION->PATIENT_ADDRESS->POSTAL_ADDRESS;
-        $PHONE_NUMBER = $patient->PATIENT_IDENTIFICATION->PHONE_NUMBER;
-        $MARITAL_STATUS = $patient->PATIENT_IDENTIFICATION->MARITAL_STATUS;
-        $DEATH_DATE = $patient->PATIENT_IDENTIFICATION->DEATH_DATE;
-        $DEATH_INDICATOR = $patient->PATIENT_IDENTIFICATION->DEATH_INDICATOR;
+        $WARD = empty($patient->PATIENT_IDENTIFICATION->PATIENT_ADDRESS->PHYSICAL_ADDRESS->WARD) ? '' : $patient->PATIENT_IDENTIFICATION->PATIENT_ADDRESS->PHYSICAL_ADDRESS->WARD;
+        $SUB_COUNTY = empty($patient->PATIENT_IDENTIFICATION->PATIENT_ADDRESS->PHYSICAL_ADDRESS->SUB_COUNTY) ? '' : empty($patient->PATIENT_IDENTIFICATION->PATIENT_ADDRESS->PHYSICAL_ADDRESS->SUB_COUNTY);
+        $COUNTY = empty($patient->PATIENT_IDENTIFICATION->PATIENT_ADDRESS->PHYSICAL_ADDRESS->COUNTY) ? '' : $patient->PATIENT_IDENTIFICATION->PATIENT_ADDRESS->PHYSICAL_ADDRESS->COUNTY;
+        $POSTAL_ADDRESS = empty($patient->PATIENT_IDENTIFICATION->PATIENT_ADDRESS->POSTAL_ADDRESS) ? '' : $patient->PATIENT_IDENTIFICATION->PATIENT_ADDRESS->POSTAL_ADDRESS;
+        $PHONE_NUMBER = empty($patient->PATIENT_IDENTIFICATION->PHONE_NUMBER) ? '' : $patient->PATIENT_IDENTIFICATION->PHONE_NUMBER;
+        $MARITAL_STATUS = empty($patient->PATIENT_IDENTIFICATION->MARITAL_STATUS) ? '' : $patient->PATIENT_IDENTIFICATION->MARITAL_STATUS;
+        $DEATH_DATE = empty($patient->PATIENT_IDENTIFICATION->DEATH_DATE) ? '' : $patient->PATIENT_IDENTIFICATION->DEATH_DATE;
+        $DEATH_INDICATOR = empty($patient->PATIENT_IDENTIFICATION->DEATH_INDICATOR) ? '' : $patient->PATIENT_IDENTIFICATION->DEATH_INDICATOR;
 
         // $patient_matching = $EXTERNAL_PATIENT_ID = $patient->PATIENT_IDENTIFICATION->EXTERNAL_PATIENT_ID;
-        $ENROLLMENT_DATE = $patient->PATIENT_VISIT->HIV_CARE_ENROLLMENT_DATE;
+        $ENROLLMENT_DATE = empty($patient->PATIENT_VISIT->HIV_CARE_ENROLLMENT_DATE) ? '' : $patient->PATIENT_VISIT->HIV_CARE_ENROLLMENT_DATE;
 
         // $patient->PATIENT_VISIT->VISIT_DATE;
         // $patient->PATIENT_VISIT->PATIENT_TYPE;
@@ -377,8 +377,8 @@ class Api extends BaseController {
         // $internal_patient_ccc = $this->parseCCC($internal_patient_ccc,$SENDING_FACILITY);
 
         if (!$internal_patient_ccc) {
-            $this->writeLog('Patient not found ', $internal_patient_ccc);
-            die;
+            $this->writeLog('Patient not found ', $ccc_no);
+            $this->processPatientRegistration($order);
         }
 
 
@@ -419,7 +419,7 @@ class Api extends BaseController {
         $pe = array(
             'order_number' => $PLACER_ORDER_NUMBER,
             'order_status' => $ORDER_STATUS,
-            'patient' => $internal_patient_ccc->patient_number_ccc,
+            'patient' => $ccc_no,
             'order_physician' => $OP_FIRST_NAME . ' ' . $OP_MIDDLE_NAME . ' ' . $OP_LAST_NAME,
             'notes' => $NOTES
         );
@@ -733,7 +733,7 @@ class Api extends BaseController {
             'payload' => $request,
             'attempts' => 0
         ];
-        
+
         $host = 'https://iltest.kenyahmis.org';
         $port = 80;
         $waitTimeoutInSeconds = 1;
