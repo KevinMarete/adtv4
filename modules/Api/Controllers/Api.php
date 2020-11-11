@@ -8,9 +8,11 @@ use \Modules\Tables\Controllers\Tables;
 use \Modules\Template\Controllers\Template;
 use App\Libraries\Mysqldump;
 use App\Libraries\Zip;
+use CodeIgniter\HTTP\Response;
 use \Modules\Api\Models\Api_model;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Client;
+use Illuminate\Database\Capsule\Manager as DB;
 
 class Api extends BaseController {
 
@@ -110,16 +112,25 @@ class Api extends BaseController {
 
     function processPatientRegistration($patient) {
         // internal & external patient ID matching
-        $INTERNAL_PATIENT_ID = $patient->PATIENT_IDENTIFICATION->INTERNAL_PATIENT_ID[0]->ID;
+        foreach ($patient->PATIENT_IDENTIFICATION->INTERNAL_PATIENT_ID as $id) {
+            $identification[$id->IDENTIFIER_TYPE] = $id->ID;
+        }
+        $INTERNAL_PATIENT_ID = ($identification['CCC_NUMBER']);
         $ASSIGNING_AUTHORITY = $patient->PATIENT_IDENTIFICATION->EXTERNAL_PATIENT_ID->ASSIGNING_AUTHORITY;
         $internal_patient = $this->api_model->getPatient($INTERNAL_PATIENT_ID);
         // getPatientInternalID($external_id,$ASSIGNING_AUTHORITY)
         if ($internal_patient) {
-            echo "Patient already exists";
+            return $this->response->setStatusCode(409, 'Patient already exists');
             die;
         }
+        // // Checking duplicate external ID
+        // $exists = DB::table('api_patient_matching')->where('external_id', $patient->PATIENT_IDENTIFICATION->EXTERNAL_PATIENT_ID->ID)->get();
+        // if(count($exists) > 0){
+        //     return 'Duplicate external ID';
+        //     die;
+        // }
         // internal identification is an array of objects
-        $identification = array();
+        $identification = [];
         foreach ($patient->PATIENT_IDENTIFICATION->INTERNAL_PATIENT_ID as $id) {
             $identification[$id->IDENTIFIER_TYPE] = $id->ID;
         }
@@ -184,7 +195,6 @@ class Api extends BaseController {
         $this->writeLog('msg', json_encode($new_patient));
         $internal_patient_id = $this->api_model->savePatient($new_patient, $INTERNAL_PATIENT_ID);
         $this->writeLog('internal_patient_id ', json_encode($internal_patient_id));
-        // $patient_matching = $EXTERNAL_PATIENT_ID = $patient->PATIENT_IDENTIFICATION->EXTERNAL_PATIENT_ID->ID;
 
         $patient_matching = array(
             'internal_id' => $internal_patient_id,
@@ -735,10 +745,16 @@ class Api extends BaseController {
         ];
 
         $host = 'https://iltest.kenyahmis.org';
-        $port = 80;
-        $waitTimeoutInSeconds = 1;
-        if ($fp = fsockopen($host, $port, $errCode, $errStr, $waitTimeoutInSeconds)) {
-            $client = new Client();
+        
+        $test_client = new Client(['verify'=>false]);
+        try {
+            $response = $test_client->get($host);
+            $result = $response->getStatusCode();
+        } catch (\Exception $e) {
+            $result = 0;
+        }
+        
+        if ($result == 200) {
 
             $response = $client->post($this->il_ip, [
                 'debug' => FALSE,
@@ -748,13 +764,12 @@ class Api extends BaseController {
                 ]
             ]);
 
-            $body = $response->getBody();
-
-            if ($body->msg == 'successfully received by the Interoperability Layer (IL)') {
+            $m_body = json_decode($response->getBody());
+            if ($m_body->msg == 'successfully received by the Interoperability Layer (IL)') {
                 $dataon = [
                     'datetime' => date('Y-m-d H:i:s'),
                     'payload' => $request,
-                    'il_response' => $body->msg
+                    'il_response' => $m_body->msg
                 ];
                 $this->db->table('il_processed_jobs')->insert($dataon);
             } else {
@@ -764,8 +779,6 @@ class Api extends BaseController {
         } else {
             $this->db->table('il_jobs')->insert($dataoff);
         }
-
-        fclose($fp);
     }
 
     function writeLog($logtype, $msg) {
