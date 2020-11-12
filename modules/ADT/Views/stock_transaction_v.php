@@ -53,7 +53,7 @@
         padding-right:10px;	
     }
     .icondose {
-        background: #FFFFFF url(<?php echo base_url(); ?>/public/assets/images/dropdown.png) no-repeat 95% 4px;		
+        background: #FFFFFF url(<?php echo base_url(); ?>/assets/images/dropdown.png) no-repeat 95% 4px;		
     }
 </style>
 
@@ -211,7 +211,7 @@
 
             var request = $.ajax({
                 type: "post",
-                url: "<?php echo base_url() . '/public/checkConnection'; ?>",
+                url: "<?php echo base_url() . '/checkConnection'; ?>",
                 dataType: "json",
 
             });
@@ -300,7 +300,7 @@
             if (rowCount == 2) {
 
             }
-            var link = "<?php echo base_url() . '/public/inventory_management/getOrderDetails' ?>";
+            var link = "<?php echo base_url() . '/inventory_management/getOrderDetails' ?>";
             //Get list of orders
             var order_id = $("#picking_list_name").val();
             $.ajax({
@@ -620,7 +620,7 @@
         function print_transactions(counter, total, data) {
 
             if (counter < (total)) {
-                var _url = "<?php echo base_url() . '/public/inventory_management/print_issues'; ?>";
+                var _url = "<?php echo base_url() . '/inventory_management/print_issues'; ?>";
                 var request = $.ajax({
                     url: _url,
                     type: 'post',
@@ -844,7 +844,7 @@
                     submit_btn.removeAttr("disabled")
                     return false;
                 }
-                var _url = "<?php echo base_url() . '/public/inventory_management/save'; ?>";
+                var _url = "<?php echo base_url() . '/inventory_management/save'; ?>";
                 var get_qty_choice = quantity_choice;
                 var get_qty_out_choice = quantity_out_choice;
                 var get_source = dump["source"];
@@ -894,7 +894,7 @@
                             if (all_drugs_supplied == 0) {
 
                                 //Set session after completing transactions
-                                var _url = "<?php echo base_url() . '/public/inventory_management/set_transaction_session'; ?>";
+                                var _url = "<?php echo base_url() . '/inventory_management/set_transaction_session'; ?>";
                                 var request = $.ajax({
                                     url: _url,
                                     type: 'post',
@@ -902,11 +902,11 @@
                                     dataType: "json"
                                 });
                                 request.always(function (data) {
-                                    window.location.replace('<?php echo base_url() . '/public/inventory_management' ?>');
+                                    window.location.replace('<?php echo base_url() . '/inventory_management' ?>');
                                 });
                             } else {//Change picking list status
                                 var order_id = $("#picking_list_name").val();
-                                var _url = "<?php echo base_url() . '/public/inventory_management/set_order_status'; ?>";
+                                var _url = "<?php echo base_url() . '/inventory_management/set_order_status'; ?>";
                                 var request = $.ajax({
                                     url: _url,
                                     type: 'post',
@@ -915,7 +915,7 @@
                                 });
                                 request.always(function (data) {
                                     //Set session after completing transactions
-                                    var _url = "<?php echo base_url() . '/public/inventory_management/set_transaction_session'; ?>";
+                                    var _url = "<?php echo base_url() . '/inventory_management/set_transaction_session'; ?>";
                                     var request = $.ajax({
                                         url: _url,
                                         type: 'post',
@@ -923,7 +923,7 @@
                                         dataType: "json"
                                     });
                                     request.always(function (data) {
-                                        window.location.replace('<?php echo base_url() . '/public/inventory_management' ?>');
+                                        window.location.replace('<?php echo base_url() . '/inventory_management' ?>');
                                     });
                                 });
                             }
@@ -988,7 +988,7 @@
 
     function loadDrugs(stock_type) {
         $("#select_drug ").html("<option value='0'>Loading drugs ...</option> ");
-        var _url = "<?php echo base_url() . '/public/getStockDrugs'; ?>";
+        var _url = "<?php echo base_url() . '/getStockDrugs'; ?>";
         //Get drugs that have a balance
         var request = $.ajax({
             url: _url,
@@ -1017,7 +1017,7 @@
 
         $("#select_drug ").html("<option value='0'>Loading drugs ...</option> ");
 
-        var _url = "<?php echo base_url() . '/public/getAllDrugs'; ?>";
+        var _url = "<?php echo base_url() . '/getAllDrugs'; ?>";
         //Get drugs that have a balance
         var request = $.ajax({
             url: _url,
@@ -1042,7 +1042,7 @@
     }
 
     function loadBatches(selected_drug, stock_type_selected, row) {
-        var _url = "<?php echo base_url() . '/public/getBacthes'; ?>";
+        var _url = "<?php echo base_url() . '/getBacthes'; ?>";
 
         var request = $.ajax({
             url: _url,
@@ -1066,7 +1066,7 @@
     }
 
     function getBatchList(selected_drug, stock_type_selected, row) {//Get list of batches for adjustment (+)
-        var url_dose = "<?php echo base_url() . '/public/inventory_management/getBacthes'; ?>";
+        var url_dose = "<?php echo base_url() . '/inventory_management/getBacthes'; ?>";
         //Get doses
         var request_dose = $.ajax({
             url: url_dose,
@@ -1086,7 +1086,7 @@
 
     function loadDrugDetails(selected_drug, row) {
 
-        var _url = "<?php echo base_url() . '/public/getDrugDetails'; ?>";
+        var _url = "<?php echo base_url() . '/getDrugDetails'; ?>";
         var request = $.ajax({
             url: _url,
             type: 'post',
@@ -1106,7 +1106,7 @@
     }
 
     function loadBatchDetails(selected_drug, stock_type, batch_selected, row) {
-        var _url = "<?php echo base_url() . '/public/getBacthDetails'; ?>";
+        var _url = "<?php echo base_url() . '/getBacthDetails'; ?>";
         var request = $.ajax({
             url: _url,
             type: 'post',
@@ -1378,12 +1378,12 @@
         <span id="msg_server"></span>
     </div>
     <div class="full-content" id="stock_div" style="background:#9CF">
-        <form id="stock_form" name="stock_form" method="post" action="<?php echo base_url() . '/public/inventory_management/save' ?>" >
+        <form id="stock_form" name="stock_form" method="post" action="<?php echo base_url() . '/inventory_management/save' ?>" >
             <textarea name="list_drugs_transacted" id="list_drugs_transacted" style="display: none"></textarea>
             <textarea name="sql" id="sql" style="display: none"></textarea>
 
             <div id="sub_title" >
-                <a href="<?php echo base_url() . '/public/inventory_management ' ?>">Inventory</a> <i class=" icon-chevron-right"></i>  <?php echo $store ?> 
+                <a href="<?php echo base_url() . '/inventory_management ' ?>">Inventory</a> <i class=" icon-chevron-right"></i>  <?php echo $store ?> 
                 <hr size="1">
             </div>
             <div id="transaction_type_details">

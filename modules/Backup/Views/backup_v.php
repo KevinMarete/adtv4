@@ -14,7 +14,7 @@
                 </form>
                 <div id="progress-panel" style="display: none;">
                     <span id="progress-text"></span>
-                    <img src="<?= base_url() ?>/public/assets/img/loader.gif" >
+                    <img src="<?= base_url() ?>/assets/img/loader.gif" >
                 </div>
                 <hr />
             </div>
@@ -105,7 +105,7 @@
                 "file_name": file_name
             }
 
-            var link = "<?php echo base_url();?>/public/upload_backup"
+            var link = "<?php echo base_url();?>/upload_backup"
             $.ajax({
                 url: link,
                 type: 'POST',
@@ -144,7 +144,7 @@
                 "remote_path": remote_path
             }
 
-            var link = "<?php echo base_url() . '/public/download_remote_file' ?>"
+            var link = "<?php echo base_url() . '/download_remote_file' ?>"
             $.ajax({
                 url: link,
                 type: 'POST',
@@ -183,7 +183,7 @@
             var current_row = $(this).closest('tr').children('td');
             var file_name = current_row.eq(0).text();
             var file = {'file_name': file_name};
-            var link = "<?php echo base_url() . '/public/delete_backup' ?>"
+            var link = "<?php echo base_url() . '/delete_backup' ?>"
              
             $.ajax({
                 url: link,

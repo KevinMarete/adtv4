@@ -78,11 +78,11 @@ class Setup extends \CodeIgniter\Controller {
             //Redirect with message
             $message = '<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong>Success!</strong> Facility initialized to MFLCODE: ' . $mflcode . ' <br /> User Login user:user</div>';
             $session->setFlashdata('init_msg', $message);
-            return redirect()->to(base_url('public/setup'));
+            return redirect()->to(base_url('/setup'));
         } else {
             $message = '<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong>Facility already Initialized</strong></div>';
             $session->setFlashdata('init_msg', $message);
-            return redirect()->to(base_url('public/setup'));
+            return redirect()->to(base_url('/setup'));
         }
     }
 

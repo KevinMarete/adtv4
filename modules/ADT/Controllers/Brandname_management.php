@@ -60,7 +60,7 @@ class Brandname_management extends \App\Controllers\BaseController {
             //$this -> session -> set('message_counter', '2');
             $this->session->set('msg_error', 'An error occured while deleting the brand. Try again !');
         }
-        return redirect()->to(base_url() . '/public/settings_management');
+        return redirect()->to(base_url() . '/settings_management');
     }
 
     public function save() {
@@ -82,7 +82,7 @@ class Brandname_management extends \App\Controllers\BaseController {
             //$this -> session -> set('message_counter', '1');
             $this->session->set('msg_success', $this->request->getPost('brandname') . ' was Added');
             $this->session->setFlashdata('filter_datatable', $this->request->getPost('brandname')); //Filter datatable
-            return redirect()->to(base_url() . '/public/settings_management');
+            return redirect()->to(base_url() . '/settings_management');
         }
     }
 

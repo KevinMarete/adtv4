@@ -1,5 +1,5 @@
 <!--Custom CSS files-->
-<link href="<?php echo base_url().'/public/assets/modules/patients/details.css'; ?>" type="text/css" rel="stylesheet"/>
+<link href="<?php echo base_url().'/assets/modules/patients/details.css'; ?>" type="text/css" rel="stylesheet"/>
 <?php $session = session(); ?>
 
 <!--art card form-->
@@ -9,7 +9,7 @@
 	<div class="row-fluid">
 		<div class="span12">
 			<ul class="breadcrumb">
-				<li><a href="<?php echo base_url().'/public/patients'; ?>">Patients</a> <span class="divider">/</span></li>
+				<li><a href="<?php echo base_url().'/patients'; ?>">Patients</a> <span class="divider">/</span></li>
 				<li class="active">ART Card</li>
 			</ul>
 			<div class="alert alert-info">
@@ -485,8 +485,8 @@
 				<?php if ($api && $patient_module){?>
 				<button class="btn btn-inverse" id="view_prescription"><strong>View Prescription</strong></button>
 				<?php } ?>
-				<a class="btn btn-inverse" href="<?php echo base_url().'/public/patient/edit/'.$patient_id; ?>"><strong>Edit Patient Record</strong></a>
-				<a id="dispense_btn" class="btn btn-inverse" href="<?php echo base_url().'/public/dispensement_management/dispense/'.$patient_id; ?>"><strong>Dispense to Patient</strong></a>
+				<a class="btn btn-inverse" href="<?php echo base_url().'/patient/edit/'.$patient_id; ?>"><strong>Edit Patient Record</strong></a>
+				<a id="dispense_btn" class="btn btn-inverse" href="<?php echo base_url().'/dispensement_management/dispense/'.$patient_id; ?>"><strong>Dispense to Patient</strong></a>
 			</div>
 		</div>
 	</div>
@@ -691,5 +691,5 @@
 </div>
 
 <!-- custom scripts-->
-<script src="<?php echo base_url().'/public/assets/modules/forms/forms.js'; ?>"></script>
-<script src="<?php echo base_url().'/public/assets/modules/patients/details.js'; ?>"></script>
+<script src="<?php echo base_url().'/assets/modules/forms/forms.js'; ?>"></script>
+<script src="<?php echo base_url().'/assets/modules/patients/details.js'; ?>"></script>

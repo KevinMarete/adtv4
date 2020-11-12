@@ -70,7 +70,7 @@ class Settings extends \App\Controllers\BaseController {
         session()->set("link_id", "listing/" . $table);
         session()->set("linkSub", "settings/listing/" . $table);
         //Filter datatable
-        return redirect()->to(base_url() . '/public/settings_management');
+        return redirect()->to(base_url() . '/settings_management');
     }
 
     public function disable($table = "", $id) {
@@ -106,7 +106,7 @@ class Settings extends \App\Controllers\BaseController {
         session()->set("link_id", "listing/" . $table);
         session()->set("linkSub", "settings/listing/" . $table);
         //Filter datatable
-        return redirect()->to(base_url() . '/public/settings_management');
+        return redirect()->to(base_url() . '/settings_management');
     }
 
     public function listing($table) {
@@ -179,9 +179,9 @@ class Settings extends \App\Controllers\BaseController {
 
                     if ($active == 1) {
                         $links .= " | ";
-                        $links .= anchor(base_url() . '/public/settings/disable/' . $table . '/' . $source->id, 'Disable', array('class' => 'disable_user'));
+                        $links .= anchor(base_url() . '/settings/disable/' . $table . '/' . $source->id, 'Disable', array('class' => 'disable_user'));
                     } else {
-                        $links .= anchor(base_url() . '/public/settings/enable/' . $table . '/' . $source->id, 'Enable', array('class' => 'enable_user'));
+                        $links .= anchor(base_url() . '/settings/enable/' . $table . '/' . $source->id, 'Enable', array('class' => 'enable_user'));
                     }
                 }
                 if ($table == "transaction_type") {
@@ -232,7 +232,7 @@ class Settings extends \App\Controllers\BaseController {
         session()->set("link_id", "listing/" . $table);
         session()->set("linkSub", "settings/listing/" . $table);
         //Filter datatable
-        return redirect()->to(base_url() . '/public/settings_management');
+        return redirect()->to(base_url() . '/settings_management');
     }
 
     public function update($table = "") {
@@ -260,7 +260,7 @@ class Settings extends \App\Controllers\BaseController {
         session()->set("link_id", "listing/" . $table);
         session()->set("linkSub", "settings/listing/" . $table);
         //Filter datatable
-        return redirect()->to(base_url() . '/public/settings_management');
+        return redirect()->to(base_url() . '/settings_management');
     }
 
     public function base_params($data) {

@@ -42,9 +42,9 @@ class Admin_management extends \App\Controllers\BaseController {
         if ($results) {
             foreach ($results as $result) {
                 if ($result['active'] == '1') {
-                    $option = "<a href='#edit_counties' data-toggle='modal' role='button' class='edit' table='counties' county='" . $result['county'] . "' county_id='" . $result['id'] . "'>Edit</a> | <a href='" . base_url() . "/public/admin_management/disable/counties/" . $result['id'] . "' class='red'>Disable</a>";
+                    $option = "<a href='#edit_counties' data-toggle='modal' role='button' class='edit' table='counties' county='" . $result['county'] . "' county_id='" . $result['id'] . "'>Edit</a> | <a href='" . base_url() . "/admin_management/disable/counties/" . $result['id'] . "' class='red'>Disable</a>";
                 } else {
-                    $option = "<a href='#edit_counties' data-toggle='modal' role='button' class='edit' table='counties' county='" . $result['county'] . "' county_id='" . $result['id'] . "'>Edit</a> | <a href='" . base_url() . "/public/admin_management/enable/counties/" . $result['id'] . "' class='green'>Enable</a>";
+                    $option = "<a href='#edit_counties' data-toggle='modal' role='button' class='edit' table='counties' county='" . $result['county'] . "' county_id='" . $result['id'] . "'>Edit</a> | <a href='" . base_url() . "/admin_management/enable/counties/" . $result['id'] . "' class='green'>Enable</a>";
                 }
                 $dyn_table .= "<tr><td>" . $result['county'] . "</td><td>" . $option . "</td></tr>";
             }
@@ -63,7 +63,7 @@ class Admin_management extends \App\Controllers\BaseController {
         $dyn_table .= "<thead><tr><th>Facility Code</th><th>Facility Name</th><th>Options</th></tr></thead><tbody>";
         if ($results) {
             foreach ($results as $result) {
-                $option = "<a href='" . base_url() . "/public/admin_management/remove/" . $result['facilitycode'] . "'' class='red'>Remove</a>";
+                $option = "<a href='" . base_url() . "/admin_management/remove/" . $result['facilitycode'] . "'' class='red'>Remove</a>";
                 $dyn_table .= "<tr><td>" . $result['facilitycode'] . "</td><td>" . $result['name'] . "</td><td>" . $option . "</td></tr>";
             }
         }
@@ -82,9 +82,9 @@ class Admin_management extends \App\Controllers\BaseController {
         if ($results) {
             foreach ($results as $result) {
                 if ($result['flag'] == '1') {
-                    $option = "<a href='#edit_facilities' data-toggle='modal' role='button' class='edit' table='facilities' facility_name='" . $result['name'] . "' facility_code='" . $result['facilitycode'] . "' facility_id='" . $result['id'] . "'>Edit</a> | <a href='" . base_url() . "/public/admin_management/disable/facilities/" . $result['id'] . "' class='red'>Disable</a>";
+                    $option = "<a href='#edit_facilities' data-toggle='modal' role='button' class='edit' table='facilities' facility_name='" . $result['name'] . "' facility_code='" . $result['facilitycode'] . "' facility_id='" . $result['id'] . "'>Edit</a> | <a href='" . base_url() . "/admin_management/disable/facilities/" . $result['id'] . "' class='red'>Disable</a>";
                 } else {
-                    $option = "<a href='#edit_facilities' data-toggle='modal' role='button' class='edit' table='facilities' facility_name ='" . $result['name'] . "' facility_code='" . $result['facilitycode'] . "' facility_id='" . $result['id'] . "'>Edit</a> | <a href='" . base_url() . "/public/admin_management/enable/facilities/" . $result['id'] . "' class='green'>Enable</a>";
+                    $option = "<a href='#edit_facilities' data-toggle='modal' role='button' class='edit' table='facilities' facility_name ='" . $result['name'] . "' facility_code='" . $result['facilitycode'] . "' facility_id='" . $result['id'] . "'>Edit</a> | <a href='" . base_url() . "/admin_management/enable/facilities/" . $result['id'] . "' class='green'>Enable</a>";
                 }
                 $dyn_table .= "<tr><td>" . $result['facilitycode'] . "</td><td>" . $result['name'] . "</td><td>" . $option . "</td></tr>";
             }
@@ -104,9 +104,9 @@ class Admin_management extends \App\Controllers\BaseController {
         if ($results) {
             foreach ($results as $result) {
                 if ($result['active'] == "1") {
-                    $option = "<a href='#edit_district' data-toggle='modal' role='button' class='edit' table='district' district='" . $result['name'] . "' district_id='" . $result['id'] . "'>Edit</a> | <a href='" . base_url() . "/public/admin_management/disable/district/" . $result['id'] . "' class='red'>Disable</a>";
+                    $option = "<a href='#edit_district' data-toggle='modal' role='button' class='edit' table='district' district='" . $result['name'] . "' district_id='" . $result['id'] . "'>Edit</a> | <a href='" . base_url() . "/admin_management/disable/district/" . $result['id'] . "' class='red'>Disable</a>";
                 } else {
-                    $option = "<a href='#edit_district' data-toggle='modal' role='button' class='edit' table='district' district='" . $result['name'] . "' district_id='" . $result['id'] . "'>Edit</a> | <a href='" . base_url() . "/public/admin_management/enable/district/" . $result['id'] . "' class='green'>Enable</a>";
+                    $option = "<a href='#edit_district' data-toggle='modal' role='button' class='edit' table='district' district='" . $result['name'] . "' district_id='" . $result['id'] . "'>Edit</a> | <a href='" . base_url() . "/admin_management/enable/district/" . $result['id'] . "' class='green'>Enable</a>";
                 }
                 $dyn_table .= "<tr><td>" . $result['name'] . "</td><td>" . $option . "</td></tr>";
             }
@@ -126,9 +126,9 @@ class Admin_management extends \App\Controllers\BaseController {
         if ($results) {
             foreach ($results as $result) {
                 if ($result['active'] == "1") {
-                    $option = "<a href='#edit_menu' data-toggle='modal' role='button' class='edit' table='menu' menu_name='" . $result['menu_text'] . "' menu_url='" . $result['menu_url'] . "' menu_desc='" . $result['description'] . "' menu_id='" . $result['id'] . "'>Edit</a> | <a href='" . base_url() . "/public/admin_management/disable/menu/" . $result['id'] . "' class='red'>Disable</a>";
+                    $option = "<a href='#edit_menu' data-toggle='modal' role='button' class='edit' table='menu' menu_name='" . $result['menu_text'] . "' menu_url='" . $result['menu_url'] . "' menu_desc='" . $result['description'] . "' menu_id='" . $result['id'] . "'>Edit</a> | <a href='" . base_url() . "/admin_management/disable/menu/" . $result['id'] . "' class='red'>Disable</a>";
                 } else {
-                    $option = "<a href='#edit_menu' data-toggle='modal' role='button' class='edit' table='menu' menu_name='" . $result['menu_text'] . "' menu_url='" . $result['menu_url'] . "' menu_desc='" . $result['description'] . "' menu_id='" . $result['id'] . "'>Edit</a> | <a href='" . base_url() . "/public/admin_management/enable/menu/" . $result['id'] . "' class='green'>Enable</a>";
+                    $option = "<a href='#edit_menu' data-toggle='modal' role='button' class='edit' table='menu' menu_name='" . $result['menu_text'] . "' menu_url='" . $result['menu_url'] . "' menu_desc='" . $result['description'] . "' menu_id='" . $result['id'] . "'>Edit</a> | <a href='" . base_url() . "/admin_management/enable/menu/" . $result['id'] . "' class='green'>Enable</a>";
                 }
                 $dyn_table .= "<tr><td>" . $result['menu_text'] . "</td><td>" . $result['menu_url'] . "</td><td>" . $result['description'] . "</td><td>" . $option . "</td></tr>";
             }
@@ -150,9 +150,9 @@ class Admin_management extends \App\Controllers\BaseController {
         if ($results) {
             foreach ($results as $result) {
                 if ($result['active'] == "1") {
-                    $option = "<a href='#edit_faq' data-toggle='modal' role='button' class='edit' table='faq' faq_module='" . $result['modules'] . "' faq-question='" . $result['questions'] . "' faq_answer='" . $result['answers'] . "' faq_id='" . $result['id'] . "'>Edit</a> | <a href='" . base_url() . "/public/admin_management/disable/faq/" . $result['id'] . "' class='red'>Disable</a>";
+                    $option = "<a href='#edit_faq' data-toggle='modal' role='button' class='edit' table='faq' faq_module='" . $result['modules'] . "' faq-question='" . $result['questions'] . "' faq_answer='" . $result['answers'] . "' faq_id='" . $result['id'] . "'>Edit</a> | <a href='" . base_url() . "/admin_management/disable/faq/" . $result['id'] . "' class='red'>Disable</a>";
                 } else {
-                    $option = "<a href='#edit_faq' data-toggle='modal' role='button' class='edit' table='faq' faq_module='" . $result['modules'] . "' faq-question='" . $result['questions'] . "' faq_answer='" . $result['answers'] . "' faq_id='" . $result['id'] . "'>Edit</a> | <a href='" . base_url() . "/public/admin_management/enable/faq/" . $result['id'] . "' class='green'>Enable</a>";
+                    $option = "<a href='#edit_faq' data-toggle='modal' role='button' class='edit' table='faq' faq_module='" . $result['modules'] . "' faq-question='" . $result['questions'] . "' faq_answer='" . $result['answers'] . "' faq_id='" . $result['id'] . "'>Edit</a> | <a href='" . base_url() . "/admin_management/enable/faq/" . $result['id'] . "' class='green'>Enable</a>";
                 }
                 $dyn_table .= "<tr><td>" . $result['modules'] . "</td><td>" . $result['questions'] . "</td><td>" . $result['answers'] . "</td><td>" . $option . "</td></tr>";
             }
@@ -173,9 +173,9 @@ class Admin_management extends \App\Controllers\BaseController {
         if ($results) {
             foreach ($results as $result) {
                 if ($result['active'] == "1") {
-                    $option = "<a href='#edit_access_level' data-toggle='modal' role='button' class='edit' table='access_level' access_level_name='" . $result['level_name'] . "' access_level_description='" . $result['description'] . "' access_level_indicator='" . $result['indicator'] . "' access_level_id='" . $result['id'] . "'>Edit</a> | <a href='" . base_url() . "/public/admin_management/disable/access_level/" . $result['id'] . "' class='red'>Disable</a>";
+                    $option = "<a href='#edit_access_level' data-toggle='modal' role='button' class='edit' table='access_level' access_level_name='" . $result['level_name'] . "' access_level_description='" . $result['description'] . "' access_level_indicator='" . $result['indicator'] . "' access_level_id='" . $result['id'] . "'>Edit</a> | <a href='" . base_url() . "/admin_management/disable/access_level/" . $result['id'] . "' class='red'>Disable</a>";
                 } else {
-                    $option = "<a href='#edit_access_level' data-toggle='modal' role='button' class='edit' table='access_level' access_level_name='" . $result['level_name'] . "' access_level_description='" . $result['description'] . "' access_level_indicator='" . $result['indicator'] . "' access_level_id='" . $result['id'] . "'>Edit</a> | <a href='" . base_url() . "/public/admin_management/enable/access_level/" . $result['id'] . "' class='green'>Enable</a>";
+                    $option = "<a href='#edit_access_level' data-toggle='modal' role='button' class='edit' table='access_level' access_level_name='" . $result['level_name'] . "' access_level_description='" . $result['description'] . "' access_level_indicator='" . $result['indicator'] . "' access_level_id='" . $result['id'] . "'>Edit</a> | <a href='" . base_url() . "/admin_management/enable/access_level/" . $result['id'] . "' class='green'>Enable</a>";
                 }
                 $dyn_table .= "<tr><td>" . $result['level_name'] . "</td><td>" . $result['indicator'] . "</td><td>" . $result['description'] . "</td><td>" . $option . "</td></tr>";
             }
@@ -198,9 +198,9 @@ class Admin_management extends \App\Controllers\BaseController {
             foreach ($results as $result) {
                 if ($result->id != $this->session->get("user_id")) {
                     if ($result->Active == "1") {
-                        $option = "<a href='" . base_url() . "/public/admin_management/disable/users/" . $result->id . "' class='red'>Disable</a>";
+                        $option = "<a href='" . base_url() . "/admin_management/disable/users/" . $result->id . "' class='red'>Disable</a>";
                     } else {
-                        $option = "<a href='" . base_url() . "/public/admin_management/enable/users/" . $result->id . "' class='green'>Enable</a>";
+                        $option = "<a href='" . base_url() . "/admin_management/enable/users/" . $result->id . "' class='green'>Enable</a>";
                     }
                 }
                 $dyn_table .= "<tr><td>" . $result->Name . "</td><td>" . $result->Username . "</td><td>" . $result->Access . "</td><td>" . $result->Email_Address . "</td><td>" . $result->Phone_Number . "</td><td>" . $result->Creator . "</td><td>" . $option . "</td></tr>";
@@ -226,9 +226,9 @@ class Admin_management extends \App\Controllers\BaseController {
             foreach ($results as $result) {
                 if ($result['id'] != $this->session->get("user_id")) {
                     if ($result['uactive'] == "1") {
-                        $option = "<a href='" . base_url() . "/public/admin_management/disable/users/" . $result['id'] . "' class='red'>Disable</a>";
+                        $option = "<a href='" . base_url() . "/admin_management/disable/users/" . $result['id'] . "' class='red'>Disable</a>";
                     } else {
-                        $option = "<a href='" . base_url() . "/public/admin_management/enable/users/" . $result['id'] . "' class='green'>Enable</a>";
+                        $option = "<a href='" . base_url() . "/admin_management/enable/users/" . $result['id'] . "' class='green'>Enable</a>";
                     }
                 }
                 $dyn_table .= "<tr><td>" . $result['name'] . "</td><td>" . $result['username'] . "</td><td>" . $result['level_name'] . "</td><td>" . $result['email_address'] . "</td><td>" . $result['phone_number'] . "</td><td>" . $result['u2name'] . "</td><td>" . $option . "</td></tr>";
@@ -283,9 +283,9 @@ class Admin_management extends \App\Controllers\BaseController {
         if ($results) {
             foreach ($results as $result) {
                 if ($result->active == "1") {
-                    $option = "<a href='#edit_user_right' data-toggle='modal' role='button' class='edit' table='user_right' access_id='" . $result->access_id . "' edit_menu_id='" . $result->menu_id . "' right_id='" . $result->id . "'>Edit</a> | <a href='" . base_url() . "/public/admin_management/disable/user_right/" . $result->id . "' class='red'>Disable</a>";
+                    $option = "<a href='#edit_user_right' data-toggle='modal' role='button' class='edit' table='user_right' access_id='" . $result->access_id . "' edit_menu_id='" . $result->menu_id . "' right_id='" . $result->id . "'>Edit</a> | <a href='" . base_url() . "/admin_management/disable/user_right/" . $result->id . "' class='red'>Disable</a>";
                 } else {
-                    $option = "<a href='#edit_user_right' data-toggle='modal' role='button' class='edit' table='user_right' access_id='" . $result->access_id . "' edit_menu_id='" . $result->menu_id . "' right_id='" . $result->id . "'>Edit</a> | <a href='" . base_url() . "/public/admin_management/enable/user_right/" . $result->id . "' class='green'>Enable</a>";
+                    $option = "<a href='#edit_user_right' data-toggle='modal' role='button' class='edit' table='user_right' access_id='" . $result->access_id . "' edit_menu_id='" . $result->menu_id . "' right_id='" . $result->id . "'>Edit</a> | <a href='" . base_url() . "/admin_management/enable/user_right/" . $result->id . "' class='green'>Enable</a>";
                 }
                 $dyn_table .= "<tr><td>" . $result->level_name . "</td><td>" . $result->menu_text . "</td><td>" . $option . "</td></tr>";
             }
@@ -460,7 +460,7 @@ class Admin_management extends \App\Controllers\BaseController {
                 $this->session->set('default_link', 'assignRights');
             }
         }
-        return redirect()->to(base_url()."/public/home");
+        return redirect()->to(base_url()."/home");
     }
 
     public function sendActivationCode($username, $contact, $password, $code = "", $type = "phone") {
@@ -539,7 +539,7 @@ class Admin_management extends \App\Controllers\BaseController {
         DB::statement($sql);
         $this->session->set('msg_error', $table . ' Record No:' . $id . ' was disabled');
         $this->setDefaultLink($table);
-        return redirect()->to(base_url()."/public/home");
+        return redirect()->to(base_url()."/home");
     }
 
     public function enable($table = "", $id = "") {
@@ -553,7 +553,7 @@ class Admin_management extends \App\Controllers\BaseController {
         DB::statement($sql);
         $this->session->set('msg_success', $table . ' Record No:' . $id . ' was enabled');
         $this->setDefaultLink($table);
-        return redirect()->to(base_url()."/public/home");
+        return redirect()->to(base_url()."/home");
     }
 
     public function remove($facilitycode = "") {
@@ -561,7 +561,7 @@ class Admin_management extends \App\Controllers\BaseController {
         DB::statement($sql);
         $this->session->set('msg_error', ' Facility No:' . $facilitycode . ' was removed as a Satellite');
         $this->session->set('default_link', 'addSatellite');
-        return redirect()->to(base_url()."/public/home");
+        return redirect()->to(base_url()."/home");
     }
 
     public function update($table = "") {
@@ -616,7 +616,7 @@ class Admin_management extends \App\Controllers\BaseController {
             $this->session->set('msg_success', 'User Right was Updated');
             $this->session->set('default_link', 'assignRights');
         }
-        return redirect()->to(base_url()."/public/home");
+        return redirect()->to(base_url()."/home");
     }
 
     public function setDefaultLink($table = "") {

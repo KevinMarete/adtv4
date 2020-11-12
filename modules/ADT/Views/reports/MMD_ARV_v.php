@@ -348,12 +348,12 @@
 <script src="<?= base_url(); ?>assets/scripts/datatable/buttons.html5.min.js"></script> -->
 
 
-<script src="<?= base_url('public/assets/scripts/datatable/dt.1.10.21.jquery.dataTables.min.js'); ?>"></script>
-<script src="<?= base_url('public/assets/scripts/datatable/dataTables.buttons.min.js'); ?>"></script>
-<script src="<?= base_url('public/assets/scripts/datatable/jszip.min.js'); ?>"></script>
-<script src="<?= base_url('public/assets/scripts/datatable/pdfmake.min.js'); ?>"></script>
-<script src="<?= base_url('public/assets/scripts/datatable/vfs_fonts.js'); ?>"></script>
-<script src="<?= base_url('public/assets/scripts/datatable/buttons.html5.min.js'); ?>"></script>
+<script src="<?= base_url('/assets/scripts/datatable/dt.1.10.21.jquery.dataTables.min.js'); ?>"></script>
+<script src="<?= base_url('/assets/scripts/datatable/dataTables.buttons.min.js'); ?>"></script>
+<script src="<?= base_url('/assets/scripts/datatable/jszip.min.js'); ?>"></script>
+<script src="<?= base_url('/assets/scripts/datatable/pdfmake.min.js'); ?>"></script>
+<script src="<?= base_url('/assets/scripts/datatable/vfs_fonts.js'); ?>"></script>
+<script src="<?= base_url('/assets/scripts/datatable/buttons.html5.min.js'); ?>"></script>
 <script>
 	$(document).ready(function() {
 		$('#mmd_mms_report').DataTable({

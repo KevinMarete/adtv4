@@ -126,7 +126,7 @@ foreach($results as $result){
 
 	    	if (patient_no != '') {
 	    		var original_patient_no = $("#original_patient_number").val();
-	    		var link = base_url + "/public/patient/checkpatient_no/" + patient_no;
+	    		var link = base_url + "/patient/checkpatient_no/" + patient_no;
 	    		$.ajax({
 	    			url: link,
 	    			type: 'POST',
@@ -145,7 +145,7 @@ foreach($results as $result){
 	    $("#match_spouse").change(function() {
 	    	var patient_no = $("#match_spouse").val();
 	    	if (patient_no != '') {
-	    		var link = base_url + "/public/patient/checkpatient_no/" + patient_no;
+	    		var link = base_url + "/patient/checkpatient_no/" + patient_no;
 	    		$.ajax({
 	    			url: link,
 	    			type: 'POST',
@@ -164,7 +164,7 @@ foreach($results as $result){
 	    $("#match_parent").change(function() {
 	    	var patient_no = $("#match_parent").val();
 	    	if (patient_no != '') {
-	    		var link = base_url + "/public/patient/checkpatient_no/" + patient_no;
+	    		var link = base_url + "/patient/checkpatient_no/" + patient_no;
 	    		$.ajax({
 	    			url: link,
 	    			type: 'POST',
@@ -767,7 +767,7 @@ foreach($results as $result){
 
 	    $("#service").change(function() {
 	    	var service_line = $(this).val();
-	    	var link = base_url + "/public/regimen_management/getRegimenLine/" + service_line;
+	    	var link = base_url + "/regimen_management/getRegimenLine/" + service_line;
 	    	var selected_text = $("#service option[value='" + service_line + "']").text();
 	    	regimen_text = "#current_regimen";
 	    	append_start_regimen = false;
@@ -788,7 +788,7 @@ foreach($results as $result){
 
 	    	if (selected_text == "ART" || selected_text == "PMTCT") {
 	    		if (selected_text == "PMTCT" && $("#age").val() < 2) {
-	    			var link = base_url + "/public/regimen_management/getRegimenLine/" + service_line + "/true";
+	    			var link = base_url + "/regimen_management/getRegimenLine/" + service_line + "/true";
 	    		}
 
 	    		if (prev_service != '') {
@@ -1061,7 +1061,7 @@ function getAge(dateString) {
 
 	        	if($("#original_patient_number").val()!=$("#patient_number").val()){
 	        		var base_url="<?php echo base_url();?>";
-	        		var link=base_url+"/public/patient/update_visit";
+	        		var link=base_url+"/patient/update_visit";
 	        		$.ajax({
 	        			url: link,
 	        			type: 'POST',
@@ -1088,7 +1088,7 @@ function getAge(dateString) {
 	<body>
 		<div class="full-content" style="background:#FF9">
 			<div id="sub_title" >
-				<a href="<?php echo base_url().'/public/patients' ?>">Patient Listing </a> <i class=" icon-chevron-right"></i><a href="<?php  echo base_url().'/public/patient/load_view/details/'.$result->id ?>"><?php echo strtoupper($result->first_name.' '.$result->other_name.' '.$result->last_name) ?></a> <i class=" icon-chevron-right"></i><strong>Edit details</strong>
+				<a href="<?php echo base_url().'/patients' ?>">Patient Listing </a> <i class=" icon-chevron-right"></i><a href="<?php  echo base_url().'/patient/load_view/details/'.$result->id ?>"><?php echo strtoupper($result->first_name.' '.$result->other_name.' '.$result->last_name) ?></a> <i class=" icon-chevron-right"></i><strong>Edit details</strong>
 				<hr size="1">
 			</div>
 			<h3>Edit Patient Details
@@ -1096,7 +1096,7 @@ function getAge(dateString) {
 					(Fields Marked with <b><span class='astericks'>*</span></b> Asterisks are required)
 				</div></h3>
 
-				<form id="edit_patient_form" method="post" action="<?php $record=$result->id; echo base_url() . '/public/patient/update/'.$record; ?>" onsubmit="return processData('edit_patient_form')" >
+				<form id="edit_patient_form" method="post" action="<?php $record=$result->id; echo base_url() . '/patient/update/'.$record; ?>" onsubmit="return processData('edit_patient_form')" >
 					<div class="column" id="columnOne">
 						<fieldset>
 							<legend>

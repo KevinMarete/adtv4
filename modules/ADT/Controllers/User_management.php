@@ -41,7 +41,7 @@ class User_management extends \App\Controllers\BaseController {
     }
 
     function sendToLgin() {
-        return redirect()->to(base_url('public/login'));
+        return redirect()->to(base_url('/login'));
     }
 
     public function get_sites($user_id = '') {
@@ -82,10 +82,10 @@ class User_management extends \App\Controllers\BaseController {
             $array_param = array('id' => $user['id'], 'role' => 'button', 'class' => 'edit_user', 'data-toggle' => 'modal');
             if ($user['Active'] == 1) {
                 if ($access_level == "system_administrator" || ($access_level == "facility_administrator" and $user['Indicator'] != "facility_administrator")) {
-                    $links .= anchor(base_url() . '/public/user_management/disable/' . $user['id'], 'Disable', array('class' => 'disable_user'));
+                    $links .= anchor(base_url() . '/user_management/disable/' . $user['id'], 'Disable', array('class' => 'disable_user'));
                 }
             } else {
-                $links .= anchor(base_url() . '/public/user_management/enable/' . $user['id'], 'Enable', array('class' => 'enable_user'));
+                $links .= anchor(base_url() . '/user_management/enable/' . $user['id'], 'Enable', array('class' => 'enable_user'));
             }
             if ($user['Access'] == "Pharmacist") {
                 $level_access = "User";
@@ -133,7 +133,7 @@ class User_management extends \App\Controllers\BaseController {
              */
             // $actual_page = get_cookie("actual_page");
             echo 'I am here';
-            return redirect()->to(base_url('public/home'));
+            return redirect()->to(base_url('/home'));
             //  redirect()->to($actual_page);
             //echo 1;
         }
@@ -185,7 +185,7 @@ class User_management extends \App\Controllers\BaseController {
             $load_access = DB::table('access_level')->where('id', $logged_in['user']->Access_Level ?? 0)->get();
             if (!isset($logged_in)) {
                 $this->session->set('m_error_msg', 'Invalid Credentials. Please try again');
-                return redirect()->to(base_url('public/home'));
+                return redirect()->back()->withInput();
             }
             // dd($load_access);
             //This code checks if the credentials are valid
@@ -193,7 +193,7 @@ class User_management extends \App\Controllers\BaseController {
                 $data['invalid'] = true;
                 $data['title'] = "System Login";
                 $this->session->set('m_error_msg', 'Invalid Credentials. Please try again');
-                return redirect()->to(base_url('public/home'));
+                return redirect()->back()->withInput();
             }      //Check if credentials are valid for username not password
             else if (isset($logged_in["attempt"]) && $logged_in["attempt"] == "attempt" && $load_access[0]->indicator != "system_administrator") {
 
@@ -203,20 +203,20 @@ class User_management extends \App\Controllers\BaseController {
                     $data['title'] = "System Login";
                     $data['login_attempt'] = "<p class='error'>The Account has been deactivated. Seek help from the Facility Administrator</p>";
                     $this->session->set('m_error_msg', 'The Account has been deactivated. Seek help from the Facility Administrator');
-                    return redirect()->to(base_url('public/home'));
+                    return redirect()->back()->withInput();
                 } else {
                     $data['invalid'] = false;
                     $data['title'] = "System Login";
                     $data['login_attempt'] = "enter the correct password!</p>";
                     $this->session->set('m_error_msg', 'Invalid Credentials. Please try again');
-                    return redirect()->to(base_url('public/home'));
+                    return redirect()->back()->withInput();
                 }
 
             } else if (isset($logged_in["attempt"]) && $logged_in["attempt"] == "attempt" && $load_access[0]->indicator == "system_administrator") {
                 $data['title'] = "System Login";
                 $data['invalid'] = true;
                 $this->session->set('m_error_msg', 'Invalid Credentials. Please try again');
-                return redirect()->to(base_url('public/home'));
+                return redirect()->back()->withInput();
             } else {
                 //If the credentials are valid, continue
                 $today_time = strtotime(date("Y-m-d"));
@@ -226,7 +226,7 @@ class User_management extends \App\Controllers\BaseController {
                     $data['inactive'] = true;
                     $data['title'] = "System Login";
                     $this->session->set('m_error_msg', 'The Account is not active. Seek help from the Administrator');
-                    return redirect()->to(base_url('public/home'));
+                    return redirect()->back()->withInput();
                 }
                 /*
                   else if (($today_time - $create_time) > (90 * 24 * 3600) && $logged_in -> Access -> Indicator != "system_administrator") {
@@ -245,7 +245,7 @@ class User_management extends \App\Controllers\BaseController {
                     $data['unactivated'] = true;
                     $data['title'] = "System Login";
                     $this->session->set('m_error_msg', 'Your Account Has Not Been Activated.<br/>Please Check your Email to Activate Account');
-                    return redirect()->to(base_url('public/home'));
+                    return redirect()->back()->withInput();
                 }
                 //looks good. Continue!
                 else {
@@ -302,7 +302,7 @@ class User_management extends \App\Controllers\BaseController {
                     $new_access_log->save();
                     //Set session to redirect the page to the previous page before logged out
                     $session->set("prev_page", "1");
-                    return redirect()->to(base_url('public/home'));
+                    return redirect()->back()->withInput();
                 }
             }
         } else { //Not validated
@@ -337,7 +337,7 @@ class User_management extends \App\Controllers\BaseController {
         if ($param == "2") {
             delete_cookie("actual_page");
         }
-        return redirect()->to(base_url() . '/public/login');
+        return redirect()->to(base_url() . '/login');
     }
 
     public function resetPassword() {
@@ -506,7 +506,7 @@ class User_management extends \App\Controllers\BaseController {
 
         $previous_url = $this->request->getCookie('actual_page', true);
         //redirect($previous_url);
-        return redirect()->to(base_url('public/' . $previous_url));
+        return redirect()->to(base_url('/' . $previous_url));
     }
 
     public function base_params($data) {
@@ -537,7 +537,7 @@ class User_management extends \App\Controllers\BaseController {
         $this->save_user_facilities($this->db->insertID(), $this->post('user_facilities_holder', TRUE));
 
         $this->session->set('msg_success', $this->post('fullname') . ' \' s details were successfully saved! The default password is <strong>' . $default_password . '</strong>');
-        return redirect()->to(base_url('/public/settings_management'));
+        return redirect()->to(base_url('/settings_management'));
     }
 
     public function edit() {
@@ -575,7 +575,7 @@ class User_management extends \App\Controllers\BaseController {
         $this->session->set('msg_success', $this->post('username') . ' \' s details were successfully Updated!');
         $this->session->setFlashdata('filter_datatable', $this->post('username'));
         //Filter datatable
-        return redirect()->to(base_url('/public/settings_management'));
+        return redirect()->to(base_url('/settings_management'));
     }
 
     public function enable($user_id) {
@@ -585,7 +585,7 @@ class User_management extends \App\Controllers\BaseController {
         $this->session->set('msg_success', $user->Name . ' was enabled!');
         $this->session->setFlashdata('filter_datatable', $user->Name);
         //Filter datatable
-        return redirect()->to(base_url('/public/settings_management'));
+        return redirect()->to(base_url('/settings_management'));
     }
 
     public function disable($user_id) {
@@ -595,7 +595,7 @@ class User_management extends \App\Controllers\BaseController {
         $this->session->set('msg_error', $user->Name . ' was disabled!');
         $this->session->setFlashdata('filter_datatable', $user->Name);
         //Filter datatable
-        return redirect()->to(base_url('/public/settings_management'));
+        return redirect()->to(base_url('/settings_management'));
     }
 
     public function save_user_facilities($user_id = '', $user_facilites = '') {
@@ -675,7 +675,7 @@ class User_management extends \App\Controllers\BaseController {
             echo json_encode($response);
         } else {
             $this->session->remove("user_id");
-            return redirect()->to(base_url('/public/login'));
+            return redirect()->to(base_url('/login'));
         }
     }
 

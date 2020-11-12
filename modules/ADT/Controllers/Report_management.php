@@ -4111,7 +4111,7 @@ class Report_management extends \App\Controllers\BaseController
       $app_desc = str_ireplace(array(' ', '(s)'), array('_', ''), $appointment_description);
       $total = $result['total'];
       $overall_total += $total;
-      $action_link = anchor('/public/report_management/getScheduledPatients/' . $result['from_date'] . '/' . $result['to_date'] . '/' . $from . '/' . $to . '/' . $app_desc, 'View Patients', array('target' => '_blank'));
+      $action_link = anchor('/report_management/getScheduledPatients/' . $result['from_date'] . '/' . $result['to_date'] . '/' . $from . '/' . $to . '/' . $app_desc, 'View Patients', array('target' => '_blank'));
       $row_string .= '<tr><td>' . $result['patient_ccc_number'] . '</td> <td>' . $result['test_date'] . '</td><td>' . $result['result'] . '</td><td>' . $result['justification'] . '</td></tr>';
     }
     $row_string .= "</tbody></table>";
@@ -4660,7 +4660,7 @@ class Report_management extends \App\Controllers\BaseController
       $app_desc = str_ireplace(array(' ', '(s)'), array('_', ''), $appointment_description);
       $total = $result['total'];
       $overall_total += $total;
-      $action_link = '<a href="' . base_url('public/report_management/getRefillDistributionPatients/' . $to . '/' . $app_desc) . '" target="_blank">View Patients</a>';
+      $action_link = '<a href="' . base_url('/report_management/getRefillDistributionPatients/' . $to . '/' . $app_desc) . '" target="_blank">View Patients</a>';
       $row_string .= "<tr><td>$appointment_description</td><td>$total</td><td>$action_link</td></tr>";
     }
     $row_string .= "</tbody></table>";
@@ -6609,7 +6609,7 @@ class Report_management extends \App\Controllers\BaseController
     unset($objPHPExcel);
     if (file_exists($filename)) {
       $filename = str_replace("#", "%23", $filename);
-      return redirect()->to(base_url('public/' . $filename));
+      return redirect()->to(base_url('/' . $filename));
     }
   }
 
@@ -7100,9 +7100,10 @@ class Report_management extends \App\Controllers\BaseController
       $template = "731_new_template";
     }
 
-    $inputFileType = 'Excel5';
-    $inputFileName = $_SERVER['DOCUMENT_ROOT'] . '/ADTv4/public/assets/templates/moh_forms/' . $template . '.xls';      
-    $objReader = \PHPExcel_IOFactory::createReader($inputFileType);
+    $inputFileType = 'Xlsx';
+    $inputFileName = $_SERVER['DOCUMENT_ROOT'] . '/ADTv4/public/assets/templates/moh_forms/' . $template . '.xls';
+    $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
+    $objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
     $objPHPExcel = $objReader->load($inputFileName);
 
     /* Delete all files in export folder */
@@ -7155,13 +7156,13 @@ class Report_management extends \App\Controllers\BaseController
     $period_start = date("F-Y", strtotime($period_start));
     $original_filename = "MOH " . $type . " form for (" . $period_start . ").xls";
     $filename = $dir . "/" . urldecode($original_filename);
-    $objWriter = new \PHPExcel_Writer_Excel5($objPHPExcel);
+    $objWriter = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($objPHPExcel, 'Xls');
     $objWriter->save($filename);
     $objPHPExcel->disconnectWorksheets();
     unset($objPHPExcel);
     if (file_exists($filename)) {
       $filename = str_replace("#", "%23", $filename);
-      return redirect()->to(base_url('public/' . $filename));
+      return redirect()->to(base_url('/' . $filename));
     }
   }
 
@@ -8469,7 +8470,7 @@ class Report_management extends \App\Controllers\BaseController
     helper('filesystem');
 
     $dir = realpath($_SERVER['DOCUMENT_ROOT']);
-    $files = directory_map($dir . '/adtv4/public/assets/guidelines/');
+    $files = directory_map($dir . '/ADTv4/public/assets/guidelines/');
 
     $columns = array('#', 'File Name', 'Action');
     $tmpl = array('table_open' => '<table class="table table-bordered table-hover table-condensed table-striped dataTables" >');
@@ -8478,7 +8479,7 @@ class Report_management extends \App\Controllers\BaseController
     $this->table->setHeading($columns);
 
     foreach ($files as $file) {
-      $links = "<a href='" . base_url() . "/public/assets/Guidelines/" . $file . "'target='_blank'>View</a>";
+      $links = "<a href='" . base_url() . "/assets/Guidelines/" . $file . "'target='_blank'>View</a>";
       $this->table->addRow("", $file, $links);
     }
     $data['guidelines_list'] = $this->table->generate();

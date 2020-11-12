@@ -92,7 +92,7 @@ if (session()->get('link_id') and session()->get('linkSub')) {
             //Change the page title value
             $("#actual_page").html(linkTitle);
 
-            $(".settings").load('<?php echo base_url(); ?>/public/' + linkSub, function () {
+            $(".settings").load('<?php echo base_url(); ?>/' + linkSub, function () {
                 //$("input[type='text']").attr("required","required");
                 $("#loadingDiv").css("display", "none");
                 $(".settings").css("display", "block");
@@ -196,7 +196,7 @@ if (session()->get('link_id') and session()->get('linkSub')) {
                 //Change the page title value
                 $("#actual_page").html(linkTitle);
                 //console.log(linkSub);
-                $(".settings").load('<?php echo base_url(); ?>/public/' + linkSub, function () {
+                $(".settings").load('<?php echo base_url(); ?>/' + linkSub, function () {
                     //$("input[type='text']").attr("required","required");
                     $("#loadingDiv").css("display", "none");
                     $(".settings").css("display", "block");
@@ -442,7 +442,7 @@ if (session()->get('link_id') and session()->get('linkSub')) {
         <div class="span12">
             <div class="settings well"></div>
             <div id="loadingDiv" style="display:none;margin:10% 40% 20% 40%;" >
-                <img src="<?php echo base_url(); ?>/public/assets/images/loading_spin.gif">	
+                <img src="<?php echo base_url(); ?>/assets/images/loading_spin.gif">	
             </div>
         </div>
     </div>

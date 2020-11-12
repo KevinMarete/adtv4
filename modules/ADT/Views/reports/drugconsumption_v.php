@@ -3,12 +3,12 @@
 
 		var stock_type = <?php echo $stock_type; ?>; //Year
 		var base_url = '<?php echo $base_url ?>';
-		var _url = <?php echo "'" . $base_url . "/public/report_management/drug_consumption/" . $stock_type . "/" . $pack_unit . "'"; ?>;
+		var _url = <?php echo "'" . $base_url . "/report_management/drug_consumption/" . $stock_type . "/" . $pack_unit . "'"; ?>;
 		var report_title = $("#report_title").text();
 		var facility = $("#facility_name").text();
 		$('#drug_table').dataTable({
 			"oTableTools": {
-				"sSwfPath": "<?php echo base_url('public/assets/scripts/datatable/copy_csv_xls_pdf.swf') ?>",
+				"sSwfPath": "<?php echo base_url('/assets/scripts/datatable/copy_csv_xls_pdf.swf') ?>",
 				"aButtons": ["copy",
 					{
 						"sExtends": "xls",

@@ -18,7 +18,7 @@
 </style>
 <script type="text/javascript">
     $(document).ready(function () {
-        base_url = "<?php echo base_url() . '/public/'; ?>";
+        base_url = "<?php echo base_url() . '/'; ?>";
         var link = base_url + "notification_management/error_generator";
         var error_list = "<?php echo $first_error; ?>";
         var start_reg_error = error_list.indexOf("Patients without Start Regimen");
@@ -175,7 +175,7 @@
         </div>
         <div>
             <ul class="breadcrumb">
-<!--                <li><a href="<?php echo base_url() . '/public/notification_management/error_fix' ?>">Errors</a> </li>-->
+<!--                <li><a href="<?php echo base_url() . '/notification_management/error_fix' ?>">Errors</a> </li>-->
                 <li>
                     <select style="width:auto;color:#000;font-weight:bold" id="error_list">
                         <?php
@@ -187,7 +187,7 @@
                 </li>
                 <input type="button" id="error_fix_btn" value="Fix Error"/>
 
-                <div id="loadingDiv" style="display:none; float: right"><img style="width: 20px" src="<?php echo base_url() . '/public/images/loading_spin.gif' ?>"></div>
+                <div id="loadingDiv" style="display:none; float: right"><img style="width: 20px" src="<?php echo base_url() . '/images/loading_spin.gif' ?>"></div>
             </ul>
 
         </div>

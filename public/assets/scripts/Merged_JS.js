@@ -865,7 +865,7 @@ $(document).ready(function () {
      */
 
     $('.generate_btn').live('click', function () {
-        var base_url = $('#base_url').val() + '/public/';
+        var base_url = $('#base_url').val() + '/';
         if (
                 $('.input-medium').is(':visible') ||
                 $('.month_period').is(':visible') ||
@@ -1095,7 +1095,7 @@ $(document).ready(function () {
             $('.active').removeClass();
             $(this).addClass('active');
             $('.reports_types').css('display', 'none');
-            var report_url = $('#base_url').val() + '/public/report_management/load_guidelines_view';
+            var report_url = $('#base_url').val() + '/report_management/load_guidelines_view';
             window.location = report_url;
         }
     });

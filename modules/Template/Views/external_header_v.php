@@ -7,26 +7,26 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-             <a class="navbar-brand" href="<?= base_url() ?>/public">ADTv<?php echo config('Adt_config')->adt_version;?> Tools</a> 
+             <a class="navbar-brand" href="<?= base_url() ?>">ADTv<?php echo config('Adt_config')->adt_version;?> Tools</a> 
 
         </div>
         <div id="navbar" class="navbar-collapse collapse">
 
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="<?= base_url() ?>/public/recover">Recover <span class="sr-only">(current)</span></a></li>
-                <li><a href="<?= base_url() ?>/public/backup">Backup<span class="sr-only">(current)</span></a></li>
+                <li><a href="<?= base_url() ?>/recover">Recover <span class="sr-only">(current)</span></a></li>
+                <li><a href="<?= base_url() ?>/backup">Backup<span class="sr-only">(current)</span></a></li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Migration <span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a href="<?= base_url(); ?>/public/migrate/access">Access to webADT Migration</a></li>
-                        <li><a href="<?= base_url(); ?>/public/migrate/editt">EDITT to webADT Migration</a></li>
-                        <li><a href="<?= base_url(); ?>/public/migrate/excel">Excel Import</a></li>
+                        <li><a href="<?= base_url(); ?>/migrate/access">Access to webADT Migration</a></li>
+                        <li><a href="<?= base_url(); ?>/migrate/editt">EDITT to webADT Migration</a></li>
+                        <li><a href="<?= base_url(); ?>/migrate/excel">Excel Import</a></li>
                     </ul>
                 </li>
-                <li><a href="<?= base_url() ?>/public/github">System Update</a></li>
-                <li><a href="<?= base_url() ?>/public/adminer/index.php" target="_blank">DB Manager</a></li>
-                <li><a href="<?= base_url() ?>/public/help">Help</a></li>
-                <li><a href="<?= base_url() ?>/public/setup">Initial Setup</a></li>
+                <li><a href="<?= base_url() ?>/github">System Update</a></li>
+                <li><a href="<?= base_url() ?>/adminer/index.php" target="_blank">DB Manager</a></li>
+                <li><a href="<?= base_url() ?>/help">Help</a></li>
+                <li><a href="<?= base_url() ?>/setup">Initial Setup</a></li>
                 <li><a href="<?= base_url() ?>/api/settings">API Settings</a></li>
             </ul>
         </div><!--/.nav-collapse -->

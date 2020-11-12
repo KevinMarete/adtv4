@@ -4,7 +4,7 @@ $(function () {
     var oTable = $('#patient_listing').dataTable({
         "bProcessing": true,
         "bDestroy": true,
-        "sAjaxSource": base_url + '/public/get-patients',
+        "sAjaxSource": base_url + '/get-patients',
         "bJQueryUI": true,
         "sPaginationType": "full_numbers",
         "bStateSave": true,
@@ -57,11 +57,11 @@ $(document).ready(function () {
     $('#filter').change(function () {
         var choice = $('#filter').val();
         if (choice == 0) {
-            var new_url = '/public/get-patients';
+            var new_url = '/get-patients';
         } else if (choice == 1) {
-            var new_url = '/public/get-patients/inactive';
+            var new_url = '/get-patients/inactive';
         } else if (choice == 2) {
-            var new_url = '/public/get-patients/all';
+            var new_url = '/get-patients/all';
         }
         filter(new_url);
     });

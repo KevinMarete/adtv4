@@ -185,7 +185,7 @@ class Order extends BaseController {
                 $this->session->setFlashdata('login_message', "<span class='error'>You are not authorized in this Facility!</span>");
             }
         }
-        return redirect()->to(base_url() . "/public/order");
+        return redirect()->to(base_url() . "/order");
     }
 
     public function logout() {
@@ -194,7 +194,7 @@ class Order extends BaseController {
         $this->session->remove("dhis_user");
         $this->session->remove("dhis_pass");
         $this->session->remove("dhis_orgs");
-        return redirect()->to(base_url() . "/public/order");
+        return redirect()->to(base_url() . "/order");
     }
 
     function facility_dhis() {
@@ -318,7 +318,7 @@ class Order extends BaseController {
 
     public function get_buttons($type = "cdrr") {
         $buttons = "";
-        $set_type = "/public/order/create_order/" . $type;
+        $set_type = "/order/create_order/" . $type;
         $satellite_type = 'btn_new_' . $type . '_satellite';
         if ($this->facility_type == 0) {
             $buttons .= "<a href='" . base_url() . $set_type . "/0' class='btn check_net'>New Satellite $type</a>";
@@ -402,11 +402,11 @@ class Order extends BaseController {
             $issynched = explode('-', strtolower(@$mydata->status_name))[1];
 
             if ($status_name == "prepared" || $status_name == "review") {
-                $links = ["/public/order/view_order/" . $table => "view", "/public/order/update_order/" . $table => "update", "/public/order/read_order/" . $table => "delete", "/public/order/download_order/" . $table => "download"];
+                $links = ["/order/view_order/" . $table => "view", "/order/update_order/" . $table => "update", "/order/read_order/" . $table => "delete", "/order/download_order/" . $table => "download"];
             } else {
-                $links = ["/public/order/view_order/" . $table => "view", "/public/order/download_order/" . $table => "download"];
+                $links = ["/order/view_order/" . $table => "view", "/order/download_order/" . $table => "download"];
                 if ($table == "aggregate") {
-                    $links = ["/public/order/aggregate_download" => "download"];
+                    $links = ["/order/aggregate_download" => "download"];
                 }
             }
 
@@ -498,9 +498,9 @@ class Order extends BaseController {
                 $data['logs'] = Cdrr_log::with('user.access')->where('cdrr_id', $cdrr_id)->get();
                 if ($data['options'] == "view" || $data['options'] == "update") {
                     if ($data['status_name'] == "prepared" || $data['status_name'] == "review") {
-                        $data['option_links'] = "<li class='active'><a href='" . base_url("/public/order/view_order/cdrr/" . $cdrr_id) . "'>view</a></li><li><a href='" . base_url("/public/order/update_order/cdrr/" . $cdrr_id) . "'>update</a></li><li><a class='delete' href='" . base_url("/public/order/delete_order/cdrr/" . $cdrr_id) . "'>delete</a></li>";
+                        $data['option_links'] = "<li class='active'><a href='" . base_url("/order/view_order/cdrr/" . $cdrr_id) . "'>view</a></li><li><a href='" . base_url("/order/update_order/cdrr/" . $cdrr_id) . "'>update</a></li><li><a class='delete' href='" . base_url("/order/delete_order/cdrr/" . $cdrr_id) . "'>delete</a></li>";
                     } else {
-                        $data['option_links'] = "<li class='active'><a href='" . base_url("/public/order/view_order/cdrr/" . $cdrr_id) . "'>view</a></li>";
+                        $data['option_links'] = "<li class='active'><a href='" . base_url("/order/view_order/cdrr/" . $cdrr_id) . "'>view</a></li>";
                     }
                 }
 
@@ -983,15 +983,15 @@ class Order extends BaseController {
         if ($status == "prepared") {
             $id = $this->extract_order($type, $main_array);
             $this->session->setFlashdata('order_message', "Your " . strtoupper($type) . " data was successfully saved !");
-            return redirect()->to(base_url() . "/public/order");
+            return redirect()->to(base_url() . "/order");
         } else if ($status != "prepared") {
             $id = $this->extract_order($type, $main_array, $id);
             $this->session->setFlashdata('order_message', "Your " . strtoupper($type) . " data was successfully " . $status . " !");
 
             if ($status == "approved" || $status == "archived") {
-                return redirect()->to(base_url() . "/public/order/view_order/" . $type . "/" . $id);
+                return redirect()->to(base_url() . "/order/view_order/" . $type . "/" . $id);
             } else {
-                return redirect()->to(base_url() . "/public/order/update_order/" . $type . "/" . $id);
+                return redirect()->to(base_url() . "/order/update_order/" . $type . "/" . $id);
             }
         }
     }
@@ -1089,7 +1089,7 @@ class Order extends BaseController {
             }
         }
         if ($mission == 0) {
-            return redirect()->to(base_url() . "/public/order");
+            return redirect()->to(base_url() . "/order");
         }
     }
 
@@ -1256,7 +1256,7 @@ class Order extends BaseController {
         $id = $this->extract_order($type, $main_array, $id);
         $this->session->setFlashdata('order_delete', "Your " . strtoupper($type) . " data was successfully " . $status . " !");
 
-        return redirect()->to(base_url() . "/public/order");
+        return redirect()->to(base_url() . "/order");
     }
 
     public function download_order($type = "cdrr", $id = null) {
@@ -1912,7 +1912,7 @@ class Order extends BaseController {
         }
         $ret = implode("<br/>", $ret);
         $this->session->setFlashdata('order_message', $ret);
-        return redirect()->to(base_url() . "/public/order");
+        return redirect()->to(base_url() . "/order");
     }
 
     public function getMainRegimen($regimen_code = "", $regimen_desc = "") {
@@ -2552,7 +2552,7 @@ class Order extends BaseController {
 
     public function base_params($data) {
         $data['title'] = "Order Reporting";
-        $data['link'] = "/public/order";
+        $data['link'] = "/order";
         echo view('\Modules\ADT\Views\template', $data);
     }
 

@@ -56,9 +56,9 @@ class Dose_management extends \App\Controllers\BaseController {
 
                 if ($dose->Active == 1) {
                     $links .= " | ";
-                    $links .= anchor(base_url() . '/public/dose_management/disable/' . $dose->id, 'Disable', array('class' => 'disable_user'));
+                    $links .= anchor(base_url() . '/dose_management/disable/' . $dose->id, 'Disable', array('class' => 'disable_user'));
                 } else {
-                    $links .= anchor(base_url() . '/public/dose_management/enable/' . $dose->id, 'Enable', array('class' => 'enable_user'));
+                    $links .= anchor(base_url() . '/dose_management/enable/' . $dose->id, 'Enable', array('class' => 'enable_user'));
                 }
             }
 
@@ -86,7 +86,7 @@ class Dose_management extends \App\Controllers\BaseController {
         $this->session->set('message_counter', '1');
         $this->session->set('msg_success', $this->request->getPost('dose_name') . ' was succesfully Added!');
         $this->session->setFlashdata('filter_datatable', $this->request->getPost('dose_name')); //Filter after saving
-        return redirect()->to(base_url() . '/public/settings_management');
+        return redirect()->to(base_url() . '/settings_management');
     }
 
     public function edit() {
@@ -105,7 +105,7 @@ class Dose_management extends \App\Controllers\BaseController {
         $query = $this->db->query("UPDATE dose SET Name='$dose_name',value='$dose_value',frequency='$dose_frequency' WHERE id='$dose_id'");
         $this->session->set('msg_success', $this->request->getPost('dose_name') . ' was Updated!');
         $this->session->setFlashdata('filter_datatable', $this->request->getPost('dose_name')); //Filter after saving
-        return redirect()->to(base_url() . '/public/settings_management');
+        return redirect()->to(base_url() . '/settings_management');
     }
 
     public function enable($dose_id) {
@@ -115,7 +115,7 @@ class Dose_management extends \App\Controllers\BaseController {
         //$this -> session -> set('message_counter','1');
         $this->session->set('msg_success', $results->Name . ' was enabled!');
         $this->session->setFlashdata('filter_datatable', $results->Name); //Filter
-        return redirect()->to(base_url() . '/public/settings_management');
+        return redirect()->to(base_url() . '/settings_management');
     }
 
     public function disable($dose_id) {
@@ -125,7 +125,7 @@ class Dose_management extends \App\Controllers\BaseController {
         //$this -> session -> set('message_counter','2');
         $this->session->set('msg_error', $results->Name . ' was disabled!');
         $this->session->setFlashdata('filter_datatable', $results->Name); //Filter
-        return redirect()->to(base_url() . '/public/settings_management');
+        return redirect()->to(base_url() . '/settings_management');
     }
 
     public function base_params($data) {

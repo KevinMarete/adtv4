@@ -10,7 +10,7 @@
                 <p style="color:red;">Blank Database installed: You must initialize facility!</p>
             <?php } ?>
         </div>
-        <form class="form-horizontal col-md-6 col-md-offset-3" method="POST" action="<?php echo base_url() . '/public/initialize'; ?>">
+        <form class="form-horizontal col-md-6 col-md-offset-3" method="POST" action="<?php echo base_url() . '/initialize'; ?>">
             <div class="form-group">
                 <label for="facility" class="col-sm-2 control-label">Facility</label>
                 <div class="col-sm-10">
@@ -25,15 +25,15 @@
         </form>	
     </div>
 </div>
-<link href="<?= base_url() . '/public/css/select2.css'; ?>" type="text/css" rel="stylesheet"/>
-<script src="<?= base_url(); ?>/public/js/select2.js"></script>
+<link href="<?= base_url() . '/css/select2.css'; ?>" type="text/css" rel="stylesheet"/>
+<script src="<?= base_url(); ?>/js/select2.js"></script>
 <script type="text/javascript">
     $(function () {
         //Get Facilities
         $("#facility").select2({
             minimumInputLength: 2,
             ajax: {
-                url: "<?php echo base_url() . '/public/getfacilities'; ?>",
+                url: "<?php echo base_url() . '/getfacilities'; ?>",
                 dataType: 'json',
                 data: function (term, page) {
                     return {

@@ -140,7 +140,7 @@ class Facility_Management extends \App\Controllers\BaseController {
         } else {
             $this->session->set('msg_error', 'Facility details could not be updated!');
         }
-        return redirect()->to(base_url() . '/public/settings_management');
+        return redirect()->to(base_url() . '/settings_management');
     }
 
     public function base_params($data) {

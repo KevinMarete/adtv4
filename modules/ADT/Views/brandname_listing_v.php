@@ -1,4 +1,4 @@
-<script type="text/javascript" src="<?php echo base_url() . '/public/assets/scripts/datatable/jquery.dataTables.rowGrouping.js' ?>"></script>
+<script type="text/javascript" src="<?php echo base_url() . '/assets/scripts/datatable/jquery.dataTables.rowGrouping.js' ?>"></script>
 
 
 <script>
@@ -86,7 +86,7 @@
                                                                      ?>  
 
                             <tr><td><?php echo $drug_code->drug; ?></td><td><?php echo $brand->brand; ?></td>
-                                        <td><?php echo anchor(base_url().'/public/brandname_management/delete/' . $brand->id, 'Delete'); ?></td></tr>
+                                        <td><?php echo anchor(base_url().'/brandname_management/delete/' . $brand->id, 'Delete'); ?></td></tr>
                                     <?php
                                 }
                             }
@@ -102,7 +102,7 @@
     <div id="client_form" title="New Brandname" class="modal hide fade cyan" tabindex="-1" role="dialog" aria-labelledby="label" aria-hidden="true">
         <?php
         $attributes = array('class' => 'input_form');
-        echo form_open(base_url().'/public/brandname_management/save', $attributes);
+        echo form_open(base_url().'/brandname_management/save', $attributes);
         ?>
 
         <div class="modal-header">

@@ -6,7 +6,7 @@
             $("#regimen_edit_tbl").css("display", "none");
             var _id = this.id;
             var request = $.ajax({
-                url: "<?php echo base_url();?>/public/regimen_management/edit",
+                url: "<?php echo base_url();?>/regimen_management/edit",
                 type: 'POST',
                 data: {"id": _id},
                 dataType: "json",
@@ -88,7 +88,7 @@
                             counter = arr.length;
                             if (counter > 0) {
                                 $.ajax({
-                                    url: base_url + '/public/regimen_management/merge/' + primary_drug_merge_id,
+                                    url: base_url + '/regimen_management/merge/' + primary_drug_merge_id,
                                     type: 'POST',
                                     data: {'drug_codes': arr},
                                     success: function (data) {
@@ -124,7 +124,7 @@
                                     drug_codes.push($(this).val());
                                 });
                                 $.ajax({
-                                    url: base_url + '/public/regimen_management/disable',
+                                    url: base_url + '/regimen_management/disable',
                                     type: 'POST',
                                     data: {'drug_codes': drug_codes, 'multiple': '1'},
                                     success: function (data) {
@@ -163,7 +163,7 @@
                                     drug_codes.push($(this).val());
                                 });
                                 $.ajax({
-                                    url: base_url + '/public/regimen_management/enable',
+                                    url: base_url + '/regimen_management/enable',
                                     type: 'POST',
                                     data: {'drug_codes': drug_codes, 'multiple': '1'},
                                     success: function (data) {
@@ -195,7 +195,7 @@
             var base_url = '<?php echo base_url(); ?>';
             //get Non mapped regimens
             $.ajax({
-                url: base_url + '/public/regimen_management/getNonMappedRegimens',
+                url: base_url + '/regimen_management/getNonMappedRegimens',
                 type: 'GET',
                 dataType: 'json',
                 data: {'param': '0'},
@@ -350,7 +350,7 @@ session()->set('message', " ");
     <div id="entry_form" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="NewRegimen" aria-hidden="true">
         <?php
         $attributes = array('class' => 'input_form');
-        echo form_open(base_url() . '/public/regimen_management/save', $attributes);
+        echo form_open(base_url() . '/regimen_management/save', $attributes);
         ?>
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><font color="white">close</font></button>
@@ -460,7 +460,7 @@ session()->set('message', " ");
     <div id="edit_form" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="EditRegimen" aria-hidden="true">
         <?php
         $attributes = array('class' => 'input_form');
-        echo form_open(base_url().'/public/regimen_management/update', $attributes);
+        echo form_open(base_url().'/regimen_management/update', $attributes);
         //echo validation_errors('<p class="error">', '</p>');
         ?>
         <!-- Modal for adding a new regimen to the database -->
@@ -595,7 +595,7 @@ session()->set('message', " ");
                 <h3 id="BulkMapping">Bulk regimen Mapping [ Regimens details ]</h3>
             </div>
             <div class="modal-body">
-                <div id="loadingD" style="display: none; width: 60%; position:fixed; margin-bottom: 15px; text-align: center;"><img style="width: 30px;" src="<?php echo base_url(); ?>//public/assets/images/loading_spin.gif"></div>
+                <div id="loadingD" style="display: none; width: 60%; position:fixed; margin-bottom: 15px; text-align: center;"><img style="width: 30px;" src="<?php echo base_url(); ?>//assets/images/loading_spin.gif"></div>
                 <table class="table table-bordered table-striped" id="tbl_bulk_mapping"> 
                     <thead>
                         <tr><th style="width: 5%">#</th><th style="width:65%">Regimens</th><th>Sync Regimens</th></tr>
@@ -674,7 +674,7 @@ session()->set('message', " ");
             var c = counter + 1;
             if (map_id != "") {//if regimen mapped, update regimens details
                 $.ajax({
-                    url: base_url + '/public/regimen_management/updateBulkMapping',
+                    url: base_url + '/regimen_management/updateBulkMapping',
                     type: 'POST',
                     dataType: 'html',
                     data: {'regimen_id': id, "map_id": map_id},

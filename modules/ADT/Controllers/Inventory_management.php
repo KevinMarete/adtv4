@@ -175,7 +175,7 @@ class Inventory_management extends \App\Controllers\BaseController {
                 }
             }
             $id = $aRow['id'];
-            $row[] = "<a href='" . base_url() . "/public/getDrugBinCard/" . $id . "/" . $stock_type . "'>View Bin Card</a>";
+            $row[] = "<a href='" . base_url() . "/getDrugBinCard/" . $id . "/" . $stock_type . "'>View Bin Card</a>";
 
             $output['aaData'][] = $row;
         }
@@ -520,7 +520,7 @@ class Inventory_management extends \App\Controllers\BaseController {
         if ($action == 'delete') {
             $this->db->query('delete from adr_form where id = ' . $id);
             $this->db->query('delete from adr_form_details where adr_id = ' . $id);
-            return redirect()->to(base_url() . '/public/adr/0/0');
+            return redirect()->to(base_url() . '/adr/0/0');
             die;
         }
         $data['content_view'] = '\Modules\ADT\Views\\adr_v';
@@ -587,7 +587,7 @@ class Inventory_management extends \App\Controllers\BaseController {
             $builder->update($pqmp_data);
             $this->session->setFlashdata('pqmp_saved', 'Pharmacovigilance form was saved successfully!');
 
-            return redirect()->to(base_url() . '/public/inventory_management/loadRecord/' . $record_no);
+            return redirect()->to(base_url() . '/inventory_management/loadRecord/' . $record_no);
         }
 
         $data = [];
@@ -612,7 +612,7 @@ class Inventory_management extends \App\Controllers\BaseController {
 
         if ($action == 'delete') {
             $this->db->query('delete from pqms where id = ' . $record_no);
-            return redirect()->to(base_url() . '/public/pqmp/0/0');
+            return redirect()->to(base_url() . '/pqmp/0/0');
         }
 
         $data['facility_code'] = session()->get('facility');
@@ -696,7 +696,7 @@ class Inventory_management extends \App\Controllers\BaseController {
             //$this->db->insert('pqmp', $pqmp_data);
             $this->session->setFlashdata('pqmp_saved', 'Pharmacovigilance form was saved successfully!');
 
-            return redirect()->to(base_url() . '/public/loadRecord/' . $record_no);
+            return redirect()->to(base_url() . '/loadRecord/' . $record_no);
 
 
             die;
@@ -800,7 +800,7 @@ class Inventory_management extends \App\Controllers\BaseController {
 
         $this->session->setFlashdata('pqmp_saved', 'Pharmacovigilance SPQMs was saved successfully!');
 
-        return redirect()->to(base_url() . '/public/pqmp/0/0');
+        return redirect()->to(base_url() . '/pqmp/0/0');
     }
 
     function _p($val) {
@@ -871,7 +871,7 @@ class Inventory_management extends \App\Controllers\BaseController {
                     $builder2 = $this->db->table('adr_form_details');
                     $builder2->insert($adr_details);
                 }
-                return redirect()->to(base_url() . '/public/adr/0/0');
+                return redirect()->to(base_url() . '/adr/0/0');
             } else {
                 echo "No drugs selected";
                 // no drugs selected
@@ -1075,7 +1075,7 @@ class Inventory_management extends \App\Controllers\BaseController {
                     $builder2->update($adr_details);
                 }
 
-                return redirect()->to(base_url() . '/public/inventory_management/loadAdrRecord/' . $record_no);
+                return redirect()->to(base_url() . '/inventory_management/loadAdrRecord/' . $record_no);
             } else {
                 echo "No drugs selected";
                 // no drugs selected
@@ -1136,7 +1136,7 @@ class Inventory_management extends \App\Controllers\BaseController {
     function deleteAdr($recordno) {
       
         $this->db->query("DELETE FROM adr_form WHERE id='$recordno'");
-        return redirect()->to(base_url() . '/public/adr/0/0');
+        return redirect()->to(base_url() . '/adr/0/0');
     }
 
     public function export_pqmp($id) {

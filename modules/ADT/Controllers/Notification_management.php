@@ -48,7 +48,7 @@ class Notification_management extends \App\Controllers\BaseController {
         $notification_days = 10;
         $notification = "";
         $message = "";
-        $notification_link = base_url('/public/order/satellites_reported');
+        $notification_link = base_url('/order/satellites_reported');
 
         //get reporting satellites
         $start_date = date('Y-m-01', strtotime("-1 month"));
@@ -83,7 +83,7 @@ class Notification_management extends \App\Controllers\BaseController {
     }
 
     public function update_notification() {
-        $changelog_link = base_url() . '/public/README.md';
+        $changelog_link = base_url() . '/README.md';
         echo "<li><a href='$changelog_link' ><i class='icon-th'></i>New System Changes</a></li>";
     }
 
@@ -327,7 +327,7 @@ class Notification_management extends \App\Controllers\BaseController {
                 }
             }
             if ($overall_total > 1) {
-                $temp_link = base_url('public/notification_management/load_error_view');
+                $temp_link = base_url('/notification_management/load_error_view');
                 $temp = "<li><a href='" . $temp_link . "'><i class='icon-th'></i>Data Errors <div class='badge badge-important'>" . $overall_total . "</div></a><li>";
             }
             echo $temp;
@@ -374,12 +374,12 @@ class Notification_management extends \App\Controllers\BaseController {
                 $patient_name = strtoupper(trim($r['first_name'] . " " . $r['other_name'] . " " . $r['last_name']));
                 $id = $r['id'];
                 $link = "";
-                $link = '<a href="' . base_url() . '/public/patient/load_view/details/' . $id . '">Detail</a> | <a href="' . base_url() . '/public/patient/edit/' . $id . '">Edit</a> ' . $link;
+                $link = '<a href="' . base_url() . '/patient/load_view/details/' . $id . '">Detail</a> | <a href="' . base_url() . '/patient/edit/' . $id . '">Edit</a> ' . $link;
                 if ($access_level == "facility_administrator") {
                     if ($r['Active'] == 1) {
-                        $link .= '| <a href="' . base_url() . '/public/patient/disable/' . $id . '" class="red">Disable</a>';
+                        $link .= '| <a href="' . base_url() . '/patient/disable/' . $id . '" class="red">Disable</a>';
                     } else {
-                        $link .= '| <a href="' . base_url() . '/public/patient/enable/' . $id . '" class="green">Enable</a>';
+                        $link .= '| <a href="' . base_url() . '/patient/enable/' . $id . '" class="green">Enable</a>';
                     }
                 }
                 $appointment = "";
@@ -599,7 +599,7 @@ class Notification_management extends \App\Controllers\BaseController {
             return $results;
         } else {
             $total = $db->affectedRows();
-            echo "<li><a href='" . base_url() . "/public/notification_management/load_ontime_appointments_view'><i class='icon-th'></i>On-time Appointments <div class='badge badge-important'>" . $total . "</div></a></li>";
+            echo "<li><a href='" . base_url() . "/notification_management/load_ontime_appointments_view'><i class='icon-th'></i>On-time Appointments <div class='badge badge-important'>" . $total . "</div></a></li>";
         }
     }
 
@@ -663,7 +663,7 @@ class Notification_management extends \App\Controllers\BaseController {
             return $results;
         } else {
             $total = $db->affectedRows();
-            echo "<li><a href='" . base_url() . "/public/notification_management/load_prescriptions_view'><i class='icon-th'></i>Pending Prescriptions<div class='badge badge-important'>" . $total . "</div></a></li>";
+            echo "<li><a href='" . base_url() . "/notification_management/load_prescriptions_view'><i class='icon-th'></i>Pending Prescriptions<div class='badge badge-important'>" . $total . "</div></a></li>";
         }
     }
 
@@ -683,9 +683,9 @@ class Notification_management extends \App\Controllers\BaseController {
 
         //loop  through patients adding the rows
         foreach ($patients as $patient) {
-            $detail_link = "<a href='" . base_url() . "/public/patient_management/viewDetails/" . $patient['id'] . "'>Detail</a>";
-            $edit_link = "<a href='" . base_url() . "/public/patient_management/edit/" . $patient['id'] . "'>Edit</a>";
-            $disable_link = "<a href='" . base_url() . "/public/patient_management/disable/" . $patient['id'] . "' class='red'>Disable</a>";
+            $detail_link = "<a href='" . base_url() . "/patient_management/viewDetails/" . $patient['id'] . "'>Detail</a>";
+            $edit_link = "<a href='" . base_url() . "/patient_management/edit/" . $patient['id'] . "'>Edit</a>";
+            $disable_link = "<a href='" . base_url() . "/patient_management/disable/" . $patient['id'] . "' class='red'>Disable</a>";
             $patient['links'] = $detail_link . " |  " . $edit_link . " | " . $disable_link;
             unset($patient['id']);
             $table->addRow($patient);
@@ -712,9 +712,9 @@ class Notification_management extends \App\Controllers\BaseController {
 
         //loop  through patients adding the rows
         foreach ($patients as $patient) {
-            $detail_link = "<a href='" . base_url() . "/public/patient_management/viewDetails/" . $patient['id'] . "'>Detail</a>";
-            $edit_link = "<a href='" . base_url() . "/public/patient_management/edit/" . $patient['id'] . "'>Edit</a>";
-            $disable_link = "<a href='" . base_url() . "/public/patient_management/disable/" . $patient['id'] . "' class='red'>Disable</a>";
+            $detail_link = "<a href='" . base_url() . "/patient_management/viewDetails/" . $patient['id'] . "'>Detail</a>";
+            $edit_link = "<a href='" . base_url() . "/patient_management/edit/" . $patient['id'] . "'>Edit</a>";
+            $disable_link = "<a href='" . base_url() . "/patient_management/disable/" . $patient['id'] . "' class='red'>Disable</a>";
             $patient['links'] = $detail_link . " |  " . $edit_link . " | " . $disable_link;
             unset($patient['id']);
             $table->addRow($patient);
@@ -741,9 +741,9 @@ class Notification_management extends \App\Controllers\BaseController {
 
         //loop  through patients adding the rows
         foreach ($patients as $patient) {
-            $detail_link = "<a href='" . base_url() . "/public/patient_management/viewDetails/" . $patient['id'] . "'>Detail</a>";
-            $edit_link = "<a href='" . base_url() . "/public/patient_management/edit/" . $patient['id'] . "'>Edit</a>";
-            $disable_link = "<a href='" . base_url() . "/public/patient_management/disable/" . $patient['id'] . "' class='red'>Disable</a>";
+            $detail_link = "<a href='" . base_url() . "/patient_management/viewDetails/" . $patient['id'] . "'>Detail</a>";
+            $edit_link = "<a href='" . base_url() . "/patient_management/edit/" . $patient['id'] . "'>Edit</a>";
+            $disable_link = "<a href='" . base_url() . "/patient_management/disable/" . $patient['id'] . "' class='red'>Disable</a>";
             $patient['links'] = $detail_link . " |  " . $edit_link . " | " . $disable_link;
             unset($patient['id']);
             $table->addRow($patient);
@@ -770,9 +770,9 @@ class Notification_management extends \App\Controllers\BaseController {
 
         //loop  through patients adding the rows
         foreach ($patients as $patient) {
-            $detail_link = "<a href='" . base_url() . "/public/patient_management/viewDetails/" . $patient['id'] . "'>Detail</a>";
-            $edit_link = "<a href='" . base_url() . "/public/patient_management/edit/" . $patient['id'] . "'>Edit</a>";
-            $disable_link = "<a href='" . base_url() . "/public/patient_management/disable/" . $patient['id'] . "' class='red'>Disable</a>";
+            $detail_link = "<a href='" . base_url() . "/patient_management/viewDetails/" . $patient['id'] . "'>Detail</a>";
+            $edit_link = "<a href='" . base_url() . "/patient_management/edit/" . $patient['id'] . "'>Edit</a>";
+            $disable_link = "<a href='" . base_url() . "/patient_management/disable/" . $patient['id'] . "' class='red'>Disable</a>";
             $patient['links'] = $detail_link . " |  " . $edit_link . " | " . $disable_link;
             unset($patient['id']);
             $table->addRow($patient);
@@ -799,8 +799,8 @@ class Notification_management extends \App\Controllers\BaseController {
         //loop  through patients adding the rows
         foreach ($patients as $patient) {
             // http://localhost:81/ADT/dispensement_management/dispense/2821?pid=1255
-            $dispense_link = "<a href='" . base_url() . "/public/dispensement_management/dispense/" . $patient['id'] . "?pid=" . $patient['drug_prescriptionid'] . "'>Dispense</a>";
-            $edit_link = "<a href='" . base_url() . "/public/patient_management/edit/" . $patient['id'] . "'>Edit</a>";
+            $dispense_link = "<a href='" . base_url() . "/dispensement_management/dispense/" . $patient['id'] . "?pid=" . $patient['drug_prescriptionid'] . "'>Dispense</a>";
+            $edit_link = "<a href='" . base_url() . "/patient_management/edit/" . $patient['id'] . "'>Edit</a>";
             // $disable_link="<a href='".base_url()."patient_management/disable/".$patient['id']."' class='red'>Disable</a>";
             $patient['links'] = $dispense_link;
             // unset($patient['id']);

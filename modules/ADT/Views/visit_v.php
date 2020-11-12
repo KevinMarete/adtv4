@@ -104,7 +104,7 @@
     <div id="client_form" title="New Client Sources" class="modal hide fade cyan" tabindex="-1" role="dialog" aria-labelledby="NewDrug" aria-hidden="true">
         <?php
         $attributes = array('class' => 'input_form');
-        echo form_open(base_url() . '/public/visit_management/save', $attributes);
+        echo form_open(base_url() . '/visit_management/save', $attributes);
         // echo validation_errors('<p class="error">', '</p>');
         ?>	
         <div class="modal-header">
@@ -127,7 +127,7 @@
     <div id="edit_form" title="Edit Visit Purpose" class="modal hide fade cyan" tabindex="-1" role="dialog" aria-labelledby="NewDrug" aria-hidden="true">
         <?php
         $attributes = array('class' => 'input_form');
-        echo form_open(base_url() . '/public/visit_management/update', $attributes);
+        echo form_open(base_url() . '/visit_management/update', $attributes);
         //  echo validation_errors('<p class="error">', '</p>');
         ?>	
         <div class="modal-header">

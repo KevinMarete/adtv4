@@ -40,7 +40,7 @@ $first_load = $ccc_stores[0]->id; //Which store to load first
         var storeTable = $('#store_table').dataTable({
             "bProcessing": true,
             "bServerSide": true,
-            "sAjaxSource": base_url+"/public/stock_listing/" + stock_type,
+            "sAjaxSource": base_url+"/stock_listing/" + stock_type,
             "bJQueryUI": true,
             "sPaginationType": "full_numbers",
             "bStateSave": true,

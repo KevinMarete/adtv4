@@ -366,8 +366,8 @@ $routes->get('regimen_drug_management/enable/(:any)', '\Modules\ADT\Controllers\
 $routes->get('regimen_drug_management/disable/(:any)', '\Modules\ADT\Controllers\Regimen_drug_management::disable/$1');
 
 /* Patients */
-$routes->addRedirect('patient_management', 'public/patients');
-$routes->addRedirect('addpatient_show', 'public/patients/add');
+$routes->addRedirect('patient_management', 'patients');
+$routes->addRedirect('addpatient_show', 'patients/add');
 $routes->get('patients', '\Modules\ADT\Controllers\Patient_management::index');
 $routes->get('patients/listing', '\Modules\ADT\Controllers\Patient_management::listing');
 $routes->get('patients/add', '\Modules\ADT\Controllers\Patient_management::addpatient_show');

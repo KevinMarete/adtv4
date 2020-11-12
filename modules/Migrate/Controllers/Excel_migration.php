@@ -69,7 +69,7 @@ class Excel_migration extends BaseController {
             $this->session->setFlashdata('msg_type', 'warning');
         }
 
-        return redirect()->to(base_url().'/public/migrate/excel');
+        return redirect()->to(base_url().'/migrate/excel');
     }
 
     public function downloadTemplate($template){

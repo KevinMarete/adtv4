@@ -50,9 +50,9 @@ class Drugcode_classification extends \App\Controllers\BaseController {
 
                 if ($classification['active'] == 1) {
                     $links .= " | ";
-                    $links .= anchor(base_url() . '/public/drugcode_classification/disable/' . $classification['id'], 'Disable', array('class' => 'disable_user'));
+                    $links .= anchor(base_url() . '/drugcode_classification/disable/' . $classification['id'], 'Disable', array('class' => 'disable_user'));
                 } else {
-                    $links .= anchor(base_url() . '/public/drugcode_classification/enable/' . $classification['id'], 'Enable', array('class' => 'enable_user'));
+                    $links .= anchor(base_url() . '/drugcode_classification/enable/' . $classification['id'], 'Enable', array('class' => 'enable_user'));
                 }
             }
 
@@ -79,7 +79,7 @@ class Drugcode_classification extends \App\Controllers\BaseController {
             $this->session->set('msg_success', $this->request->getPost('classification_name') . ' was Added');
             $this->session->setFlashdata('filter_datatable', $this->request->getPost('classification_name'));
             //Filter datatable
-            return redirect()->to(base_url() . '/public/settings_management');
+            return redirect()->to(base_url() . '/settings_management');
         }
     }
 
@@ -90,7 +90,7 @@ class Drugcode_classification extends \App\Controllers\BaseController {
         $this->session->set('msg_success', $this->request->getPost('edit_classification_name') . ' was Updated');
         $this->session->setFlashdata('filter_datatable', $this->request->getPost('edit_classification_name'));
         //Filter datatable
-        return redirect()->to(base_url() . '/public/settings_management');
+        return redirect()->to(base_url() . '/settings_management');
     }
 
     public function enable($classification_id) {
@@ -99,7 +99,7 @@ class Drugcode_classification extends \App\Controllers\BaseController {
         $this->session->set('msg_success', $results->name . ' was enabled');
         $this->session->setFlashdata('filter_datatable', $results->name);
         //Filter datatable
-        return redirect()->to(base_url() . '/public/settings_management');
+        return redirect()->to(base_url() . '/settings_management');
     }
 
     public function disable($classification_id) {
@@ -108,7 +108,7 @@ class Drugcode_classification extends \App\Controllers\BaseController {
         $this->session->set('msg_error', $results->name . ' was disabled');
         $this->session->setFlashdata('filter_datatable', $results->name);
         //Filter datatable
-        return redirect()->to(base_url() . '/public/settings_management');
+        return redirect()->to(base_url() . '/settings_management');
     }
 
     private function _submit_validate() {

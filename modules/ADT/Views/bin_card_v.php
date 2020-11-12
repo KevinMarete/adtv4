@@ -70,7 +70,7 @@
 
     <div class="full-content" style="background-color: #D6DFEC;">
         <div id="sub_title" >
-            <a href="<?php echo base_url() . '/public/inventory_management ' ?>">Inventory - <?php echo str_replace('(store)', '', str_replace('(pharmacy)', '', $store)) ?> </a> <i class=" icon-chevron-right"></i> <strong>Bin Card</strong>
+            <a href="<?php echo base_url() . '/inventory_management ' ?>">Inventory - <?php echo str_replace('(store)', '', str_replace('(pharmacy)', '', $store)) ?> </a> <i class=" icon-chevron-right"></i> <strong>Bin Card</strong>
             <hr size="1">
         </div>
 
@@ -160,7 +160,7 @@
 </div>
 <script type="text/javascript">
     $(document).ready(function () {
-        var _url = '<?php echo base_url() . "/public/getDrugTransactions/" . $drug_id . "/" . $stock_val; ?>';
+        var _url = '<?php echo base_url() . "/getDrugTransactions/" . $drug_id . "/" . $stock_val; ?>';
         $('#transaction_tbl').dataTable({
             "sDom": "<'row row_top'<'span7'l><'span5'f>r>t<'row row_bottom'<'span6'i><'span5'p>>",
             "sPaginationType": "bootstrap",

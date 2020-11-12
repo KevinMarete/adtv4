@@ -28,7 +28,7 @@
             "bAutoWidth": false,
             "bDeferRender": true,
             "bInfo": true,
-            "sAjaxSource": "/public/patients/listing",
+            "sAjaxSource": "/patients/listing",
             "aoColumnDefs": [{"bSearchable": true, "aTargets": [0, 1, 3, 4]}, {"bSearchable": false, "aTargets": ["_all"]}]
         });
         setTimeout(function () {

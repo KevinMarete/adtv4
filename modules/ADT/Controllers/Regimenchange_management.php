@@ -54,10 +54,10 @@ class Regimenchange_management extends \App\Controllers\BaseController {
 
                 if ($source->active == 1) {
                     $links .= " | ";
-                    $links .= anchor(base_url() . '/public/regimenchange_management/disable/' . $source->id, 'Disable', array('class' => 'disable_user'));
+                    $links .= anchor(base_url() . '/regimenchange_management/disable/' . $source->id, 'Disable', array('class' => 'disable_user'));
                 } else {
 
-                    $links .= anchor(base_url() . '/public/regimenchange_management/enable/' . $source->id, 'Enable', array('class' => 'enable_user'));
+                    $links .= anchor(base_url() . '/regimenchange_management/enable/' . $source->id, 'Enable', array('class' => 'enable_user'));
                 }
             }
             $this->table->addRow($source->id, $source->name, $links);
@@ -85,7 +85,7 @@ class Regimenchange_management extends \App\Controllers\BaseController {
         //$this -> session -> set_userdata('message_counter','1');
         session()->set('msg_success', $_POST['regimenchange_name'] . ' was Added');
         session()->setFlashdata('filter_datatable', $_POST['regimenchange_name']); //Filter after saving
-        return redirect()->to(base_url() . '/public/settings_management');
+        return redirect()->to(base_url() . '/settings_management');
     }
 
     public function edit($source_id) {
@@ -105,7 +105,7 @@ class Regimenchange_management extends \App\Controllers\BaseController {
         //$this -> session -> set_userdata('message_counter','1');
         session()->set('msg_success', $this->request->getPost('regimenchange_name') . ' was Updated');
         session()->set('filter_datatable', $this->request->getPost('regimenchange_name')); //Filter after saving
-        return redirect()->to(base_url() . '/public/settings_management');
+        return redirect()->to(base_url() . '/settings_management');
     }
 
     public function enable($regimenchange_id) {
@@ -114,7 +114,7 @@ class Regimenchange_management extends \App\Controllers\BaseController {
         //$this -> session -> set_userdata('message_counter','1');
         session()->set('msg_success', $results->name . ' was enabled');
         session()->set('filter_datatable', $results->name); //Filter
-        return redirect()->to(base_url() . '/public/settings_management');
+        return redirect()->to(base_url() . '/settings_management');
     }
 
     public function disable($regimenchange_id) {
@@ -123,7 +123,7 @@ class Regimenchange_management extends \App\Controllers\BaseController {
         session()->set('message_counter', '2');
         session()->set('msg_error', $results->name . ' was disabled');
         session()->set('filter_datatable', $results->name); //Filter
-        return redirect()->to(base_url() . '/public/settings_management');
+        return redirect()->to(base_url() . '/settings_management');
     }
 
     public function base_params($data) {

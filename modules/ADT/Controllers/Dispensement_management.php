@@ -279,7 +279,7 @@ class Dispensement_management extends BaseController {
                     ];
                     $this->db->table('adr_form_details')->insert($adr_details);
                 }
-                redirect()->to(base_url().'/public/inventory_management/adr/');
+                redirect()->to(base_url().'/inventory_management/adr/');
                 
             } else {
                 echo "No drugs selected";
@@ -909,7 +909,7 @@ class Dispensement_management extends BaseController {
 
         $this->session->set('msg_save_transaction', 'success');
         $this->session->setFlashdata('dispense_updated', 'Dispensing to patient No. ' . $patient . ' successfully completed!');
-        return redirect()->to(base_url()."/public/patients");
+        return redirect()->to(base_url()."/patients");
     }
 
     public function save_edit() {
@@ -1049,7 +1049,7 @@ class Dispensement_management extends BaseController {
         $results = DB::select($sql);
         $record_no = $results[0]->id;
         $this->session->set('msg_save_transaction', 'success');
-        return redirect()->to(base_url("public/patient_management/load_view/details/$record_no"));
+        return redirect()->to(base_url("/patient_management/load_view/details/$record_no"));
     }
 
     public function drugAllergies() {
@@ -1140,7 +1140,7 @@ class Dispensement_management extends BaseController {
             } //end foreach
             $file_name = 'assets/download/' . $patient_name . '(Labels).pdf';
             $this->mpdf->Output($file_name, 'F');
-            echo base_url() .'/public/'. $file_name;
+            echo base_url() .'/'. $file_name;
             // return $this->response->download($file_name, null);
         } else {
             echo 0;
@@ -1216,7 +1216,7 @@ class Dispensement_management extends BaseController {
     public function base_params($data) {
         $data['title'] = "webADT | Drug Dispensing";
         $data['banner_text'] = "Facility Dispensing";
-        $data['link'] = "/public/dispensements";
+        $data['link'] = "/dispensements";
         echo view('\Modules\ADT\Views\template', $data);
     }
 

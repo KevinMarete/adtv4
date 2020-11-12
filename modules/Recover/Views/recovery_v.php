@@ -137,7 +137,7 @@
                             <div id="progress-panel" style="display: none;">
                                 <span id="progress-text">Performing Recovery. May take some time.</span>
                                 <br />  
-                                <img src="<?= base_url() ?>/public/assets/img/loader.gif" >
+                                <img src="<?= base_url() ?>/assets/img/loader.gif" >
                             </div>
 
                             <div class="control-group form-actions">

@@ -15,19 +15,19 @@
 
 <div class="container" style="background-color: #fffacc;border: solid thick #2b597e;padding: 30px; margin-top: 130px; margin-bottom: 130px;border-radius:20px;">
 
-    <a href="<?= base_url(); ?>/public/inventory_management/adr" class="btn btn-default" > Back </a>
+    <a href="<?= base_url(); ?>/inventory_management/adr" class="btn btn-default" > Back </a>
     <?php if (!\is_null($adr_data[0]['ppid']) || $adr_data[0]['synch'] === '1') { ?>
 
     <?php } else { ?>
-        <a href="<?= base_url(); ?>/public/inventory_management/adr/<?= $record_no; ?>/delete" class="btn btn-danger delete-form" > Delete  </a>  
+        <a href="<?= base_url(); ?>/inventory_management/adr/<?= $record_no; ?>/delete" class="btn btn-danger delete-form" > Delete  </a>  
     <?php } ?>
 
-    <a href="<?= base_url(); ?>/public/inventory_management/export_adr/<?= $record_no; ?>/export" class="btn btn-default" > Export(.xls) </a>
-    <form name="adr_form" action="<?= base_url(); ?>/public/inventory_management/adr/<?= $record_no; ?>" method="post">
+    <a href="<?= base_url(); ?>/inventory_management/export_adr/<?= $record_no; ?>/export" class="btn btn-default" > Export(.xls) </a>
+    <form name="adr_form" action="<?= base_url(); ?>/inventory_management/adr/<?= $record_no; ?>" method="post">
         <div class="container">
             <div class="row">
                 <div class="text-center">
-                    <img src="<?php echo base_url() . '/public/assets/images/top_logo.png'; ?>">
+                    <img src="<?php echo base_url() . '/assets/images/top_logo.png'; ?>">
                     <h4>
                         MINISTRY OF HEALTH <br />
                         THE PHARMACY AND POISONS BOARD<br />

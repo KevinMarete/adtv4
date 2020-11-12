@@ -51,9 +51,9 @@ class Visit_management extends \App\Controllers\BaseController {
 
                 if ($source->Active == 1) {
                     $links .= " | ";
-                    $links .= anchor(base_url() . '/public/visit_management/disable/' . $source->id, 'Disable', array('class' => 'disable_user'));
+                    $links .= anchor(base_url() . '/visit_management/disable/' . $source->id, 'Disable', array('class' => 'disable_user'));
                 } else {
-                    $links .= anchor(base_url() . '/public/visit_management/enable/' . $source->id, 'Enable', array('class' => 'enable_user'));
+                    $links .= anchor(base_url() . '/visit_management/enable/' . $source->id, 'Enable', array('class' => 'enable_user'));
                 }
             }
             $this->table->addRow($source->id, $source->name, $links);
@@ -78,7 +78,7 @@ class Visit_management extends \App\Controllers\BaseController {
         $source->save();
         $this->session->set('msg_success', $this->request->getPost('source_name') . ' was Added');
         $this->session->setFlashdata('filter_datatable', $this->request->getPost('source_name')); //Filter datatable
-        return redirect()->to(base_url() . '/public/settings_management');
+        return redirect()->to(base_url() . '/settings_management');
     }
 
     public function edit($source_id) {
@@ -97,7 +97,7 @@ class Visit_management extends \App\Controllers\BaseController {
         //$this -> session -> set('message_counter','1');
         $this->session->set('msg_success', $this->request->getPost('source_name') . ' was Updated');
         $this->session->setFlashdata('filter_datatable', $this->request->getPost('source_name')); //Filter datatable
-        return redirect()->to(base_url() . '/public/settings_management');
+        return redirect()->to(base_url() . '/settings_management');
     }
 
     public function enable($source_id) {
@@ -107,7 +107,7 @@ class Visit_management extends \App\Controllers\BaseController {
         $this->session->set('message_counter', '1');
         $this->session->set('msg_success', $results->name . ' was enabled');
         $this->session->setFlashdata('filter_datatable', $results->name); //Filter datatable
-        return redirect()->to(base_url() . '/public/settings_management');
+        return redirect()->to(base_url() . '/settings_management');
     }
 
     public function disable($source_id) {
@@ -117,7 +117,7 @@ class Visit_management extends \App\Controllers\BaseController {
         //$this -> session -> set('message_counter','2');
         $this->session->set('msg_error', $results->name . ' was disabled');
         $this->session->setFlashdata('filter_datatable', $results->name); //Filter datatable
-        return redirect()->to(base_url() . '/public/settings_management');
+        return redirect()->to(base_url() . '/settings_management');
     }
 
     public function base_params($data) {

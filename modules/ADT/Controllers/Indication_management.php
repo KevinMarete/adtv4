@@ -53,9 +53,9 @@ class Indication_management extends \App\Controllers\BaseController {
 
                 if ($infection->active == 1) {
                     $links .= " | ";
-                    $links .= anchor(base_url().'/public/indication_management/disable/' . $infection->id, 'Disable', array('class' => 'disable_user'));
+                    $links .= anchor(base_url().'/indication_management/disable/' . $infection->id, 'Disable', array('class' => 'disable_user'));
                 } else {
-                    $links .= anchor(base_url().'/public/indication_management/enable/' . $infection->id, 'Enable', array('class' => 'enable_user'));
+                    $links .= anchor(base_url().'/indication_management/enable/' . $infection->id, 'Enable', array('class' => 'enable_user'));
                 }
             }
             $infection_temp = "";
@@ -87,7 +87,7 @@ class Indication_management extends \App\Controllers\BaseController {
         //$this -> session -> set('message_counter','1');
         $this->session->set('msg_success', $this->request->getPost('indication_code') . ' was Added');
         $this->session->setFlashdata('filter_datatable', $this->request->getPost('indication_code')); //Filter datatable
-        return redirect()->to(base_url() . '/public/settings_management');
+        return redirect()->to(base_url() . '/settings_management');
     }
 
     public function edit($indication_id) {
@@ -110,7 +110,7 @@ class Indication_management extends \App\Controllers\BaseController {
         //$this -> session -> set('message_counter','1');
         $this->session->set('msg_success', $this->request->getPost('indication_code') . ' was Updated');
         $this->session->setFlashdata('filter_datatable', $this->request->getPost('indication_code')); //Filter datatable
-        return redirect()->to(base_url() . '/public/settings_management');
+        return redirect()->to(base_url() . '/settings_management');
     }
 
     public function enable($indication_id) {
@@ -120,7 +120,7 @@ class Indication_management extends \App\Controllers\BaseController {
         //$this -> session -> set('message_counter','1');
         $this->session->set('msg_success', $results->indication . ' was enabled');
         $this->session->setFlashdata('filter_datatable', $results->indication); //Filter datatable
-        return redirect()->to(base_url() . '/public/settings_management');
+        return redirect()->to(base_url() . '/settings_management');
     }
 
     public function disable($indication_id) {
@@ -130,7 +130,7 @@ class Indication_management extends \App\Controllers\BaseController {
         //$this -> session -> set('message_counter','2');
         $this->session->set('msg_error', $results->indication . ' was disabled');
         $this->session->setFlashdata('filter_datatable', $results->indication); //Filter datatable
-        return redirect()->to(base_url() . '/public/settings_management');
+        return redirect()->to(base_url() . '/settings_management');
     }
 
     public function base_params($data) {

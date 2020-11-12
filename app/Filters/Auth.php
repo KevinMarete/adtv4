@@ -10,7 +10,7 @@ class Auth implements FilterInterface {
 
     public function before(RequestInterface $request, $arguments = null) {
         if (!session()->has('user_id')) {
-            return redirect()->to(base_url() . '/public/login');
+            return redirect()->to(base_url() . '/login');
         }
     }
 

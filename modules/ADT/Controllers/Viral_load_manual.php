@@ -157,7 +157,7 @@ class Viral_load_manual extends \App\Controllers\BaseController {
         $this->session->set('msg_success', $this->request->getPost('patient_ccc_number') . ' was Updated');
         $this->session->setFlashdata('filter_datatable', $this->request->getPost('patient_ccc_number'));
         //Filter datatable
-        return redirect()->to(base_url() . '/public/settings_management');
+        return redirect()->to(base_url() . '/settings_management');
     }
 
     private function _submit_validate() {

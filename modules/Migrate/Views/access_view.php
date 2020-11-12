@@ -132,10 +132,10 @@
 
 </form>
 </div>
-<link href="<?= base_url() . '/public/css/bootstrap-multiselect.css'; ?>" type="text/css" rel="stylesheet"/>
-<link href="<?= base_url() . '/public/css/select2.css'; ?>" type="text/css" rel="stylesheet"/>
+<link href="<?= base_url() . '/css/bootstrap-multiselect.css'; ?>" type="text/css" rel="stylesheet"/>
+<link href="<?= base_url() . '/css/select2.css'; ?>" type="text/css" rel="stylesheet"/>
 <!--scripts-->
-<script src="<?= base_url(); ?>/public/js/bootstrap-multiselect.js"></script>
-<script src="<?= base_url(); ?>/public/js/jquery.validate.min.js"></script>
-<script src="<?= base_url(); ?>/public/js/select2.js"></script>
-<script src="<?= base_url() ?>/public/js/access-migration.js"></script>
+<script src="<?= base_url(); ?>/js/bootstrap-multiselect.js"></script>
+<script src="<?= base_url(); ?>/js/jquery.validate.min.js"></script>
+<script src="<?= base_url(); ?>/js/select2.js"></script>
+<script src="<?= base_url() ?>/js/access-migration.js"></script>

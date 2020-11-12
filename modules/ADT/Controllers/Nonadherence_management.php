@@ -51,9 +51,9 @@ class Nonadherence_management extends \App\Controllers\BaseController {
 
                 if ($source->active == 1) {
                     $links .= " | ";
-                    $links .= anchor(base_url().'/public/Nonadherence_Management/disable/' . $source->id, 'Disable', array('class' => 'disable_user'));
+                    $links .= anchor(base_url().'/Nonadherence_Management/disable/' . $source->id, 'Disable', array('class' => 'disable_user'));
                 } else {
-                    $links .= anchor(base_url().'/public/Nonadherence_Management/enable/' . $source->id, 'Enable', array('class' => 'enable_user'));
+                    $links .= anchor(base_url().'/Nonadherence_Management/enable/' . $source->id, 'Enable', array('class' => 'enable_user'));
                 }
             }
             $this->table->addRow($source->id, $source->name, $links);
@@ -81,7 +81,7 @@ class Nonadherence_management extends \App\Controllers\BaseController {
         //$this -> session -> set('message_counter','1');
         $this->session->set('msg_success', $this->request->getPost('nonadherence_name') . ' was successfully Added!');
         $this->session->setFlashdata('filter_datatable', $this->request->getPost('nonadherence_name')); //Filter datatable
-      return redirect()->to(base_url() . '/public/settings_management');
+      return redirect()->to(base_url() . '/settings_management');
     }
 
     public function edit($source_id) {
@@ -103,7 +103,7 @@ class Nonadherence_management extends \App\Controllers\BaseController {
         //$this -> session -> set('message_counter','1');
         $this->session->set('msg_success', $this->request->getPost('nonadherence_name') . ' was Updated!');
         $this->session->setFlashdata('filter_datatable', $this->request->getPost('nonadherence_name')); //Filter datatable
-      return redirect()->to(base_url() . '/public/settings_management');
+      return redirect()->to(base_url() . '/settings_management');
     }
 
     public function enable($nonadherence_id) {
@@ -113,7 +113,7 @@ class Nonadherence_management extends \App\Controllers\BaseController {
         //$this -> session -> set('message_counter','1');
         $this->session->set('msg_success', $results->name . ' was enabled!');
         $this->session->setFlashdata('filter_datatable', $results->name); //Filter datatable
-      return redirect()->to(base_url() . '/public/settings_management');
+      return redirect()->to(base_url() . '/settings_management');
     }
 
     public function disable($nonadherence_id) {
@@ -123,7 +123,7 @@ class Nonadherence_management extends \App\Controllers\BaseController {
         //$this -> session -> set('message_counter','2');
         $this->session->set('msg_error', $results->name . ' was disabled!');
         $this->session->setFlashdata('filter_datatable', $results->name); //Filter datatable
-      return redirect()->to(base_url() . '/public/settings_management');
+      return redirect()->to(base_url() . '/settings_management');
     }
 
     public function base_params($data) {

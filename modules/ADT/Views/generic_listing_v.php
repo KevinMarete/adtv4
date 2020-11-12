@@ -66,7 +66,7 @@
     <div id="client_form" title="New Generic Name" class="modal hide fade cyan" tabindex="-1" role="dialog" aria-labelledby="label" aria-hidden="true">
         <?php
         $attributes = array('class' => 'input_form');
-        echo form_open(base_url() . '/public/genericname_management/save', $attributes);
+        echo form_open(base_url() . '/genericname_management/save', $attributes);
         ?>
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -88,7 +88,7 @@
     <div id="edit_form" title="Edit Generic Name" class="modal hide fade cyan" tabindex="-1" role="dialog" aria-labelledby="label" aria-hidden="true">
         <?php
         $attributes = array('class' => 'input_form');
-        echo form_open(base_url() . '/public/genericname_management/update', $attributes);
+        echo form_open(base_url() . '/genericname_management/update', $attributes);
         ?>
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
