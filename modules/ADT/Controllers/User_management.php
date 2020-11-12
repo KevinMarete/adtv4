@@ -185,46 +185,37 @@ class User_management extends \App\Controllers\BaseController {
             $load_access = DB::table('access_level')->where('id', $logged_in['user']->Access_Level ?? 0)->get();
             if (!isset($logged_in)) {
                 $this->session->set('m_error_msg', 'Invalid Credentials. Please try again');
-                // return redirect()->to(base_url('/home'));
                 return redirect()->back()->withInput();
             }
             // dd($load_access);
             //This code checks if the credentials are valid
             if ($logged_in == false) {
-                file_put_contents ( "C://Users//kennl//Documents//debug.txt" , PHP_EOL.'HERE' , FILE_APPEND);
                 $data['invalid'] = true;
                 $data['title'] = "System Login";
                 $this->session->set('m_error_msg', 'Invalid Credentials. Please try again');
-                // return redirect()->to(base_url('/home'));
                 return redirect()->back()->withInput();
             }      //Check if credentials are valid for username not password
             else if (isset($logged_in["attempt"]) && $logged_in["attempt"] == "attempt" && $load_access[0]->indicator != "system_administrator") {
 
                 //check to see whether the user is active
                 if ($logged_in["user"]->Active == 0) {
-                    file_put_contents ( "C://Users//kennl//Documents//debug.txt" , PHP_EOL.'HERE2' , FILE_APPEND);
                     $data['inactive'] = true;
                     $data['title'] = "System Login";
                     $data['login_attempt'] = "<p class='error'>The Account has been deactivated. Seek help from the Facility Administrator</p>";
                     $this->session->set('m_error_msg', 'The Account has been deactivated. Seek help from the Facility Administrator');
-                    // return redirect()->to(base_url('/home'));
                     return redirect()->back()->withInput();
                 } else {
-                    file_put_contents ( "C://Users//kennl//Documents//debug.txt" , PHP_EOL.'HERE3' , FILE_APPEND);
                     $data['invalid'] = false;
                     $data['title'] = "System Login";
                     $data['login_attempt'] = "enter the correct password!</p>";
                     $this->session->set('m_error_msg', 'Invalid Credentials. Please try again');
-                    // return redirect()->to(base_url('/home'));
                     return redirect()->back()->withInput();
                 }
 
             } else if (isset($logged_in["attempt"]) && $logged_in["attempt"] == "attempt" && $load_access[0]->indicator == "system_administrator") {
-                file_put_contents ( "C://Users//kennl//Documents//debug.txt" , PHP_EOL.'HERE4' , FILE_APPEND);
                 $data['title'] = "System Login";
                 $data['invalid'] = true;
                 $this->session->set('m_error_msg', 'Invalid Credentials. Please try again');
-                // return redirect()->to(base_url('/home'));
                 return redirect()->back()->withInput();
             } else {
                 //If the credentials are valid, continue
@@ -235,7 +226,6 @@ class User_management extends \App\Controllers\BaseController {
                     $data['inactive'] = true;
                     $data['title'] = "System Login";
                     $this->session->set('m_error_msg', 'The Account is not active. Seek help from the Administrator');
-                    // return redirect()->to(base_url('/home'));
                     return redirect()->back()->withInput();
                 }
                 /*
@@ -255,7 +245,6 @@ class User_management extends \App\Controllers\BaseController {
                     $data['unactivated'] = true;
                     $data['title'] = "System Login";
                     $this->session->set('m_error_msg', 'Your Account Has Not Been Activated.<br/>Please Check your Email to Activate Account');
-                    // return redirect()->to(base_url('/home'));
                     return redirect()->back()->withInput();
                 }
                 //looks good. Continue!
@@ -313,7 +302,6 @@ class User_management extends \App\Controllers\BaseController {
                     $new_access_log->save();
                     //Set session to redirect the page to the previous page before logged out
                     $session->set("prev_page", "1");
-                    // return redirect()->to(base_url('/home'));
                     return redirect()->back()->withInput();
                 }
             }
