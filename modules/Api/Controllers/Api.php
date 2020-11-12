@@ -389,7 +389,7 @@ class Api extends BaseController {
 
         if (!$internal_patient_ccc) {
             $this->writeLog('Patient not found ', $ccc_no);
-            $this->processPatientRegistration($order);
+            //$this->processPatientRegistration($order);
         }
 
 
