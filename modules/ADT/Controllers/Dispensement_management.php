@@ -1193,8 +1193,7 @@ class Dispensement_management extends BaseController {
 		"dp.id = dpd.drug_prescriptionid and dp.id = ".$pid;
         $ps = (array) DB::select($ps_sql);
         $data = $ps;
-        print_r($ps);
-        die;
+     
         // find if possible regimen from prescription
         foreach ($ps as $key => $p) {
             $drugname = $p->drug_name;
