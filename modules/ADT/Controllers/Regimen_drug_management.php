@@ -102,7 +102,7 @@ class Regimen_drug_management extends \App\Controllers\BaseController {
                 $this->session->set('msg_success', $drug_message);
             }
         }
-        return redirect()->to(base_url() . '/public/settings_management');
+        return redirect()->to(base_url() . '/settings_management');
     }
 
     public function enable($regimen_drug_id) {

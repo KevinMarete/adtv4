@@ -322,17 +322,17 @@ class Patient_management extends BaseController {
             $link = "";
             if ($access_level == "facility_administrator") {
                 if ($aRow['Active'] == 1) {
-                    $link = ' | <a href="' . base_url() . '/public/patient/disable/' . $id . '" class="red actual"> Disable </a>';
+                    $link = ' | <a href="' . base_url() . '/patient/disable/' . $id . '" class="red actual"> Disable </a>';
                 } else {
-                    $link = ' | <a href="' . base_url() . '/public/patient/enable/' . $id . '" class="green actual"> Enable </a>';
+                    $link = ' | <a href="' . base_url() . '/patient/enable/' . $id . '" class="green actual"> Enable </a>';
                 }
             }
 
             if ($aRow['Active'] == 1) {
-                $row[] = ' <a href="' . base_url() . '/public/patient/viewDetails/' . $id . '"> Detail </a> | <a href="' . base_url() . 'patient/edit/' . $id . '"> Edit </a> ' . $link;
+                $row[] = ' <a href="' . base_url() . '/patient/viewDetails/' . $id . '"> Detail </a> | <a href="' . base_url() . 'patient/edit/' . $id . '"> Edit </a> ' . $link;
             } else {
                 $link = str_replace("|", "", $link);
-                $link .= ' | <a href="' . base_url() . '/public/patient/delete/' . $id . '" class="red actual"> Delete </a>';
+                $link .= ' | <a href="' . base_url() . '/patient/delete/' . $id . '" class="red actual"> Delete </a>';
                 $row[] = $link;
             }
 
@@ -551,11 +551,12 @@ class Patient_management extends BaseController {
         $ccc = trim($this->post('patient_number'));
         if (empty($ccc)) {
             $this->session->set('patient_error', 'Patient CCC cannot be empty');
-            return redirect()->to(base_url('/public/patients/add'));
+            return redirect()->back()->withInput();
+            return redirect()->to(base_url('/patients/add'));
         }
         if (Patient::where('patient_number_ccc', $ccc)->exists()) {
             $this->session->set('patient_error', 'Patient CCC already exists');
-            return redirect()->to(base_url('/public/patients/add'));
+            return redirect()->to(base_url('/patients/add'));
         }
 
         $this->init_api_values();
@@ -714,9 +715,9 @@ class Patient_management extends BaseController {
         if ($direction == 0) {
             $this->session->set('msg_save_transaction', 'success');
             $this->session->setFlashdata('dispense_updated', 'Patient: ' . $this->post('first_name', TRUE) . " " . $this->post('last_name', TRUE) . ' was Saved');
-            return redirect()->to(base_url() . "/public/patients");
+            return redirect()->to(base_url() . "/patients");
         } else if ($direction == 1) {
-            return redirect()->to(base_url() . "/public/dispensement_management/dispense/$auto_id");
+            return redirect()->to(base_url() . "/dispensement_management/dispense/$auto_id");
         }
     }
 
@@ -950,7 +951,7 @@ class Patient_management extends BaseController {
             // /> POST TO IL VIA API
         }
 
-        return redirect()->to(base_url() . "/public/patient/load_view/details/$record_id");
+        return redirect()->to(base_url() . "/patient/load_view/details/$record_id");
     }
 
     public function updateTestData($test_data = []) {
@@ -977,7 +978,7 @@ class Patient_management extends BaseController {
     public function base_params($data) {
         $data['title'] = "webADT | Patients";
         $data['banner_text'] = "Facility Patients";
-        $data['link'] = "/public/patients";
+        $data['link'] = "/patients";
         echo view('\Modules\ADT\Views\template', $data);
     }
 
@@ -997,7 +998,7 @@ class Patient_management extends BaseController {
             $facility = $this->post('facility');
         }
         $data = [];
-        $data['current'] = "/public/patient_management";
+        $data['current'] = "/patient_management";
         $data['title'] = "webADT | Patient Regimen Breakdown";
         $data['content_view'] = "\Modules\ADT\Views\patient_regimen_breakdown_v";
         $data['banner_text'] = "Patient Regimen Breakdown";
@@ -1193,7 +1194,7 @@ class Patient_management extends BaseController {
         //Set session for notications
         $this->session->set('msg_save_transaction', 'success');
         $this->session->set('user_enabled', $first_name . " was enabled!");
-        return redirect()->to(base_url() . "/public/patients");
+        return redirect()->to(base_url() . "/patients");
     }
 
     public function disable($id) {
@@ -1207,7 +1208,7 @@ class Patient_management extends BaseController {
         //Set session for notications
         $this->session->set('msg_save_transaction', 'success');
         $this->session->set('user_disabled', $first_name . " was disabled!");
-        return redirect()->to(base_url() . "/public/patients");
+        return redirect()->to(base_url() . "/patients");
     }
 
     public function delete($id) {
@@ -1215,7 +1216,7 @@ class Patient_management extends BaseController {
         //Set session for notications
         $this->session->set('msg_save_transaction', 'success');
         $this->session->set('user_disabled', "User Deleted");
-        return redirect()->to(base_url() . "/public/patients");
+        return redirect()->to(base_url() . "/patients");
     }
 
     public function getAppointments($appointment = "") {
@@ -1741,7 +1742,7 @@ class Patient_management extends BaseController {
         $this->session->set('message_counter', '1');
         $this->session->set('msg_success', '[' . $patients_to_remove . '] was Merged to [' . $target_patient_ccc . '] !');
         $this->session->set("link_id", "merge_list");
-        $this->session->set("linkSub", "/public/patient_management/merge_list");
+        $this->session->set("linkSub", "/patient_management/merge_list");
     }
 
     public function unmerge() {
@@ -1768,7 +1769,7 @@ class Patient_management extends BaseController {
         $this->session->set('message_counter', '1');
         $this->session->set('msg_success', '[' . $target_patient_ccc . '] was unmerged!');
         $this->session->set("link_id", "merge_list");
-        $this->session->set("linkSub", "/public/patient_management/merge_list");
+        $this->session->set("linkSub", "/patient_management/merge_list");
     }
 
     public function load_view($page_id = null, $id = null) {
@@ -1944,7 +1945,7 @@ class Patient_management extends BaseController {
         foreach ($visits as $counter => $visit) {
             foreach ($visit as $key => $value) {
                 if ($key == "record_id") {
-                    $link = base_url() . '/public/dispensement_management/edit/' . $value;
+                    $link = base_url() . '/dispensement_management/edit/' . $value;
                     $value = "<a href='" . $link . "' class='btn btn-small btn-warning'>Edit</a>";
                 }
 
@@ -2085,7 +2086,7 @@ class Patient_management extends BaseController {
             $data = [];
             foreach ($aRow as $col => $value) {
                 if ($col == "record_id") {
-                    $link = base_url() . '/public/dispensement_management/edit/' . $value;
+                    $link = base_url() . '/dispensement_management/edit/' . $value;
                     $data[] = "<a href='" . $link . "' class='btn btn-small btn-warning'>Edit</a>";
                 } else {
                     $data[] = $value;
@@ -2171,20 +2172,20 @@ class Patient_management extends BaseController {
                     //Active Patient
                     if ($access_level == "facility_administrator") {
                         if ($value == 1) {
-                            $link = '| <a href="' . base_url() . '/public/patient/disable/' . $id . '" class="red actual">Disable</a>';
+                            $link = '| <a href="' . base_url() . '/patient/disable/' . $id . '" class="red actual">Disable</a>';
                         } else {
-                            $link = '| <a href="' . base_url() . '/public/patient/enable/' . $id . '" class="green actual">Enable</a>';
+                            $link = '| <a href="' . base_url() . '/patient/enable/' . $id . '" class="green actual">Enable</a>';
                         }
                     }
                     if ($value == 1) {
                         if (strtolower($patient->status) != 'active') {
-                            $link = '<a href="' . base_url() . '/public/patient/load_view/details/' . $id . '">Detail</a> | <a href="' . base_url() . '/public/patient/edit/' . $id . '">Edit</a> ' . $link;
+                            $link = '<a href="' . base_url() . '/patient/load_view/details/' . $id . '">Detail</a> | <a href="' . base_url() . '/patient/edit/' . $id . '">Edit</a> ' . $link;
                         } else {
-                            $link = '<a href="' . base_url() . '/public/dispensement_management/dispense/' . $id . '">Dispense</a> | <a href="' . base_url() . '/public/patient/load_view/details/' . $id . '">Detail</a> | <a href="' . base_url() . '/public/patient/edit/' . $id . '"> Edit </a> ' . $link;
+                            $link = '<a href="' . base_url() . '/dispensement_management/dispense/' . $id . '">Dispense</a> | <a href="' . base_url() . '/patient/load_view/details/' . $id . '">Detail</a> | <a href="' . base_url() . '/patient/edit/' . $id . '"> Edit </a> ' . $link;
                         }
                     } else {
                         $link = str_replace("|", "", $link);
-                        $link .= '| <a href="' . base_url() . '/public/patient/delete/' . $id . '" class="red actual">Delete</a>';
+                        $link .= '| <a href="' . base_url() . '/patient/delete/' . $id . '" class="red actual">Delete</a>';
                     }
 
                     $value = $link;

@@ -1,6 +1,6 @@
 <!--Sync Drug Form-->
 <div id="sync_drug_form" class="modal hide fade dialog_form" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <form class="form-horizontal sync_drug_form" action="<?php echo base_url() . '/public/order_settings/save/sync_drug'; ?>" method="post">
+    <form class="form-horizontal sync_drug_form" action="<?php echo base_url() . '/order_settings/save/sync_drug'; ?>" method="post">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             <h3 id="myModalLabel">Add Sync Drug</h3>
@@ -76,7 +76,7 @@
 
 <!--Sync Regimen Form-->
 <div id="sync_regimen_form" class="modal hide fade dialog_form" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <form class="form-horizontal sync_regimen_form" action="<?php echo base_url() . '/public/order_settings/save/sync_regimen'; ?>" method="post">
+    <form class="form-horizontal sync_regimen_form" action="<?php echo base_url() . '/order_settings/save/sync_regimen'; ?>" method="post">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             <h3 id="myModalLabel">Add Sync Regimen</h3>
@@ -122,7 +122,7 @@
 
 <!--Sync Regimen Category Form-->
 <div id="sync_regimen_category_form" class="modal hide fade dialog_form" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <form class="form-horizontal sync_regimen_category_form" action="<?php echo base_url() . '/public/order_settings/save/sync_regimen_category'; ?>" method="post">
+    <form class="form-horizontal sync_regimen_category_form" action="<?php echo base_url() . '/order_settings/save/sync_regimen_category'; ?>" method="post">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             <h3 id="myModalLabel">Add Sync Regimen Category</h3>
@@ -144,7 +144,7 @@
 
 <!--Sync Facility Form-->
 <div id="sync_facility_form" class="modal hide fade dialog_form" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <form class="form-horizontal sync_facility_form" action="<?php echo base_url() . '/public/order_settings/save/sync_facility'; ?>" method="post">
+    <form class="form-horizontal sync_facility_form" action="<?php echo base_url() . '/order_settings/save/sync_facility'; ?>" method="post">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             <h3 id="myModalLabel">Add Sync Facility</h3>
@@ -236,7 +236,7 @@
 </div>
 
 <script type="text/javascript">
-    base_url = "<?php echo base_url() . '/public/'; ?>"
+    base_url = "<?php echo base_url() . '/'; ?>"
     var categoryURL = base_url + 'order_settings/fetch/sync_regimen_category'
     var regimenURL = base_url + 'order_settings/fetch/sync_regimen'
     var parentURL = base_url + 'order_settings/fetch/sync_facility'

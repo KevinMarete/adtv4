@@ -1,4 +1,4 @@
-<script src="<?= base_url('public/assets/scripts/highcharts/highcharts.js') ?>"></script>
+<script src="<?= base_url('/assets/scripts/highcharts/highcharts.js') ?>"></script>
 <style type="text/css">
 	.graph {
 		height: auto !important;

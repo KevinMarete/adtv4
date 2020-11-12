@@ -143,7 +143,7 @@ session()->set('message', " ");
     <div id="regimenchange_form" title="New regimen change reason" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="NewRegimen" aria-hidden="true">
         <?php
         $attributes = array('class' => 'input_form', 'id' => 'regimenchange_management_frm');
-        echo form_open(base_url() . '/public/regimenchange_management/save', $attributes);
+        echo form_open(base_url() . '/regimenchange_management/save', $attributes);
         // echo validation_errors('<p class="error">', '</p>');
         ?>
         <div class="modal-header">
@@ -168,7 +168,7 @@ session()->set('message', " ");
     <div id="edit_form" title="Edit regimen change reason" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="NewRegimen" aria-hidden="true">
         <?php
         $attributes = array('class' => 'input_form', 'id' => 'regimenupdate_management_frm');
-        echo form_open(base_url() . '/public/regimenchange_management/update', $attributes);
+        echo form_open(base_url() . '/regimenchange_management/update', $attributes);
         //echo validation_errors('<p class="error">', '</p>');
         ?>
         <div class="modal-header">

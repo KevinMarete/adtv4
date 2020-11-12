@@ -12,13 +12,13 @@
                 <div class="row-fluid">
                 	<div class="span12">
 	                	<ul class="breadcrumb">
-						  <li><a href="<?php echo base_url().'/public/login'; ?>">Login</a> <span class="divider">/</span></li>
+						  <li><a href="<?php echo base_url().'/login'; ?>">Login</a> <span class="divider">/</span></li>
 						  <li class="active">Forgot Password</li>
 						</ul>
 				    </div>
                 </div>
 	            <!--Forgot Password Form-->
-                <form class="form" action="<?php echo base_url().'/public/user_management/resend_password'?>" method="POST">
+                <form class="form" action="<?php echo base_url().'/user_management/resend_password'?>" method="POST">
 				    <fieldset>
 					    <legend>
 						    <?php

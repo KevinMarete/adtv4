@@ -44,10 +44,10 @@
                 <h3>Templates</h3>
                 <ul style="list-style: none; padding-left: 0;">
                     <li>
-                        <a href="<?= base_url() ?>/public/migrate/excel/template/patient_list">Patient list</a>
+                        <a href="<?= base_url() ?>/migrate/excel/template/patient_list">Patient list</a>
                     </li>
                     <li>
-                        <a href="<?= base_url() ?>/public/migrate/excel/template/patient_history">Patient history</a>
+                        <a href="<?= base_url() ?>/migrate/excel/template/patient_history">Patient history</a>
                     </li>
                 </ul>
             </div>

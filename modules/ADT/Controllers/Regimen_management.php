@@ -80,22 +80,22 @@ class Regimen_management extends \App\Controllers\BaseController {
 
             if ($regimen['Enabled'] == 1 && @$regimen['Merged_To']) {
                 $links .= " | ";
-                $links .= anchor(base_url() . '/public/regimen_management/disable/' . $regimen['id'], 'Disable', array('class' => 'disable_user actual'));
+                $links .= anchor(base_url() . '/regimen_management/disable/' . $regimen['id'], 'Disable', array('class' => 'disable_user actual'));
             }
 
             if ($regimen['Enabled'] == 1 && @$regimen['Merged_To'] == "" && $access_level == "facility_administrator") {
                 $links .= " | ";
-                $links .= anchor(base_url() . '/public/regimen_management/disable/' . $regimen['id'], 'Disable', array('class' => 'disable_user actual'));
+                $links .= anchor(base_url() . '/regimen_management/disable/' . $regimen['id'], 'Disable', array('class' => 'disable_user actual'));
                 $links .= " | ";
                 $links .= "<a href='#' class='merge_drug' id='$drug'>Merge</a>";
             }
             if ($regimen['Enabled'] == 0 && $access_level == "facility_administrator") {
-                $links .= anchor(base_url() . '/public/regimen_management/enable/' . $regimen['id'], 'Enable', array('class' => 'enable_user actual'));
+                $links .= anchor(base_url() . '/regimen_management/enable/' . $regimen['id'], 'Enable', array('class' => 'enable_user actual'));
             }
             if ($regimen['Merged_To'] != '') {
                 if ($access_level == "facility_administrator") {
                     $links .= " | ";
-                    $links .= anchor(base_url() . '/public/regimen_management/unmerge/' . $regimen['id'], 'Unmerge', array('class' => 'unmerge_drug'));
+                    $links .= anchor(base_url() . '/regimen_management/unmerge/' . $regimen['id'], 'Unmerge', array('class' => 'unmerge_drug'));
                 }
                 $checkbox = "<input type='checkbox' name='drugcodes' id='drugcodes' class='drugcodes' value='$drug' disabled/>";
             } else {
@@ -151,7 +151,7 @@ class Regimen_management extends \App\Controllers\BaseController {
 
             session()->set('msg_error', 'Regimen Code already exists!');
             $this->session->setFlashdata('filter_datatable', $query->getResult()[0]->regimen_code);
-            return redirect(base_url() . '/public/settings_management');
+            return redirect(base_url() . '/settings_management');
         } else {
 
 
@@ -176,7 +176,7 @@ class Regimen_management extends \App\Controllers\BaseController {
             session()->set('msg_success', $this->request->getPost('regimen_code') . ' was added.');
             $this->session->setFlashdata('filter_datatable', $this->request->getPost('regimen_code'));
             //Filter after saving
-            return redirect()->to(base_url() . '/public/settings_management');
+            return redirect()->to(base_url() . '/settings_management');
         }
         // }
     }
@@ -202,7 +202,7 @@ class Regimen_management extends \App\Controllers\BaseController {
         session()->set('msg_success', $this->request->getPost('regimen_code') . ' was Updated');
         $this->session->setFlashdata('filter_datatable', $this->request->getPost('regimen_code'));
         //Filter after updating
-        return redirect()->to(base_url() . '/public/settings_management');
+        return redirect()->to(base_url() . '/settings_management');
     }
 
     public function enable($regimen_id = '') {
@@ -224,7 +224,7 @@ class Regimen_management extends \App\Controllers\BaseController {
             $this->session->setFlashdata('filter_datatable', $results->regimen_code);
             //Filter
 
-            return redirect()->to(base_url() . '/public/settings_management');
+            return redirect()->to(base_url() . '/settings_management');
         }
     }
 
@@ -246,7 +246,7 @@ class Regimen_management extends \App\Controllers\BaseController {
             session()->set('msg_error', $results->regimen_code . ' was disabled');
             $this->session->setFlashdata('filter_datatable', $results->regimen_code);
             //Filter
-            return redirect()->to(base_url() . '/public/settings_management');
+            return redirect()->to(base_url() . '/settings_management');
         }
     }
 
@@ -303,7 +303,7 @@ class Regimen_management extends \App\Controllers\BaseController {
         $results = Regimen::getRegimen($drugcode);
         session()->set('message_counter', '1');
         session()->set('msg_error', $results->regimen_code . ' was Unmerged');
-        return redirect()->to(base_url() . '/public/settings_management');
+        return redirect()->to(base_url() . '/settings_management');
     }
 
     public function getRegimenLine($service = false, $pmtct_oi = FALSE) {

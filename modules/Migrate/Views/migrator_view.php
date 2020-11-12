@@ -4,33 +4,33 @@
         <!--title-->
         <title><?php echo $title; ?></title>
         <!--favicon-->
-        <link rel="shortcut icon" type="text/css" href="<?php echo base_url() . '/public/assets/images/favicon.ico'; ?>">
+        <link rel="shortcut icon" type="text/css" href="<?php echo base_url() . '/assets/images/favicon.ico'; ?>">
         <!--smartwizard-css-->
-        <link href="<?php echo base_url() . '/public/lib/smartwizard/css/smart_wizard.css'; ?>" rel="stylesheet" type="text/css">
+        <link href="<?php echo base_url() . '/lib/smartwizard/css/smart_wizard.css'; ?>" rel="stylesheet" type="text/css">
         <!--select2-css-->
-        <link href="<?php echo base_url() . '/public/lib/select2/css/select2.min.css'; ?>" rel="stylesheet" type="text/css">
+        <link href="<?php echo base_url() . '/lib/select2/css/select2.min.css'; ?>" rel="stylesheet" type="text/css">
         <!--datatables-css-->
-        <link href="<?php echo base_url() . '/public/lib/datatables/css/jquery.dataTables.min.css'; ?>" rel="stylesheet" type="text/css">
+        <link href="<?php echo base_url() . '/lib/datatables/css/jquery.dataTables.min.css'; ?>" rel="stylesheet" type="text/css">
         <!--migrator-css-->
-        <link href="<?php echo base_url() . '/public/lib/migrator/css/migrator.css'; ?>" rel="stylesheet" type="text/css">
+        <link href="<?php echo base_url() . '/lib/migrator/css/migrator.css'; ?>" rel="stylesheet" type="text/css">
         <!--boostrap_css-->
-        <link href="<?php echo base_url() . '/public/assets/styles/bootstrap/bootstrap.min.css' ?>"  type="text/css" rel="stylesheet" media="all">
+        <link href="<?php echo base_url() . '/assets/styles/bootstrap/bootstrap.min.css' ?>"  type="text/css" rel="stylesheet" media="all">
         <!--jquery-->
-        <script type="text/javascript" src="<?php echo base_url() . '/public/js/jquery.min.js'; ?>"></script>
+        <script type="text/javascript" src="<?php echo base_url() . '/js/jquery.min.js'; ?>"></script>
         <!--smartwizard-js-->
-        <script type="text/javascript" src="<?php echo base_url() . '/public/lib/smartwizard/js/jquery.smartWizard.js'; ?>"></script>
+        <script type="text/javascript" src="<?php echo base_url() . '/lib/smartwizard/js/jquery.smartWizard.js'; ?>"></script>
         <!--select2-js-->
-        <script type="text/javascript" src="<?php echo base_url() . '/public/lib/select2/js/select2.full.min.js'; ?>"></script>
+        <script type="text/javascript" src="<?php echo base_url() . '/lib/select2/js/select2.full.min.js'; ?>"></script>
         <!--datatables-js-->
-        <script type="text/javascript" src="<?php echo base_url() . '/public/lib/datatables/js/jquery.dataTables.min.js'; ?>"></script>
+        <script type="text/javascript" src="<?php echo base_url() . '/lib/datatables/js/jquery.dataTables.min.js'; ?>"></script>
         <!--datatables-select-js-->
-        <script type="text/javascript" src="<?php echo base_url() . '/public/lib/datatables/js/dataTables.select.min.js'; ?>"></script>
+        <script type="text/javascript" src="<?php echo base_url() . '/lib/datatables/js/dataTables.select.min.js'; ?>"></script>
         <!--progressbar-->
-        <script type="text/javascript" src="<?php echo base_url() . '/public/lib/progressbar/js/progressbar.min.js'; ?>"></script>
+        <script type="text/javascript" src="<?php echo base_url() . '/lib/progressbar/js/progressbar.min.js'; ?>"></script>
         <!--boostrap_js-->
-        <script src="<?php echo base_url() . '/public/assets/scripts/bootstrap/bootstrap.min.js' ?>" type="text/javascript"></script>
+        <script src="<?php echo base_url() . '/assets/scripts/bootstrap/bootstrap.min.js' ?>" type="text/javascript"></script>
         <!--migrator-js-->
-        <script type="text/javascript" src="<?php echo base_url() . '/public/lib/migrator/js/migrator.js'; ?>"></script>
+        <script type="text/javascript" src="<?php echo base_url() . '/lib/migrator/js/migrator.js'; ?>"></script>
     </head>
     <body>
         <?php echo view('\Modules\Template\Views\\external_header_v'); ?>

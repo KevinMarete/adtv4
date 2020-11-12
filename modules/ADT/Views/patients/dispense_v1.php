@@ -6,9 +6,9 @@
 	    <div class="row-fluid">
 		    <div class="span12">
 			    <ul class="breadcrumb">
-					<li><a href="<?php echo base_url().'/public/patients'; ?>">Patients</a> <span class="divider">/</span></li>
+					<li><a href="<?php echo base_url().'/patients'; ?>">Patients</a> <span class="divider">/</span></li>
 				  	<li>
-				  		<a href="<?php echo base_url().'/public/patient/load_view/details/'.$patient_id; ?>">
+				  		<a href="<?php echo base_url().'/patient/load_view/details/'.$patient_id; ?>">
 				  		<span class="patient_name_link"></span>
 				  		</a><span class="divider">/</span> 
 				  	</li>
@@ -240,5 +240,5 @@
 </div>
 
 <!-- custom scripts-->
-<script src="<?php echo base_url().'/public/assets/modules/forms/forms.js'; ?>"></script>
-<script src="<?php echo base_url().'/public/assets/modules/patients/dispensing.js'; ?>"></script>
+<script src="<?php echo base_url().'/assets/modules/forms/forms.js'; ?>"></script>
+<script src="<?php echo base_url().'/assets/modules/patients/dispensing.js'; ?>"></script>

@@ -96,7 +96,7 @@ if(isset($results)){
 
 		$("#patient_number").change(function(){
 			var patient_no=$("#patient_number").val();
-			var link=base_url+"/public/patient/checkpatient_no/"+patient_no;
+			var link=base_url+"/patient/checkpatient_no/"+patient_no;
 			$.ajax({
 				url: link,
 				type: 'POST',
@@ -633,7 +633,7 @@ if(isset($results)){
 			window.location.href = url;
 		});
 		$("#edit_patient").click(function() {
-			var url = base_url+"/public/patient/edit/" + record_id;
+			var url = base_url+"/patient/edit/" + record_id;
 			window.location.href = url;
 		});
 		$("#dispense").click(function() {
@@ -692,7 +692,7 @@ if(isset($results)){
 			
 		function getDispensing(){
 				var patient_no=$("#patient_number").val();
-				var link=base_url+"public/patient/getSixMonthsDispensing/"+patient_no;
+				var link=base_url+"/patient/getSixMonthsDispensing/"+patient_no;
 				$.ajax({
 					url: link,
 					type: 'POST',
@@ -706,7 +706,7 @@ if(isset($results)){
 			
 			function getRegimenChange(){
 				var patient_no=$("#patient_number").val();
-				var link=base_url+"public/patient/getRegimenChange/"+patient_no;
+				var link=base_url+"/patient/getRegimenChange/"+patient_no;
 				$.ajax({
 					url: link,
 					type: 'POST',
@@ -720,7 +720,7 @@ if(isset($results)){
 			
 			function getAppointmentHistory(){
 				var patient_no=$("#patient_number").val();
-				var link=base_url+"public/patient/getAppointmentHistory/"+patient_no;
+				var link=base_url+"/patient/getAppointmentHistory/"+patient_no;
 				$.ajax({
 					url: link,
 					type: 'POST',
@@ -882,7 +882,7 @@ if(isset($results)){
 		?>
 	</div>
 	<div id="sub_title" >
-		<a href="<?php  echo base_url().'/public/patients ' ?>">Patient Listing </a> <i class=" icon-chevron-right"></i> <strong>ART Card</strong>
+		<a href="<?php  echo base_url().'/patients ' ?>">Patient Listing </a> <i class=" icon-chevron-right"></i> <strong>ART Card</strong>
 		<hr size="1">
 	</div>
 	<h3>Patient ART Card
@@ -890,7 +890,7 @@ if(isset($results)){
 		(Fields Marked with <b><span class='astericks'>*</span></b> Asterisks are required)
 	</div></h3>
 
-	<form id="edit_patient_form" method="post"  action="<?php echo base_url() . '/public/patient/save'; ?>" onsubmit="return processData('add_patient_form')" >
+	<form id="edit_patient_form" method="post"  action="<?php echo base_url() . '/patient/save'; ?>" onsubmit="return processData('add_patient_form')" >
 		<div class="column" id="columnOne">
 			<fieldset>
 				<legend>

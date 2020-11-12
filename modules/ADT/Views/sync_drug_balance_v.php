@@ -5,7 +5,7 @@
 
     function synch_drug_balance(stock_type) {
         //Get number total number of drugs
-        var _url = "<?php echo base_url() . '/public/drug_stock_balance_sync/getTotalDrugs'; ?>";
+        var _url = "<?php echo base_url() . '/drug_stock_balance_sync/getTotalDrugs'; ?>";
         var stock_type = stock_type;
         $.ajax({
             url: _url,
@@ -26,7 +26,7 @@
 
                     //Start synch
                     var drug_id = value.id;
-                    var link = "<?php echo base_url() . '/public/drug_stock_balance_sync/synch_balance'; ?>";
+                    var link = "<?php echo base_url() . '/drug_stock_balance_sync/synch_balance'; ?>";
                     var div_width = (remaining_drugs / count_drugs) * 100;
                     $.ajax({
                         url: link,

@@ -66,7 +66,7 @@
     <div id="client_form" title="New Drug Classification" class="modal hide fade cyan" tabindex="-1" role="dialog" aria-labelledby="label" aria-hidden="true">
         <?php
         $attributes = array('class' => 'input_form');
-        echo form_open(base_url() . '/public/drugcode_classification/save', $attributes);
+        echo form_open(base_url() . '/drugcode_classification/save', $attributes);
         ?>
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -88,7 +88,7 @@
     <div id="edit_form" title="Edit Drug Classification" class="modal hide fade cyan" tabindex="-1" role="dialog" aria-labelledby="label" aria-hidden="true">
         <?php
         $attributes = array('class' => 'input_form');
-        echo form_open(base_url() . '/public/drugcode_classification/update', $attributes);
+        echo form_open(base_url() . '/drugcode_classification/update', $attributes);
         ?>
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>

@@ -69,16 +69,16 @@ class Drugcode_management extends \App\Controllers\BaseController {
             if ($drugcode['Enabled'] == 1 && $access_level == "facility_administrator") {
 
                 $links .= " | ";
-                $links .= anchor(base_url() . '/public/drugcode_management/disable/' . $drugcode['id'], 'Disable', array('class' => 'disable_user'));
+                $links .= anchor(base_url() . '/drugcode_management/disable/' . $drugcode['id'], 'Disable', array('class' => 'disable_user'));
                 $links .= " | ";
                 $links .= "<a href='#' class='merge_drug' id='$drug'>Merge</a>";
             } elseif ($access_level == "facility_administrator") {
-                $links .= anchor(base_url() . '/public/drugcode_management/enable/' . $drugcode['id'], 'Enable', array('class' => 'enable_user'));
+                $links .= anchor(base_url() . '/drugcode_management/enable/' . $drugcode['id'], 'Enable', array('class' => 'enable_user'));
             }
             if ($drugcode['Merged_to'] != '') {
                 if ($access_level == "facility_administrator") {
                     $links .= " | ";
-                    $links .= anchor(base_url() . '/public/drugcode_management/unmerge/' . $drugcode['id'], 'Unmerge', array('class' => 'unmerge_drug'));
+                    $links .= anchor(base_url() . '/drugcode_management/unmerge/' . $drugcode['id'], 'Unmerge', array('class' => 'unmerge_drug'));
                 }
                 $checkbox = "<input type='checkbox' name='drugcodes' id='drugcodes' class='drugcodes' value='$drug' disabled/>";
             } else {
@@ -172,7 +172,7 @@ class Drugcode_management extends \App\Controllers\BaseController {
         $this->session->set('msg_success', $this->request->getPost('drugname') . ' was successfully Added!');
         $this->session->setFlashdata('filter_datatable', $this->request->getPost('drugname'));
         //Filter after saving
-        return redirect()->to(base_url() . '/public/settings_management');
+        return redirect()->to(base_url() . '/settings_management');
     }
 
     //}
@@ -220,7 +220,7 @@ class Drugcode_management extends \App\Controllers\BaseController {
         $this->session->set('msg_success', $this->request->getPost('drugname') . ' was Updated');
         $this->session->setFlashdata('filter_datatable', $this->request->getPost('drugname'));
         //Filter after saving
-        return redirect()->to(base_url() . '/public/settings_management');
+        return redirect()->to(base_url() . '/settings_management');
     }
 
     public function enable($drugcode_id = '') {
@@ -242,7 +242,7 @@ class Drugcode_management extends \App\Controllers\BaseController {
             $this->session->set('msg_success', $results->drug . ' was enabled!');
             $this->session->setFlashdata('filter_datatable', $results->drug);
             //Filter
-            return redirect()->to(base_url() . '/public/settings_management');
+            return redirect()->to(base_url() . '/settings_management');
         }
     }
 
@@ -264,7 +264,7 @@ class Drugcode_management extends \App\Controllers\BaseController {
             $this->session->set('msg_success', $results->drug . ' was disabled!');
             $this->session->setFlashdata('filter_datatable', $results->drug);
             //Filter
-            return redirect()->to(base_url() . '/public/settings_management');
+            return redirect()->to(base_url() . '/settings_management');
         }
     }
 
@@ -309,7 +309,7 @@ class Drugcode_management extends \App\Controllers\BaseController {
         $results = Drugcode::getDrugCode($drugcode);
         $this->session->set('message_counter', '1');
         $this->session->set('msg_error', $results->drug . ' was unmerged!');
-        return redirect()->to(base_url() . '/public/settings_management');
+        return redirect()->to(base_url() . '/settings_management');
     }
 
     private function _submit_validate() {

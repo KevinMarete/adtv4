@@ -21,7 +21,7 @@ $styles = [
 ];
 
 foreach ($styles as $style) {
-  echo '<link type="text/css" rel="stylesheet" href="' . base_url('public/assets/styles/' . $style) . '" media="screen" />';
+  echo '<link type="text/css" rel="stylesheet" href="' . base_url('/assets/styles/' . $style) . '" media="screen" />';
 }
 
 //Scripts
@@ -52,5 +52,5 @@ $scripts = [
 ];
 
 foreach ($scripts as $script) {
-  echo '<script type="text/javascript" src="' . base_url('public/assets/scripts/' . $script) . '" charset="UTF-8"></script>';
+  echo '<script type="text/javascript" src="' . base_url('/assets/scripts/' . $script) . '" charset="UTF-8"></script>';
 }

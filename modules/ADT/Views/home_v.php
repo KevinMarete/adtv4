@@ -46,17 +46,17 @@ if ($session->get("changed_password")) {
     }
 </style>
 
-<script src="<?= base_url(); ?>/public/assets/scripts/jquery-1.7.2.min.js"></script>
-<script src="<?= base_url(); ?>/public/assets/scripts/jquery-ui.js"></script>
-<script src="<?= base_url(); ?>/public/assets/scripts/jquery.blockUI.js"></script>
+<script src="<?= base_url(); ?>/assets/scripts/jquery-1.7.2.min.js"></script>
+<script src="<?= base_url(); ?>/assets/scripts/jquery-ui.js"></script>
+<script src="<?= base_url(); ?>/assets/scripts/jquery.blockUI.js"></script>
 
-<script src="<?= base_url(); ?>/public/assets/scripts/datatable/jquery.dataTables.min.js"></script>
-<script src="<?= base_url(); ?>/public/assets/scripts/jquery.multiselect.js"></script>
-<script src="<?= base_url(); ?>/public/assets/scripts/jquery.multiselect.filter.js"></script>
-<script src="<?= base_url(); ?>/public/assets/scripts/highcharts/highcharts.js"></script>
-<script src="<?= base_url(); ?>/public/assets/scripts/highcharts/modules/exporting.js"></script>
-<script src="<?= base_url(); ?>/public/assets/scripts/highcharts/modules/offline-exporting.js"></script>
-<script src="<?= base_url(); ?>/public/assets/scripts/highcharts/modules/export-csv.js"></script>
+<script src="<?= base_url(); ?>/assets/scripts/datatable/jquery.dataTables.min.js"></script>
+<script src="<?= base_url(); ?>/assets/scripts/jquery.multiselect.js"></script>
+<script src="<?= base_url(); ?>/assets/scripts/jquery.multiselect.filter.js"></script>
+<script src="<?= base_url(); ?>/assets/scripts/highcharts/highcharts.js"></script>
+<script src="<?= base_url(); ?>/assets/scripts/highcharts/modules/exporting.js"></script>
+<script src="<?= base_url(); ?>/assets/scripts/highcharts/modules/offline-exporting.js"></script>
+<script src="<?= base_url(); ?>/assets/scripts/highcharts/modules/export-csv.js"></script>
 
 <script type="text/javascript">
     $(document).ready(function () {
@@ -79,13 +79,13 @@ if ($session->get("changed_password")) {
         $("#visit_end").val(endDate);
 
         $(".loadingDiv").show();
-        var expiry_link = "<?php echo base_url() . '/public/getExpiringDrugs/'; ?>" + period + '/' + location;
-        var enrollment_link = "<?php echo base_url() . '/public/getPatientEnrolled/'; ?>" + fromDate + '/' + endDate;
-        var visits_link = "<?php echo base_url() . '/public/getExpectedPatients/'; ?>" + fromDate + '/' + endDate;
+        var expiry_link = "<?php echo base_url() . '/getExpiringDrugs/'; ?>" + period + '/' + location;
+        var enrollment_link = "<?php echo base_url() . '/getPatientEnrolled/'; ?>" + fromDate + '/' + endDate;
+        var visits_link = "<?php echo base_url() . '/getExpectedPatients/'; ?>" + fromDate + '/' + endDate;
         $('#chart_area').load(expiry_link);
         $('#chart_area2').load(enrollment_link);
         $('#chart_area3').load(visits_link);
-        $('#table1').load('<?php echo base_url() . '/public/getStockSafetyQty' ?>', function () {
+        $('#table1').load('<?php echo base_url() . '/getStockSafetyQty' ?>', function () {
             $('#stock_level').dataTable({
                 "bJQueryUI": true,
                 "sPaginationType": "full_numbers",
@@ -108,7 +108,7 @@ if ($session->get("changed_password")) {
                     $('#drugs-chart').show();
                     chartID = '#drugs-chart';
                     graphID = "#chart_area";
-                    chartLink = "<?php echo base_url() . '/public/getExpiringDrugs/'; ?>" + period + '/' + location;
+                    chartLink = "<?php echo base_url() . '/getExpiringDrugs/'; ?>" + period + '/' + location;
 
                     break;
                 case'enrollment-more':
@@ -116,7 +116,7 @@ if ($session->get("changed_password")) {
                     $('#enrollment-chart').show();
                     chartID = '#enrollment-chart';
                     graphID = "#chart_area2";
-                    chartLink = "<?php echo base_url() . '/public/getPatientEnrolled/'; ?>" + fromDate + '/' + endDate;
+                    chartLink = "<?php echo base_url() . '/getPatientEnrolled/'; ?>" + fromDate + '/' + endDate;
 
                     break;
                 case'appointment-more':
@@ -124,7 +124,7 @@ if ($session->get("changed_password")) {
                     $('#appointments-chart').show();
                     chartID = '#appointments-chart';
                     graphID = "#chart_area3";
-                    chartLink = "<?php echo base_url() . '/public/getExpectedPatients/'; ?>" + fromDate + '/' + endDate;
+                    chartLink = "<?php echo base_url() . '/getExpectedPatients/'; ?>" + fromDate + '/' + endDate;
 
                     break;
                 case'stock-more':
@@ -173,30 +173,30 @@ if ($session->get("changed_password")) {
             if (button_id == "expiry_btn") {
                 period = $('.period').val();
                 location = $('.location').val();
-                var expiry_link = "<?php echo base_url() . '/public/getExpiringDrugs/'; ?>" + period + '/' + location;
+                var expiry_link = "<?php echo base_url() . '/getExpiringDrugs/'; ?>" + period + '/' + location;
                 $('#chart_area').load(expiry_link);
             } else if (button_id == "enrollment_btn") {
                 var from_date = $("#enrollment_start").val();
                 var to_date = $("#enrollment_end").val();
-                var enrollment_link = "<?php echo base_url() . '/public/getPatientEnrolled/'; ?>" + from_date + '/' + to_date;
+                var enrollment_link = "<?php echo base_url() . '/getPatientEnrolled/'; ?>" + from_date + '/' + to_date;
                 $('#chart_area2').load(enrollment_link);
             } else if (button_id == "appointment_btn") {
                 var from_date = $("#visit_start").val();
                 var to_date = $("#visit_end").val();
-                var visits_link = "<?php echo base_url() . '/public/getExpectedPatients/'; ?>" + from_date + '/' + to_date;
+                var visits_link = "<?php echo base_url() . '/getExpectedPatients/'; ?>" + from_date + '/' + to_date;
                 $('#chart_area3').load(visits_link);
             } else if (button_id == "stockout_btn") {
                 period = $("#store_location").val();
-                $('#table1').load('<?php echo base_url() . '/public/getStockSafetyQty/' ?>' + period, function () {
+                $('#table1').load('<?php echo base_url() . '/getStockSafetyQty/' ?>' + period, function () {
 
                 });
             } else if (button_id == "usage_btn") {
                 period = $("#usage_period").val();
-                $('#chart_area77').load('<?php echo base_url() . '/public/admin_management/getSystemUsage/' ?>' + period);
+                $('#chart_area77').load('<?php echo base_url() . '/admin_management/getSystemUsage/' ?>' + period);
             } else if (button_id == "access_btn") {
                 var from_date = $("#enrollment_start").val();
                 var to_date = $("#enrollment_end").val();
-                $('#chart_area78').load('<?php echo base_url() . '/public/admin_management/getWeeklySumary/' ?>' + from_date + '/' + to_date);
+                $('#chart_area78').load('<?php echo base_url() . '/admin_management/getWeeklySumary/' ?>' + from_date + '/' + to_date);
             }
         });
     });
@@ -227,7 +227,7 @@ if ($session->get("changed_password")) {
                 </h3>
 
                 <div id="chart_area">
-                    <div class="loadingDiv" style="margin:20% 0 20% 0;" ><img style="width: 30px;margin-left:50%" src="<?php echo base_url() . '/public/assets/images/loading_spin.gif' ?>"></div>
+                    <div class="loadingDiv" style="margin:20% 0 20% 0;" ><img style="width: 30px;margin-left:50%" src="<?php echo base_url() . '/assets/images/loading_spin.gif' ?>"></div>
                 </div>
 
             </div>
@@ -241,7 +241,7 @@ if ($session->get("changed_password")) {
                     <button class="btn btn-danger less" id="enrollment-less">Small</button>
                 </h3>
                 <div id="chart_area2">
-                    <div class="loadingDiv" style="margin:20% 0 20% 0;" ><img style="width: 30px;margin-left:50%" src="<?php echo base_url() . '/public/assets/images/loading_spin.gif' ?>"></div>
+                    <div class="loadingDiv" style="margin:20% 0 20% 0;" ><img style="width: 30px;margin-left:50%" src="<?php echo base_url() . '/assets/images/loading_spin.gif' ?>"></div>
                 </div>
             </div>
             <div class="tile" id="appointments-chart">
@@ -254,7 +254,7 @@ if ($session->get("changed_password")) {
                     <button class="btn btn-danger less" id="appointment-less">Small</button>
                 </h3>
                 <div id="chart_area3">
-                    <div class="loadingDiv" style="margin:20% 0 20% 0;"><img style="width: 30px;margin-left:50%" src="<?php echo base_url() . '/public/assets/images/loading_spin.gif' ?>"></div>		
+                    <div class="loadingDiv" style="margin:20% 0 20% 0;"><img style="width: 30px;margin-left:50%" src="<?php echo base_url() . '/assets/images/loading_spin.gif' ?>"></div>		
                 </div>
             </div>
             <div class="tile" id="stocks-chart">
@@ -269,7 +269,7 @@ if ($session->get("changed_password")) {
                     <button class="btn btn-danger less" id="stock-less">Small</button>
                 </h3>		
                 <div id="table1" style="overflow:scroll;">
-                    <div class="loadingDiv" style="margin:20% 0 20% 0;" ><img style="width: 30px;margin-left:50%" src="<?php echo base_url() . '/public/assets/images/loading_spin.gif' ?>"></div>
+                    <div class="loadingDiv" style="margin:20% 0 20% 0;" ><img style="width: 30px;margin-left:50%" src="<?php echo base_url() . '/assets/images/loading_spin.gif' ?>"></div>
                 </div>
             </div>
         </div>

@@ -1,5 +1,5 @@
 <!--Custom CSS files-->
-<link href="<?php echo base_url() . '/public/assets/modules/patients/listing.css'; ?>" type="text/css" rel="stylesheet"/>
+<link href="<?php echo base_url() . '/assets/modules/patients/listing.css'; ?>" type="text/css" rel="stylesheet"/>
 
 <!--container-->
 <div class="container-fluid center-content">
@@ -102,5 +102,5 @@
 </div>
 
 <!--custom js-->
-<script src="<?php echo base_url(); ?>/public/assets/modules/patients/listing.js"></script>
+<script src="<?php echo base_url(); ?>/assets/modules/patients/listing.js"></script>
 

@@ -26,7 +26,7 @@ if ($access_level == "nascop_staff") {
 	<title>My Reports</title>
 	<script type="text/javascript">
 		$(document).ready(function() {
-			$("#default").load('<?php echo base_url('public/report_management/cumulative_patients/' . date('d-M-Y') . '/2'); ?>', function() {
+			$("#default").load('<?php echo base_url('/report_management/cumulative_patients/' . date('d-M-Y') . '/2'); ?>', function() {
 				$('.dataTables').dataTable({
 					"bJQueryUI": true,
 					"sPaginationType": "full_numbers",

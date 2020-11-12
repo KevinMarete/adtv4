@@ -610,7 +610,7 @@ class Auto_management extends \App\Controllers\BaseController {
 
         if ($autobackup == 1) {
             // check if auto backup is set
-            $backup_result = base_url() . '/public/run_backup';
+            $backup_result = base_url() . '/run_backup';
 
             $postRequest = array(
                 'backup' => 'true'
@@ -626,7 +626,7 @@ class Auto_management extends \App\Controllers\BaseController {
             $file = explode('-', str_replace(' ', '', $apiResponse));
 
             if ($file[0] == 'BackupSuccess') {
-                $backup_result_ = base_url() . '/public/upload_backup';
+                $backup_result_ = base_url() . '/upload_backup';
 
 
                 $postRequest = array(

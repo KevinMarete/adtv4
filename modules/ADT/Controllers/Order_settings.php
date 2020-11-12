@@ -17,8 +17,8 @@ class Order_settings extends BaseController {
 
     function __construct() {
         $this->session = session();
-        $this->session->set("link_id", "/public/listing/sync_drug");
-        $this->session->set("linkSub", "/public/order_settings/listing/sync_drug");
+        $this->session->set("link_id", "/listing/sync_drug");
+        $this->session->set("linkSub", "/order_settings/listing/sync_drug");
         $this->session->set("linkTitle", "Settings Management");
         $this->table = new \CodeIgniter\View\Table();
         $this->session = \Config\Services::session();
@@ -64,8 +64,8 @@ class Order_settings extends BaseController {
             foreach ($result as $index => $value) {
                 if ($index == 'Active') {
                     $edit_link = anchor('#' . $table . '_form', 'Edit', array('id' => $result['id'], 'table' => $table, 'role' => 'button', 'class' => 'edit_setting', 'data-toggle' => 'modal'));
-                    $disable_link = anchor(base_url() . '/public/order_settings/disable/' . $table . '/' . $result['id'], 'Disable', array('class' => 'disable_user'));
-                    $enable_link = anchor(base_url() . '/public/order_settings/enable/' . $table . '/' . $result['id'], 'Enable', array('class' => 'enable_user'));
+                    $disable_link = anchor(base_url() . '/order_settings/disable/' . $table . '/' . $result['id'], 'Disable', array('class' => 'disable_user'));
+                    $enable_link = anchor(base_url() . '/order_settings/enable/' . $table . '/' . $result['id'], 'Enable', array('class' => 'enable_user'));
                     ;
                     $links = $edit_link;
                     if ($access_level == "facility_administrator") {
@@ -116,7 +116,7 @@ class Order_settings extends BaseController {
         $this->session->set("link_id", "listing/" . $table);
         $this->session->set("linkSub", "order_settings/listing/" . $table);
         //Filter datatable
-        return redirect()->to(base_url() . '/public/settings_management');
+        return redirect()->to(base_url() . '/settings_management');
     }
 
     public function disable($table = '', $id) {
@@ -140,7 +140,7 @@ class Order_settings extends BaseController {
         $this->session->set("link_id", "listing/" . $table);
         $this->session->set("linkSub", "order_settings/listing/" . $table);
         //Filter datatable
-        return redirect()->to(base_url() . '/public/settings_management');
+        return redirect()->to(base_url() . '/settings_management');
     }
 
     public function save($table = '') {
@@ -157,7 +157,7 @@ class Order_settings extends BaseController {
         $this->session->set("link_id", "listing/" . $table);
         $this->session->set("linkSub", "order_settings/listing/" . $table);
 
-        return redirect()->to(base_url() . '/public/settings_management');
+        return redirect()->to(base_url() . '/settings_management');
     }
 
     public function update($table = '', $id = '') {
@@ -175,7 +175,7 @@ class Order_settings extends BaseController {
         $this->session->set("link_id", "listing/" . $table);
         $this->session->set("linkSub", "order_settings/listing/" . $table);
 
-        return redirect()->to(base_url() . '/public/settings_management');
+        return redirect()->to(base_url() . '/settings_management');
     }
 
     public function fetch($table = '') {

@@ -19,11 +19,11 @@
     }
 </style>
 <div class="container" style="background-color: #fde8e7;border: solid thick #2b597e;padding: 30px; margin-top: 130px; margin-bottom: 130px;border-radius: 20px;">
-    <a href="<?= base_url().'/public/'; ?>pqmp/0/0" class="btn btn-default" > Back </a>
+    <a href="<?= base_url().'/'; ?>pqmp/0/0" class="btn btn-default" > Back </a>
  
 
 
-    <a href="<?= base_url().'/public/'; ?>inventory_management/export_pqmp/<?= $record_no; ?>/export" class="btn btn-default" > Export(.xls) </a>
+    <a href="<?= base_url().'/'; ?>inventory_management/export_pqmp/<?= $record_no; ?>/export" class="btn btn-default" > Export(.xls) </a>
     <div class="container">
         <div class="row">
             <div class="text-center">
@@ -37,7 +37,7 @@
             </div>
         </div>
     </div>
-    <form name="pqmp-form" id="pqmp-form" method="POST" action="<?= base_url().'/public/'; ?>inventory_management/pqmp/<?= $record_no; ?>">
+    <form name="pqmp-form" id="pqmp-form" method="POST" action="<?= base_url().'/'; ?>inventory_management/pqmp/<?= $record_no; ?>">
         <table border="1" style="">
             <tr>
                 <td colspan="2">Name of Facility : <input type="text" name="facility_name" id="facility_name" class="form-control" value="<?= @$pqmp_data[0]['facility_name']; ?>"> </td>

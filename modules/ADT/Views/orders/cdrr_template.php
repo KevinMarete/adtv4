@@ -3,7 +3,7 @@
     <div>
         <ul class="breadcrumb">
             <li>
-                <a href="<?php echo base_url() . '/public/order' ?>">CDRR</a><span class="divider">/</span>
+                <a href="<?php echo base_url() . '/order' ?>">CDRR</a><span class="divider">/</span>
             </li>
             <li class="active" id="actual_page">
                 <?php echo $page_title; ?>
@@ -13,11 +13,11 @@
     <?php
     if ($options == "update" || $options == "view") {
         ?>
-        <form id="fmPostCdrr" name="fmPostCdrr" method="post" action="<?php echo base_url('/public/order/save/cdrr/prepared/' . $cdrr_id) ?>">	
+        <form id="fmPostCdrr" name="fmPostCdrr" method="post" action="<?php echo base_url('/order/save/cdrr/prepared/' . $cdrr_id) ?>">	
             <?php
         } else {
             ?>
-            <form id="fmPostCdrr" name="fmPostCdrr" method="post" action="<?php echo base_url('/public/order/save/cdrr/prepared') ?>">
+            <form id="fmPostCdrr" name="fmPostCdrr" method="post" action="<?php echo base_url('/order/save/cdrr/prepared') ?>">
                 <?php
             }
             ?>
@@ -35,7 +35,7 @@
                     <?php echo $option_links; ?>
                 </ul>
                 <label><h2><b><?php echo $cdrr_array[0]->cdrr_label . " " . $cdrr_array[0]->status_name; ?></b></h2></label><br/>
-                <a href='<?php echo base_url("/public/order/download_order/cdrr/" . $cdrr_id); ?>'><?php echo $cdrr_array[0]->cdrr_label . " " . $cdrr_array[0]->facility_name . " " . $cdrr_array[0]->period_begin . " to " . $cdrr_array[0]->period_end . ".xls"; ?></a>
+                <a href='<?php echo base_url("/order/download_order/cdrr/" . $cdrr_id); ?>'><?php echo $cdrr_array[0]->cdrr_label . " " . $cdrr_array[0]->facility_name . " " . $cdrr_array[0]->period_begin . " to " . $cdrr_array[0]->period_end . ".xls"; ?></a>
                 <p></p>
                 <input type="hidden"  id="status" name="status" value="<?php echo strtolower($cdrr_array[0]->status_name); ?>"/>
                 <input type="hidden"  id="created" name="created" value="<?php echo $cdrr_array[0]->created; ?>"/>
@@ -467,7 +467,7 @@
 
         $("#generate").on('click', function () {
             //display generating modal
-            $.blockUI({message: '<h3><img width="30" height="30" src="<?php echo base_url() . '/public/assets/images/loading_spin.gif' ?>" /> Generating...</h3>'});
+            $.blockUI({message: '<h3><img width="30" height="30" src="<?php echo base_url() . '/assets/images/loading_spin.gif' ?>" /> Generating...</h3>'});
             //parameters
             var count = 0;
             var total = $(".ordered_drugs").length;
@@ -791,4 +791,4 @@ if ($stand_alone == 1) {
     }
 </style>
 <!--scripts-->
-<script src="<?php echo base_url(); ?>/public/assets/scripts/bootstrap/bootstrap-multiselect.js"></script>
+<script src="<?php echo base_url(); ?>/assets/scripts/bootstrap/bootstrap-multiselect.js"></script>

@@ -53,9 +53,9 @@ class Dossing_chart extends \App\Controllers\BaseController {
 
                 if ($classification['is_active'] == 1) {
                     $links .= " | ";
-                    $links .= anchor(base_url().'/public/dossing_chart/disable/' . $classification['id'], 'Disable', array('class' => 'disable_user'));
+                    $links .= anchor(base_url().'/dossing_chart/disable/' . $classification['id'], 'Disable', array('class' => 'disable_user'));
                 } else {
-                    $links .= anchor(base_url().'/public/dossing_chart/enable/' . $classification['id'], 'Enable', array('class' => 'enable_user'));
+                    $links .= anchor(base_url().'/dossing_chart/enable/' . $classification['id'], 'Enable', array('class' => 'enable_user'));
                 }
             }
 
@@ -124,7 +124,7 @@ class Dossing_chart extends \App\Controllers\BaseController {
                 $this->session->set('msg_success', ' Item was not Added');
             }
 
-          return redirect()->to(base_url() . '/public/settings_management');
+          return redirect()->to(base_url() . '/settings_management');
         }
     }
 
@@ -156,21 +156,21 @@ class Dossing_chart extends \App\Controllers\BaseController {
 
         $this->session->set('msg_success', 'Update Was Successfull');
         //Filter datatable
-      return redirect()->to(base_url() . '/public/settings_management');
+      return redirect()->to(base_url() . '/settings_management');
     }
 
     public function enable($classification_id) {
         $query = $this->db->query("UPDATE dossing_chart SET is_active='1' WHERE id='$classification_id'");
         $this->session->set('msg_success', 'Item was enabled');
         //Filter datatable
-      return redirect()->to(base_url() . '/public/settings_management');
+      return redirect()->to(base_url() . '/settings_management');
     }
 
     public function disable($classification_id) {
         $query = $this->db->query("UPDATE dossing_chart SET is_active='0' WHERE id='$classification_id'");
         $this->session->set('msg_error', 'Item was disabled');
         //Filter datatable
-      return redirect()->to(base_url() . '/public/settings_management');
+      return redirect()->to(base_url() . '/settings_management');
     }
 
     private function _submit_validate() {

@@ -31,7 +31,7 @@
 		var charts = ["overview", "service", "gender", "age"];
 		//Loop through Charts
 		$.each(charts, function(i, v) {
-			var url = "<?php echo base_url() . 'public/report_management/getAdherence/' . $type . '/' . $start_date . '/' . $end_date . '/'; ?>" + v;
+			var url = "<?php echo base_url() . '/report_management/getAdherence/' . $type . '/' . $start_date . '/' . $end_date . '/'; ?>" + v;
 			//Load charts
 			load_charts(v, url);
 		});

@@ -17,7 +17,7 @@
 
 </style>
 <script type="text/javascript">
-    base_url = "<?php echo base_url() . '/public/'; ?>";
+    base_url = "<?php echo base_url() . '/'; ?>";
     function triggetmultiselect() {
         $('.sync_facility').multiselect().multiselectfilter();
     }
@@ -236,7 +236,7 @@
     <div id="user_form" title="New User" class="modal hide fade cyan" tabindex="-1" role="dialog" aria-labelledby="label" aria-hidden="true">
         <?php
         $attributes = array('class' => 'input_form', 'id' => 'fm_user');
-        echo form_open(base_url() . '/public/user_management/save', $attributes);
+        echo form_open(base_url() . '/user_management/save', $attributes);
         ?>
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -342,7 +342,7 @@
     <div id="edit_user" title="Edit User" class="modal hide fade cyan" tabindex="-1" role="dialog" aria-labelledby="label" aria-hidden="true">
         <?php
         $attributes = array('class' => 'input_form', 'id' => 'fm_edit_user');
-        echo form_open(base_url() . '/public/user_management/update', $attributes);
+        echo form_open(base_url() . '/user_management/update', $attributes);
         ?>
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>

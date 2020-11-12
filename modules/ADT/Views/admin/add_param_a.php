@@ -22,7 +22,7 @@ if ($table) {
 <div id="dialog_counties" title="Add County" class="modal hide fade cyan" tabindex="-1" role="dialog" aria-labelledby="AddCounty" aria-hidden="true">
     <?php
     $attributes = ['class' => 'input_form'];
-    echo form_open(base_url() . '/public/admin_management/save/' . $table, $attributes);
+    echo form_open(base_url() . '/admin_management/save/' . $table, $attributes);
     // echo validation_errors('<p class="error">', '</p>');
     ?>
     <p class="error"> <?= \Config\Services::validation()->listErrors(); ?> </p>
@@ -50,7 +50,7 @@ if ($table) {
 <div id="edit_counties" title="Edit County" class="modal hide fade cyan" tabindex="-1" role="dialog" aria-labelledby="AddCounty" aria-hidden="true">
     <?php
     $attributes = ['class' => 'input_form'];
-    echo form_open(base_url() . '/public/admin_management/update/' . $table, $attributes);
+    echo form_open(base_url() . '/admin_management/update/' . $table, $attributes);
     // echo validation_errors('<p class="error">', '</p>');
     ?>
     <p class="error"> <?= \Config\Services::validation()->listErrors(); ?> </p>
@@ -80,7 +80,7 @@ if ($table) {
 <div id="dialog_satellites" title="Add Satellite" class="modal hide fade cyan" tabindex="-1" role="dialog" aria-labelledby="AddCounty" aria-hidden="true">
     <?php
     $attributes = ['class' => 'input_form', 'id' => 'satellite_frm'];
-    echo form_open(base_url() . '/public/admin_management/save/' . $table, $attributes);
+    echo form_open(base_url() . '/admin_management/save/' . $table, $attributes);
     // echo validation_errors('<p class="error">', '</p>');
     ?>
     <p class="error"> <?= \Config\Services::validation()->listErrors(); ?> </p>
@@ -111,7 +111,7 @@ if ($table) {
 <div id="dialog_facilities" title="Add Facility" class="modal hide fade cyan" tabindex="-1" role="dialog" aria-labelledby="AddFacility" aria-hidden="true">
     <?php
     $attributes = ['class' => 'input_form'];
-    echo form_open(base_url() . '/public/admin_management/save/' . $table, $attributes);
+    echo form_open(base_url() . '/admin_management/save/' . $table, $attributes);
     // echo validation_errors('<p class="error">', '</p>');
     ?>
     <p class="error"> <?= \Config\Services::validation()->listErrors(); ?> </p>
@@ -143,7 +143,7 @@ if ($table) {
 <div id="edit_facilities" title="Edit Facility" class="modal hide fade cyan" tabindex="-1" role="dialog" aria-labelledby="AddFacility" aria-hidden="true">
     <?php
     $attributes = ['class' => 'input_form'];
-    echo form_open(base_url() . '/public/admin_management/update/' . $table, $attributes);
+    echo form_open(base_url() . '/admin_management/update/' . $table, $attributes);
     // echo validation_errors('<p class="error">', '</p>');
     ?>
     <p class="error"> <?= \Config\Services::validation()->listErrors(); ?> </p>
@@ -178,7 +178,7 @@ if ($table) {
 <div id="dialog_district" title="Add District" class="modal hide fade cyan" tabindex="-1" role="dialog" aria-labelledby="AddDistrict" aria-hidden="true">
     <?php
     $attributes = ['class' => 'input_form'];
-    echo form_open(base_url() . '/public/admin_management/save/' . $table, $attributes);
+    echo form_open(base_url() . '/admin_management/save/' . $table, $attributes);
     // echo validation_errors('<p class="error">', '</p>');
     ?>
     <p class="error"> <?= \Config\Services::validation()->listErrors(); ?> </p>
@@ -206,7 +206,7 @@ if ($table) {
 <div id="edit_district" title="Edit District" class="modal hide fade cyan" tabindex="-1" role="dialog" aria-labelledby="AddDistrict" aria-hidden="true">
     <?php
     $attributes = ['class' => 'input_form'];
-    echo form_open(base_url() . '/public/admin_management/update/' . $table, $attributes);
+    echo form_open(base_url() . '/admin_management/update/' . $table, $attributes);
     // echo validation_errors('<p class="error">', '</p>');
     ?>
     <p class="error"> <?= \Config\Services::validation()->listErrors(); ?> </p>
@@ -235,7 +235,7 @@ if ($table) {
 <div id="dialog_menu" title="Add Menu" class="modal hide fade cyan" tabindex="-1" role="dialog" aria-labelledby="AddDistrict" aria-hidden="true">
     <?php
     $attributes = ['class' => 'input_form'];
-    echo form_open(base_url() . '/public/admin_management/save/' . $table, $attributes);
+    echo form_open(base_url() . '/admin_management/save/' . $table, $attributes);
     // echo validation_errors('<p class="error">', '</p>');
     ?>
     <p class="error"> <?= \Config\Services::validation()->listErrors(); ?> </p>
@@ -271,7 +271,7 @@ if ($table) {
 <div id="edit_menu" title="Edit Menu" class="modal hide fade cyan" tabindex="-1" role="dialog" aria-labelledby="AddDistrict" aria-hidden="true">
     <?php
     $attributes = ['class' => 'input_form'];
-    echo form_open(base_url() . '/public/admin_management/update/' . $table, $attributes);
+    echo form_open(base_url() . '/admin_management/update/' . $table, $attributes);
     // echo validation_errors('<p class="error">', '</p>');
     ?>
     <p class="error"> <?= \Config\Services::validation()->listErrors(); ?> </p>
@@ -311,7 +311,7 @@ if ($table) {
 
     <?php
     $attributes = ['class' => 'input_form', 'id' => 'fm_user'];
-    echo form_open(base_url() . '/public/admin_management/save/' . $table, $attributes);
+    echo form_open(base_url() . '/admin_management/save/' . $table, $attributes);
     // echo validation_errors('<p class="error">', '</p>');
     ?>
     <p class="error"> <?= \Config\Services::validation()->listErrors(); ?> </p>
@@ -383,7 +383,7 @@ if ($table) {
 <div id="dialog_faq" title="Add FAQ" class="modal hide fade cyan" tabindex="-1" role="dialog" aria-labelledby="AddFAQ" aria-hidden="true">
     <?php
     $attributes = ['class' => 'input_form'];
-    echo form_open(base_url() . '/public/admin_management/save/' . $table, $attributes);
+    echo form_open(base_url() . '/admin_management/save/' . $table, $attributes);
     // echo validation_errors('<p class="error">', '</p>');
     ?>
     <p class="error"> <?= \Config\Services::validation()->listErrors(); ?> </p>
@@ -426,7 +426,7 @@ if ($table) {
 <div id="edit_faq" title="Edit FAQ" class="modal hide fade cyan" tabindex="-1" role="dialog" aria-labelledby="AddFAQ" aria-hidden="true">
     <?php
     $attributes = ['class' => 'input_form'];
-    echo form_open(base_url() . '/public/admin_management/update/' . $table, $attributes);
+    echo form_open(base_url() . '/admin_management/update/' . $table, $attributes);
     // echo validation_errors('<p class="error">', '</p>');
     ?>
     <p class="error"> <?= \Config\Services::validation()->listErrors(); ?> </p>
@@ -464,7 +464,7 @@ if ($table) {
 <div id="dialog_access_level" title="Add Access Level" class="modal hide fade cyan" tabindex="-1" role="dialog" aria-labelledby="AddAccessLevel" aria-hidden="true">
     <?php
     $attributes = ['class' => 'input_form'];
-    echo form_open(base_url() . '/public/admin_management/save/' . $table, $attributes);
+    echo form_open(base_url() . '/admin_management/save/' . $table, $attributes);
     // echo validation_errors('<p class="error">', '</p>');
     ?>
     <p class="error"> <?= \Config\Services::validation()->listErrors(); ?> </p>
@@ -500,7 +500,7 @@ if ($table) {
 <div id="edit_access_level" title="Edit Access Level" class="modal hide fade cyan" tabindex="-1" role="dialog" aria-labelledby="AddAccessLevel" aria-hidden="true">
     <?php
     $attributes = ['class' => 'input_form'];
-    echo form_open(base_url() . '/public/admin_management/update/' . $table, $attributes);
+    echo form_open(base_url() . '/admin_management/update/' . $table, $attributes);
     // echo validation_errors('<p class="error">', '</p>');
     ?>
     <p class="error"> <?= \Config\Services::validation()->listErrors(); ?> </p>
@@ -538,7 +538,7 @@ if ($table) {
 <div id="dialog_user_right" title="Add User Right" class="modal hide fade cyan" tabindex="-1" role="dialog" aria-labelledby="AddCounty" aria-hidden="true">
     <?php
     $attributes = ['class' => 'input_form', 'id' => 'fm_user'];
-    echo form_open(base_url() . '/public/admin_management/save/' . $table, $attributes);
+    echo form_open(base_url() . '/admin_management/save/' . $table, $attributes);
     // echo validation_errors('<p class="error">', '</p>');
     ?>
     <p class="error"> <?= \Config\Services::validation()->listErrors(); ?> </p>
@@ -574,7 +574,7 @@ if ($table) {
 <div id="edit_user_right" title="Edit User Right" class="modal hide fade cyan" tabindex="-1" role="dialog" aria-labelledby="AddCounty" aria-hidden="true">
     <?php
     $attributes = ['class' => 'input_form', 'id' => 'fm_user'];
-    echo form_open(base_url() . '/public/admin_management/update/' . $table, $attributes);
+    echo form_open(base_url() . '/admin_management/update/' . $table, $attributes);
     // echo validation_errors('<p class="error">', '</p>');
     ?>
     <p class="error"> <?= \Config\Services::validation()->listErrors(); ?> </p>
@@ -607,7 +607,7 @@ if ($table) {
 <div id="edit_nascop" title="Edit Nascop" class="modal hide fade cyan" tabindex="-1" role="dialog" aria-labelledby="AddCounty" aria-hidden="true">
     <?php
     $attributes = ['class' => 'input_form'];
-    echo form_open(base_url() . '/public/admin_management/update/nascop', $attributes);
+    echo form_open(base_url() . '/admin_management/update/nascop', $attributes);
     // echo validation_errors('<p class="error">', '</p>');
     ?>
     <p class="error"> <?= \Config\Services::validation()->listErrors(); ?> </p>
@@ -638,7 +638,7 @@ if ($table) {
         $("#actual_page").text("<?php echo $actual_page; ?>");
         //Adding Satellites
         $("#satellites").live('click', function () {
-            var link = base_url + "/public/facility_management/getFacilityList";
+            var link = base_url + "/facility_management/getFacilityList";
             $.ajax({
                 url: link,
                 type: 'POST',
@@ -658,7 +658,7 @@ if ($table) {
         //Adding Users
         $("#users").live('click', function () {
             //Get current facility
-            var link = base_url + "/public/facility_management/getCurrent";
+            var link = base_url + "/facility_management/getCurrent";
             $.ajax({
                 url: link,
                 type: 'POST',
@@ -671,7 +671,7 @@ if ($table) {
                 }
             });
             //Get lower access_levels
-            var accessURL = base_url + "/public/settings_management/getActiveAccessLevels";
+            var accessURL = base_url + "/settings_management/getActiveAccessLevels";
             $("#access_level").empty();
             $.getJSON(accessURL, function (levels) {
                 $.each(levels, function (i, level) {
@@ -682,7 +682,7 @@ if ($table) {
 
         //Adding User Rights
         $("#user_right").live('click', function () {
-            var link1 = base_url + "/public/settings_management/getActiveAccessLevels";
+            var link1 = base_url + "/settings_management/getActiveAccessLevels";
             $.ajax({
                 url: link1,
                 type: 'POST',
@@ -695,7 +695,7 @@ if ($table) {
                 }
             });
 
-            var link2 = base_url + "/public/settings_management/getMenus";
+            var link2 = base_url + "/settings_management/getMenus";
             $.ajax({
                 url: link2,
                 type: 'POST',
@@ -742,7 +742,7 @@ if ($table) {
                 $("#edit_right_id").val($(this).attr("right_id"))
                 var access_id = $(this).attr("access_id");
                 var menu_id = $(this).attr("edit_menu_id");
-                var link1 = base_url + "/public/settings_management/getActiveAccessLevels";
+                var link1 = base_url + "/settings_management/getActiveAccessLevels";
                 $.ajax({
                     url: link1,
                     type: 'POST',
@@ -759,7 +759,7 @@ if ($table) {
                     }
                 });
 
-                var link2 = base_url + "/public/settings_management/getMenus";
+                var link2 = base_url + "/settings_management/getMenus";
                 $.ajax({
                     url: link2,
                     type: 'POST',

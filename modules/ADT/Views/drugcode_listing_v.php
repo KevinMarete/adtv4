@@ -88,7 +88,7 @@
 </style>
 <script type="text/javascript">
     $(document).ready(function () {
-        base_url = "<?php echo base_url(); ?>/" + "public/"
+        base_url = "<?php echo base_url(); ?>/" ;
 
         $('entry_form').submit(function () {
             $(this).find(':submit').attr('disabled', 'disabled');
@@ -475,7 +475,7 @@
         $attributes = array(
             'id' => 'entry_form',
             'onsubmit' => 'return processNewInstructions()');
-        echo form_open(base_url() . '/public/drugcode_management/save', $attributes);
+        echo form_open(base_url() . '/drugcode_management/save', $attributes);
         ?>
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -617,7 +617,7 @@
         $attributes = array(
             'id' => 'entry_form',
             'onsubmit' => 'return processEditInstructions()');
-        echo form_open(base_url() . '/public/drugcode_management/update', $attributes);
+        echo form_open(base_url() . '/drugcode_management/update', $attributes);
         ?>
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -769,7 +769,7 @@
                 <h3 id="BulkMapping">Bulk Drugs  Mapping [ Drugs details ]</h3>
             </div>
             <div class="modal-body">
-                <div id="loadingD" style="display: none; width: 60%; position:fixed; margin-bottom: 15px; text-align: center;"><img style="width: 30px;" src="<?php echo base_url(); ?>//public/assets/images/loading_spin.gif"></div>
+                <div id="loadingD" style="display: none; width: 60%; position:fixed; margin-bottom: 15px; text-align: center;"><img style="width: 30px;" src="<?php echo base_url(); ?>//assets/images/loading_spin.gif"></div>
                 <table class="table table-bordered table-striped" id="tbl_bulk_mapping"> 
                     <thead>
                         <tr><th style="width: 6%">#</th><th style="width:60%">Drugs</th><th>Sync Drugs</th></tr>

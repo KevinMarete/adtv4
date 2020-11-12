@@ -84,20 +84,20 @@ class Backup extends \CodeIgniter\Controller {
                 if (in_array($file, $local_files) && in_array($file, $data['remote_files'])) { //Both local and remote -> Delete
                     $table .= '<tr><td>' . basename($file) . '</td>';
                     $table .= '<td><button class="btn btn-danger btn-sm delete" >Delete</button></td>';
-                    $table .= '</td><td align="center"><img src="' . $base_url . 'public/assets/img/check-mark.png" height="25px"></td><td align="center"> <img src="' . $base_url . 'public/assets/img/check-mark.png" height="25px"></td></tr>';
+                    $table .= '</td><td align="center"><img src="' . $base_url . '/assets/img/check-mark.png" height="25px"></td><td align="center"> <img src="' . $base_url . '/assets/img/check-mark.png" height="25px"></td></tr>';
                     $table .= '</tr>';
                 }
                 if (!in_array($file, $local_files) && in_array($file, $data['remote_files'])) { //Only Remote -> Download
                     $table .= '<tr><td>' . str_replace("/backups/" . $facility_code . "/", "", $file) . '</td>';
                     $table .= '<td><button class="btn btn-warning btn-sm download" >Download</button> </td>';
-                    $table .= '<td align="center"><img src="' . $base_url . 'public/assets/img/x-mark.png" height="20px"></td><td align="center"> <img src="' . $base_url . 'public/assets/img/check-mark.png" height="25px"></td></tr>';
+                    $table .= '<td align="center"><img src="' . $base_url . '/assets/img/x-mark.png" height="20px"></td><td align="center"> <img src="' . $base_url . '/assets/img/check-mark.png" height="25px"></td></tr>';
                     $table .= '</tr>';
                 }
                 if (in_array($file, $local_files) && !in_array($file, $data['remote_files'])) { //Only Local -> Upload
                     $table .= '<tr><td>' . basename($file) . '</td>';
                     $table .= '<td><button class="btn btn-danger btn-sm delete" >Delete</button>
 					<button type="button" class="btn btn-info btn-sm upload" >Upload</button> </td>';
-                    $table .= '<td align="center"><img src="' . $base_url . 'public/assets/img/check-mark.png" height="25px"></td><td align="center"><img src="' . $base_url . 'public/assets/img/x-mark.png" height="20px"></td></tr>';
+                    $table .= '<td align="center"><img src="' . $base_url . '/assets/img/check-mark.png" height="25px"></td><td align="center"><img src="' . $base_url . '/assets/img/x-mark.png" height="20px"></td></tr>';
                     $table .= '</tr>';
                 }
             }

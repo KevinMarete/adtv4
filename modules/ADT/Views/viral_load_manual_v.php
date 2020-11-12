@@ -1,6 +1,6 @@
 <script>
     $(document).ready(function () {
-        base_url = "<?php echo base_url() . '/public/'; ?>";
+        base_url = "<?php echo base_url() . '/'; ?>";
 
         $('.edit_user').live('click', function (event) {
             event.preventDefault();
@@ -27,7 +27,7 @@
         		var table=$('.vl_results').dataTable( {
 			"bProcessing": true,
 			"bServerSide": true,
-			"sAjaxSource": "<?= base_url();?>/public/viral_load_manual/get_viral_load",
+			"sAjaxSource": "<?= base_url();?>/viral_load_manual/get_viral_load",
 	        "bJQueryUI": true,
 	        "sPaginationType": "full_numbers",
 	        "bStateSave" : true,
@@ -89,7 +89,7 @@
     <div id="edit_form" title="Edit Drug Classification" class="modal hide fade cyan " tabindex="-1" role="dialog" aria-labelledby="label" aria-hidden="true">
         <?php
         $attributes = array('class' => 'input_form');
-        echo form_open(base_url().'/public/viral_load_manual/update', $attributes);
+        echo form_open(base_url().'/viral_load_manual/update', $attributes);
         ?>
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>

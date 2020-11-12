@@ -6,7 +6,7 @@
 	<div class="row-fluid">
 		<div class="span8 offset2">
 			<?php echo $session->getFlashdata('login_message');?>
-			<?php echo form_open(base_url().'/public/order/authenticate_user');?>
+			<?php echo form_open(base_url().'/order/authenticate_user');?>
 			<?php echo form_fieldset('', ['id' => 'login_legend']);?>
 			<legend id="login_legend">
 				<i class="fa fa-info-circle"></i>DHIS Log In

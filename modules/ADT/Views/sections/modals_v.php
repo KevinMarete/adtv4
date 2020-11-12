@@ -14,7 +14,7 @@
 <?php $session = session(); ?>
 <!-- ADT UPDATE Modal-->
 <div id="adt_update_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <form action="<?php echo base_url() . '/public/user_management/profile_update' ?>" method="post" id="ADT_update_frm">
+    <form action="<?php echo base_url() . '/user_management/profile_update' ?>" method="post" id="ADT_update_frm">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             <h3 id="myModalLabel">ADT Update Progress</h3>
@@ -23,7 +23,7 @@
 
             <p>A newer version of ADT is available. <br />You are currently using <?= '3.5.0' ?></p>
             <?php if (!empty($download_status) || !$session->get('download_status')) { ?>
-                <div id="downloading" style="display: none;"><img src="<?= base_url() ?>/public/assets/images/loading_spin.gif" style="width: 19px;"> Downloading ADT Release. This may take up to 3 minutes</div>
+                <div id="downloading" style="display: none;"><img src="<?= base_url() ?>/assets/images/loading_spin.gif" style="width: 19px;"> Downloading ADT Release. This may take up to 3 minutes</div>
 
                 <div id='download_status'><span style="color:red;">ADT Release Not Downloaded</span>.
                     <a href="javascript:;;" id="download-ADT-release" onclick="download_ADT()">Download Now</a>
@@ -35,7 +35,7 @@
         <a href="javascript:;;" id="download-ADT-release" class="btn btn-warning" onclick="update_ADT()">Update</a>
     </div>
 
-    <div id="updating" style="display: none;"><img src="<?= base_url() ?>/public/assets/images/loading_spin.gif" style="width: 19px;"> Updating ADT Release. May take a few minutes.</div>
+    <div id="updating" style="display: none;"><img src="<?= base_url() ?>/assets/images/loading_spin.gif" style="width: 19px;"> Updating ADT Release. May take a few minutes.</div>
 
     <table>
         <tr>
@@ -54,7 +54,7 @@
 
 <!-- Modal edit user profile-->
 <div id="edit_user_profile" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <form action="<?php echo base_url() . '/public/user_management/profile_update' ?>" method="post" id="profile_update_frm">
+    <form action="<?php echo base_url() . '/user_management/profile_update' ?>" method="post" id="profile_update_frm">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             <h3 id="myModalLabel">User details</h3>
@@ -136,16 +136,16 @@
 <!-- Modal edit user profile end-->
 <!-- Modal edit change password-->
 <div id="user_change_pass" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <form action="<?php echo base_url() . '/public/user_management/profile_update' ?>" method="post">
+    <form action="<?php echo base_url() . '/user_management/profile_update' ?>" method="post">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             <h3 id="myModalLabel">Change password</h3>
         </div>
         <div class="modal-body">
             <input type="hidden" name="base_url" id="base_url" value="<?php echo base_url() ?>" />
-            <form id="fmChangePassword" action="<?php echo base_url() . '/public/user_management/save_new_password/1' ?>" method="post" class="well">
+            <form id="fmChangePassword" action="<?php echo base_url() . '/user_management/save_new_password/1' ?>" method="post" class="well">
                 <span class="message error" id="error_msg_change_pass"></span>
-                <div id="m_loadingDiv" style="display: none"><img style="width: 30px" src="<?php echo base_url() . '/public/images/loading_spin.gif' ?>"></div>
+                <div id="m_loadingDiv" style="display: none"><img style="width: 30px" src="<?php echo base_url() . '/images/loading_spin.gif' ?>"></div>
                 <br>
                 <table>
                     <tr>
@@ -269,9 +269,9 @@
 <!-- Login for escm -->
 
 <script type="text/javascript">
-    var sitesURL = "<?php echo base_url() . '/public/order_settings/fetch/sync_facility'; ?>"
-    var storesURL = "<?php echo base_url() . '/public/user_management/get_stores'; ?>"
-    var userSitesURL = "<?php echo base_url() . '/public/user_management/get_sites/' . $session->get('user_id'); ?>"
+    var sitesURL = "<?php echo base_url() . '/order_settings/fetch/sync_facility'; ?>"
+    var storesURL = "<?php echo base_url() . '/user_management/get_stores'; ?>"
+    var userSitesURL = "<?php echo base_url() . '/user_management/get_sites/' . $session->get('user_id'); ?>"
     var profileDiv = '#profile_user_facilities'
     var storesDiv = '#profile_user_store'
     var ccc_store = <?= $session->get('ccc_store_id') ?>;
@@ -344,7 +344,7 @@
         $('#downloading').show();
 
         $.ajax({
-            url: "<?= base_url() ?>/public/home_controller/updater/download",
+            url: "<?= base_url() ?>/home_controller/updater/download",
             context: document.body
         }).done(function(results) {
             $('#download_status').html(results);
@@ -362,12 +362,12 @@
         $('#updating').show();
 
         $.ajax({
-            url: "<?= base_url() ?>/public/home_controller/updater/update",
+            url: "<?= base_url() ?>/home_controller/updater/update",
             context: document.body
         }).done(function(results) {
             $('#download_status').html(results);
             $('#updating').hide();
-            window.location.replace('<?= base_url() ?>/public/user_management/logout/2')
+            window.location.replace('<?= base_url() ?>/user_management/logout/2')
             // $('#download_status').show();
             // alert('Download success'+results)
             // $( this ).addClass( "done" );

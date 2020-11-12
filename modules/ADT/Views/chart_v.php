@@ -48,20 +48,20 @@ if ($resultArraySize > 25) {
                             role = myStorage.getItem("role");
                             //alert(category)
                             if (counter === 1) {
-                                var chart1_link = "<?php echo base_url() . '/public/admin_management/getSystemUsage/'; ?>" + $('#usage_period').val();
+                                var chart1_link = "<?php echo base_url() . '/admin_management/getSystemUsage/'; ?>" + $('#usage_period').val();
                                 $('#chart_area77').load(chart1_link);
                             } else if (counter === 1 && role !== 'System Administrator' || role !== 'Pharmacist' || role !== 'Facility Administrator') {
-                                $.post("<?php echo base_url() . '/public/drillAccessLevel'; ?>", {level: role, period: $('#usage_period').val()}, function (resp) {
+                                $.post("<?php echo base_url() . '/drillAccessLevel'; ?>", {level: role, period: $('#usage_period').val()}, function (resp) {
                                     $('#chart_area77').append(resp);
                                     counter = 1;
                                 });
                             } else if (counter === 2) {
-                                $.post("<?php echo base_url() . '/public/drillAccessLevel'; ?>", {level: category, period: $('#usage_period').val()}, function (resp) {
+                                $.post("<?php echo base_url() . '/drillAccessLevel'; ?>", {level: category, period: $('#usage_period').val()}, function (resp) {
                                     $('#chart_area77').append(resp);
                                     counter = 1;
                                 });
                             } else if (counter === 3) {
-                                $.post("<?php echo base_url() . '/public/getdataByUser'; ?>", {user: this.category, period: $('#usage_period').val()}, function (resp) {
+                                $.post("<?php echo base_url() . '/getdataByUser'; ?>", {user: this.category, period: $('#usage_period').val()}, function (resp) {
                                     $('#chart_area77').append(resp);
 
                                 });
@@ -127,32 +127,32 @@ if ($resultArraySize > 25) {
                                 myStorage.setItem("period", period);
                                 if (this.category === 'System Administrator') {
                                     myStorage.setItem("role", this.category);
-                                    $.post("<?php echo base_url() . '/public/admin_management/drillAccessLevel'; ?>", {level: this.category, period: period}, function (resp) {
+                                    $.post("<?php echo base_url() . '/admin_management/drillAccessLevel'; ?>", {level: this.category, period: period}, function (resp) {
                                         $('#chart_area77').append(resp);
                                         counter = 1;
                                     });
                                 } else
                                 if (this.category === 'Pharmacist') {
                                     myStorage.setItem("role", this.category);
-                                    $.post("<?php echo base_url() . '/public/admin_management/drillAccessLevel'; ?>", {level: this.category, period: period}, function (resp) {
+                                    $.post("<?php echo base_url() . '/admin_management/drillAccessLevel'; ?>", {level: this.category, period: period}, function (resp) {
                                         $('#chart_area77').append(resp);
                                         counter = 1;
                                     });
                                 } else
                                 if (this.category === 'Facility Administrator') {
                                     myStorage.setItem("role", this.category);
-                                    $.post("<?php echo base_url() . '/public/admin_management/drillAccessLevel'; ?>", {level: this.category, period: period}, function (resp) {
+                                    $.post("<?php echo base_url() . '/admin_management/drillAccessLevel'; ?>", {level: this.category, period: period}, function (resp) {
                                         $('#chart_area77').append(resp);
                                         counter = 1;
                                     });
                                 } else if (this.category === 'Dispensment') {
-                                    window.location.href = "<?php echo base_url(); ?>/public/home_controller/dispensement" + $('#uservalue').val() + '/' + period;
+                                    window.location.href = "<?php echo base_url(); ?>/home_controller/dispensement" + $('#uservalue').val() + '/' + period;
                                 } else if (this.category === 'Inventory') {
-                                    window.location.href = "<?php echo base_url(); ?>/public/home_controller/inventory" + $('#uservalue').val() + '/' + period;
+                                    window.location.href = "<?php echo base_url(); ?>/home_controller/inventory" + $('#uservalue').val() + '/' + period;
 
                                 } else {
                                     $('#uservalue').val(this.category);
-                                    $.post("<?php echo base_url() . '/public/admin_management/getdataByUser'; ?>", {user: this.category, period: period}, function (resp) {
+                                    $.post("<?php echo base_url() . '/admin_management/getdataByUser'; ?>", {user: this.category, period: period}, function (resp) {
                                         $('#chart_area77').append(resp);
                                         counter = 2;
                                     });

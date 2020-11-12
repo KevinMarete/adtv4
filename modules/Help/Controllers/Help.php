@@ -50,7 +50,7 @@ class Help extends \CodeIgniter\Controller {
 
         foreach ($files as $file) {
 
-            $links = "<a href='" . str_replace("tools/", "", base_url()) . "/public/assets/manuals/" . $file . "'target='_blank'>View</a>";
+            $links = "<a href='" . str_replace("tools/", "", base_url()) . "/assets/manuals/" . $file . "'target='_blank'>View</a>";
 
 
             $this->table->addRow("", $file, $links);

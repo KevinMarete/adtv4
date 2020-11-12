@@ -4,7 +4,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <title><?php echo $title; ?></title>
-        <link rel="SHORTCUT ICON" href="<?php echo base_url() . '/public/Images/favicon.ico'; ?>">
+        <link rel="SHORTCUT ICON" href="<?php echo base_url() . '/Images/favicon.ico'; ?>">
             <?php
             echo view('\Modules\ADT\Views\sections\\head');
             ?>
@@ -14,10 +14,10 @@
             <div class="container-fluid">
                 <div class="row-fluid">
                     <div class="span9" style="text-align:center">
-                        <img src='<?php echo base_url(); ?>/public/assets/images/nascop.jpg'>
+                        <img src='<?php echo base_url(); ?>/assets/images/nascop.jpg'>
                     </div>
                     <div class="span3" style="text-align:center">
-                        <a class="btn btn-warning pull-right" href="<?= base_url() ?>/public/recover">ADT Tools</a>
+                        <a class="btn btn-warning pull-right" href="<?= base_url() ?>/recover">ADT Tools</a>
                     </div>
                 </div>
             </div>
@@ -52,7 +52,7 @@
                         Login 
                         
                     </div>
-                    <form class="login-form" action="<?php echo base_url() . '/public/user_management/authenticate' ?>" method="post" style="margin:0 auto " >
+                    <form class="login-form" action="<?php echo base_url() . '/user_management/authenticate' ?>" method="post" style="margin:0 auto " >
                         <br>
                         <label> <strong >Username</strong>
                             <br>
@@ -85,7 +85,7 @@
                         <input type="submit" class="btn" name="register" id="register" value="Login" >
 
                         <div style="margin:auto;width:auto" class="anchor">
-                            <strong><a href="<?php echo base_url().'/public/user_management/resetPassword' ?>" >Forgot Password?</a></strong>
+                            <strong><a href="<?php echo base_url().'/user_management/resetPassword' ?>" >Forgot Password?</a></strong>
                         </div>
                     </form>
                 </div>

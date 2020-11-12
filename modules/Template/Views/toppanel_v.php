@@ -16,7 +16,7 @@
         <!--Welcome Message-->
         <div class="welcome_msg">
             Welcome <b><?php echo session()->get('Name'); ?></b>
-            <a href='<?php echo base_url() . "public/logout"; ?>'> Logout</a>
+            <a href='<?php echo base_url() . "/logout"; ?>'> Logout</a>
             <br/>
             <span class="date"><?php echo date('l,jS M Y'); ?></span>
         </div>

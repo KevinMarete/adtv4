@@ -7,7 +7,7 @@
 
 
 <title><?php echo $title; ?></title>
-<link rel="SHORTCUT ICON" href="<?php echo base_url() . '/public/images/favicon.ico' ?>">
+<link rel="SHORTCUT ICON" href="<?php echo base_url() . '/images/favicon.ico' ?>">
 <?php
 echo view('\Modules\ADT\Views\sections\\link');
 ?>

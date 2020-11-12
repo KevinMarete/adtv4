@@ -117,7 +117,7 @@
 					$(".btn").attr("disabled",false);
 
 				if(patient_no !=''){
-					var link=base_url+"/public/patient/checkpatient_no/"+patient_no;
+					var link=base_url+"/patient/checkpatient_no/"+patient_no;
 					$.ajax({
 						url: link,
 						type: 'POST',
@@ -141,7 +141,7 @@
 			$("#match_spouse").change(function(){
 				var patient_no=$("#match_spouse").val();
 				if(patient_no !=''){
-					var link=base_url+"/public/patient/checkpatient_no/"+patient_no;
+					var link=base_url+"/patient/checkpatient_no/"+patient_no;
 					$.ajax({
 						url: link,
 						type: 'POST',
@@ -160,7 +160,7 @@
 			$("#match_parent").change(function(){
 				var patient_no=$("#match_parent").val();
 				if(patient_no !=''){
-					var link=base_url+"/public/patient/checkpatient_no/"+patient_no;
+					var link=base_url+"/patient/checkpatient_no/"+patient_no;
 					$.ajax({
 						url: link,
 						type: 'POST',
@@ -286,7 +286,7 @@
 		   $("#service").change(function() {
 		   	var service_line = $(this).val();
 		   	var service_line_text = $("#service option[value='"+service_line+"']").text().toLowerCase();
-		   	var link = base_url+"/public/regimen_management/getRegimenLine/"+service_line;
+		   	var link = base_url+"/regimen_management/getRegimenLine/"+service_line;
 
 		   	$("#drug_prophylax").css("display","block");
 		   	$("#regimen option").remove();
@@ -330,7 +330,7 @@
 		   	}
 		   	else{
 		   		if(service_line_text == "pmtct" && $("#age_in_years").val() < 2){
-		   			var link = base_url+"/public/regimen_management/getRegimenLine/"+service_line+"/true";
+		   			var link = base_url+"/regimen_management/getRegimenLine/"+service_line+"/true";
 		   		}
 		   		$("#pep_reason_listing").hide();
 		   		$("#pep_reason").val(0);
@@ -730,7 +730,7 @@
 		}
 
 	</script>
-	<script type="text/javascript" src="<?= base_url()?>/public/assets/scripts/jcook.js"></script>
+	<script type="text/javascript" src="<?= base_url()?>/assets/scripts/jcook.js"></script>
 
 </head>
 
@@ -738,7 +738,7 @@
 
 	<div class="full-content" style="background:#80f26d">
 		<div id="sub_title" >
-			<a href="<?php  echo base_url().'/public/patients ' ?>">Patient Listing </a> <i class=" icon-chevron-right"></i> <strong>Add Patients</strong>
+			<a href="<?php  echo base_url().'/patients ' ?>">Patient Listing </a> <i class=" icon-chevron-right"></i> <strong>Add Patients</strong>
 			<hr size="1">
 		</div>
 		<h3>Patient Registration
@@ -746,7 +746,7 @@
 				(Fields Marked with <b><span class='astericks'>*</span></b> Asterisks are required)
 			</div></h3>
 
-			<form id="add_patient_form" name="add_patient_form" method="post"  action="<?php echo base_url().'/public/patient/save';?>"  >
+			<form id="add_patient_form" name="add_patient_form" method="post"  action="<?php echo base_url().'/patient/save';?>"  >
 				<div class="column" id="columnOne">
 					<fieldset>
 						<legend>

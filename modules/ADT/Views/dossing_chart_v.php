@@ -1,7 +1,7 @@
 <script>
 //load pediatric drugs and dose when the add button is clicked 
     $(document).ready(function () {
-        base_url = "<?php echo base_url() . '/public/'; ?>"
+        base_url = "<?php echo base_url() . '/'; ?>"
         /*Prevent Double Click*/
         $('input_form').submit(function () {
             $(this).find(':submit').attr('disabled', 'disabled');
@@ -179,7 +179,7 @@
     <div id="client_form1" title="New Dossing Chart" class="modal hide fade cyan" tabindex="-1" role="dialog" aria-labelledby="label" aria-hidden="true">
         <?php
         $attributes = array('class' => 'input_form');
-        echo form_open(base_url() . '/public/dossing_chart/save', $attributes);
+        echo form_open(base_url() . '/dossing_chart/save', $attributes);
         ?>
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -214,7 +214,7 @@
     <div id="edit_form" title="Edit Drug Classification" class="modal hide fade cyan" tabindex="-1" role="dialog" aria-labelledby="label" aria-hidden="true">
         <?php
         $attributes = array('class' => 'input_form');
-        echo form_open(base_url() . '/public/dossing_chart/update', $attributes);
+        echo form_open(base_url() . '/dossing_chart/update', $attributes);
         ?>
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>

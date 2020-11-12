@@ -6,7 +6,7 @@ helper('url', 'form');
 $session = session();
 $request = \Config\Services::request();
 if (!$session->get('user_id') && $content_view != '\Modules\ADT\Views\\resend_password_v') {
-    return redirect()->to("public/login");
+    return redirect()->to("/login");
 }
 if (!isset($link)) {
     $link = null;
@@ -118,7 +118,7 @@ if ($access_level == "system_administrator") {
             }
         }
         ?> 
-        <script type="text/javascript" src="<?= base_url(); ?>/public/assets/scripts/parsely.js"></script>
+        <script type="text/javascript" src="<?= base_url(); ?>/assets/scripts/parsely.js"></script>
         <script>
 
             $(document).ready(function () {
@@ -141,26 +141,26 @@ if ($message == 0) {
 }
 if ($user_is_pharmacist || $user_is_facility_administrator) {
     ?>
-                    $('#span1').load('<?php echo base_url() . '/public/error_notification'; ?>');
-                    $('#span2').load('<?php echo base_url() . '/public/reporting_notification'; ?>');
-                    $('#span3').load('<?php echo base_url() . '/public/defaulter_notification'; ?>');
-                    $('#span4').load('<?php echo base_url() . '/public/missed_appointments_notification'; ?>');
-                    $('#span5').load('<?php echo base_url() . '/public/followup_notification'; ?>');
-                    $('#span6').load('<?php echo base_url() . '/public/prescriptions_notification_view'; ?>');
-                    $('#span7').load('<?php echo base_url() . '/public/update_notification'; ?>');
+                    $('#span1').load('<?php echo base_url() . '/error_notification'; ?>');
+                    $('#span2').load('<?php echo base_url() . '/reporting_notification'; ?>');
+                    $('#span3').load('<?php echo base_url() . '/defaulter_notification'; ?>');
+                    $('#span4').load('<?php echo base_url() . '/missed_appointments_notification'; ?>');
+                    $('#span5').load('<?php echo base_url() . '/followup_notification'; ?>');
+                    $('#span6').load('<?php echo base_url() . '/prescriptions_notification_view'; ?>');
+                    $('#span7').load('<?php echo base_url() . '/update_notification'; ?>');
 
-                    $('#span3').load('<?php echo base_url() . '/public/ontime_notification'; ?>');
-                    $('#span4').load('<?php echo base_url() . '/public/missed_appointments_notification'; ?>');
-                    $('#span6').load('<?php echo base_url() . '/public/followup_notification'; ?>');
-                    $('#span7').load('<?php echo base_url() . '/public/prescriptions_notification_view'; ?>');
-                    $('#span8').load('<?php echo base_url() . '/public/update_notification'; ?>');
+                    $('#span3').load('<?php echo base_url() . '/ontime_notification'; ?>');
+                    $('#span4').load('<?php echo base_url() . '/missed_appointments_notification'; ?>');
+                    $('#span6').load('<?php echo base_url() . '/followup_notification'; ?>');
+                    $('#span7').load('<?php echo base_url() . '/prescriptions_notification_view'; ?>');
+                    $('#span8').load('<?php echo base_url() . '/update_notification'; ?>');
 
     <?php
 }
 if ($user_is_administrator) {
     ?>
-                    $('#span1').load('<?php echo base_url() . '/public/admin_management/inactive_users'; ?>');
-                    $('#span2').load('<?php echo base_url() . '/public/admin_management/online_users'; ?>');
+                    $('#span1').load('<?php echo base_url() . '/admin_management/inactive_users'; ?>');
+                    $('#span2').load('<?php echo base_url() . '/admin_management/online_users'; ?>');
     <?php
 }
 ?>
@@ -170,7 +170,7 @@ if ($user_is_administrator) {
                   //  autoUpdate();
                 }
                 //Load scripts for system search
-                jQuery.getScript("<?php echo base_url(); ?>/public/assets/scripts/settings.js")
+                jQuery.getScript("<?php echo base_url(); ?>/assets/scripts/settings.js")
             });
         </script>
         <script>
@@ -209,12 +209,12 @@ if ($user_is_administrator) {
         if (isset($report_title)) {
             ?>
             <style type="text/css" title="currentStyle">
-                @import "<?php echo base_url() . '/public/assets/styles/datatable/demo_page.css'; ?>";
-                @import "<?php echo base_url() . '/public/assets/styles/datatable/demo_table.css'; ?>";
-                @import "<?php echo base_url() . '/public/assets/styles/datatable/TableTools.css' ?>";
+                @import "<?php echo base_url() . '/assets/styles/datatable/demo_page.css'; ?>";
+                @import "<?php echo base_url() . '/assets/styles/datatable/demo_table.css'; ?>";
+                @import "<?php echo base_url() . '/assets/styles/datatable/TableTools.css' ?>";
             </style>
-            <script type="text/javascript" charset="utf-8" src="<?php echo base_url() . '/public/assets/scripts/datatable/ZeroClipboard.js' ?>"></script>
-            <script type="text/javascript" charset="utf-8"  src="<?php echo base_url() . '/public/assets/scripts/datatable/TableTools.js' ?>"></script>
+            <script type="text/javascript" charset="utf-8" src="<?php echo base_url() . '/assets/scripts/datatable/ZeroClipboard.js' ?>"></script>
+            <script type="text/javascript" charset="utf-8"  src="<?php echo base_url() . '/assets/scripts/datatable/TableTools.js' ?>"></script>
 
             <?php
         }
@@ -251,7 +251,7 @@ if ($user_is_administrator) {
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <div class="top_logo" style="background: url(<?php echo base_url() . '/public/assets/images/top_logo.png'; ?>) no-repeat">
+                    <div class="top_logo" style="background: url(<?php echo base_url() . '/assets/images/top_logo.png'; ?>) no-repeat">
                         <div id="system_title">
                             <?php
                             echo view('\Modules\ADT\Views\sections\\banner');
@@ -271,7 +271,7 @@ if ($user_is_administrator) {
                         //echo $current;
                         if ($menus) { ?>
                             <ul class="nav nav_header" style="margin: 0 !important;">
-                                <li><a href="<?php echo base_url('/public/home'); ?>" class="top_menu_link  first_link <?php
+                                <li><a href="<?php echo base_url('/home'); ?>" class="top_menu_link  first_link <?php
                                     if ($current == "home") {
                                         echo " top_menu_active ";
                                     }
@@ -289,7 +289,7 @@ if ($user_is_administrator) {
                                      
                                         ?>
                                         
-                                        <li> <a href = "<?php echo base_url('/public/' . $menu['url']); ?>" class="top_menu_link <?php
+                                        <li> <a href = "<?php echo base_url('/' . $menu['url']); ?>" class="top_menu_link <?php
                                             if ($current == $menu['url'] || $menu['url'] == $link) {
                                                 echo " top_menu_active ";
                                             }
@@ -315,7 +315,7 @@ if ($user_is_administrator) {
                         <?php if ($session->get('update_available')) { ?>
                             <!-- <a class="badge blinking pull-left" style="background-color: #ff0905b1 !important;" href="#adt_update_modal" data-toggle="modal">New Update available</a> -->
                         <?php } ?>
-                        <span><span style="color:#B8B8B8; text-transform: uppercase; font-weight: bold;" >username: </span><b style="font-weight: bold;font-size: 15px;text-transform: uppercase;"><?php echo $session->get('full_name'); ?> | </b><a id="logout_btn" href="<?php echo base_url() . '/public/logout/2' ?>"><i class="icon-off"></i> Logout</a></span>
+                        <span><span style="color:#B8B8B8; text-transform: uppercase; font-weight: bold;" >username: </span><b style="font-weight: bold;font-size: 15px;text-transform: uppercase;"><?php echo $session->get('full_name'); ?> | </b><a id="logout_btn" href="<?php echo base_url() . '/logout/2' ?>"><i class="icon-off"></i> Logout</a></span>
                         <br>
                             <span class="date"><?php echo date('l, jS F Y') ?></span>
                             <input type="hidden" id="facility_hidden" />
@@ -419,7 +419,7 @@ if ($user_is_administrator) {
                                 <?php
                                 if ($user_is_pharmacist || $user_is_facility_administrator) {
                                     ?>
-                                    <li><a href="<?php echo base_url() . '/public/addpatient_show' ?>"><i class="icon-user"></i>Add Patients</a></li>
+                                    <li><a href="<?php echo base_url() . '/addpatient_show' ?>"><i class="icon-user"></i>Add Patients</a></li>
 
                                     <?php
                                     $count_ccc = count($ccc_stores);
@@ -431,29 +431,29 @@ if ($user_is_administrator) {
                                                 <?php
                                                 foreach ($ccc_stores as $ccc_store) {
                                                     ?>
-                                                    <li><a href="<?php echo base_url() . '/public/stock_transaction/' . $ccc_store->id; ?>"><i class="icon-inbox"></i>Receive/Issue - <?php echo $ccc_store->name; ?></a></li>
+                                                    <li><a href="<?php echo base_url() . '/stock_transaction/' . $ccc_store->id; ?>"><i class="icon-inbox"></i>Receive/Issue - <?php echo $ccc_store->name; ?></a></li>
                                                     <?php
                                                 }
                                                 ?>
                                             </ul>
                                         </li>
-                                        <li><a href="<?php echo base_url() . '/public/pqmp/0/0' ?>"><i class="icon-flag"></i>Pharmacovigilance</a></li>
+                                        <li><a href="<?php echo base_url() . '/pqmp/0/0' ?>"><i class="icon-flag"></i>Pharmacovigilance</a></li>
 
                                         <li>
-                                            <a href="<?php echo base_url() . '/public/get_faq'; ?>" target="_blank"><i class="icon-question-sign"></i>FAQ</a>
+                                            <a href="<?php echo base_url() . '/get_faq'; ?>" target="_blank"><i class="icon-question-sign"></i>FAQ</a>
                                         </li>
                                         <?php
                                     } else {//If no Extra pharmacies, load main store and Main Pharmacy Only
                                         ?>
-                                        <li><a href="<?php echo base_url() . '/public/stock_transaction/1' ?>"><i class="icon-inbox"></i>Receive/Issue - Main Store</a></li>
-                                        <li><a href="<?php echo base_url() . '/public/stock_transaction/2' ?>"><i class="icon-inbox"></i>Receive/Issue - Pharmacy</a></li>
+                                        <li><a href="<?php echo base_url() . '/stock_transaction/1' ?>"><i class="icon-inbox"></i>Receive/Issue - Main Store</a></li>
+                                        <li><a href="<?php echo base_url() . '/stock_transaction/2' ?>"><i class="icon-inbox"></i>Receive/Issue - Pharmacy</a></li>
                                         <?php
                                     }
                                     ?>
 
                                     <li class="divider"></li>
-                                    <li><a href="<?php echo base_url() . '/public/getPatientMasterList' ?>"  id="ReportGenerator"> <i class="icon-book"></i>Patient Master list</a></li>           
-                                    <li><a href="<?php echo base_url() . '/public/assets/manuals/user_manual.pdf' ?>" target="_blank"><i class="icon-book"></i>User Manual</a></li> 
+                                    <li><a href="<?php echo base_url() . '/getPatientMasterList' ?>"  id="ReportGenerator"> <i class="icon-book"></i>Patient Master list</a></li>           
+                                    <li><a href="<?php echo base_url() . '/assets/manuals/user_manual.pdf' ?>" target="_blank"><i class="icon-book"></i>User Manual</a></li> 
 
 
                                     <?php
@@ -494,7 +494,7 @@ if ($user_is_administrator) {
                                         <a  id="getDeniedLogs" class="admin_link"><i class="icon-book"></i>Denied Logs</a>
                                     </li>
                                     <li>
-                                        <a href="<?php echo base_url() . '/public/assets/manuals/user_manual.pdf' ?>"><i class="icon-book"></i>User Manual</a>
+                                        <a href="<?php echo base_url() . '/assets/manuals/user_manual.pdf' ?>"><i class="icon-book"></i>User Manual</a>
                                     </li>   
                                     <?php
                                 }

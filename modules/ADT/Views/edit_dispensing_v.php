@@ -187,7 +187,7 @@ foreach ($expiries as $expiry) {
 		   function getRegimenDrugs(regimen){
 		   	  var base_url="<?php echo base_url();?>";
 		   	  // var link=base_url+"regimen_management/getAllDrugs/"+regimen;
-		   	  var link=base_url+"/public/regimen_management/getAllDrugs";
+		   	  var link=base_url+"/regimen_management/getAllDrugs";
 				$.ajax({
 				    url: link,
 				    type: 'POST',
@@ -234,7 +234,7 @@ foreach ($expiries as $expiry) {
 		   
 		   function getDrugBatches(drug){
 		   	  var base_url="<?php echo base_url();?>";
-		   	  var link=base_url+"/public/inventory_management/getAllDrugsBatches/"+drug;
+		   	  var link=base_url+"/inventory_management/getAllDrugsBatches/"+drug;
 				$.ajax({
 				    url: link,
 				    type: 'POST',
@@ -263,7 +263,7 @@ foreach ($expiries as $expiry) {
 		   }
 		   
 		   function getDoses(){
-		   	var url_dose="<?php echo base_url().'/public/dispensement_management/getDoses'; ?>";
+		   	var url_dose="<?php echo base_url().'/dispensement_management/getDoses'; ?>";
 					//Get doses
 					var request_dose=$.ajax({
 				     url: url_dose,
@@ -281,7 +281,7 @@ foreach ($expiries as $expiry) {
 		   
 		   function getBrands(drug){
 		   	 var base_url="<?php echo base_url();?>";
-		   	  var link=base_url+"/public/inventory_management/getDrugsBrands/"+drug;
+		   	  var link=base_url+"/inventory_management/getDrugsBrands/"+drug;
 				$.ajax({
 				    url: link,
 				    type: 'POST',
@@ -306,7 +306,7 @@ foreach ($expiries as $expiry) {
                 $( this ).closest('');
                 var row = $(this);
 
-                var url_drug_dose = "<?php echo base_url() . '/public/dispensement_management/getDrugDose/'; ?>";
+                var url_drug_dose = "<?php echo base_url() . '/dispensement_management/getDrugDose/'; ?>";
                 var new_url_dose = url_drug_dose+$( this ).val();
                 var request_one_dose = $.ajax({
                     url: new_url_dose,
@@ -336,7 +336,7 @@ foreach ($expiries as $expiry) {
 			 var stock_type='<?php echo $ccc_id; ?>';
 		   	 var drug=$("#drug").val();
 		   	 var batch=$("#batch").val();
-		   	 var link=base_url+"/public/inventory_management/getAllBacthDetails";
+		   	 var link=base_url+"/inventory_management/getAllBacthDetails";
 		   	
 		   	 $.ajax({
 				    url: link,
@@ -442,11 +442,11 @@ foreach ($expiries as $expiry) {
 	<body>
 <div class="full-content" style="background:#FFCC99">
 	<div id="sub_title" >
-		<a href="<?php  echo base_url().'/public/patients ' ?>">Patient Listing </a> <i class=" icon-chevron-right"></i><a href="<?php  echo base_url().'public/patient/load_view/details/'.$result->p_id ?>"><?php echo strtoupper($result->first_name.' '.$result->other_name.' '.$result->last_name) ?></a> <i class=" icon-chevron-right"></i><strong>Edit dispensing details</strong>
+		<a href="<?php  echo base_url().'/patients ' ?>">Patient Listing </a> <i class=" icon-chevron-right"></i><a href="<?php  echo base_url().'/patient/load_view/details/'.$result->p_id ?>"><?php echo strtoupper($result->first_name.' '.$result->other_name.' '.$result->last_name) ?></a> <i class=" icon-chevron-right"></i><strong>Edit dispensing details</strong>
 		<hr size="1">
 	</div>
 	<h3>Dispensing History Editing</h3>
-	<form id="edit_dispense_form" name="edit_dispense_form" method="post"  action="<?php echo base_url().'/public/dispensement_management/save_edit';?>"  >
+	<form id="edit_dispense_form" name="edit_dispense_form" method="post"  action="<?php echo base_url().'/dispensement_management/save_edit';?>"  >
 		<input id="original_dispensing_date" name="original_dispensing_date" type="hidden"/>
 		<input id="original_expiry_date" name="original_expiry_date" type="hidden"/>
 		<input id="original_drug" name="original_drug" type="hidden"/>

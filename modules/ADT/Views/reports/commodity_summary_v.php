@@ -1,11 +1,11 @@
 <script type="text/javascript">
 	$(document).ready(function() {
-		var _url = <?php echo "'" . $base_url . "/public/report_management/getMoreHelp/" . $stock_type . "/" . $start_date . "/" . $end_date . "'"; ?>;
+		var _url = <?php echo "'" . $base_url . "/report_management/getMoreHelp/" . $stock_type . "/" . $start_date . "/" . $end_date . "'"; ?>;
 		var report_title = $("#report_title").text();
 		var facility = $("#facility_name").text();
 		$('#drug_table').dataTable({
 			"oTableTools": {
-				"sSwfPath": "<?php echo base_url('public/assets/scripts/datatable/copy_csv_xls_pdf.swf') ?>",
+				"sSwfPath": "<?php echo base_url('/assets/scripts/datatable/copy_csv_xls_pdf.swf') ?>",
 				"aButtons": ["copy",
 					{
 						"sExtends": "xls",

@@ -15,7 +15,7 @@
 <?php $uri = service('uri');?>
 <div class="container" style="background-color: #fffacc;border: solid thick #2b597e;padding: 30px; margin-top: 130px; margin-bottom: 130px; border-radius:20px;">
 
-    <form name="adr_form" id="adr_form" method="post" action="<?= base_url();?>/public/inventory_management/adr/save/<?= $patient_id ?>">
+    <form name="adr_form" id="adr_form" method="post" action="<?= base_url();?>/inventory_management/adr/save/<?= $patient_id ?>">
         <div class="container">
             <div class="row">
                 <div class="text-center">

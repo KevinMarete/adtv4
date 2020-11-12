@@ -81,7 +81,7 @@
     <div id="client_form" title="New Drug Destination" class="modal hide fade cyan" tabindex="-1" role="dialog" aria-labelledby="NewDrug" aria-hidden="true">
         <?php
         $attributes = array('class' => 'input_form');
-        echo form_open(base_url() . '/public/drugdestination_management/save', $attributes);
+        echo form_open(base_url() . '/drugdestination_management/save', $attributes);
         // echo validation_errors('<p class="error">', '</p>');
         ?>
         <div class="modal-header">
@@ -116,7 +116,7 @@
     <div id="edit_form" title="Edit Drug Destination" class="modal hide fade cyan" tabindex="-1" role="dialog" aria-labelledby="NewDrug" aria-hidden="true">
         <?php
         $attributes = array('class' => 'input_form');
-        echo form_open(base_url() . '/public/drugdestination_management/update', $attributes);
+        echo form_open(base_url() . '/drugdestination_management/update', $attributes);
         // echo validation_errors('<p class="error">', '</p>');
         ?>
         <div class="modal-header">

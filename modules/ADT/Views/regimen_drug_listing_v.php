@@ -37,7 +37,7 @@
 </style>
 <script type="text/javascript">
     // regimen_drug_management/disable
-    new_base = "<?php echo base_url() . '/public/'; ?>"
+    new_base = "<?php echo base_url() . '/'; ?>"
     function toggleDrugRegimen(regimen_drug) {
 
         if ($('.reg_drug_name_' + regimen_drug).hasClass('enabled')) {
@@ -171,7 +171,7 @@
         $attributes = array(
             'class' => 'input_form',
             'onsubmit' => 'return process_drugs()');
-        echo form_open(base_url() . '/public/regimen_drug_management/save', $attributes);
+        echo form_open(base_url() . '/regimen_drug_management/save', $attributes);
         ?>
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>

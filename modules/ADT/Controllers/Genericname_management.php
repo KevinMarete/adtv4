@@ -51,9 +51,9 @@ class Genericname_management extends \App\Controllers\BaseController {
 
                 if ($generic['active'] == 1) {
                     $links .= " | ";
-                    $links .= anchor(base_url() . '/public/genericname_management/disable/' . $generic['id'], 'Disable', array('class' => 'disable_user'));
+                    $links .= anchor(base_url() . '/genericname_management/disable/' . $generic['id'], 'Disable', array('class' => 'disable_user'));
                 } else {
-                    $links .= anchor(base_url() . '/public/genericname_management/enable/' . $generic['id'], 'Enable', array('class' => 'enable_user'));
+                    $links .= anchor(base_url() . '/genericname_management/enable/' . $generic['id'], 'Enable', array('class' => 'enable_user'));
                 }
             }
 
@@ -80,7 +80,7 @@ class Genericname_management extends \App\Controllers\BaseController {
             //$this->db->replace('generic_name', array('name' => $drugname));
             $this->session->set('msg_success', $this->request->getPost('generic_name') . ' was Added');
             $this->session->setFlashdata('filter_datatable', $this->request->getPost('generic_name')); //Filter datatable
-            return redirect()->to(base_url() . '/public/settings_management');
+            return redirect()->to(base_url() . '/settings_management');
         }
     }
 
@@ -101,7 +101,7 @@ class Genericname_management extends \App\Controllers\BaseController {
         $query = $this->db->query("UPDATE generic_name SET Name='$generic_name' WHERE id='$generic_id'");
         $this->session->set('msg_success', $this->request->getPost('edit_generic_name') . ' was Updated');
         $this->session->setFlashdata('filter_datatable', $this->request->getPost('edit_generic_name')); //Filter datatable
-        return redirect()->to(base_url() . '/public/settings_management');
+        return redirect()->to(base_url() . '/settings_management');
     }
 
     public function enable($generic_id) {
@@ -109,7 +109,7 @@ class Genericname_management extends \App\Controllers\BaseController {
         $results = Generic_Name::getGeneric($generic_id);
         $this->session->set('msg_success', $results->name . ' was enabled');
         $this->session->setFlashdata('filter_datatable', $results->name); //Filter datatable
-        return redirect()->to(base_url() . '/public/settings_management');
+        return redirect()->to(base_url() . '/settings_management');
     }
 
     public function disable($generic_id) {
@@ -118,7 +118,7 @@ class Genericname_management extends \App\Controllers\BaseController {
         $results = Generic_Name::getGeneric($generic_id);
         $this->session->set('msg_error', $results->name . ' was disabled');
         $this->session->setFlashdata('filter_datatable', $results->name); //Filter datatable
-        return redirect()->to(base_url() . '/public/settings_management');
+        return redirect()->to(base_url() . '/settings_management');
     }
 
     private function _submit_validate() {

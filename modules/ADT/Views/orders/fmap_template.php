@@ -116,12 +116,12 @@ if ($facility_object->service_pep == "1") {
 				echo '<p class="message info">'.$session->getFlashdata('order_message').'</p>';
 			}	
 		 ?>
-		<form id="fmPostMaps" action="<?php echo base_url() . '/public/order/save/maps/prepared';?>" method="post" name="fmPostMaps" style="margin-bottom:8%;">
+		<form id="fmPostMaps" action="<?php echo base_url() . '/order/save/maps/prepared';?>" method="post" name="fmPostMaps" style="margin-bottom:8%;">
 			<input type="hidden"  id="report_type" name="report_type" value="<?php echo $report_type;?>"/>
 			<div>
 				<ul class="breadcrumb">
 					<li>
-						<a href="<?php echo base_url().'/public/order' ?>">MAPS</a><span class="divider">/</span>
+						<a href="<?php echo base_url().'/order' ?>">MAPS</a><span class="divider">/</span>
 					</li>
 					<li class="active" id="actual_page">
 						<?php echo $page_title;?>
@@ -133,7 +133,7 @@ if ($facility_object->service_pep == "1") {
 					<?php
 				if($options=='view'){
 						echo "<h4>".@$maps_id.' '.@ucfirst($status)."</h4>";
-						echo "<a href='".base_url("/public/order/download_order/maps/".$map_id)."'>".$maps_id." ".$fmaps_array[0]->facility_name." ".$fmaps_array[0]->period_begin." to ".$fmaps_array[0]->period_end.".xls</a><p>";
+						echo "<a href='".base_url("/order/download_order/maps/".$map_id)."'>".$maps_id." ".$fmaps_array[0]->facility_name." ".$fmaps_array[0]->period_begin." to ".$fmaps_array[0]->period_end.".xls</a><p>";
 						$access_level = $session->get("user_indicator");
 				      	if($access_level=="facility_administrator"){
 					      	if($status=="prepared"){
@@ -434,11 +434,11 @@ if ($facility_object->service_pep == "1") {
 		
 		if(is_update==1){//If form is open for updating data
 			getFacilityData(fmaps_id);
-			$("#fmPostMaps").attr("action","<?php echo base_url() . '/public/order/save/maps/prepared/'.@$map_id;?>");//Change action to be posted to update function 
+			$("#fmPostMaps").attr("action","<?php echo base_url() . '/order/save/maps/prepared/'.@$map_id;?>");//Change action to be posted to update function 
 		}
 		if(is_view==1){//When viewing maps details
 			getFacilityData(fmaps_id);
-			$("#fmPostMaps").attr("action","<?php echo base_url() . '/public/order/save/maps/prepared/'.@$map_id;?>");//Change action to be posted to update function 
+			$("#fmPostMaps").attr("action","<?php echo base_url() . '/order/save/maps/prepared/'.@$map_id;?>");//Change action to be posted to update function 
 			$(":input").attr('readonly',true);
 			$(".state_change").attr("readonly",false);
 			if($('#report_type').val()=='2'){//If reporting for satellite, enable art total
@@ -448,7 +448,7 @@ if ($facility_object->service_pep == "1") {
 		}
 		
 		$("#generate").click(function() {//Get aggregated data
-			$.blockUI({ message: '<h3><img width="30" height="30" src="<?php echo base_url().'/public/images/loading_spin.gif' ?>" /> Generating...</h3>' }); 
+			$.blockUI({ message: '<h3><img width="30" height="30" src="<?php echo base_url().'/images/loading_spin.gif' ?>" /> Generating...</h3>' }); 
             var period_start = '<?php echo date('Y-m-01',strtotime(date('Y-m-d').'-1 month')) ?>';
             var period_end = '<?php echo date('Y-m-t',strtotime(date('Y-m-d').'-1 month')) ?>';
             
@@ -457,7 +457,7 @@ if ($facility_object->service_pep == "1") {
 		});
 		
 		$("#generate_central").click(function() {//Generate data for central report
-			$.blockUI({ message: '<h3><img width="30" height="30" src="<?php echo base_url().'/public/images/loading_spin.gif' ?>" /> Generating...</h3>' }); 
+			$.blockUI({ message: '<h3><img width="30" height="30" src="<?php echo base_url().'/images/loading_spin.gif' ?>" /> Generating...</h3>' }); 
             var period_start = '<?php echo date('Y-m-01',strtotime(date('Y-m-d').'-1 month')) ?>';
             var period_end = '<?php echo date('Y-m-t',strtotime(date('Y-m-d').'-1 month')) ?>';
             var data_type = 'new_patient';
@@ -537,7 +537,7 @@ if ($facility_object->service_pep == "1") {
 	
 	function getNonMappedRegimen(start_date, end_date){//Get regimens that are not mapped(Not in the Escm or Nascop and list them as others)
 		var base_url = "<?php echo base_url(); ?>";
-		var link = base_url + '/public/order/getNotMappedRegimenPatients/' + start_date + '/' + end_date;
+		var link = base_url + '/order/getNotMappedRegimenPatients/' + start_date + '/' + end_date;
 		$("#other_regimen").text("");
 		$.ajax({
 			url : link,
@@ -566,7 +566,7 @@ if ($facility_object->service_pep == "1") {
 	function getoiPatients(){
 		var base_url = "<?php echo base_url(); ?>";
 		//Get the data from the controller
-		var link = base_url + '/public/order/getoiPatients';
+		var link = base_url + '/order/getoiPatients';
 		$.ajax({
 			url : link,
 			type : 'POST',
@@ -640,7 +640,7 @@ if ($facility_object->service_pep == "1") {
 	function getCentralData(period_start,period_end,data_type){
 		
 		var base_url = "<?php echo base_url(); ?>";
-	  	var link = base_url + '/public/order/getCentralDataMaps/' + period_start + '/' + period_end + '/'+data_type;
+	  	var link = base_url + '/order/getCentralDataMaps/' + period_start + '/' + period_end + '/'+data_type;
 	  	
 	  	$.ajax({
 				url : link,

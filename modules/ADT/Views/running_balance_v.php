@@ -36,9 +36,9 @@
     </div>
 </div>
 
-<script src="<?php echo base_url(); ?>/public/assets/scripts/bootstrap/bootstrap-multiselect.js"></script>
-<script src="<?php echo base_url(); ?>/public/assets/scripts/plugin/jquery-validate/jquery.validate.min.js"></script>
-<script src="<?php echo base_url(); ?>/public/assets/scripts/select2-3.4.8/select2.js"></script>
+<script src="<?php echo base_url(); ?>/assets/scripts/bootstrap/bootstrap-multiselect.js"></script>
+<script src="<?php echo base_url(); ?>/assets/scripts/plugin/jquery-validate/jquery.validate.min.js"></script>
+<script src="<?php echo base_url(); ?>/assets/scripts/select2-3.4.8/select2.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {
         $(".loadingDiv").css("display", "none");
@@ -69,7 +69,7 @@
     function getRunningBalance(drugs, total, counter) {
         var drug = drugs[counter];
         var count = counter + 1;
-        link = '<?php echo base_url(); ?>/public/drug_stock_balance_sync/getRunningBalance';
+        link = '<?php echo base_url(); ?>/drug_stock_balance_sync/getRunningBalance';
         $.ajax({
             url: link,
             type: 'post',
@@ -101,7 +101,7 @@
 
 
     function loadListDrugs() {
-        var _url = '<?php echo base_url(); ?>/public/getAllDrugs';
+        var _url = '<?php echo base_url(); ?>/getAllDrugs';
         $.ajax({
             url: _url,
             type: 'post',

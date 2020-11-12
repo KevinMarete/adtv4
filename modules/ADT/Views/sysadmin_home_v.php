@@ -77,7 +77,7 @@
     <div>
         <div>
             <ul class="breadcrumb">
-                <li><a href="<?php echo base_url() . '/public/home' ?>"  id='goHome'><i class="icon-home"></i><strong>Home</strong></a> 
+                <li><a href="<?php echo base_url() . '/home' ?>"  id='goHome'><i class="icon-home"></i><strong>Home</strong></a> 
                     <span class="divider">/</span></li>
                 <li class="active" id="actual_page"></li>
             </ul>
@@ -124,7 +124,7 @@
             </h3>
 
             <div id="chart_area77">
-                <div class="loadingDiv" style="margin:20% 0 20% 0;" ><img style="width: 30px;margin-left:50%" src="<?php echo base_url() . '/public/images//loading_spin.gif' ?>"></div>
+                <div class="loadingDiv" style="margin:20% 0 20% 0;" ><img style="width: 30px;margin-left:50%" src="<?php echo base_url() . '/images//loading_spin.gif' ?>"></div>
             </div>
 
         </div>
@@ -137,7 +137,7 @@
                 <button class="btn btn-danger less" id="enrollment-less">Smaller</button>
             </h3>
             <div id="chart_area78">
-                <div class="loadingDiv" style="margin:20% 0 20% 0;"  ><img style="width: 30px;margin-left:50%" src="<?php echo base_url() . '/public/images/loading_spin.gif' ?>"></div>
+                <div class="loadingDiv" style="margin:20% 0 20% 0;"  ><img style="width: 30px;margin-left:50%" src="<?php echo base_url() . '/images/loading_spin.gif' ?>"></div>
             </div>
         </div>
     </div>		
@@ -169,7 +169,7 @@
     $(document).ready(function () {
         myStorage = window.localStorage;
         myStorage.clear();
-        var base_url = "<?php echo base_url().'/public/'; ?>";
+        var base_url = "<?php echo base_url().'/'; ?>";
         var default_link = "<?php echo session()->get('default_link'); ?>";
 
 
@@ -190,8 +190,8 @@
         var endDate = y + '-' + mm + '-' + dd;
         //Load Charts	
         var period = 30;
-        var chart1_link = "<?php echo base_url() . '/public/admin_management/getSystemUsage/'; ?>" + period
-        var chart2_link = "<?php echo base_url() . '/public/admin_management/getWeeklySumary/'; ?>" + fromDate + '/' + endDate;
+        var chart1_link = "<?php echo base_url() . '/admin_management/getSystemUsage/'; ?>" + period
+        var chart2_link = "<?php echo base_url() . '/admin_management/getWeeklySumary/'; ?>" + fromDate + '/' + endDate;
         myStorage.setItem("fromDate", fromDate);
         myStorage.setItem("endDate", endDate);
 
@@ -202,7 +202,7 @@
 
         if (default_link) {
             default_link = base_url + "admin_management/" + default_link;
-            $.blockUI({message: '<h3><img width="30" height="30" src="<?php echo base_url() . '/public/images/loading_spin.gif' ?>" /> Working...</h3>'});
+            $.blockUI({message: '<h3><img width="30" height="30" src="<?php echo base_url() . '/images/loading_spin.gif' ?>" /> Working...</h3>'});
             $("#display_content").load(default_link, function () {
                 $('.dataTables').dataTable({
                     "bJQueryUI": true,
@@ -232,9 +232,9 @@ session()->set('default_link', "");
 
         $(".admin_link").click(function () {
             $("#display_content").empty();
-            $.blockUI({message: '<h3><img width="30" height="30" src="<?php echo base_url() . '/public/images/loading_spin.gif' ?>" /> Working...</h3>'});
+            $.blockUI({message: '<h3><img width="30" height="30" src="<?php echo base_url() . '/images/loading_spin.gif' ?>" /> Working...</h3>'});
             var link = $(this).attr("id");
-            var link = "<?php echo base_url();?>/public/admin_management/" + link;
+            var link = "<?php echo base_url();?>/admin_management/" + link;
             $("#display_content").load(link, function () {
                 $('.dataTables').dataTable({
                     "bJQueryUI": true,

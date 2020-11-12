@@ -77,7 +77,7 @@ foreach ($facilities as $facility) {
 
                 <?php
                 $attributes = array('class' => 'input_form');
-                echo form_open(base_url() . '/public/facility_management/update', $attributes);
+                echo form_open(base_url() . '/facility_management/update', $attributes);
                 // echo validation_errors('<p class="error">', '</p>');
                 ?>
                 <div id="facility_form" title="Facility Information" style="zoom:0.8">
@@ -256,7 +256,7 @@ foreach ($facilities as $facility) {
                 </div>
                 </form>
             </div>
-            <div id="loading" style="text-align:center;display:none"><img width="120px" src="<?php echo base_url() . '/public/assets/images/loading.gif' ?>"></div> 
+            <div id="loading" style="text-align:center;display:none"><img width="120px" src="<?php echo base_url() . '/assets/images/loading.gif' ?>"></div> 
 
         </div><!--/span-->
     </div><!--/row-->

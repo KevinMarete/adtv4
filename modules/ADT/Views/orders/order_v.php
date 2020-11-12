@@ -41,7 +41,7 @@
 		<div class="row-fluid">
 			<div class="span3 offset9">
 				Welcome <b><?php echo $session->get('dhis_name'); ?></b>, 
-				<a href="<?php echo base_url().'/public/order/logout'; ?>"><i class="icon-off"></i>Logout</a>
+				<a href="<?php echo base_url().'/order/logout'; ?>"><i class="icon-off"></i>Logout</a>
 			</div>
 		</div>
 	<?php } ?>
@@ -96,19 +96,19 @@
 					<div class="table-responsive">
 						<span id="test">
 							<div class="span12" style="margin-top:0.2em;">
-								<h4>CDRR Templates  <i><img class="img-rounded" style="height:30px;" src="<?php echo base_url().'/public/assets/images/excel.jpg';?>"/> </i></h4>
+								<h4>CDRR Templates  <i><img class="img-rounded" style="height:30px;" src="<?php echo base_url().'/assets/images/excel.jpg';?>"/> </i></h4>
 								<hr/>
 								<ul>
-									<li><a href="<?php echo base_url().'/public/assets/templates/orders/v2/cdrr_satellite.xls';?>" download="F-CDRR for Satellite Sites.xls"> <i class="icon-download-alt"></i>F-CDRR for Satellite Sites.xls</a></li>
-									<li><a href="<?php echo base_url().'/public/assets/templates/orders/v2/cdrr_standalone.xls';?>" download="F-CDRR for Standalone Sites.xls"> <i class="icon-download-alt"></i>F-CDRR for Standalone Sites.xls</a></li>
-									<li><a href="<?php echo base_url().'/public/assets/templates/orders/v2/cdrr_aggregate.xls';?>" download="D-CDRR for Central Sites.xls"> <i class="icon-download-alt"></i>D-CDRR for Central Sites.xls</a></li>
+									<li><a href="<?php echo base_url().'/assets/templates/orders/v2/cdrr_satellite.xls';?>" download="F-CDRR for Satellite Sites.xls"> <i class="icon-download-alt"></i>F-CDRR for Satellite Sites.xls</a></li>
+									<li><a href="<?php echo base_url().'/assets/templates/orders/v2/cdrr_standalone.xls';?>" download="F-CDRR for Standalone Sites.xls"> <i class="icon-download-alt"></i>F-CDRR for Standalone Sites.xls</a></li>
+									<li><a href="<?php echo base_url().'/assets/templates/orders/v2/cdrr_aggregate.xls';?>" download="D-CDRR for Central Sites.xls"> <i class="icon-download-alt"></i>D-CDRR for Central Sites.xls</a></li>
 								</ul>
-								<h4>MAPS Templates <i><img class="img-rounded" style="height:30px;" src="<?php echo base_url() . '/public/assets/images/excel.jpg';?>"/> </i></h4>
+								<h4>MAPS Templates <i><img class="img-rounded" style="height:30px;" src="<?php echo base_url() . '/assets/images/excel.jpg';?>"/> </i></h4>
 								<hr/>
 								<ul>
-									<li><a href="<?php echo base_url().'/public/assets/templates/orders/v2/maps_satellite.xls';?>" download="F-MAPS for Satellite Sites.xls"> <i class="icon-download-alt"></i>F-MAPS for Satellite Sites.xls</a></li>
-									<li><a href="<?php echo base_url().'/public/assets/templates/orders/v2/maps_standalone.xls';?>" download="F-MAPS for Standalone Sites.xls"> <i class="icon-download-alt"></i>F-MAPS for Standalone Sites.xls</a></li>
-									<li><a href="<?php echo base_url().'/public/assets/templates/orders/v2/maps_aggregate.xls';?>" download="D-MAPS for Central Sites.xls"> <i class="icon-download-alt"></i>D-MAPS for Central Sites.xls</a></li>
+									<li><a href="<?php echo base_url().'/assets/templates/orders/v2/maps_satellite.xls';?>" download="F-MAPS for Satellite Sites.xls"> <i class="icon-download-alt"></i>F-MAPS for Satellite Sites.xls</a></li>
+									<li><a href="<?php echo base_url().'/assets/templates/orders/v2/maps_standalone.xls';?>" download="F-MAPS for Standalone Sites.xls"> <i class="icon-download-alt"></i>F-MAPS for Standalone Sites.xls</a></li>
+									<li><a href="<?php echo base_url().'/assets/templates/orders/v2/maps_aggregate.xls';?>" download="D-MAPS for Central Sites.xls"> <i class="icon-download-alt"></i>D-MAPS for Central Sites.xls</a></li>
 								</ul>
 							</div>
 						</span>	
@@ -134,7 +134,7 @@
 
 <!-- Modal to select a satellite facility -->
 <div id="select_satellite" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-	<form id="fmFillOrderForm" action="<?php echo base_url().'/public/order/create_order/cdrr/2'?>" method="post" style="margin:0 auto;">
+	<form id="fmFillOrderForm" action="<?php echo base_url().'/order/create_order/cdrr/2'?>" method="post" style="margin:0 auto;">
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
 				×
@@ -185,7 +185,7 @@
 					var type=$(this).attr("id");
 					var period_begin=$(this).attr("value");
 					var base_url="<?php echo base_url();?>";
-					var url=base_url+'/public/order/get_orders/cdrr/'+period_begin;
+					var url=base_url+'/order/get_orders/cdrr/'+period_begin;
 					
 					$.ajax({
 						url: url,
@@ -216,7 +216,7 @@
 					var type=$(this).attr("id");
 					var period_begin=$(this).attr("value");
 					var base_url="<?php echo base_url();?>";
-					var url=base_url+'/public/order/get_orders/maps/'+period_begin;
+					var url=base_url+'/order/get_orders/maps/'+period_begin;
 					
 					$.ajax({
 						url: url,
@@ -299,10 +299,10 @@
 		var base_url="<?php echo base_url();?>";
 <?php if($session->get('facility_dhis')  && (!$dhis_data)){ ?>
 			$.blockUI({ 
-				message: '<h3><img width="30" height="30" src="<?php echo base_url().'/public/images/loading_spin.gif' ?>" /> Downloading...</h3>' 
+				message: '<h3><img width="30" height="30" src="<?php echo base_url().'/images/loading_spin.gif' ?>" /> Downloading...</h3>' 
 			}); 
 
-			var dataURL = base_url+'/public/order/get_dhis_data/1'
+			var dataURL = base_url+'/order/get_dhis_data/1'
 				$('#download_msg').html('')
 			$.getJSON(dataURL, function(data){
 				$.unblockUI();
@@ -317,10 +317,10 @@
 		//Get data from dhis
 		$('#get_dhis_data').click(function(){
 			$.blockUI({ 
-				message: '<h3><img width="30" height="30" src="<?php echo base_url().'/public/images/loading_spin.gif' ?>" /> Downloading...</h3>' 
+				message: '<h3><img width="30" height="30" src="<?php echo base_url().'/images/loading_spin.gif' ?>" /> Downloading...</h3>' 
 			}); 
 			var dhis_filter = $("#period_filter").val();
-			var dataURL = base_url+'/public/order/get_dhis_data/'+dhis_filter
+			var dataURL = base_url+'/order/get_dhis_data/'+dhis_filter
 			$('#download_msg').html('')
 			$.getJSON(dataURL, function(data){
 				$.unblockUI();
@@ -399,12 +399,12 @@
 		$('.btn_satellite').click(function(){//check which button was clicked
 			var btn_id=$(this).attr('id');
 			if(btn_id=='btn_new_cdrr_satellite'){
-				$('#fmFillOrderForm').attr('action','<?php echo base_url().'/public/order/create_order/cdrr/0'?>');
-				$('#fmImportData').attr('action','<?php echo base_url().'/public/order/import_order/cdrr'?>');
+				$('#fmFillOrderForm').attr('action','<?php echo base_url().'/order/create_order/cdrr/0'?>');
+				$('#fmImportData').attr('action','<?php echo base_url().'/order/import_order/cdrr'?>');
 			}
 			else if(btn_id=='btn_new_maps_satellite'){
-				$('#fmFillOrderForm').attr('action','<?php echo base_url().'/public/order/create_order/maps/0'?>');
-				$('#fmImportData').attr('action','<?php echo base_url().'/public/order/import_order/maps'?>');
+				$('#fmFillOrderForm').attr('action','<?php echo base_url().'/order/create_order/maps/0'?>');
+				$('#fmImportData').attr('action','<?php echo base_url().'/order/import_order/maps'?>');
 			}
 		});
 	});
