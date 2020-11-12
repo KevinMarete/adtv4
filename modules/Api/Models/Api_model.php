@@ -215,6 +215,7 @@ class Api_model extends BaseModel {
             $pe_details = [
                 'drug_prescriptionid' => $insert_id,
                 'drug_name' => $details->DRUG_NAME,
+                'prescription_number' => $details->PRESCRIPTION_NUMBER,
                 'coding_system' => $details->CODING_SYSTEM,
                 'strength' => $details->STRENGTH,
                 'dosage' => $details->DOSAGE,

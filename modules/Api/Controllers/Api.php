@@ -134,8 +134,9 @@ class Api extends BaseController {
         foreach ($patient->PATIENT_IDENTIFICATION->INTERNAL_PATIENT_ID as $id) {
             $identification[$id->IDENTIFIER_TYPE] = $id->ID;
         }
-        $ccc_no = ($identification['CCC_NUMBER']);
-        $SENDING_FACILITY = $patient->MESSAGE_HEADER->SENDING_FACILITY;
+        
+        $ccc_no = empty($identification['CCC_NUMBER']) ? $this->writeLog('PATIENT', 'CCC Missing') : $identification['CCC_NUMBER'];
+        $SENDING_FACILITY = empty($patient->MESSAGE_HEADER->SENDING_FACILITY) ? $this->writeLog('PATIENT', 'FACILITY Missing') : $patient->MESSAGE_HEADER->SENDING_FACILITY;
         // $ccc_no = $this->parseCCC($ccc_no,$SENDING_FACILITY);
 
         $FIRST_NAME = $patient->PATIENT_IDENTIFICATION->PATIENT_NAME->FIRST_NAME;
@@ -144,8 +145,8 @@ class Api extends BaseController {
 
 
         $MOTHER_NAME = empty($patient->PATIENT_IDENTIFICATION->MOTHER_NAME) ? '' : $patient->PATIENT_IDENTIFICATION->MOTHER_NAME;
-        $DATE_OF_BIRTH = empty($patient->PATIENT_IDENTIFICATION->DATE_OF_BIRTH) ? '' : $patient->PATIENT_IDENTIFICATION->DATE_OF_BIRTH;
-        $SEX = empty($patient->PATIENT_IDENTIFICATION->SEX) ? '' : (($patient->PATIENT_IDENTIFICATION->SEX) == 'M' ? 1 : 2);
+        $DATE_OF_BIRTH = empty($patient->PATIENT_IDENTIFICATION->DATE_OF_BIRTH) ? $this->writeLog('PATIENT', 'DOB Missing') : $patient->PATIENT_IDENTIFICATION->DATE_OF_BIRTH;
+        $SEX = empty($patient->PATIENT_IDENTIFICATION->SEX) ? $this->writeLog('PATIENT', 'SEX Missing') : (($patient->PATIENT_IDENTIFICATION->SEX) == 'M' ? 1 : 2);
         $VILLAGE = empty($patient->PATIENT_IDENTIFICATION->PATIENT_ADDRESS->PHYSICAL_ADDRESS->VILLAGE) ? '' : $patient->PATIENT_IDENTIFICATION->PATIENT_ADDRESS->PHYSICAL_ADDRESS->VILLAGE;
         // var_dump($patient);die;
         $WARD = empty($patient->PATIENT_IDENTIFICATION->PATIENT_ADDRESS->PHYSICAL_ADDRESS->WARD) ? '' : $patient->PATIENT_IDENTIFICATION->PATIENT_ADDRESS->PHYSICAL_ADDRESS->WARD;
