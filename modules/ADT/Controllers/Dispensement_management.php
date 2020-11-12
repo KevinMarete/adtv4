@@ -1172,13 +1172,13 @@ class Dispensement_management extends BaseController {
 
     public function getPrescriptions($patient_ccc = null) {
         $prescription = [];
-        $sql = "SELECT * FROM drug_prescription WHERE patient_ccc = '$patient_ccc' ORDER BY id DESC LIMIT 1";
-        $results = (array) DB::select($sql);
+        $sql = "SELECT * FROM drug_prescription WHERE patient = '$patient_ccc' ORDER BY id DESC LIMIT 1";
+        $results = DB::select($sql);
         if ($results) {
-            $sql = "SELECT * FROM drug_prescription_details WHERE drug_prescriptionid =" . $results[0]['id'];
-            $res = (array) DB::select($sql);
+            $sql = "SELECT * FROM drug_prescription_details WHERE drug_prescriptionid =" . $results[0]->id;
+            $res = DB::select($sql);
             if ($res) {
-                $prescription = $results[0];
+                $prescription = (array) $results[0];
                 $prescription['prescription_details'] = $res;
             }
         }

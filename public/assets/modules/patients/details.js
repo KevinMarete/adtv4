@@ -326,7 +326,7 @@ function getViralResult(ccc_no) {
 }
 
 function get_patient_prescriptions(ccc_no) {
-    var data_source ="../../../dispensement/getPrescriptions/" + ccc_no;
+    var data_source ="../../../dispensement_management/getPrescriptions/" + ccc_no;
     var patient_id = $("#hidden_data").data("patient");
 
     $.getJSON(data_source, function (data) {
@@ -343,10 +343,10 @@ function get_patient_prescriptions(ccc_no) {
                     '<td>' + val.prescription_notes + '</td><tr>');
 
             $('#dispense_prescription_btn').show();
-            $('#dispense_prescription_btn').attr('href', '../../../dispensement/dispense/' + patient_id + '?pid=' + val.drug_prescriptionid);
+            $('#dispense_prescription_btn').attr('href', '../../../dispensement_management/dispense/' + patient_id + '?pid=' + val.drug_prescriptionid);
         });
 
-        $('#prescriptions_data table').append('<a id="dispense_btn" class="btn btn-default" href="' + base_url + 'dispensement/dispense/' + patient_id + '"><strong>Dispense to Patient</strong></a>');
+        $('#prescriptions_data table').append('<a id="dispense_btn" class="btn btn-default" href="' + base_url + 'dispensement_management/dispense/' + patient_id + '"><strong>Dispense to Patient</strong></a>');
     });
 
 }

@@ -401,7 +401,7 @@ $routes->match(['get', 'post'], 'patient/getWhoStage', '\Modules\ADT\Controllers
 $routes->get('dispensement_management/dispense/(:any)', '\Modules\ADT\Controllers\Dispensement_management::dispense');
 $routes->match(['get', 'post'], 'dispensement_management/save', '\Modules\ADT\Controllers\Dispensement_management::save');
 $routes->get('dispensement_management/edit/(:any)', '\Modules\ADT\Controllers\Dispensement_management::edit');
-$routes->get('dispensement_management/getPrescriptions/(:any)', '\Modules\ADT\Controllers\Dispensement_management::getPrescriptions');
+$routes->get('dispensement_management/getPrescriptions/(:any)', '\Modules\ADT\Controllers\Dispensement_management::getPrescriptions/$1');
 $routes->match(['get', 'post'], 'dispensement_management/get_other_dispensing_details', '\Modules\ADT\Controllers\Dispensement_management::get_other_dispensing_details');
 $routes->get('dispensement_management/get_patient_data/(:any)', '\Modules\ADT\Controllers\Dispensement_management::get_patient_data');
 $routes->match(['get', 'post'], 'dispensement_management/getDrugsRegimens', '\Modules\ADT\Controllers\Dispensement_management::getDrugsRegimens');
