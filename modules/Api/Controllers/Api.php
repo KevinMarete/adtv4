@@ -820,8 +820,9 @@ class Api extends BaseController {
 				INNER JOIN drugcode d ON d.id = pv.drug_id
 				WHERE dp.id = '$order_id' group by pv.drug_id ";
         $res = DB::select($sql);
-        foreach ($res as $key => $pat) {
-            $dispense['PHARMACY_DISPENSE'][$key] = [
+        foreach ($res as $pat) {
+            $this->writeLog('LOGGER: ', json_encode($pat));
+            $dispense['PHARMACY_DISPENSE'][] = [
                 'PRESCRIPTION_NUMBER' => empty($pat->prescription_number) ? '' : $pat->prescription_number,
                 'DRUG_NAME' => empty($pat->drug_name) ? '' : $pat->drug_name,
                 'CODING_SYSTEM' => "NASCOP_CODES",
