@@ -170,7 +170,7 @@ class Api_model extends BaseModel {
 				INNER JOIN drug_prescription dp ON dp.id = dpd.drug_prescriptionid AND pv.patient_id = dp.patient
 				INNER JOIN patient p ON p.patient_number_ccc = pv.patient_id
 				INNER JOIN drugcode d ON d.id = pv.drug_id
-				WHERE dp.id = '$order_id'";
+				WHERE dp.id = '$order_id' group by dpd.drug_name ";
 
         $query = $this->db->query($sql);
 
