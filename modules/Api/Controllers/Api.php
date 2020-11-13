@@ -820,7 +820,7 @@ class Api extends BaseController {
 				INNER JOIN drugcode d ON d.id = pv.drug_id
 				WHERE dp.id = '$order_id' group by pv.drug_id ";
         $res = DB::select($sql);
-        $this->writeLog('LOGGER: ', count($res));
+        $this->writeLog('LOGGER 12: ', count($res)); 
         
         foreach ($res as $pat) {
 
