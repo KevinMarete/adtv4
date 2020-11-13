@@ -179,6 +179,7 @@ class Api extends BaseController {
         $IS_ALCOHOLIC = (isset($observations['IS_ALCOHOLIC'])) ? (empty($observations['IS_ALCOHOLIC']) ? '' : $observations['CURRENT_REGIMEN']) : false;
         $REGIMEN_CHANGE_REASON = (isset($observations['REGIMEN_CHANGE_REASON'])) ? (empty($observations['REGIMEN_CHANGE_REASON']) ? '' : $observations['REGIMEN_CHANGE_REASON']) : false;
         $WHO_STAGE = (isset($observations['WHO_STAGE'])) ? (empty($observations['WHO_STAGE']) ? '' : $observations['WHO_STAGE']) : false;
+        $ART_START = (isset($observations['ART_START'])) ? (empty($observations['ART_START']) ? '' : $observations['ART_START']) : false;
 
         $new_patient = [
             'facility_code' => $SENDING_FACILITY,
@@ -205,7 +206,9 @@ class Api extends BaseController {
             'active' => 1,
             'date_enrolled' => substr($ENROLLMENT_DATE, 0, 4) . '-' . substr($ENROLLMENT_DATE, 4, 2) . '-' . substr($ENROLLMENT_DATE, -2),
             'current_status' => $this->api_model->getActivePatientStatus()->id,
-            'weight' => $START_HEIGHT
+            'weight' => $START_HEIGHT,
+            'who_stage' => $WHO_STAGE,
+            'start_regimen_date' => substr($ART_START, 0, 4) . '-' . substr($ART_START, 4, 2) . '-' . substr($ART_START, -2)
         ];
         $this->writeLog('msg', json_encode($new_patient));
         $internal_patient_id = $this->api_model->savePatient($new_patient, $INTERNAL_PATIENT_ID);
@@ -627,6 +630,17 @@ class Api extends BaseController {
                 'CODING_SYSTEM' => "",
                 'VALUE_TYPE' => "N",
                 'OBSERVATION_VALUE' => ($pat_oru->who_stage == '0') ? '' : $pat_oru->who_stage,
+                'UNITS' => "",
+                'OBSERVATION_RESULT_STATUS' => "F",
+                'OBSERVATION_DATETIME' => date('Ymdhis', strtotime($pat_oru->date_enrolled)),
+                'ABNORMAL_FLAGS' => "N"
+            ],
+            [
+                'SET_ID' => "9",
+                'OBSERVATION_IDENTIFIER' => "ART_START",
+                'CODING_SYSTEM' => "",
+                'VALUE_TYPE' => "N",
+                'OBSERVATION_VALUE' => empty($pat_oru->start_regimen_date) ? '' : date('Ymdhis', strtotime($pat_oru->start_regimen_date)),
                 'UNITS' => "",
                 'OBSERVATION_RESULT_STATUS' => "F",
                 'OBSERVATION_DATETIME' => date('Ymdhis', strtotime($pat_oru->date_enrolled)),
