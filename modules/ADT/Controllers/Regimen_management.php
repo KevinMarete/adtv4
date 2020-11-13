@@ -380,7 +380,9 @@ class Regimen_management extends \App\Controllers\BaseController {
         $service = $this->request->getPost("service");
         $regimens = "";
         if ($service == 'prep' || $service == 'pep') {
-            $regimens = Regimen::getServiceRegimens($service);
+            $regimens = Regimen::whereHas('Regimen_Service_Type', function($query) use ($service) {
+                $query->where('name', 'like', '%'.$service.'%');
+            })->orderBy('type_of_service')->get()->toArray();
         } else {
 
             if ($age == '') {
@@ -388,13 +390,26 @@ class Regimen_management extends \App\Controllers\BaseController {
             } else {
                 if ($age < 15) {
                     //paediatric regimens
-                    $regimens = Regimen::getChildRegimens();
+                    $regimens = Regimen::whereHas('Regimen_Category', function($query) {
+                        $query->where('Name', 'like', '%paed%')
+                            ->orWhere('Name', 'like', '%ped%')
+                            ->orWhere('Name', 'like', '%child%')
+                            ->orWhere('Name', 'like', '%oi%')
+                            ->orWhere('Name', 'like', '%hepatitis%');
+                    })->where('enabled', '1')->orderBy('regimen_code')->get()->toArray();
                 } else if ($age >= 15) {
                     //adult regimens
-                    $regimens = Regimen::getAdultRegimens();
+                    $regimens = Regimen::whereHas('Regimen_Category', function($query) {
+                        $query->where('Name', 'like', '%adult%')
+                            ->orWhere('Name', 'like', '%mother%')
+                            ->orWhere('Name', 'like', '%oi%')
+                            ->orWhere('Name', 'like', '%hepatitis%')
+                            ->orWhere('Name', 'like', '%prep%');
+                    })->where('enabled', '1')->orderBy('regimen_code')->get()->toArray();
                 }
             }
         }
+        
         echo json_encode($regimens);
     }
 

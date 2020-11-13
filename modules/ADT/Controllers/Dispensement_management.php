@@ -12,6 +12,8 @@ use Modules\ADT\Models\Dose;
 use Modules\ADT\Models\Drug_Classification;
 use Modules\ADT\Models\Drugcode;
 use Modules\ADT\Models\DrugInstructions;
+use Modules\ADT\Models\DrugPrescriptionDetails;
+use Modules\ADT\Models\DrugPrescrition;
 use Modules\ADT\Models\DrugStockBalance;
 use Modules\ADT\Models\Facilities;
 use Modules\ADT\Models\Non_adherence_reasons;
@@ -62,7 +64,7 @@ class Dispensement_management extends BaseController {
         $this->dispense_module = ($conf['api_dispense_module'] == 'on') ? TRUE : FALSE;
         $this->appointment_module = ($conf['api_appointments_module'] == 'on') ? TRUE : FALSE;
         $this->api_adt_url = (strlen($conf['api_adt_url']) > 2) ? $conf['api_adt_url'] : FALSE;
-    }
+}
 
     public function get_patient_details() {
         $record_no = $this->post('record_no');
@@ -616,6 +618,7 @@ class Dispensement_management extends BaseController {
     }
 
     public function save() {
+        $this->init_api_values();
         $appointment_id = 0;
         $period = date("M-Y");
         $ccc_id = $this->post("ccc_store_id");
@@ -1189,9 +1192,10 @@ class Dispensement_management extends BaseController {
 
     public function getPrescription($pid) {
         $data = [];
-        $ps_sql = "SELECT dpd.id,drug_prescriptionid,drug_name from drug_prescription dp,drug_prescription_details dpd where ".
-		"dp.id = dpd.drug_prescriptionid and dp.id = ".$pid;
-        $ps = (array) DB::select($ps_sql);
+        // $ps_sql = "SELECT dpd.id,drug_prescriptionid,drug_name from drug_prescription dp,drug_prescription_details dpd where ".
+		// "dp.id = dpd.drug_prescriptionid and dp.id = ".$pid;
+        $ps = DrugPrescriptionDetails::with('drug_prescription')->where('drug_prescriptionid', $pid)->get();
+        // $ps = (array) DB::select($ps_sql);
         $data = $ps;
      
         // find if possible regimen from prescription
@@ -1201,12 +1205,15 @@ class Dispensement_management extends BaseController {
             if ($rs) {
                 $data[$key]->prescription_regimen_id = $rs->id;
                 $arv_prescription = $p->id;
-                $data['arv_prescription'] = $arv_prescription;
+                    $data['arv_prescription'] = $arv_prescription;
                 //Get oi_prescription(s)
-                $sql = "SELECT dpd.id from drug_prescription dp,drug_prescription_details dpd where ".
-				"dp.id = dpd.drug_prescriptionid and dp.id = ".$pid." and dpd.id != '".$arv_prescription."'";
-                $query = DB::select($sql);
-                $data['oi_prescription'] = $query[0]->id;
+                // $sql = "SELECT dpd.id from drug_prescription dp,drug_prescription_details dpd where ".
+                // "dp.id = dpd.drug_prescriptionid and dp.id = ".$pid." and dpd.id != '".$arv_prescription."'";
+                $query = DrugPrescriptionDetails::whereHas('drug_prescription', function($query) use ($pid) {
+                    $query->where('id', $pid);
+                })->where('id', '!=', $arv_prescription)->first();
+                // $query = DB::select($sql);
+                $data['oi_prescription'] = $query->id ?? null;
             }
         }
         return $data;

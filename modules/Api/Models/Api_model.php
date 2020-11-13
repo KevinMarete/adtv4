@@ -154,7 +154,7 @@ class Api_model extends BaseModel {
         if (count($query->getResult()) > 0) {
             $returnable = $query->getResult()[0];
         } else {
-            $returnable = false;
+            $returnable = [];
         }
         return $returnable;
     }
@@ -177,7 +177,7 @@ class Api_model extends BaseModel {
         if (count($query->getResult()) > 0) {
             $returnable = $query->getResult();
         } else {
-            $returnable = false;
+            $returnable = [];
         }
         return $returnable;
     }
@@ -186,12 +186,12 @@ class Api_model extends BaseModel {
         //$CI = &get_instance();
         //$CI->load->database();
 
-        $query = $CI->db->query("SELECT * FROM user");
+        $query = DB::select("SELECT * FROM user");
 
-        if (count($query->getResult()) > 0) {
-            $returnable = $query->getResult();
+        if (count($query) > 0) {
+            $returnable = $query;
         } else {
-            $returnable = false;
+            $returnable = [];
         }
         return $returnable;
     }
