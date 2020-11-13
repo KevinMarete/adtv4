@@ -819,7 +819,8 @@ class Api extends BaseController {
 				INNER JOIN patient p ON p.patient_number_ccc = pv.patient_id
 				INNER JOIN drugcode d ON d.id = pv.drug_id
 				WHERE dp.id = '$order_id' group by pv.drug_id ";
-        foreach ($sql as $key => $pat) {
+        $res = DB::select($sql);
+        foreach ($res as $key => $pat) {
             $dispense['PHARMACY_DISPENSE'][$key] = [
                 'PRESCRIPTION_NUMBER' => empty($pat->prescription_number) ? '' : $pat->prescription_number,
                 'DRUG_NAME' => empty($pat->drug_name) ? '' : $pat->drug_name,
