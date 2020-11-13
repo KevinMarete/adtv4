@@ -139,9 +139,9 @@ class Api extends BaseController {
         $SENDING_FACILITY = empty($patient->MESSAGE_HEADER->SENDING_FACILITY) ? $this->writeLog('PATIENT', 'FACILITY Missing') : $patient->MESSAGE_HEADER->SENDING_FACILITY;
         // $ccc_no = $this->parseCCC($ccc_no,$SENDING_FACILITY);
 
-        $FIRST_NAME = $patient->PATIENT_IDENTIFICATION->PATIENT_NAME->FIRST_NAME;
-        $MIDDLE_NAME = $patient->PATIENT_IDENTIFICATION->PATIENT_NAME->MIDDLE_NAME;
-        $LAST_NAME = $patient->PATIENT_IDENTIFICATION->PATIENT_NAME->LAST_NAME;
+        $FIRST_NAME = empty($patient->PATIENT_IDENTIFICATION->PATIENT_NAME->FIRST_NAME) ? '' : $patient->PATIENT_IDENTIFICATION->PATIENT_NAME->FIRST_NAME;
+        $MIDDLE_NAME = empty($patient->PATIENT_IDENTIFICATION->PATIENT_NAME->MIDDLE_NAME) ? '' : $patient->PATIENT_IDENTIFICATION->PATIENT_NAME->MIDDLE_NAME;
+        $LAST_NAME = empty($patient->PATIENT_IDENTIFICATION->PATIENT_NAME->LAST_NAME) ? '' : $patient->PATIENT_IDENTIFICATION->PATIENT_NAME->LAST_NAME;
 
 
         $MOTHER_NAME = empty($patient->PATIENT_IDENTIFICATION->MOTHER_NAME) ? '' : $patient->PATIENT_IDENTIFICATION->MOTHER_NAME;
@@ -165,9 +165,23 @@ class Api extends BaseController {
         // $patient->PATIENT_VISIT->PATIENT_TYPE;
         // $patient->PATIENT_VISIT->PATIENT_SOURCE;
 
+        $observations = [];
+        foreach ($patient->OBSERVATION_RESULT as $ob) {
+            $observations[$ob->OBSERVATION_IDENTIFIER] = $ob->OBSERVATION_VALUE;
+        }
+        $START_HEIGHT = (isset($observations['START_HEIGHT'])) ? (empty($observations['START_HEIGHT']) ? '' : $observations['START_HEIGHT']) : '';
+        $START_WEIGHT = (isset($observations['START_WEIGHT'])) ? (empty($observations['START_WEIGHT']) ?  '' : $observations['START_WEIGHT']) : '';
+
+        $IS_PREGNANT = (isset($observations['IS_PREGNANT'])) ? (empty($observations['IS_PREGNANT']) ? '' : $observations['IS_PREGNANT']) : false;
+        $PRENGANT_EDD = (isset($observations['PRENGANT_EDD'])) ? (empty($observations['PRENGANT_EDD']) ? '' : $observations['PRENGANT_EDD']) : false;
+        $CURRENT_REGIMEN = (isset($observations['CURRENT_REGIMEN'])) ? (empty($observations['CURRENT_REGIMEN']) ? '' : $observations['CURRENT_REGIMEN']) : false;
+        $IS_SMOKER = (isset($observations['IS_SMOKER'])) ? (empty($observations['IS_SMOKER']) ? '' : $observations['CURRENT_REGIMEN']) : false;
+        $IS_ALCOHOLIC = (isset($observations['IS_ALCOHOLIC'])) ? (empty($observations['IS_ALCOHOLIC']) ? '' : $observations['CURRENT_REGIMEN']) : false;
+        $REGIMEN_CHANGE_REASON = (isset($observations['REGIMEN_CHANGE_REASON'])) ? (empty($observations['REGIMEN_CHANGE_REASON']) ? '' : $observations['REGIMEN_CHANGE_REASON']) : false;
+        $WHO_STAGE = (isset($observations['WHO_STAGE'])) ? (empty($observations['WHO_STAGE']) ? '' : $observations['WHO_STAGE']) : false;
+
         $new_patient = [
             'facility_code' => $SENDING_FACILITY,
-            // 'dob'=>$DATE_OF_BIRTH,
             'dob' => substr($DATE_OF_BIRTH, 0, 4) . '-' . substr($DATE_OF_BIRTH, 4, 2) . '-' . substr($DATE_OF_BIRTH, -2),
             'first_name' => $FIRST_NAME,
             'gender' => $SEX,
@@ -180,18 +194,18 @@ class Api extends BaseController {
             'pob' => $WARD,
             'pob' => $SUB_COUNTY,
             'pob' => $COUNTY,
-            'alcohol' => ' ',
+            'alcohol' => $IS_ALCOHOLIC,
             'current_regimen' => ' ',
-            'height' => ' ',
-            'pregnant' => ' ',
-            'smoke' => ' ',
-            'start_height' => ' ',
-            'start_regimen' => ' ',
-            'start_weight' => ' ',
+            'height' => $START_HEIGHT,
+            'pregnant' => $IS_PREGNANT,
+            'smoke' => $IS_SMOKER,
+            'start_height' => $START_HEIGHT,
+            'start_regimen' => $CURRENT_REGIMEN,
+            'start_weight' => $START_WEIGHT,
             'active' => 1,
             'date_enrolled' => substr($ENROLLMENT_DATE, 0, 4) . '-' . substr($ENROLLMENT_DATE, 4, 2) . '-' . substr($ENROLLMENT_DATE, -2),
             'current_status' => $this->api_model->getActivePatientStatus()->id,
-            'weight' => ' '
+            'weight' => $START_HEIGHT
         ];
         $this->writeLog('msg', json_encode($new_patient));
         $internal_patient_id = $this->api_model->savePatient($new_patient, $INTERNAL_PATIENT_ID);
@@ -292,7 +306,7 @@ class Api extends BaseController {
         $SENDING_FACILITY = $obx->MESSAGE_HEADER->SENDING_FACILITY;
 
         // Observation Result(s) - Array of Objects
-        $observations = array();
+        $observations = [];
         foreach ($obx->OBSERVATION_RESULT as $ob) {
             $observations[$ob->OBSERVATION_IDENTIFIER] = $ob->OBSERVATION_VALUE;
         }
@@ -505,33 +519,124 @@ class Api extends BaseController {
             // array('ID'=>$pat->external_id, 'IDENTIFIER_TYPE' =>"GODS_NUMBER",'ASSIGNING_AUTHORITY' =>"MPI"),
             // fetch external identifications
             'INTERNAL_PATIENT_ID' => [
-                array('ID' => $pat->id, 'IDENTIFIER_TYPE' => "SOURCE_SYSTEM_ID", 'ASSIGNING_AUTHORITY' => "ADT"),
-                array('ID' => $this->constructCCC($pat->patient_number_ccc, $pat->facility_code, true), 'IDENTIFIER_TYPE' => "CCC_NUMBER", 'ASSIGNING_AUTHORITY' => "CCC")
+                ['ID' => $pat->id, 'IDENTIFIER_TYPE' => "SOURCE_SYSTEM_ID", 'ASSIGNING_AUTHORITY' => "ADT"],
+                ['ID' => $this->constructCCC($pat->patient_number_ccc, $pat->facility_code, true), 'IDENTIFIER_TYPE' => "CCC_NUMBER", 'ASSIGNING_AUTHORITY' => "CCC"]
             ],
-            'PATIENT_NAME' => array('FIRST_NAME' => $pat->first_name, 'MIDDLE_NAME' => $pat->other_name, 'LAST_NAME' => $pat->last_name),
+            'PATIENT_NAME' => ['FIRST_NAME' => $pat->first_name, 'MIDDLE_NAME' => $pat->other_name, 'LAST_NAME' => $pat->last_name],
             'DATE_OF_BIRTH' => date('Ymd', strtotime($pat->dob)),
             'DATE_OF_BIRTH_PRECISION' => 'EXACT',
             'SEX' => substr($pat->patient_gender, 0, 1),
-            'PATIENT_ADDRESS' => array('PHYSICAL_ADDRESS' => array('VILLAGE' => '', 'WARD' => '', 'SUB_COUNTY' => '', 'COUNTY' => ''), 'POSTAL_ADDRESS' => $pat->pob),
+            'PATIENT_ADDRESS' => ['PHYSICAL_ADDRESS' => ['VILLAGE' => '', 'WARD' => '', 'SUB_COUNTY' => '', 'COUNTY' => ''], 'POSTAL_ADDRESS' => $pat->pob],
             'PHONE_NUMBER' => $pat->phone,
             'MARITAL_STATUS' => $pat->partner_status, // if partner the nyes other wise unknown
             'DEATH_DATE' => '',
             'DEATH_INDICATOR' => ''
         );
-        $patient['NEXT_OF_KIN'] = array();
+        $patient['NEXT_OF_KIN'] = [];
 
-        $patient['PATIENT_VISIT'] = array(
-            'VISIT_DATE' => date('Ymd', strtotime($pat->date_enrolled)),
+        $patient['PATIENT_VISIT'] = [
+            'VISIT_DATE' => ['Ymd', strtotime($pat->date_enrolled)],
             'PATIENT_TYPE' => 'NEW', // TRANSFER IN, NEW = active, TRANSIT, 
             'PATIENT_SOURCE' => 'CCC',
             'HIV_CARE_ENROLLMENT_DATE' => date('Ymd', strtotime($pat->date_enrolled))
-        );
-        //echo "<pre>";
-        //echo(json_encode($patient, JSON_PRETTY_PRINT));
-        $this->writeLog('PATIENT ' . $msg_type . ' ' . $message_type, json_encode($patient));
+        ];
 
+        $pat_oru = $this->api_model->getPatient($pat->patient_number_ccc);
+
+        // construct & add observation (obx ) message
+        $patient['OBSERVATION_RESULT'] = [
+            [
+                'SET_ID' => 1,
+                'OBSERVATION_IDENTIFIER' => 'START_HEIGHT',
+                'CODING_SYSTEM' => 1,
+                'VALUE_TYPE' => "NM",
+                'OBSERVATION_VALUE' => $pat_oru->start_height,
+                'UNITS' => "CM",
+                'OBSERVATION_RESULT_STATUS' => "F",
+                'OBSERVATION_DATETIME' => date('Ymdhis', strtotime($pat_oru->date_enrolled)),
+                'ABNORMAL_FLAGS' => "N"],
+            [
+                'SET_ID' => "2",
+                'OBSERVATION_IDENTIFIER' => "START_WEIGHT",
+                'CODING_SYSTEM' => "",
+                'VALUE_TYPE' => "NM",
+                'OBSERVATION_VALUE' => $pat_oru->start_weight,
+                'UNITS' => "KG",
+                'OBSERVATION_RESULT_STATUS' => "F",
+                'OBSERVATION_DATETIME' => date('Ymdhis', strtotime($pat_oru->date_enrolled)),
+                'ABNORMAL_FLAGS' => "N"
+            ],
+            [
+                'SET_ID' => "3",
+                'OBSERVATION_IDENTIFIER' => 'IS_PREGNANT',
+                'CODING_SYSTEM' => "",
+                'VALUE_TYPE' => "CE",
+                'OBSERVATION_VALUE' => ($pat_oru->pregnant == '0') ? 'NO' : 'Yes',
+                'UNITS' => "YES/NO",
+                'OBSERVATION_RESULT_STATUS' => "F",
+                'OBSERVATION_DATETIME' => date('Ymdhis', strtotime($pat_oru->date_enrolled)),
+                'ABNORMAL_FLAGS' => "N"
+            ],
+            [
+                'SET_ID' => "4",
+                'OBSERVATION_IDENTIFIER' => "PRENGANT_EDD",
+                'CODING_SYSTEM' => "",
+                'VALUE_TYPE' => "D",
+                'OBSERVATION_VALUE' => "20170713110000",
+                'UNITS' => "DATE",
+                'OBSERVATION_RESULT_STATUS' => "F",
+                'OBSERVATION_DATETIME' => date('Ymdhis', strtotime($pat_oru->date_enrolled)),
+                'ABNORMAL_FLAGS' => "N"
+            ],
+            [
+                'SET_ID' => "5",
+                'OBSERVATION_IDENTIFIER' => "CURRENT_REGIMEN",
+                'CODING_SYSTEM' => "NASCOP_CODES",
+                'VALUE_TYPE' => "CE",
+                'OBSERVATION_VALUE' => $pat_oru->current_regimen,
+                'UNITS' => "",
+                'OBSERVATION_RESULT_STATUS' => "F",
+                'OBSERVATION_DATETIME' => date('Ymdhis', strtotime($pat_oru->date_enrolled)),
+                'ABNORMAL_FLAGS' => "N"
+            ],
+            [
+                'SET_ID' => "6",
+                'OBSERVATION_IDENTIFIER' => "IS_SMOKER",
+                'CODING_SYSTEM' => "",
+                'VALUE_TYPE' => "CE",
+                'OBSERVATION_VALUE' => ($pat_oru->smoke == '0') ? 'NO' : 'Yes',
+                'UNITS' => "YES/NO",
+                'OBSERVATION_RESULT_STATUS' => "F",
+                'OBSERVATION_DATETIME' => date('Ymdhis', strtotime($pat_oru->date_enrolled)),
+                'ABNORMAL_FLAGS' => "N"
+            ],
+            [
+                'SET_ID' => "7",
+                'OBSERVATION_IDENTIFIER' => "IS_ALCOHOLIC",
+                'CODING_SYSTEM' => "",
+                'VALUE_TYPE' => "CE",
+                'OBSERVATION_VALUE' => ($pat_oru->alcohol == '0') ? 'NO' : 'Yes',
+                'UNITS' => "YES/NO",
+                'OBSERVATION_RESULT_STATUS' => "F",
+                'OBSERVATION_DATETIME' => date('Ymdhis', strtotime($pat_oru->date_enrolled)),
+                'ABNORMAL_FLAGS' => "N"
+            ],
+            [
+                'SET_ID' => "8",
+                'OBSERVATION_IDENTIFIER' => "WHO_STAGE",
+                'CODING_SYSTEM' => "",
+                'VALUE_TYPE' => "N",
+                'OBSERVATION_VALUE' => ($pat_oru->who_stage == '0') ? '' : $pat_oru->who_stage,
+                'UNITS' => "",
+                'OBSERVATION_RESULT_STATUS' => "F",
+                'OBSERVATION_DATETIME' => date('Ymdhis', strtotime($pat_oru->date_enrolled)),
+                'ABNORMAL_FLAGS' => "N"
+            ]
+        ];
+        
+        $this->writeLog('PATIENT ' . $msg_type . ' ' . $message_type, json_encode($patient));
         $this->tcpILRequest(null, json_encode($patient));
-        $this->getObservation($pat->patient_number_ccc);
+        // $this->getObservation($pat->patient_number_ccc);
     }
 
     public function getObservation($patient_id) {
