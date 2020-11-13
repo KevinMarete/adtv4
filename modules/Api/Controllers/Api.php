@@ -134,7 +134,7 @@ class Api extends BaseController {
         foreach ($patient->PATIENT_IDENTIFICATION->INTERNAL_PATIENT_ID as $id) {
             $identification[$id->IDENTIFIER_TYPE] = $id->ID;
         }
-        
+
         $ccc_no = empty($identification['CCC_NUMBER']) ? $this->writeLog('PATIENT', 'CCC Missing') : $identification['CCC_NUMBER'];
         $SENDING_FACILITY = empty($patient->MESSAGE_HEADER->SENDING_FACILITY) ? $this->writeLog('PATIENT', 'FACILITY Missing') : $patient->MESSAGE_HEADER->SENDING_FACILITY;
         // $ccc_no = $this->parseCCC($ccc_no,$SENDING_FACILITY);
@@ -170,7 +170,7 @@ class Api extends BaseController {
             $observations[$ob->OBSERVATION_IDENTIFIER] = $ob->OBSERVATION_VALUE;
         }
         $START_HEIGHT = (isset($observations['START_HEIGHT'])) ? (empty($observations['START_HEIGHT']) ? '' : $observations['START_HEIGHT']) : '';
-        $START_WEIGHT = (isset($observations['START_WEIGHT'])) ? (empty($observations['START_WEIGHT']) ?  '' : $observations['START_WEIGHT']) : '';
+        $START_WEIGHT = (isset($observations['START_WEIGHT'])) ? (empty($observations['START_WEIGHT']) ? '' : $observations['START_WEIGHT']) : '';
 
         $IS_PREGNANT = (isset($observations['IS_PREGNANT'])) ? (empty($observations['IS_PREGNANT']) ? '' : $observations['IS_PREGNANT']) : false;
         $PRENGANT_EDD = (isset($observations['PRENGANT_EDD'])) ? (empty($observations['PRENGANT_EDD']) ? '' : $observations['PRENGANT_EDD']) : false;
@@ -647,7 +647,7 @@ class Api extends BaseController {
                 'ABNORMAL_FLAGS' => "N"
             ]
         ];
-        
+
         $this->writeLog('PATIENT ' . $msg_type . ' ' . $message_type, json_encode($patient));
         $this->tcpILRequest(null, json_encode($patient));
         // $this->getObservation($pat->patient_number_ccc);
@@ -797,7 +797,9 @@ class Api extends BaseController {
         ];
 
         /* Loop Drugs */
+        $ids = '';
         foreach ($pats as $key => $pat) {
+            $ids = $pat->visit_id . ',';
             $dispense['PHARMACY_ENCODED_ORDER'][$key] = [
                 'PRESCRIPTION_NUMBER' => empty($pat->prescription_number) ? '' : $pat->prescription_number,
                 'DRUG_NAME' => empty($pat->drug_name) ? '' : $pat->drug_name,
@@ -809,6 +811,9 @@ class Api extends BaseController {
                 'QUANTITY_PRESCRIBED' => empty($pat->quantity_prescribed) ? '' : $pat->quantity_prescribed,
                 'PRESCRIPTION_NOTES' => empty($pat->prescription_notes) ? '' : $pat->prescription_notes
             ];
+        }
+        $prescriptions = DB::select("");
+        foreach ($pats as $key => $pat) {
             $dispense['PHARMACY_DISPENSE'][$key] = [
                 'PRESCRIPTION_NUMBER' => empty($pat->prescription_number) ? '' : $pat->prescription_number,
                 'DRUG_NAME' => empty($pat->drug_name) ? '' : $pat->drug_name,
@@ -865,15 +870,15 @@ class Api extends BaseController {
         ];
 
         $host = 'https://iltest.kenyahmis.org';
-        
-        $test_client = new Client(['verify'=>false]);
+
+        $test_client = new Client(['verify' => false]);
         try {
             $response = $test_client->get($host);
             $result = $response->getStatusCode();
         } catch (\Exception $e) {
             $result = 0;
         }
-        
+
         if ($result == 200) {
 
             $response = $client->post($this->il_ip, [
