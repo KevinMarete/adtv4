@@ -476,7 +476,7 @@ class Api extends BaseController {
             'PROCESSING_ID' => "P"
         );
         $appoint['PATIENT_IDENTIFICATION'] = array(
-            'EXTERNAL_PATIENT_ID' => array('ID' => $pat->external_id, 'IDENTIFIER_TYPE' => "GODS_NUMBER", 'ASSIGNING_AUTHORITY' => "MPI"),
+            'EXTERNAL_PATIENT_ID' => array('ID' => '', 'IDENTIFIER_TYPE' => "GODS_NUMBER", 'ASSIGNING_AUTHORITY' => "MPI"),
             'INTERNAL_PATIENT_ID' => [
                 array('ID' => $this->constructCCC($pat->patient_number_ccc, $pat->facility_code, true), 'IDENTIFIER_TYPE' => "CCC_NUMBER", 'ASSIGNING_AUTHORITY' => "CCC")
             ],

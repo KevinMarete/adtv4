@@ -154,7 +154,7 @@ class Api_model extends BaseModel {
         if (count($query->getResult()) > 0) {
             $returnable = $query->getResult()[0];
         } else {
-            $returnable = false;
+            $returnable = [];
         }
         return $returnable;
     }
