@@ -64,7 +64,7 @@ class Dispensement_management extends BaseController {
         $this->dispense_module = ($conf['api_dispense_module'] == 'on') ? TRUE : FALSE;
         $this->appointment_module = ($conf['api_appointments_module'] == 'on') ? TRUE : FALSE;
         $this->api_adt_url = (strlen($conf['api_adt_url']) > 2) ? $conf['api_adt_url'] : FALSE;
-    }
+}
 
     public function get_patient_details() {
         $record_no = $this->post('record_no');
@@ -618,6 +618,7 @@ class Dispensement_management extends BaseController {
     }
 
     public function save() {
+        $this->init_api_values();
         $appointment_id = 0;
         $period = date("M-Y");
         $ccc_id = $this->post("ccc_store_id");
@@ -1204,7 +1205,7 @@ class Dispensement_management extends BaseController {
             if ($rs) {
                 $data[$key]->prescription_regimen_id = $rs->id;
                 $arv_prescription = $p->id;
-                $data['arv_prescription'] = $arv_prescription;
+                    $data['arv_prescription'] = $arv_prescription;
                 //Get oi_prescription(s)
                 // $sql = "SELECT dpd.id from drug_prescription dp,drug_prescription_details dpd where ".
                 // "dp.id = dpd.drug_prescriptionid and dp.id = ".$pid." and dpd.id != '".$arv_prescription."'";

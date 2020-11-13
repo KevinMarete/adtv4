@@ -708,7 +708,7 @@ class Api extends BaseController {
         echo(json_encode($dispense, JSON_PRETTY_PRINT));
         echo "</pre>";
         $this->writeLog('PHARMACY DISPENSE RDS^O13 ', json_encode($dispense));
-       $this->tcpILRequest(null, json_encode($dispense));
+        $this->tcpILRequest(null, json_encode($dispense));
     }
 
     function postILRequest($request) {
