@@ -134,7 +134,7 @@ class Api extends BaseController {
         foreach ($patient->PATIENT_IDENTIFICATION->INTERNAL_PATIENT_ID as $id) {
             $identification[$id->IDENTIFIER_TYPE] = $id->ID;
         }
-        
+
         $ccc_no = empty($identification['CCC_NUMBER']) ? $this->writeLog('PATIENT', 'CCC Missing') : $identification['CCC_NUMBER'];
         $SENDING_FACILITY = empty($patient->MESSAGE_HEADER->SENDING_FACILITY) ? $this->writeLog('PATIENT', 'FACILITY Missing') : $patient->MESSAGE_HEADER->SENDING_FACILITY;
         // $ccc_no = $this->parseCCC($ccc_no,$SENDING_FACILITY);
@@ -170,7 +170,7 @@ class Api extends BaseController {
             $observations[$ob->OBSERVATION_IDENTIFIER] = $ob->OBSERVATION_VALUE;
         }
         $START_HEIGHT = (isset($observations['START_HEIGHT'])) ? (empty($observations['START_HEIGHT']) ? '' : $observations['START_HEIGHT']) : '';
-        $START_WEIGHT = (isset($observations['START_WEIGHT'])) ? (empty($observations['START_WEIGHT']) ?  '' : $observations['START_WEIGHT']) : '';
+        $START_WEIGHT = (isset($observations['START_WEIGHT'])) ? (empty($observations['START_WEIGHT']) ? '' : $observations['START_WEIGHT']) : '';
 
         $IS_PREGNANT = (isset($observations['IS_PREGNANT'])) ? (empty($observations['IS_PREGNANT']) ? '' : $observations['IS_PREGNANT']) : false;
         $PREGNANT_EDD = (isset($observations['PREGNANT_EDD'])) ? (empty($observations['PREGNANT_EDD']) ? '' : $observations['PRENGANT_EDD']) : false;
@@ -647,7 +647,7 @@ class Api extends BaseController {
                 'ABNORMAL_FLAGS' => "N"
             ]
         ];
-        
+
         $this->writeLog('PATIENT ' . $msg_type . ' ' . $message_type, json_encode($patient));
         $this->tcpILRequest(null, json_encode($patient));
         // $this->getObservation($pat->patient_number_ccc);
@@ -767,6 +767,7 @@ class Api extends BaseController {
 
     public function getDispensing($order_id) {
         $pats = $this->api_model->getDispensing($order_id);
+
         $message_type = 'RDS^O13';
 
         $dispense['MESSAGE_HEADER'] = [
@@ -810,8 +811,20 @@ class Api extends BaseController {
                 'PRESCRIPTION_NOTES' => empty($pat->prescription_notes) ? '' : $pat->prescription_notes
             ];
         }
-        foreach ($pats as $key => $pat) {
-            $dispense['PHARMACY_DISPENSE'][$key] = [
+        $sql = "SELECT *, dpd.strength as drug_strength, pv.id visit_id, DATE_FORMAT(timecreated, '%Y%m%d%h%i%s') timecreated, pv.duration disp_duration, TRIM(d.drug) drugcode, pv.quantity disp_quantity, pv.dose disp_dose, dpd.prescription_number
+				FROM patient_visit pv 
+				INNER JOIN drug_prescription_details_visit dpdv ON dpdv.visit_id = pv.id
+				INNER JOIN drug_prescription_details dpd ON dpd.id = dpdv.drug_prescription_details_id
+				INNER JOIN drug_prescription dp ON dp.id = dpd.drug_prescriptionid AND pv.patient_id = dp.patient
+				INNER JOIN patient p ON p.patient_number_ccc = pv.patient_id
+				INNER JOIN drugcode d ON d.id = pv.drug_id
+				WHERE dp.id = '$order_id' group by pv.drug_id ";
+        $res = DB::select($sql);
+       // $this->writeLog('LOGGER 12: ', count($res)); 
+        
+        foreach ($res as $pat) {
+
+            $dispense['PHARMACY_DISPENSE'][] = [
                 'PRESCRIPTION_NUMBER' => empty($pat->prescription_number) ? '' : $pat->prescription_number,
                 'DRUG_NAME' => empty($pat->drug_name) ? '' : $pat->drug_name,
                 'CODING_SYSTEM' => "NASCOP_CODES",
@@ -829,7 +842,7 @@ class Api extends BaseController {
         echo(json_encode($dispense, JSON_PRETTY_PRINT));
         echo "</pre>";
         $this->writeLog('PHARMACY DISPENSE RDS^O13 ', json_encode($dispense));
-        $this->tcpILRequest(null, json_encode($dispense));
+         $this->tcpILRequest(null, json_encode($dispense));
     }
 
     function postILRequest($request) {
@@ -867,15 +880,15 @@ class Api extends BaseController {
         ];
 
         $host = 'https://iltest.kenyahmis.org';
-        
-        $test_client = new Client(['verify'=>false]);
+
+        $test_client = new Client(['verify' => false]);
         try {
             $response = $test_client->get($host);
             $result = $response->getStatusCode();
         } catch (\Exception $e) {
             $result = 0;
         }
-        
+
         if ($result == 200) {
 
             $response = $client->post($this->il_ip, [
