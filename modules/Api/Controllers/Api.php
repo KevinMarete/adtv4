@@ -173,7 +173,7 @@ class Api extends BaseController {
         $START_WEIGHT = (isset($observations['START_WEIGHT'])) ? (empty($observations['START_WEIGHT']) ?  '' : $observations['START_WEIGHT']) : '';
 
         $IS_PREGNANT = (isset($observations['IS_PREGNANT'])) ? (empty($observations['IS_PREGNANT']) ? '' : $observations['IS_PREGNANT']) : false;
-        $PRENGANT_EDD = (isset($observations['PRENGANT_EDD'])) ? (empty($observations['PRENGANT_EDD']) ? '' : $observations['PRENGANT_EDD']) : false;
+        $PREGNANT_EDD = (isset($observations['PREGNANT_EDD'])) ? (empty($observations['PREGNANT_EDD']) ? '' : $observations['PRENGANT_EDD']) : false;
         $CURRENT_REGIMEN = (isset($observations['CURRENT_REGIMEN'])) ? (empty($observations['CURRENT_REGIMEN']) ? '' : $observations['CURRENT_REGIMEN']) : false;
         $IS_SMOKER = (isset($observations['IS_SMOKER'])) ? (empty($observations['IS_SMOKER']) ? '' : $observations['CURRENT_REGIMEN']) : false;
         $IS_ALCOHOLIC = (isset($observations['IS_ALCOHOLIC'])) ? (empty($observations['IS_ALCOHOLIC']) ? '' : $observations['CURRENT_REGIMEN']) : false;
@@ -206,7 +206,7 @@ class Api extends BaseController {
             'active' => 1,
             'date_enrolled' => substr($ENROLLMENT_DATE, 0, 4) . '-' . substr($ENROLLMENT_DATE, 4, 2) . '-' . substr($ENROLLMENT_DATE, -2),
             'current_status' => $this->api_model->getActivePatientStatus()->id,
-            'weight' => $START_HEIGHT,
+            'weight' => $START_WEIGHT,
             'who_stage' => $WHO_STAGE,
             'start_regimen_date' => substr($ART_START, 0, 4) . '-' . substr($ART_START, 4, 2) . '-' . substr($ART_START, -2)
         ];
@@ -317,7 +317,7 @@ class Api extends BaseController {
         $START_WEIGHT = (isset($observations['START_WEIGHT'])) ? $observations['START_WEIGHT'] : false;
 
         $IS_PREGNANT = (isset($observations['IS_PREGNANT'])) ? $observations['IS_PREGNANT'] : false;
-        $PRENGANT_EDD = (isset($observations['PRENGANT_EDD'])) ? $observations['PRENGANT_EDD'] : false;
+        $PREGNANT_EDD = (isset($observations['PREGNANT_EDD'])) ? $observations['PREGNANT_EDD'] : false;
         $CURRENT_REGIMEN = (isset($observations['CURRENT_REGIMEN'])) ? $observations['CURRENT_REGIMEN'] : false;
         $IS_SMOKER = (isset($observations['IS_SMOKER'])) ? $observations['IS_SMOKER'] : false;
         $IS_ALCOHOLIC = (isset($observations['IS_ALCOHOLIC'])) ? $observations['IS_ALCOHOLIC'] : false;
@@ -582,7 +582,7 @@ class Api extends BaseController {
             ],
             [
                 'SET_ID' => "4",
-                'OBSERVATION_IDENTIFIER' => "PRENGANT_EDD",
+                'OBSERVATION_IDENTIFIER' => "PREGNANT_EDD",
                 'CODING_SYSTEM' => "",
                 'VALUE_TYPE' => "D",
                 'OBSERVATION_VALUE' => "20170713110000",
@@ -715,7 +715,7 @@ class Api extends BaseController {
             ),
             array(
                 'SET_ID' => "4",
-                'OBSERVATION_IDENTIFIER' => "PRENGANT_EDD",
+                'OBSERVATION_IDENTIFIER' => "PREGNANT_EDD",
                 'CODING_SYSTEM' => "",
                 'VALUE_TYPE' => "D",
                 'OBSERVATION_VALUE' => "20170713110000",
@@ -809,6 +809,8 @@ class Api extends BaseController {
                 'QUANTITY_PRESCRIBED' => empty($pat->quantity_prescribed) ? '' : $pat->quantity_prescribed,
                 'PRESCRIPTION_NOTES' => empty($pat->prescription_notes) ? '' : $pat->prescription_notes
             ];
+        }
+        foreach ($pats as $key => $pat) {
             $dispense['PHARMACY_DISPENSE'][$key] = [
                 'PRESCRIPTION_NUMBER' => empty($pat->prescription_number) ? '' : $pat->prescription_number,
                 'DRUG_NAME' => empty($pat->drug_name) ? '' : $pat->drug_name,
