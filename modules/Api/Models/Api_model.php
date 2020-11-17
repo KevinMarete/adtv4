@@ -11,8 +11,6 @@ class Api_model extends BaseModel {
 
     function __construct() {
         $this->db = \Config\Database::connect();
-        // $CI = &get_instance();
-        // $CI -> load -> database();
     }
 
     function saveAPIConfig($conf) {
@@ -20,8 +18,6 @@ class Api_model extends BaseModel {
         DB::update("update api_config set value = 'off' where type='toggle'");
 
         foreach ($conf as $key => $val) {
-            // $CI->where('config', $key);
-            // $CI->db->update('api_config', array('value' => $val));
             DB::update("UPDATE api_config SET value='$val' WHERE config='$key'");
         }
 
@@ -35,18 +31,10 @@ class Api_model extends BaseModel {
 
     function savePatient($patient, $external_id) {
         $insert_id = DB::table('patient')->insertGetId($patient);
-        //$CI = &get_instance();
-        //$CI->load->database();
-        // $CI->db->insert('patient', $patient);
-        // $insert_id = $CI->db->insert_id();
-        // $this->savePatientMatching(array('internal_id'=>$insert_id, 'external_id'=>$external_id));
         return $insert_id;
     }
 
     function updatePatient($patient, $internal_patient_id) {
-
-        //  $CI = &get_instance();
-        // $CI->load->database();
         $b = $this->db->table('patient');
         $b->where('id', $internal_patient_id);
         $b->update($patient);
@@ -61,9 +49,6 @@ class Api_model extends BaseModel {
     }
 
     function getPatient($internal_id = null) {
-
-        //$CI = &get_instance();
-        //$CI->load->database();
         $cond = '';
         $query_str = "SELECT p.*,ps.name as patient_status,pso.name as patient_source ,g.name as patient_gender FROM patient p ".
 		"left join patient_status ps on p.current_status = ps.id ".
@@ -108,9 +93,6 @@ class Api_model extends BaseModel {
     }
 
     function getPatientExternalID($internal_id = null, $assigning_authority = null) {
-
-        //$CI = &get_instance();
-        //$CI->load->database();
         $cond = (isset($assigning_authority)) ? "and assigning_authority = '$assigning_authority' " : null;
         $query_str = "SELECT external_id as ID, identifier_type as IDENTIFIER_TYPE, assigning_authority as ASSIGNING_AUTHORITY FROM api_patient_matching WHERE internal_id   = '$internal_id' and external_id IS NOT NULL" . $cond;
         $query = $this->db->query($query_str);
@@ -125,9 +107,6 @@ class Api_model extends BaseModel {
     }
 
     function getPatientInternalID($external_id = null, $assigning_authority = null) {
-
-        //$CI = &get_instance();
-        //$CI->load->database();
         $cond = (isset($assigning_authority)) ? "and assigning_authority = '$assigning_authority' " : null;
         $query_str = "SELECT id FROM api_patient_matching WHERE internal_id   = '$internal_id' and external_id IS NOT NULL" . $cond;
         $query = $this->db->query($query_str);
@@ -142,8 +121,6 @@ class Api_model extends BaseModel {
     }
 
     function getPatientAppointment($appointment_id = null) {
-        // $CI = &get_instance();
-        // $CI->load->database();
 
         $sql = "SELECT DATE_FORMAT(MIN(pa.appointment), '%Y%m%d') appointment, pa.facility facility_code, p.*
 				FROM patient_appointment pa 
@@ -160,8 +137,6 @@ class Api_model extends BaseModel {
     }
 
     function getDispensing($order_id = null) {
-        // $CI = &get_instance();
-        // $CI->load->database();
 
         $sql = "SELECT *, dpd.strength as drug_strength, pv.id visit_id, DATE_FORMAT(timecreated, '%Y%m%d%h%i%s') timecreated, pv.duration disp_duration, TRIM(d.drug) drugcode, pv.quantity disp_quantity, pv.dose disp_dose, dpd.prescription_number
 				FROM patient_visit pv 
@@ -183,8 +158,6 @@ class Api_model extends BaseModel {
     }
 
     function getUsers($merchantemail = null) {
-        //$CI = &get_instance();
-        //$CI->load->database();
 
         $query = DB::select("SELECT * FROM user");
 

@@ -538,7 +538,7 @@ class Api extends BaseController {
         $patient['NEXT_OF_KIN'] = [];
 
         $patient['PATIENT_VISIT'] = [
-            'VISIT_DATE' => ['Ymd', strtotime($pat->date_enrolled)],
+            'VISIT_DATE' => date('Ymd', strtotime($pat->date_enrolled)),
             'PATIENT_TYPE' => 'NEW', // TRANSFER IN, NEW = active, TRANSIT, 
             'PATIENT_SOURCE' => 'CCC',
             'HIV_CARE_ENROLLMENT_DATE' => date('Ymd', strtotime($pat->date_enrolled))
@@ -640,7 +640,7 @@ class Api extends BaseController {
                 'OBSERVATION_IDENTIFIER' => "ART_START",
                 'CODING_SYSTEM' => "",
                 'VALUE_TYPE' => "N",
-                'OBSERVATION_VALUE' => empty($pat_oru->start_regimen_date) ? '' : date('Ymdhis', strtotime($pat_oru->start_regimen_date)),
+                'OBSERVATION_VALUE' => empty($pat_oru->start_regimen_date) ? '' : date('Ymd', strtotime($pat_oru->start_regimen_date)),
                 'UNITS' => "",
                 'OBSERVATION_RESULT_STATUS' => "F",
                 'OBSERVATION_DATETIME' => date('Ymdhis', strtotime($pat_oru->date_enrolled)),
