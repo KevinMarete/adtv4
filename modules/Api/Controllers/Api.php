@@ -650,9 +650,7 @@ class Api extends BaseController {
         ];
 
         $this->writeLog('PATIENT ' . $msg_type . ' ' . $message_type, json_encode($patient));
-        echo '<pre>';
-        print_r($patient);
-        //$this->tcpILRequest(null, json_encode($patient));
+        $this->tcpILRequest(null, json_encode($patient));
         // $this->getObservation($pat->patient_number_ccc);
     }
 
