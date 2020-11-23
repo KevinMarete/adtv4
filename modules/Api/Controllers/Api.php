@@ -538,6 +538,7 @@ class Api extends BaseController {
         $patient['NEXT_OF_KIN'] = [];
 
         $patient['PATIENT_VISIT'] = [
+            'VISIT_DATE2' =>date_format(date_create_from_format('Y-m-d', $pat->date_enrolled), 'Ymd'),
             'VISIT_DATE' => date('Ymd', strtotime($pat->date_enrolled)),
             'PATIENT_TYPE' => 'NEW', // TRANSFER IN, NEW = active, TRANSIT, 
             'PATIENT_SOURCE' => 'CCC',
@@ -649,7 +650,9 @@ class Api extends BaseController {
         ];
 
         $this->writeLog('PATIENT ' . $msg_type . ' ' . $message_type, json_encode($patient));
-        $this->tcpILRequest(null, json_encode($patient));
+        echo '<pre>';
+        print_r($patient);
+        //$this->tcpILRequest(null, json_encode($patient));
         // $this->getObservation($pat->patient_number_ccc);
     }
 
