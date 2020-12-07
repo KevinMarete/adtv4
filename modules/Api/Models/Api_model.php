@@ -15,10 +15,10 @@ class Api_model extends BaseModel {
 
     function saveAPIConfig($conf) {
 
-        DB::update("update api_config set value = 'off' where type='toggle'");
+        DB::statement("update api_config set value = 'off' where type='toggle'");
 
         foreach ($conf as $key => $val) {
-            DB::update("UPDATE api_config SET value='$val' WHERE config='$key'");
+            DB::statement("UPDATE api_config SET value='$val' WHERE config='$key'");
         }
 
         return true;

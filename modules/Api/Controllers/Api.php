@@ -978,11 +978,11 @@ class Api extends BaseController {
     }
 
     public function settings() {
-        // if ($_POST) {
-        //     if ($this->api_model->saveAPIConfig($_POST)) {
-        //         $data['message'] = 'Settings Saved successfully';
-        //     }
-        // }
+        if ($_POST) {
+            if ($this->api_model->saveAPIConfig($_POST)) {
+                $data['message'] = 'Settings Saved successfully';
+            }
+        }
 
         $data['api_config'] = $this->init_api_values();
         $data['active_menu'] = 8;
