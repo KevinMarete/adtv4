@@ -538,7 +538,7 @@ class Api extends BaseController {
         $patient['NEXT_OF_KIN'] = [];
 
         $patient['PATIENT_VISIT'] = [
-            'VISIT_DATE' => date('Ymd', strtotime($pat->date_enrolled)),
+            'VISIT_DATE' =>date_format(date_create_from_format('Y-m-d', $pat->date_enrolled), 'Ymd'),           
             'PATIENT_TYPE' => 'NEW', // TRANSFER IN, NEW = active, TRANSIT, 
             'PATIENT_SOURCE' => 'CCC',
             'HIV_CARE_ENROLLMENT_DATE' => date('Ymd', strtotime($pat->date_enrolled))
