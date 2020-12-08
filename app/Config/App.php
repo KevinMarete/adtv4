@@ -23,7 +23,7 @@ class App extends BaseConfig
 	| environments.
 	|
 	*/
-	public $baseURL = 'http://localhost:88/ADT/public';
+	public $baseURL = BASE;
 
 	/*
 	|--------------------------------------------------------------------------
