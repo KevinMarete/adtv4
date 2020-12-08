@@ -5,5 +5,5 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-header('Location:' . 'http://' . $_SERVER['SERVER_NAME'] . '/ADTv4/public');
+header('Location:' . 'http://' . $_SERVER['SERVER_NAME'] .':'.$_SERVER['SERVER_PORT']. '/ADT/public');
 

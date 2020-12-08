@@ -17,8 +17,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | environments.
 |
 */
-$config['base_url'] = 'http://'. $_SERVER['SERVER_NAME'] .':'.$_SERVER['SERVER_PORT']. '/ADTv4/public/tools/';
-$config['adt_url'] = 'http://'. $_SERVER['SERVER_NAME'] .':'.$_SERVER['SERVER_PORT']. '/ADTv4/public/';
+$config['base_url'] = 'http://'. $_SERVER['SERVER_NAME'] .':'.$_SERVER['SERVER_PORT']. '/ADT/public/tools/';
+$config['adt_url'] = 'http://'. $_SERVER['SERVER_NAME'] .':'.$_SERVER['SERVER_PORT']. '/ADT/public/';
 
 /*
 |--------------------------------------------------------------------------

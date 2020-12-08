@@ -23,7 +23,7 @@ class App extends BaseConfig
 	| environments.
 	|
 	*/
-	public $baseURL = 'http://localhost/ADTv4/public';
+	public $baseURL = 'http://localhost:88/ADT/public';
 
 	/*
 	|--------------------------------------------------------------------------
@@ -101,7 +101,7 @@ class App extends BaseConfig
 	| dates with the date helper, and can be retrieved through app_timezone()
 	|
 	*/
-	public $appTimezone = 'America/Chicago';
+	public $appTimezone = 'Africa/Nairobi';
 
 	/*
 	|--------------------------------------------------------------------------

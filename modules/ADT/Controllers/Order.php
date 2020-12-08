@@ -1295,7 +1295,7 @@ class Order extends BaseController {
             } else {
                 $template = "cdrr_standalone.xls";
             }
-            $inputFileName = $_SERVER['DOCUMENT_ROOT'] . '/ADTv4/public/assets/templates/orders/v2/' . $template;
+            $inputFileName = $_SERVER['DOCUMENT_ROOT'] . '/ADT/public/assets/templates/orders/v2/' . $template;
             $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
             $objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
             $objPHPExcel = $objReader->load($inputFileName);
@@ -1442,7 +1442,7 @@ class Order extends BaseController {
             } else {
                 $template = "maps_standalone.xls";
             }
-            $inputFileName = $_SERVER['DOCUMENT_ROOT'] . '/ADTv4/public/assets/templates/orders/v2/' . $template;
+            $inputFileName = $_SERVER['DOCUMENT_ROOT'] . '/ADT/public/assets/templates/orders/v2/' . $template;
             $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
             $objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
             $objPHPExcel = $objReader->load($inputFileName);

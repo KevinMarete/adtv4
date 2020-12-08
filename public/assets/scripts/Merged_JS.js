@@ -644,14 +644,14 @@ function autoUpdate() {
 
 function getbaseurl() {
     var href = window.location.href;
-    var base_url = href.substr(href.lastIndexOf('http://'), href.lastIndexOf('/ADTv4/public/'));
+    var base_url = href.substr(href.lastIndexOf('http://'), href.lastIndexOf('/ADT/public/'));
     var _href = href.substr(href.lastIndexOf('/') + 1);
-    var base_url = base_url + '/ADTv4/public/';
+    var base_url = base_url + '/ADT/public/';
     return base_url;
 }
 
 function getBaseUrlLinux(){
-    return location.protocol + "//" + location.host+'/ADTv4/public/';
+    return location.protocol + "//" + location.host+'/ADT/public/';
 }
 
 /*

@@ -7101,7 +7101,7 @@ class Report_management extends \App\Controllers\BaseController
     }
 
     $inputFileType = 'Xlsx';
-    $inputFileName = $_SERVER['DOCUMENT_ROOT'] . '/ADTv4/public/assets/templates/moh_forms/' . $template . '.xls';
+    $inputFileName = $_SERVER['DOCUMENT_ROOT'] . '/ADT/public/assets/templates/moh_forms/' . $template . '.xls';
     $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
     $objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
     $objPHPExcel = $objReader->load($inputFileName);
@@ -8470,7 +8470,7 @@ class Report_management extends \App\Controllers\BaseController
     helper('filesystem');
 
     $dir = realpath($_SERVER['DOCUMENT_ROOT']);
-    $files = directory_map($dir . '/ADTv4/public/assets/guidelines/');
+    $files = directory_map($dir . '/ADT/public/assets/guidelines/');
 
     $columns = array('#', 'File Name', 'Action');
     $tmpl = array('table_open' => '<table class="table table-bordered table-hover table-condensed table-striped dataTables" >');

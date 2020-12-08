@@ -11,7 +11,7 @@ use CodeIgniter\Config\BaseConfig;
  */
 class Adt_config extends BaseConfig
 {
-	public $adt_version = '4.0(beta)';
+	public $adt_version = '4.0';
     public $server_url = 'http://197.248.7.226/api/public/api/v1/';  // ppb API url
     public $ip = '197.248.7.226'; // PPB IP address
     public $port = '80'; // PPB PORt

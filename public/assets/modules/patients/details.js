@@ -352,5 +352,5 @@ function get_patient_prescriptions(ccc_no) {
 }
 
 function getBaseUrlLinux() {
-    return location.protocol + "//" + location.host + '/ADTv4/public/';
+    return location.protocol + "//" + location.host + '/ADT/public/';
 }
