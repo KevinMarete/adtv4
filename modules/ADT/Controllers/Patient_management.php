@@ -768,7 +768,7 @@ class Patient_management extends BaseController {
                 //If no appointment(Insert new record)
                 $sql = "insert patient_appointment(patient,appointment,facility)VALUES('$patient','$appointment','$facility')";
             }
-            DB::select($sql);
+            DB::statement($sql);
         }
 
         if ($clinicalappointment) {
@@ -784,7 +784,7 @@ class Patient_management extends BaseController {
                 //If no appointment(Insert new record)
                 $sql = "insert clinic_appointment(patient,appointment,facility)VALUES('$patient','$appointment','$facility')";
             }
-            DB::select($sql);
+            DB::statement($sql);
         }
 
         $family_planning = $this->post('family_planning_holder');
@@ -907,8 +907,8 @@ class Patient_management extends BaseController {
                 . $this->post('patient_number') . "' and service !='"
                 . $this->post('service') . "'";
 
-        DB::select($service_change_query);
-        DB::select($status_change_query);
+        DB::statement($service_change_query);
+        DB::statement($status_change_query);
 
         Patient::where('id', $record_id)->update($data);
 
@@ -968,7 +968,7 @@ class Patient_management extends BaseController {
         // $this->db->where('patient_id', $original_patient_number);
         // $this->db->update('patient_visit', array("patient_id" => $patient_number));
 
-        DB::select("call change_ccc('" . $original_patient_number . "','" . $patient_number . "')");
+        DB::statement("call change_ccc('" . $original_patient_number . "','" . $patient_number . "')");
         //update spouses
         $this->unmerge_spouse($original_patient_number);
         //update dependants
