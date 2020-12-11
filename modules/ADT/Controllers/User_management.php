@@ -118,7 +118,7 @@ class User_management extends \App\Controllers\BaseController {
         $data = array();
         $data['stores'] = CCC_store_service_point::where('active', '1')->get();
 
-        // (count($users) == 1) ? redirect()->to('tools/setup') : '';
+        if(count($users) <= 1) return redirect()->to(base_url('/setup'));
         //if seesion variable user_id is not present
         // test database connection
         if (!$session->get("user_id")) {
