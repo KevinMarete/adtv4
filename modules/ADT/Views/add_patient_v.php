@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<?php $session = session(); ?>
 <html lang="en">
 <head>
 	<style>
@@ -746,7 +747,18 @@
 				(Fields Marked with <b><span class='astericks'>*</span></b> Asterisks are required)
 			</div></h3>
 
-			<form id="add_patient_form" name="add_patient_form" method="post"  action="<?php echo base_url().'/patient/save';?>"  >
+			<?php
+			if($session->get("patient_error")){ ?>
+                <div class="alert alert-danger">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <?= $session->get("patient_error") ?>
+                </div> 	
+            <?php 
+            	$session->remove("patient_error");
+            }
+            ?>
+
+			<form id="add_patient_form" name="add_patient_form" method="post" action="<?php echo base_url().'/patient/save';?>"  >
 				<div class="column" id="columnOne">
 					<fieldset>
 						<legend>
@@ -780,7 +792,7 @@
 						<div class="max-row">
 							<div class="mid-row">
 								<label> Medical Record No.</label>
-								<input type="text" name="medical_record_number" id="medical_record_number" value="">
+								<input type="text" name="medical_record_number" id="medical_record_number" value="<?= old('medical_record_number') ?>">
 							</div>
 							<div class="mid-row">
 								<label> <span class='astericks'>*</span>Patient Number CCC </label>
@@ -789,23 +801,23 @@
 						</div>
 						<div class="max-row">
 							<label>Last Name</label>
-							<input  type="text"name="last_name" id="last_name" >
+							<input  type="text"name="last_name" id="last_name" value="<?= old('last_name') ?>">
 						</div>
 						<div class="max-row">
 							<div class="mid-row">
 								<label><span class='astericks'>*</span>First Name</label>
-								<input type="text"name="first_name" id="first_name" class="validate[required]">
+								<input type="text"name="first_name" id="first_name" value="<?= old('first_name') ?>" class="validate[required]">
 							</div>
 
 							<div class="mid-row">
 								<label>Other Name</label>
-								<input type="text"name="other_name" id="other_name">
+								<input type="text"name="other_name" id="other_name" value="<?= old('other_name') ?>">
 							</div>
 						</div>
 						<div class="max-row">
 							<div class="mid-row">
 								<label><span class='astericks'>*</span>Date of Birth</label>
-								<input type="text"name="dob" id="dob" class="validate[required]" autocomplete="off">
+								<input type="text" name="dob" id="dob" value="<?= old('dob') ?>" class="validate[required]" autocomplete="off">
 							</div>
 							<div class="mid-row">
 								<label> Place of Birth </label>
@@ -821,17 +833,17 @@
 						</div>
 						<div class="max-row match_hidden">
 							<label>Match to parent/guardian in ccc?</label>
-							<input type="text" name="match_parent" id="match_parent">
+							<input type="text" name="match_parent" id="match_parent" value="<?= old('match_parent') ?>">
 
 						</div>
 						<div class="max-row">
 							<div class="mid-row">
 								<label>Age(Years)</label>
-								<input type="text" id="age_in_years" name="age_in_years" disabled="disabled"/>
+								<input type="text" id="age_in_years" name="age_in_years" disabled="disabled" value="<?= old('age_in_years') ?>"/>
 							</div>
 							<div class="mid-row">
 								<label>Age(Months)</label>
-								<input type="text" id="age_in_months" disabled="disabled"/>
+								<input type="text" id="age_in_months" disabled="disabled" value="<?= old('age_in_months') ?>"/>
 							</div>
 						</div>
 						<div class="max-row">
@@ -862,28 +874,28 @@
 						<div class="max-row">
 							<div class="mid-row">
 								<label><span class='astericks'>*</span>Weight (KG)</label>
-								<input type="text"name="weight" id="weight" class="validate[required]" onblur="getMSQ()">
+								<input type="text"name="weight" id="weight" class="validate[required]" onblur="getMSQ()" value="<?= old('weight') ?>">
 							</div>
 							<div class="mid-row">
 								<label ><span class='astericks'>*</span>Height (CM)</label>
-								<input  type="text"name="height" id="height" class="validate[required]" onblur="getMSQ()">
+								<input  type="text"name="height" id="height" class="validate[required]" onblur="getMSQ()" value="<?= old('height') ?>">
 							</div>
 						</div>
 						<div class="max-row">
 							<label><span class='astericks'>*</span> Body Surface Area (MSQ)</label>
-							<input type="text" name="surface_area" id="surface_area" value="" readonly="readonly" class="validate[required]">
+							<input type="text" name="surface_area" id="surface_area" readonly="readonly" class="validate[required]" value="<?= old('surface_area') ?>">
 
 						</div>
 						<div class="max-row">
 							<label><span class='astericks'>*</span> Body Mass Index (BMI)</label>
-							<input type="text" name="start_bmi" id="start_bmi" value="" readonly="readonly" class="validate[required]">
+							<input type="text" name="start_bmi" id="start_bmi" readonly="readonly" class="validate[required]" value="<?= old('start_bmi') ?>">
 
 						</div>
 
 						<div class="max-row">
 							<div class="mid-row">
 								<label> Patient's Phone Contact(s)</label>
-								<input  type="text"  name="phone" id="phone" value="" class="phone" placeholder="e.g 0722123456">
+								<input  type="text" name="phone" id="phone" class="phone" placeholder="e.g 0722123456" value="<?= old('phone') ?>">
 							</div>
 							<div class="mid-row">
 								<label > Receive SMS Reminders</label>
@@ -896,23 +908,23 @@
 						</div>
 						<div class="max-row">
 							<label> Patient's Physical Contact(s)</label>
-							<textarea name="physical" id="physical" value=""></textarea>
+							<textarea name="physical" id="physical" value="<?= old('physical') ?>"></textarea>
 						</div>
 						<div class="max-row">
 							<label> Patient's Alternate Contact(s)</label>
-							<textarea name="alternate" id="alternate" value=""></textarea>
+							<textarea name="alternate" id="alternate" value="<?= old('alternate') ?>"></textarea>
 						</div>
 						
 						<div class="max-row">
 							<label>Does Patient belong to any support group?</label>
 							<label>Yes
-								<input type="checkbox" name="support_group" id="support_group" value="">
+								<input type="checkbox" name="support_group" id="support_group" value="<?= old('support_group') ?>">
 							</label>
 
 							<div class="list">
 								List Them
 							</div>
-							<textarea class="list_area" name="support_group_listing" id="support_group_listing"></textarea>
+							<textarea class="list_area" name="support_group_listing" id="support_group_listing" value="<?= old('support_group_listing') ?>"></textarea>
 						</div>
 
 					</div>
@@ -945,13 +957,13 @@
 							</div>
 							<div class="max-row match_spouse">
 								<label>Match to spouse in this ccc?</label>
-								<input type="text" name="match_spouse" id="match_spouse">
+								<input type="text" name="match_spouse" id="match_spouse" value="<?= old('match_spouse') ?>">
 
 							</div>
 
 							<div class="max-row status_hidden">
 								<label>Family Planning Method</label>
-								<input type="hidden" id="family_planning_holder" name="family_planning_holder" />
+								<input type="hidden" id="family_planning_holder" name="family_planning_holder" value="<?= old('family_planning_holder') ?>" />
 								<select name="family_planning" id="family_planning" multiple="multiple" style="width:400px;" >
 									<?php
 									foreach($family_planning as $fplan){
@@ -963,7 +975,7 @@
 							</div>
 							<div class="max-row">
 								<label>Does Patient have other Chronic illnesses</label>
-								<input type="hidden" id="other_illnesses_holder" name="other_illnesses_holder" />
+								<input type="hidden" id="other_illnesses_holder" name="other_illnesses_holder" value="<?= old('other_illnesses_holder') ?>"/>
 								<select name="other_illnesses" id="other_illnesses"  multiple="multiple" style="width:400px;">
 									<?php
 									foreach($other_illnesses as $other_illness){
@@ -974,15 +986,15 @@
 							</div>
 							<div class="max-row">
 								If <b>Other Illnesses</b> 
-								<br/>Click Here <input type="checkbox" name="other_other" id="other_other" value=""> 
+								<br/>Click Here <input type="checkbox" name="other_other" id="other_other" value="<?= old('other_other') ?>"> 
 								<br/>List Them Below (Use Commas to separate) 
 
-								<textarea  name="other_chronic" id="other_chronic"></textarea>
+								<textarea name="other_chronic" id="other_chronic"></textarea>
 							</div>
 							<div class="max-row">
 								<label> List Other Drugs Patient is Taking </label>
 								<label>Yes
-									<input type="checkbox" name="other_drugs_box" id="other_drugs_box" value="">
+									<input type="checkbox" name="other_drugs_box" id="other_drugs_box" value="<?= old('other_drugs_box') ?>">
 								</label>
 
 								<label>List Them</label>
@@ -990,7 +1002,7 @@
 							</div>
 							<div class="max-row">
 								<label><span class='astericks'>*</span>Drugs Allergies/ADR</label>
-								<input type="hidden" id="drug_allergies_holder" name="drug_allergies_holder" />
+								<input type="hidden" id="drug_allergies_holder" name="drug_allergies_holder"  value="<?= old('drug_allergies_holder') ?>"/>
 								<select name="drug_allergies" id="drug_allergies" multiple="multiple" style="width:400px;" required class="validate[required]">
 									<option value="-0-">None</option>
 									<?php
@@ -1004,7 +1016,7 @@
 							<div class="max-row">
 								<label>Does Patient have any other Drugs Allergies/ADR not listed?</label>
 								<label>Yes
-									<input type="checkbox" name="other_allergies" id="other_allergies" value="">
+									<input type="checkbox" name="other_allergies" id="other_allergies" value="<?= old('other_allergies') ?>">
 								</label>
 
 								<label>List Them</label>
@@ -1066,11 +1078,11 @@
 							<div class="max-row">
 								<div class="mid-row" id="fromphase_view" style="display:none;">
 									<label id="ttphase">Start of Phase</label>
-									<input type="text" name="fromphase" id="fromphase" value=""/>
+									<input type="text" name="fromphase" id="fromphase" value="<?= old('fromphase') ?>"/>
 								</div>
 								<div class="mid-row" id="tophase_view" style="display:none;">
 									<label id="endp">End of Phase</label>
-									<input type="text" name="tophase" id="tophase" value=""/>
+									<input type="text" name="tophase" id="tophase" value="<?= old('tophase') ?>"/>
 								</div>
 							</div>
 						</fieldset>
@@ -1082,7 +1094,7 @@
 							</legend>
 							<div class="max-row">
 								<label><span class='astericks'>*</span>Date Patient Enrolled</label>
-								<input type="text" name="enrolled" id="enrolled" value="" class="validate[required]" autocomplete="off">
+								<input type="text" name="enrolled" id="enrolled" value="<?= old('enrolled') ?>" class="validate[required]" autocomplete="off">
 							</div>
 							<div class="max-row">
 								<label><span class='astericks'>*</span>Current Status</label>
@@ -1197,22 +1209,22 @@
 				<div class="max-row" id="isoniazid_view">
 					<div class="mid-row" id="isoniazid_start_date_view">
 						<label>Isoniazid Start Date</label>
-						<input type="text" name="iso_start_date" id="iso_start_date"  style="color:red" autocomplete="off"/>
+						<input type="text" name="iso_start_date" id="iso_start_date"  style="color:red" autocomplete="off" value="<?= old('iso_start_date') ?>"/>
 					</div>
 					<div class="mid-row" id="isoniazid_end_date_view">
 						<label> Isoniazid End Date</label>
-						<input  type="text"name="iso_end_date" id="iso_end_date" style="color:red" autocomplete="off">
+						<input  type="text"name="iso_end_date" id="iso_end_date" style="color:red" autocomplete="off" value="<?= old('iso_end_date') ?>">
 					</div>								
 				</div>
 
 				<div class="max-row" id="rifa_isoniazid_view">
 					<div class="mid-row" id="rifa_isoniazid_start_date_view">
 						<label>Rifapentine/Isoniazid Start Date</label>
-						<input type="text" name="rifa_iso_start_date" id="rifa_iso_start_date"  style="color:red" autocomplete="off"/>
+						<input type="text" name="rifa_iso_start_date" id="rifa_iso_start_date"  style="color:red" autocomplete="off" value="<?= old('rifa_iso_start_date') ?>"/>
 					</div>
 					<div class="mid-row" id="rifa_isoniazid_end_date_view">
 						<label>Rifapentine/Isoniazid End Date</label>
-						<input  type="text"name="rifa_iso_end_date" id="rifa_iso_end_date" style="color:red" autocomplete="off">
+						<input  type="text"name="rifa_iso_end_date" id="rifa_iso_end_date" style="color:red" autocomplete="off" value="<?= old('rifa_iso_end_date') ?>">
 					</div>								
 				</div>
 
