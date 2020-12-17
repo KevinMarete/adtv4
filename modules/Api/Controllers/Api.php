@@ -9,6 +9,7 @@ use \Modules\Template\Controllers\Template;
 use App\Libraries\Mysqldump;
 use App\Libraries\Zip;
 use CodeIgniter\HTTP\Response;
+use Exception;
 use \Modules\Api\Models\Api_model;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Client;
@@ -879,7 +880,7 @@ class Api extends BaseController {
             'attempts' => 0
         ];
 
-        $host = 'https://iltest.kenyahmis.org';
+        $host = $this->il_ip;
 
         $test_client = new Client(['verify' => false]);
         try {
@@ -889,7 +890,8 @@ class Api extends BaseController {
             $result = 0;
         }
 
-        if ($result == 200) {
+        // if ($result == 200) {
+        try {
 
             $response = $client->post($this->il_ip, [
                 'debug' => FALSE,
@@ -911,7 +913,9 @@ class Api extends BaseController {
 
                 $this->db->table('il_jobs')->insert($dataoff);
             }
-        } else {
+        }
+        catch (Exception $e) {
+        // } else {
             $this->db->table('il_jobs')->insert($dataoff);
         }
     }
