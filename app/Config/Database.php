@@ -51,7 +51,7 @@ class Database extends \CodeIgniter\Database\Config {
         'compress' => false,
         'strictOn' => false,
         'failover' => [],
-        'port' => 3307,
+        'port' => 3306,
     ];
 
     /**

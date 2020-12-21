@@ -5,7 +5,16 @@ namespace Modules\Setup\Controllers;
 use \Modules\Tables\Controllers\Tables;
 use \Modules\Template\Controllers\Template;
 
+
+
 use DB;
+//use Illuminate\Support\Facades\DB;
+
+
+
+
+
+
 
 class Setup extends \CodeIgniter\Controller {
 
@@ -54,11 +63,20 @@ class Setup extends \CodeIgniter\Controller {
         $sql = "SELECT Facility_Code from users limit 1";
         $result = $db->query($sql);
         $old_facility_code = $result->getResultArray()[0]['Facility_Code'];
+  
+           // $presence= DB::table('users')->where('Username','user') ->first();
+           
+           $user_sql="SELECT Username from users where Username='people'";
+           $presence=$db->query($user_sql);
+           
+           //look if the facilty exist and excute the queries
 
-        $presence = DB::table('users')->where('Username', 'user')->first();
-        if (count($presence > 0)) {
+       if( $old_facility_code!=$mflcode)
+       {
+            
+        if ($presence > 0) {
             //Update all users to mflcode
-            $sql = "REPLACE INTO users (id, Name, Username, Password, Access_Level, Facility_Code, Created_By, Time_Created, Phone_Number, Email_Address, Active, Signature, map, ccc_store_sp) VALUES(2,	'Demo User',	'user',	'1a7a4c2f236042c4f8cfd79ec9ff2094',	'3',	'$mflcode',	'1',	'2014-09-24',	' 736262781',	'kevomarete@gmail.com',	'1',	'1',	0,	2);
+            $sql = "REPLACE INTO users (id, Name, Username, Password, Access_Level, Facility_Code, Created_By, Time_Created, Phone_Number, Email_Address, Active, Signature, map, ccc_store_sp) VALUES(2,	'Demo User',	'people',	'1a7a4c2f236042c4f8cfd79ec9ff2094',	'3',	'$mflcode',	'1',	'2014-09-24',	' 736262781',	'kevomarete@gmail.com',	'1',	'1',	0,	2);
 
 			UPDATE users SET Facility_Code = $mflcode  WHERE Facility_Code = $old_facility_code;
 			UPDATE drug_stock_movement SET facility = $mflcode  WHERE facility = $old_facility_code;
@@ -84,6 +102,16 @@ class Setup extends \CodeIgniter\Controller {
             $session->setFlashdata('init_msg', $message);
             return redirect()->to(base_url('/setup'));
         }
+    }
+
+//if the facility already exist alert
+
+    else{
+        $message = '<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong>Facility already Initialized</strong></div>';
+        $session->setFlashdata('init_msg', $message);
+        return redirect()->to(base_url('/setup'));
+      
+    }
     }
 
     public function template($data) {

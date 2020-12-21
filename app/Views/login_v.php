@@ -17,7 +17,9 @@
 			<img src='<?php echo asset_url();?>images/nascop.jpg'>
 			</div>
 			<div class="span3" style="text-align:center">
+
 							<a class="btn btn-warning pull-right" href="<?= base_url() ?>tools">ADT Tools</a>
+
 			</div>
 			</div>
 			</div>
@@ -77,6 +79,7 @@
 				<input type="submit" class="btn" name="register" id="register" value="Login" >
 
 				<div style="margin:auto;width:auto" class="anchor">
+					 <a href = "<?php echo site_url('Api/show');?>" >Patient list</a>
 					<strong><a href="<?php echo base_url().'user_management/resetPassword' ?>" >Forgot Password?</a></strong>
 				</div>
 			</form>

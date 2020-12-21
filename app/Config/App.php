@@ -21,9 +21,9 @@ class App extends BaseConfig
 	| and path to your installation. However, you should always configure this
 	| explicitly and never rely on auto-guessing, especially in production
 	| environments.
-	|
+	|                     
 	*/
-	public $baseURL = BASE;
+	    public $baseURL = BASE;
 
 	/*
 	|--------------------------------------------------------------------------
@@ -33,7 +33,8 @@ class App extends BaseConfig
 	| Typically this will be your index.php file, unless you've renamed it to
 	| something else. If you are using mod_rewrite to remove the page set this
 	| variable so that it is blank.
-	|
+
+	|           $config['index_page'] = '';          
 	*/
 	public $indexPage = 'index.php';
 
