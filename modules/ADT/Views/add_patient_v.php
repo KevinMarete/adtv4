@@ -801,7 +801,7 @@
 						</div>
 						<div class="max-row">
 							<label>Last Name</label>
-							<input  type="text"name="last_name" id="last_name" value="<?= old('last_name') ?>">
+							<input type="text" name="last_name" id="last_name" value="<?= old('last_name') ?>">
 						</div>
 						<div class="max-row">
 							<div class="mid-row">

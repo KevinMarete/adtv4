@@ -121,7 +121,7 @@ class Inventory_management extends \App\Controllers\BaseController {
                             $sFilter .= " OR ";
                         }
                         $c = 1;
-                        $sSearch = mysql_real_escape_string($sSearch);
+                        $sSearch = $this->db->escapeLikeString($sSearch);
                         $sFilter .= "`" . $aColumns[$i] . "` LIKE '%" . $sSearch . "%'";
                     }
                 }
@@ -153,11 +153,11 @@ class Inventory_management extends \App\Controllers\BaseController {
         //echo $iDisplayLength;die();
         // Data set length after filtering
         $res = $this->db->query('SELECT COUNT(id) AS found_rows from drugcode dc where dc.enabled=1 ' . $sFilter)->getResult();
-        $iFilteredTotal = count($res);
+        $iFilteredTotal = $res[0]->found_rows;
 
         //Total number of drugs that are displayed
-        $res2 = $this->db->query('SELECT COUNT(id) AS found_rows from drugcode dc where dc.enabled=1')->getResult();
-        $iTotal = count($res2);
+        $iTotal = Drugcode::where('enabled', '1')->count();
+
         //$iFilteredTotal = $iTotal;
         // Output
         $output = array('sEcho' => intval($sEcho), 'iTotalRecords' => $iTotal, 'iTotalDisplayRecords' => $iFilteredTotal, 'aaData' => array());
