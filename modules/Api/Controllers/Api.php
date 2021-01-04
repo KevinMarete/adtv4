@@ -1016,7 +1016,7 @@ $data=$api_config;
     {
         # code...
        //  $data=[
-       // 'name'=>'karanja',
+       // 'name'=>'ephantus',
        // 'age'=>'64',
        // 'jjjgg'=>'yfgdhh',
        // 'ccc'=>$ccc
@@ -1030,6 +1030,28 @@ $data=$api_config;
         //return json_encode($data);
         return (json_encode($data, JSON_PRETTY_PRINT));
     }
+//edit search by gender
+    public function searchGender($pgender)
+    {
+        # code...
+       //  $data=[
+       // 'name'=>'karanja',
+       // 'age'=>'64',
+       // 'jjjgg'=>'yfgdhh',
+       // 'ccc'=>$ccc
+       //  ]
+    $sql = "SELECT `id`, `medical_record_number`, `patient_number_ccc`, `first_name`, `last_name`, `other_name`, `dob`, `pob`, `gender`,`pregnant` FROM patient where gender= '$pgender' ";
+        $query = $this->db->query($sql);
+        $api_config = $query->getResultArray();
+
+$data=$api_config;
+
+        //return json_encode($data);
+        return (json_encode($data, JSON_PRETTY_PRINT));
+    }
+
+
+
 
 
     public function template($data) {

@@ -65,7 +65,8 @@ class Setup extends \CodeIgniter\Controller {
         $old_facility_code = $result->getResultArray()[0]['Facility_Code'];
   
            // $presence= DB::table('users')->where('Username','user') ->first();
-           
+           //corrected for facility initializing
+
            $user_sql="SELECT Username from users where Username='people'";
            $presence=$db->query($user_sql);
            

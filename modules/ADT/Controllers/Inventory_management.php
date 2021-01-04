@@ -152,12 +152,17 @@ class Inventory_management extends \App\Controllers\BaseController {
         $rResult = $q;
         //echo $iDisplayLength;die();
         // Data set length after filtering
-        $res = $this->db->query('SELECT COUNT(id) AS found_rows from drugcode dc where dc.enabled=1 ' . $sFilter)->getResult();
+//selected query error counting entries
+        $res = $this->db->query('SELECT id AS found_rows from drugcode dc where dc.enabled=1 ' . $sFilter)->getResult();
         $iFilteredTotal = count($res);
+      
 
-        //Total number of drugs that are displayed
-        $res2 = $this->db->query('SELECT COUNT(id) AS found_rows from drugcode dc where dc.enabled=1')->getResult();
+//Total number of drugs that are displayed
+        $res2 = $this->db->query('SELECT id AS found_rows from drugcode dc where dc.enabled=1')->getResult();
         $iTotal = count($res2);
+
+       //$iTotal=10
+
         //$iFilteredTotal = $iTotal;
         // Output
         $output = array('sEcho' => intval($sEcho), 'iTotalRecords' => $iTotal, 'iTotalDisplayRecords' => $iFilteredTotal, 'aaData' => array());
@@ -179,10 +184,11 @@ class Inventory_management extends \App\Controllers\BaseController {
 
             $output['aaData'][] = $row;
         }
-
+        
+        
         echo json_encode($output);
     }
-
+  
     public function getDrugBinCard($drug_id = '', $ccc_id = '') {
         $uri = $this->request->uri;
 
@@ -210,7 +216,7 @@ class Inventory_management extends \App\Controllers\BaseController {
         $batches = Drugcode::getDrugBatches($uri->getSegment(2), $uri->getSegment(3), $facility_code, $today);
         if ($batches) {//Check if batches exist
             foreach ($batches as $counter => $batch) {
-                $drug_batches[$counter]['drug'] = $batches[$counter]['drugname'];
+                $drug_batches[$counter]['drugggggg'] = $batches[$counter]['drugname'];
                 $drug_batches[$counter]['packsize'] = $batches[$counter]['pack_size'];
                 $drug_batches[$counter]['batchno'] = $batches[$counter]['batch_number'];
                 $drug_batches[$counter]['balance'] = $batches[$counter]['balance'];
