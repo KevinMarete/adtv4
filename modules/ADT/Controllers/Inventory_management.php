@@ -121,7 +121,7 @@ class Inventory_management extends \App\Controllers\BaseController {
                             $sFilter .= " OR ";
                         }
                         $c = 1;
-                        $sSearch = mysql_real_escape_string($sSearch);
+                        $sSearch = $this->db->escapeLikeString($sSearch);
                         $sFilter .= "`" . $aColumns[$i] . "` LIKE '%" . $sSearch . "%'";
                     }
                 }

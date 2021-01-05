@@ -314,10 +314,7 @@ class Backup extends \CodeIgniter\Controller {
         $result = $db->query($sql);
         $facility_code = $result->getResultArray()[0]['Facility_Code'];
 
-
-// $outer_file = "webadt_" . date('d-M-Y h-i-sa') . ".sql";
-//$outer_file = $facility_code . "_" . date('YmdHis') . '_v3.4.2' . $this->config->item('adt_version') . ".sql";
-        $outer_file = $facility_code . "_" . date('YmdHis') . '_v4.0.sql';
+        $outer_file = $facility_code . "_" . date('YmdHis') . '_v'.config('Adt_config')->adt_version.'.sql';
         $file_path = "\"" . $file_path . "//" . $outer_file . "\"";
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
             $mysql_home = realpath($_SERVER['MYSQL_HOME']) . "\mysqldump";

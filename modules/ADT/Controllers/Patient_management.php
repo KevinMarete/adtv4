@@ -552,11 +552,12 @@ class Patient_management extends BaseController {
         if (empty($ccc)) {
             $this->session->set('patient_error', 'Patient CCC cannot be empty');
             return redirect()->back()->withInput();
-            return redirect()->to(base_url('/patients/add'));
+            // return redirect()->to(base_url('/patients/add'));
         }
         if (Patient::where('patient_number_ccc', $ccc)->exists()) {
             $this->session->set('patient_error', 'Patient CCC already exists');
-            return redirect()->to(base_url('/patients/add'));
+            // return redirect()->to(base_url('/patients/add'));
+            return redirect()->back()->withInput();
         }
 
         $this->init_api_values();
