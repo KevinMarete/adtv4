@@ -45,7 +45,7 @@ class System_management extends \App\Controllers\BaseController {
             } else {
                 $answer[] = ["id" => "0", "text" => "No Results Found.."];
             }
-        } else if ($search_type == 'drugcode') {
+        } else if ($stock_type == 'drugcode') {
             $sql = "SELECT d.id,d.drug,du.Name as drug_unit, d.pack_size,g.name as generic_name ".
 				"FROM drugcode d ".
 				"LEFT JOIN drug_unit du ON du.id = d.unit ".
@@ -56,7 +56,7 @@ class System_management extends \App\Controllers\BaseController {
 
             if ($results) {
                 foreach ($results as $result) {
-
+                   
                     $res = $result['drug'] . ' (' . $result['generic_name'] . ')  - ' . $result['drug_unit'];
                     $answer[] = ["id" => $result['id'], "text" => $res];
                 }

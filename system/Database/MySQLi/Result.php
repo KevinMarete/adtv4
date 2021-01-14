@@ -69,6 +69,8 @@ class Result extends BaseResult implements ResultInterface
 	public function getFieldNames(): array
 	{
 		$fieldNames = [];
+		
+
 		$this->resultID->field_seek(0);
 		while ($field = $this->resultID->fetch_field())
 		{

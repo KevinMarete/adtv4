@@ -179,10 +179,11 @@ class Inventory_management extends \App\Controllers\BaseController {
 
             $output['aaData'][] = $row;
         }
-
+        
+        
         echo json_encode($output);
     }
-
+  
     public function getDrugBinCard($drug_id = '', $ccc_id = '') {
         $uri = $this->request->uri;
 
@@ -210,7 +211,7 @@ class Inventory_management extends \App\Controllers\BaseController {
         $batches = Drugcode::getDrugBatches($uri->getSegment(2), $uri->getSegment(3), $facility_code, $today);
         if ($batches) {//Check if batches exist
             foreach ($batches as $counter => $batch) {
-                $drug_batches[$counter]['drug'] = $batches[$counter]['drugname'];
+                $drug_batches[$counter]['drugggggg'] = $batches[$counter]['drugname'];
                 $drug_batches[$counter]['packsize'] = $batches[$counter]['pack_size'];
                 $drug_batches[$counter]['batchno'] = $batches[$counter]['batch_number'];
                 $drug_batches[$counter]['balance'] = $batches[$counter]['balance'];
