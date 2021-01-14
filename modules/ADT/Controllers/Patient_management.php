@@ -1473,7 +1473,7 @@ class Patient_management extends BaseController {
                     if ($result[$x]["regimen"] != $result[$key]["regimen"]) {
                         //Update current_patient visit last regimen column
                         $sql = "UPDATE patient_visit SET last_regimen =" . $result[$x]["regimen"] . " WHERE id =" . $result[$key]["id"];
-                        $count = DB::select($sql);
+                        $count = DB::statement($sql);
                     }
                 }
             }
@@ -1496,7 +1496,7 @@ class Patient_management extends BaseController {
             $extra = ", service = '$art_service_id' ";
         }
         $sql = "UPDATE patient SET pregnant = '0', breastfeeding = '0' $extra WHERE patient_number_ccc ='$patient_ccc'";
-        $count = DB::select($sql);
+        $count = DB::statement($sql);
     }
 
     public function update_tb_status() {
