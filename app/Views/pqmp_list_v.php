@@ -166,16 +166,24 @@ function ellipsis($string, $max_length) {
         }, 25000);
 
         var storeTable = $('table').dataTable({
-            "bJQueryUI": true,
-            "sPaginationType": "full_numbers",
-            "sDom": '<"H"Tfr>t<"F"ip>',
-            "aoColumnDefs": [{"bSortable": false, "aTargets": [0]}],
-            "oTableTools": {
-                "sSwfPath": base_url + "scripts/datatable/copy_csv_xls_pdf.swf",
-                "aButtons": ["copy", "print", "xls", "pdf"]
-            },
-            "bProcessing": true,
-            "bServerSide": false,
+            // "bJQueryUI": true,
+            // "sPaginationType": "full_numbers",
+            // "sDom": '<"H"Tfr>t<"F"ip>',
+            // "aoColumnDefs": [{"bSortable": false, "aTargets": [0]}],
+            // "oTableTools": {
+            //     "sSwfPath": base_url + "scripts/datatable/copy_csv_xls_pdf.swf",
+            //     "aButtons": ["copy", "print", "xls", "pdf"]
+            // },
+            // "bProcessing": true,
+            // "bServerSide": false,
+            dom: 'Bfrtip',
+			buttons: [
+				'copyHtml5',
+				'excelHtml5',
+				'csvHtml5',
+				'pdfHtml5'
+			],
+			pagingType: "full_numbers"
         });
 
 

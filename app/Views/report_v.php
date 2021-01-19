@@ -31,22 +31,30 @@ if ($access_level == "nascop_staff") {
 			$(document).ready(function(){
 				$("#default").load('<?php $today=date('d-M-Y'); echo base_url().'report_management/cumulative_patients/'.$today.'/2';?>',function(){
 					$('.dataTables').dataTable({
-				   		"bJQueryUI": true,
-			        	        "sPaginationType": "full_numbers",
-				                "sDom": '<"H"frT>t<"F"ip>',
-				   		"oTableTools": {
-							"sSwfPath": base_url+"scripts/datatable/copy_csv_xls_pdf.swf",
-							"aButtons": [ "copy", "print","xls","pdf" ]
-						},
-				   		"bProcessing": true,
-						"bServerSide": false,
-						"bAutoWidth" : false,
-			                        "bDeferRender" : true,
-			                        "bInfo" : true,
-						"bDestroy" : true,
-						"fnInitComplete": function() {
-					        this.css("visibility", "visible");
-					    }
+				   		// "bJQueryUI": true,
+			        	//         "sPaginationType": "full_numbers",
+				        //         "sDom": '<"H"frT>t<"F"ip>',
+				   		// "oTableTools": {
+						// 	"sSwfPath": base_url+"scripts/datatable/copy_csv_xls_pdf.swf",
+						// 	"aButtons": [ "copy", "print","xls","pdf" ]
+						// },
+				   		// "bProcessing": true,
+						// "bServerSide": false,
+						// "bAutoWidth" : false,
+			            //             "bDeferRender" : true,
+			            //             "bInfo" : true,
+						// "bDestroy" : true,
+						// "fnInitComplete": function() {
+					    //     this.css("visibility", "visible");
+						// }
+						dom: 'Bfrtip',
+						buttons: [
+							'copyHtml5',
+							'excelHtml5',
+							'csvHtml5',
+							'pdfHtml5'
+						],
+						pagingType: "full_numbers"
 					});
 					$(".dataTables").wrap('<div class="dataTables_scroll" />');
 				});

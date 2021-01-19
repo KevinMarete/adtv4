@@ -8,31 +8,48 @@
 		var report_title=$("#report_title").text();
 		var facility=$("#facility_name").text();
 		$('#drug_table').dataTable({
-			"oTableTools" : {
-			"sSwfPath" : "<?php echo base_url(); ?>assets/scripts/datatable/copy_csv_xls_pdf.swf",
-			"aButtons" : ["copy", 
-			{
-				"sExtends" : "xls",
-				"sTitle" : report_title+" ("+facility+")",
-			},  
-			{
-				"sExtends" : "pdf",
-				"sPdfOrientation" : "landscape",
-				"sPdfSize" : "A3",
-				"sTitle" : report_title+" ("+facility+")",
-			}]
-		},
-			"sDom" : '<"H"<"clear">lfrT>t<"F"ip>',
-			"bProcessing": true,
-			"bServerSide": true,
-			"sAjaxSource": _url,
-	        "bJQueryUI": true,
-	        "aoColumnDefs": [
-          	{'bSortable': false, 'aTargets': [ 2,3 ,4,5,6] }
-    		],
-    		"iDisplayLength": 10,
-    		"aLengthMenu": [[10, 25, 50,100, -1], [10, 25, 50, 100, "All"]],
-	        "sPaginationType": "full_numbers"
+		// 	"oTableTools" : {
+		// 	"sSwfPath" : "<?php echo base_url(); ?>assets/scripts/datatable/copy_csv_xls_pdf.swf",
+		// 	"aButtons" : ["copy", 
+		// 	{
+		// 		"sExtends" : "xls",
+		// 		"sTitle" : report_title+" ("+facility+")",
+		// 	},  
+		// 	{
+		// 		"sExtends" : "pdf",
+		// 		"sPdfOrientation" : "landscape",
+		// 		"sPdfSize" : "A3",
+		// 		"sTitle" : report_title+" ("+facility+")",
+		// 	}]
+		// },
+		// 	"sDom" : '<"H"<"clear">lfrT>t<"F"ip>',
+		// 	"bProcessing": true,
+		// 	"bServerSide": true,
+		// 	"sAjaxSource": _url,
+	    //     "bJQueryUI": true,
+	    //     "aoColumnDefs": [
+        //   	{'bSortable': false, 'aTargets': [ 2,3 ,4,5,6] }
+    	// 	],
+    	// 	"iDisplayLength": 10,
+    	// 	"aLengthMenu": [[10, 25, 50,100, -1], [10, 25, 50, 100, "All"]],
+		//     "sPaginationType": "full_numbers"
+			
+		dom: 'Bfrtip',
+			buttons: [
+				'copyHtml5',
+				{
+					extend: 'excelHtml5',
+					title: report_title+" ("+facility+")"
+				},
+				'csvHtml5',
+				{
+					extend: 'pdf',
+					title: report_title+" ("+facility+")",
+					pageSize: 'A3',
+					orientation: 'landscape'
+				}
+			],
+			pagingType: "full_numbers"
 		});
 		
 	});

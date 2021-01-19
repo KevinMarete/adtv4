@@ -15,6 +15,7 @@ use \Modules\ADT\Models\Transaction_type;
 use \Modules\ADT\Models\Counties;
 use Illuminate\Database\Capsule\Manager as DB;
 use Mpdf\Mpdf;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
 class Report_management extends \App\Controllers\BaseController
 {
@@ -5993,14 +5994,14 @@ class Report_management extends \App\Controllers\BaseController
     if (session()->get("user_id")) {
 
       /* Server side start */
-      $data = array();
-      $aColumns = array('drug');
-      $iDisplayStart = $this->request->getGetPost('iDisplayStart');
-      $iDisplayLength = $this->request->getGetPost('iDisplayLength');
-      $iSortCol_0 = $this->request->getGetPost('iSortCol_0');
-      $iSortingCols = $this->request->getGetPost('iSortingCols');
-      $sSearch = $this->request->getGetPost('sSearch');
-      $sEcho = $this->request->getGetPost('sEcho');
+      $data = [];
+      $aColumns = ['drug'];
+      $iDisplayStart = $this->request->getGetPost('start');
+      $iDisplayLength = $this->request->getGetPost('length');
+      $iSortCol_0 = $this->request->getGetPost('order')[0]['column'];
+      $iSortingCols = $this->request->getGetPost('order');
+      $sSearch = $this->request->getGetPost('search')['value'];
+      $sEcho = $this->request->getGetPost('draw');
 
       //Builder
       $builder = $this->db->table('drugcode dc');
@@ -6013,9 +6014,9 @@ class Report_management extends \App\Controllers\BaseController
       // Ordering
       if (isset($iSortCol_0)) {
         for ($i = 0; $i < intval($iSortingCols); $i++) {
-          $iSortCol = $this->request->getGetPost('iSortCol_' . $i);
-          $bSortable = $this->request->getGetPost('bSortable_' . intval($iSortCol));
-          $sSortDir = $this->request->getGetPost('sSortDir_' . $i);
+          $iSortCol = $this->request->getGetPost('order')[$i]['column'];
+          $bSortable = $this->request->getGetPost('columns')[intval($iSortCol)]['orderable'];
+          $sSortDir = $this->request->getGetPost('order')[$i]['dir'];
 
           if ($bSortable == 'true') {
             $builder->orderBy($aColumns[intval($this->db->escapeString($iSortCol))], $this->db->escapeString($sSortDir));
@@ -6030,7 +6031,7 @@ class Report_management extends \App\Controllers\BaseController
            */
       if (isset($sSearch) && !empty($sSearch)) {
         for ($i = 0; $i < count($aColumns); $i++) {
-          $bSearchable = $this->request->getGetPost('bSearchable_' . $i);
+          $bSearchable = $this->request->getGetPost('columns')[$i]['orderable'];
           // Individual column filtering
           if (isset($bSearchable) && $bSearchable == 'true') {
             $builder->orLike($aColumns[$i], $this->db->escapeLikeString($sSearch));
@@ -6164,12 +6165,12 @@ class Report_management extends \App\Controllers\BaseController
     $data = array();
     $aColumns = array('drug', 'Unit');
 
-    $iDisplayStart = $this->request->getGetPost('iDisplayStart');
-    $iDisplayLength = $this->request->getGetPost('iDisplayLength');
-    $iSortCol_0 = $this->request->getGetPost('iSortCol_0');
-    $iSortingCols = $this->request->getGetPost('iSortingCols');
-    $sSearch = $this->request->getGetPost('sSearch');
-    $sEcho = $this->request->getGetPost('sEcho');
+    $iDisplayStart = $this->request->getGetPost('start');
+    $iDisplayLength = $this->request->getGetPost('length');
+    $iSortCol_0 = $this->request->getGetPost('order')[0]['column'];
+    $iSortingCols = $this->request->getGetPost('order');
+    $sSearch = $this->request->getGetPost('search')['value'];
+    $sEcho = $this->request->getGetPost('draw');
 
     $count = 0;
 
@@ -6184,9 +6185,9 @@ class Report_management extends \App\Controllers\BaseController
     // Ordering
     if (isset($iSortCol_0)) {
       for ($i = 0; $i < intval($iSortingCols); $i++) {
-        $iSortCol = $this->request->getGetPost('iSortCol_' . $i);
-        $bSortable = $this->request->getGetPost('bSortable_' . intval($iSortCol));
-        $sSortDir = $this->request->getGetPost('sSortDir_' . $i);
+        $iSortCol = $this->request->getGetPost('order')[$i]['column'];
+        $bSortable = $this->request->getGetPost('columns')[intval($iSortCol)]['orderable'];
+        $sSortDir = $this->request->getGetPost('order')[$i]['dir'];
 
         if ($bSortable == 'true') {
           $builder->orderBy($aColumns[intval($this->db->escapeString($iSortCol))], $this->db->escapeString($sSortDir));
@@ -6201,7 +6202,7 @@ class Report_management extends \App\Controllers\BaseController
        */
     if (isset($sSearch) && !empty($sSearch)) {
       for ($i = 0; $i < count($aColumns); $i++) {
-        $bSearchable = $this->request->getGetPost('bSearchable_' . $i);
+        $bSearchable = $this->request->getGetPost('columns')[$i]['orderable'];
 
         // Individual column filtering
         if (isset($bSearchable) && $bSearchable == 'true') {
@@ -6305,12 +6306,12 @@ class Report_management extends \App\Controllers\BaseController
        */
     $aColumns = array('drug', 'pack_size');
 
-    $iDisplayStart = $this->request->getGetPost('iDisplayStart');
-    $iDisplayLength = $this->request->getGetPost('iDisplayLength');
-    $iSortCol_0 = $this->request->getGetPost('iSortCol_0');
-    $iSortingCols = $this->request->getGetPost('iSortingCols');
-    $sSearch = $this->request->getGetPost('sSearch');
-    $sEcho = $this->request->getGetPost('sEcho');
+    $iDisplayStart = $this->request->getGetPost('start');
+    $iDisplayLength = $this->request->getGetPost('length');
+    $iSortCol_0 = $this->request->getGetPost('order')[0]['column'];
+    $iSortingCols = $this->request->getGetPost('order');
+    $sSearch = $this->request->getGetPost('search')['value'];
+    $sEcho = $this->request->getGetPost('draw');
 
     //Builder
     $builder = $this->db->table('drugcode dc');
@@ -6323,9 +6324,9 @@ class Report_management extends \App\Controllers\BaseController
     // Ordering
     if (isset($iSortCol_0)) {
       for ($i = 0; $i < intval($iSortingCols); $i++) {
-        $iSortCol = $this->request->getGetPost('iSortCol_' . $i);
-        $bSortable = $this->request->getGetPost('bSortable_' . intval($iSortCol));
-        $sSortDir = $this->request->getGetPost('sSortDir_' . $i);
+        $iSortCol = $this->request->getGetPost('order')[$i]['column'];
+        $bSortable = $this->request->getGetPost('columns')[intval($iSortCol)]['orderable'];
+        $sSortDir = $this->request->getGetPost('order')[$i]['dir'];
 
         if ($bSortable == 'true') {
           $builder->orderBy($aColumns[intval($this->db->escapeString($iSortCol))], $this->db->escapeString($sSortDir));
@@ -6341,7 +6342,7 @@ class Report_management extends \App\Controllers\BaseController
        */
     if (isset($sSearch) && !empty($sSearch)) {
       for ($i = 0; $i < count($aColumns); $i++) {
-        $bSearchable = $this->request->getGetPost('bSearchable_' . $i);
+        $bSearchable = $this->request->getGetPost('columns')[$i]['orderable'];
 
         // Individual column filtering
         if (isset($bSearchable) && $bSearchable == 'true') {
@@ -6487,8 +6488,8 @@ class Report_management extends \App\Controllers\BaseController
 
   public function patient_consumption($period_start = "", $period_end = "")
   {
-    $patients = array();
-    $oi_drugs = array();
+    $patients = [];
+    $oi_drugs = [];
     //get all regimen drugs from OI
     $sql = "SELECT IF(d.drug IS NULL,rd.drugcode,d.drug) as drugname,'' as drugqty
             FROM regimen_drug rd 
@@ -6544,7 +6545,7 @@ class Report_management extends \App\Controllers\BaseController
     //export patient transactions
     //$this->load->library('PHPExcel');
     $dir = "assets/download";
-    $objPHPExcel = new \PHPExcel();
+    $objPHPExcel = new Spreadsheet();
     $objPHPExcel->setActiveSheetIndex(0);
 
     /* Delete all files in export folder */
@@ -6603,7 +6604,7 @@ class Report_management extends \App\Controllers\BaseController
     $period_start = date("F-Y", strtotime($period_start));
     $original_filename = "PATIENT DRUG CONSUMPTION[" . $period_start . "].xls";
     $filename = $dir . "/" . urldecode($original_filename);
-    $objWriter = new \PHPExcel_Writer_Excel5($objPHPExcel);
+    $objWriter = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($objPHPExcel, 'Xls');
     $objWriter->save($filename);
     $objPHPExcel->disconnectWorksheets();
     unset($objPHPExcel);
@@ -6916,11 +6917,11 @@ class Report_management extends \App\Controllers\BaseController
     $query = $this->db->query($sql, [$start_date, $end_date, $facility_code]);
     $results = $query->getResultArray();
 
-    $sources = array();
+    $sources = [];
 
     if ($results) {
       foreach ($results as $result) {
-        $temp = array();
+        $temp = [];
         $temp[$result['drug_source']] = $result['total'];
         $sources[] = $result['drug_source'];
         $drugs[$result['drug_name']][] = $temp;
@@ -6930,12 +6931,12 @@ class Report_management extends \App\Controllers\BaseController
     //Select Unique Sources
     $sources = array_unique($sources);
 
-    $temp = array();
+    $temp = [];
 
     if ($drugs) {
       //Loop through Drugs 
       foreach ($drugs as $drug => $sources_data) {
-        $temp_data = array();
+        $temp_data = [];
         //Map Drugs to Sources
         foreach ($sources as $source) {
           foreach ($sources_data as $source_data) {
@@ -6955,15 +6956,15 @@ class Report_management extends \App\Controllers\BaseController
 
     $this->table = new \CodeIgniter\View\Table();;
 
-    $tmpl = array('table_open' => '<table class="table table-bordered table-hover table-condensed dataTables" id="received_listing">');
-    $initial = array('#', 'DRUGNAME');
+    $tmpl = ['table_open' => '<table class="table table-bordered table-hover table-condensed dataTables" id="received_listing">'];
+    $initial = ['DRUGNAME'];
     $columns = array_merge($initial, $sources);
 
     $this->table->setTemplate($tmpl);
     $this->table->setHeading($columns);
 
     foreach ($temp as $drug => $quantities) {
-      $result = array();
+      $result = [];
       $result['DRUGNAME'] = $drug;
 
       foreach ($quantities as $source_name => $quantity) {
@@ -7015,11 +7016,11 @@ class Report_management extends \App\Controllers\BaseController
     $query = $this->db->query($sql, [$start_date, $end_date, $facility_code]);
     $results = $query->getResultArray();
 
-    $sources = array();
+    $sources = [];
 
     if ($results) {
       foreach ($results as $result) {
-        $temp = array();
+        $temp = [];
         $temp[$result['drug_source']] = $result['total'];
         $sources[] = $result['drug_source'];
         $drugs[$result['drug_name']][] = $temp;
@@ -7029,12 +7030,12 @@ class Report_management extends \App\Controllers\BaseController
     //Select Unique Sources
     $sources = array_unique($sources);
 
-    $temp = array();
+    $temp = [];
 
     if ($drugs) {
       //Loop through Drugs 
       foreach ($drugs as $drug => $sources_data) {
-        $temp_data = array();
+        $temp_data = [];
         //Map Drugs to Sources
         foreach ($sources as $source) {
           foreach ($sources_data as $source_data) {
@@ -7054,8 +7055,8 @@ class Report_management extends \App\Controllers\BaseController
 
     $this->table = new \CodeIgniter\View\Table();;
 
-    $tmpl = array('table_open' => '<table class="table table-bordered table-hover table-condensed dataTables" id="received_listing">');
-    $initial = array('#', 'DRUGNAME');
+    $tmpl = ['table_open' => '<table class="table table-bordered table-hover table-condensed dataTables" id="received_listing">'];
+    $initial = ['DRUGNAME'];
     $columns = array_merge($initial, $sources);
 
     $this->table->setTemplate($tmpl);
@@ -7065,8 +7066,8 @@ class Report_management extends \App\Controllers\BaseController
 
     foreach ($temp as $drug => $quantities) {
       $row_count++;
-      $result = array();
-      $result['COUNTER'] = $row_count;
+      $result = [];
+      // $result['COUNTER'] = $row_count;
       $result['DRUGNAME'] = $drug;
 
       foreach ($quantities as $source_name => $quantity) {

@@ -211,10 +211,8 @@ if ($user_is_administrator) {
             <style type="text/css" title="currentStyle">
                 @import "<?php echo base_url() . '/assets/styles/datatable/demo_page.css'; ?>";
                 @import "<?php echo base_url() . '/assets/styles/datatable/demo_table.css'; ?>";
-                @import "<?php echo base_url() . '/assets/styles/datatable/TableTools.css' ?>";
             </style>
             <script type="text/javascript" charset="utf-8" src="<?php echo base_url() . '/assets/scripts/datatable/ZeroClipboard.js' ?>"></script>
-            <script type="text/javascript" charset="utf-8"  src="<?php echo base_url() . '/assets/scripts/datatable/TableTools.js' ?>"></script>
 
             <?php
         }
