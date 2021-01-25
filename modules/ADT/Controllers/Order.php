@@ -484,8 +484,8 @@ class Order extends BaseController {
                 $data['status_name'] = strtolower($cdrr_array['cdrr_array'][0]->status_name);
                 $facility_id = $cdrr_array['cdrr_array'][0]->facility_id;
                 $data['facility_id'] = $facility_id;
-                $facilities = Sync_facility::getCode($facility_id, $order_type);
-                $facility = $facilities->code;
+                // $facilities = Sync_facility::getCode($facility_id, $order_type);
+                // $facility = $facilities->code;
                 $code = $cdrr_array['cdrr_array'][0]->code;
                 $code = $this->getDummyCode($code, $order_type);
                 $data['options'] = $cdrr_array['options'];
