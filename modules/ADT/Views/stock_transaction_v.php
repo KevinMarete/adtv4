@@ -1417,7 +1417,7 @@
                                         //Check if transaction type is not issued to
                                         //if($pos===false){
                                         ?>
-                                        <option id="" label="<?php echo $transaction_type['Effect'] ?>"  value="<?php echo $transaction_type['id'] ?>"><?php echo $transaction_type['name'] ?></option>
+                                        <option id="" label="<?php echo $transaction_type['effect'] ?>"  value="<?php echo $transaction_type['id'] ?>"><?php echo $transaction_type['name'] ?></option>
                                         <?php
                                         //}
                                     } else {
