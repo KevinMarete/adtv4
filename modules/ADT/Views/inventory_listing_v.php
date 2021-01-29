@@ -37,17 +37,18 @@ $first_load = $ccc_stores[0]->id; //Which store to load first
 
     function loadData(stock_type) {
         base_url="<?php echo base_url();?>"
+        var _url = base_url + "/inventory_management/stock_listing/";
         var storeTable = $('#store_table').dataTable({
-            "bProcessing": true,
-            "bServerSide": true,
-            "sAjaxSource": base_url+"/stock_listing/" + stock_type,
-            "bJQueryUI": true,
-            "sPaginationType": "full_numbers",
-            "bStateSave": true,
-            "bDestroy": true,
-            "aoColumnDefs": [
-                {"bSearchable": false, "aTargets": [2]}
-            ]
+            processing: true,
+			serverSide: true,
+			ajax: _url+stock_type,
+			destroy: true,
+            pagination: "full_numbers",
+            stateSave: true,
+			columnDefs: [{
+				'searchable': false,
+				'targets': [2]
+			}]
         });
     }
 </script>

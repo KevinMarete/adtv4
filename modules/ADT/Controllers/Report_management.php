@@ -6031,7 +6031,7 @@ class Report_management extends \App\Controllers\BaseController
            */
       if (isset($sSearch) && !empty($sSearch)) {
         for ($i = 0; $i < count($aColumns); $i++) {
-          $bSearchable = $this->request->getGetPost('columns')[$i]['orderable'];
+          $bSearchable = $this->request->getGetPost('columns')[$i]['searchable'];
           // Individual column filtering
           if (isset($bSearchable) && $bSearchable == 'true') {
             $builder->orLike($aColumns[$i], $this->db->escapeLikeString($sSearch));
@@ -6202,7 +6202,7 @@ class Report_management extends \App\Controllers\BaseController
        */
     if (isset($sSearch) && !empty($sSearch)) {
       for ($i = 0; $i < count($aColumns); $i++) {
-        $bSearchable = $this->request->getGetPost('columns')[$i]['orderable'];
+        $bSearchable = $this->request->getGetPost('columns')[$i]['searchable'];
 
         // Individual column filtering
         if (isset($bSearchable) && $bSearchable == 'true') {
@@ -6342,7 +6342,7 @@ class Report_management extends \App\Controllers\BaseController
        */
     if (isset($sSearch) && !empty($sSearch)) {
       for ($i = 0; $i < count($aColumns); $i++) {
-        $bSearchable = $this->request->getGetPost('columns')[$i]['orderable'];
+        $bSearchable = $this->request->getGetPost('columns')[$i]['searchable'];
 
         // Individual column filtering
         if (isset($bSearchable) && $bSearchable == 'true') {

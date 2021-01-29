@@ -65,17 +65,17 @@ class Inventory_management extends \App\Controllers\BaseController {
 
     public function stock_listing($stock_type = 1) {
         $facility_code = session()->get('facility');
-        $data = array();
+        $data = [];
         /* Array of database columns which should be read and sent back to DataTables. Use a space where
          * you want to insert a non-database field (for example a counter or static image)
          */
-        $aColumns = array('drug', 'generic_name', 'stock_level', 'drug_unit', 'pack_size', 'supported_by', 'dose');
-        $iDisplayStart = @$_GET['iDisplayStart'];
-        $iDisplayLength = @$_GET['iDisplayLength'];
-        $iSortCol_0 = @$_GET['iSortCol_0'];
-        $iSortingCols = @$_GET['iSortingCols'];
-        $sSearch = @$_GET['sSearch'];
-        $sEcho = @$_GET['sEcho'];
+        $aColumns = ['drug', 'generic_name', 'stock_level', 'drug_unit', 'pack_size', 'supported_by', 'dose'];
+        $iDisplayStart = @$_GET['start'];
+        $iDisplayLength = @$_GET['length'];
+        $iSortCol_0 = @$_GET['order'][0]['column'];
+        $iSortingCols = @$_GET['order'];
+        $sSearch = @$_GET['search']['value'];
+        $sEcho = @$_GET['draw'];
         /*
          * Paging
          * */
@@ -87,11 +87,15 @@ class Inventory_management extends \App\Controllers\BaseController {
          * Ordering
          */
         $sOrder = "";
-        if (isset($_GET['iSortCol_0'])) {
+        if (isset($iSortCol_0)) {
             $sOrder = "ORDER BY  ";
-            for ($i = 0; $i < intval(@$_GET['iSortingCols']); $i++) {
-                if (@$_GET['bSortable_' . intval(@$_GET['iSortCol_' . $i])] == "true") {
-                    $sOrder .= "`" . $aColumns[intval(@$_GET['iSortCol_' . $i])] . "` " . (@$_GET['sSortDir_' . $i] === 'asc' ? 'asc' : 'desc') . ", ";
+            for ($i = 0; $i < intval($iSortingCols); $i++) {
+                $iSortCol = $this->request->getGetPost('order')[$i]['column'];
+                $bSortable = $this->request->getGetPost('columns')[intval($iSortCol)]['orderable'];
+                $sSortDir = $this->request->getGetPost('order')[$i]['dir'];
+
+                if ($bSortable == "true") {
+                    $sOrder .= "`" . $aColumns[intval($iSortCol)] . "` " . ($sSortDir === 'asc' ? 'asc' : 'desc') . ", ";
                 }
             }
 
@@ -112,7 +116,7 @@ class Inventory_management extends \App\Controllers\BaseController {
         if (isset($sSearch) && !empty($sSearch)) {
             $sFilter = "AND ( ";
             for ($i = 0; $i < count($aColumns); $i++) {
-                $bSearchable = @$_GET['bSearchable_' . $i];
+                $bSearchable = $this->request->getGetPost('columns')[$i]['searchable'];
 
                 // Individual column filtering
                 if (isset($bSearchable) && $bSearchable == 'true') {
@@ -153,17 +157,17 @@ class Inventory_management extends \App\Controllers\BaseController {
         //echo $iDisplayLength;die();
         // Data set length after filtering
         $res = $this->db->query('SELECT COUNT(id) AS found_rows from drugcode dc where dc.enabled=1 ' . $sFilter)->getResult();
-        $iFilteredTotal = count($res);
+        $iFilteredTotal = $res[0]->found_rows;
 
         //Total number of drugs that are displayed
         $res2 = $this->db->query('SELECT COUNT(id) AS found_rows from drugcode dc where dc.enabled=1')->getResult();
-        $iTotal = count($res2);
+        $iTotal = $res2[0]->found_rows;
         //$iFilteredTotal = $iTotal;
         // Output
-        $output = array('sEcho' => intval($sEcho), 'iTotalRecords' => $iTotal, 'iTotalDisplayRecords' => $iFilteredTotal, 'aaData' => array());
+        $output = ['sEcho' => intval($sEcho), 'iTotalRecords' => $iTotal, 'iTotalDisplayRecords' => $iFilteredTotal, 'aaData' => []];
 
         foreach ($rResult->getResultArray() as $aRow) {
-            $row = array();
+            $row = [];
             $x = 0;
             foreach ($aColumns as $col) {
                 $x++;
