@@ -380,7 +380,7 @@ class Api extends BaseController {
         $APPOINTMENT_LOCATION = $appointment->APPOINTMENT_INFORMATION[0]->APPOINTMENT_LOCATION;
         $ACTION_CODE = $appointment->APPOINTMENT_INFORMATION[0]->ACTION_CODE;
         $APPOINTMENT_NOTE = $appointment->APPOINTMENT_INFORMATION[0]->APPOINTMENT_NOTE;
-        $APPINTMENT_HONORED = $appointment->APPOINTMENT_INFORMATION[0]->APPINTMENT_HONORED;
+        $APPOINTMENT_STATUS = $appointment->APPOINTMENT_INFORMATION[0]->APPOINTMENT_STATUS;
 
         $patient_appointment = array(
             'patient' => $internal_patient_ccc->patient_number_ccc,
@@ -495,7 +495,7 @@ class Api extends BaseController {
         'APPOINTMENT_LOCATION' => "PHARMACY",
         'ACTION_CODE' => "A",
         'APPOINTMENT_NOTE' => "TO COME BACK FOR A REFILL",
-        'APPOINTMENT_HONORED' => "N"
+        'APPOINTMENT_STATUS' => "PENDING"
         )];
 
 

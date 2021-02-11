@@ -21,7 +21,7 @@
         </div>
         <div class="modal-body">
 
-            <p>A newer version of ADT is available. <br />You are currently using <?= '3.5.0' ?></p>
+            <p>A newer version of ADT is available. <br />You are currently using <?= config('Adt_config')->adt_version ?></p>
             <?php if (!empty($download_status) || !$session->get('download_status')) { ?>
                 <div id="downloading" style="display: none;"><img src="<?= base_url() ?>/assets/images/loading_spin.gif" style="width: 19px;"> Downloading ADT Release. This may take up to 3 minutes</div>
 
@@ -29,7 +29,7 @@
                     <a href="javascript:;;" id="download-ADT-release" onclick="download_ADT()">Download Now</a>
                 </div>
             <?php } else { ?>
-                ADT Version 3.4.2--new is already downloaded. Click below button to update
+                ADT Version <?= config('Adt_config')->adt_version ?> is already downloaded. Click below button to update
         </div><?php } ?>
     <div id="update_ADT" style="display: none;">
         <a href="javascript:;;" id="download-ADT-release" class="btn btn-warning" onclick="update_ADT()">Update</a>
