@@ -58,41 +58,59 @@ $(document).ready(function () {
     var report_title = $('#report_title').text();
     var facility = $('#facility_name').text();
     var oTable = $('.dataTables').dataTable({
-        bJQueryUI: true,
-        sPaginationType: 'full_numbers',
-        bStateSave: true,
-        sDom: '<"H"<"clear">lfrT>t<"F"ip>',
-        oTableTools: {
-            sSwfPath: base_url + 'assets/scripts/datatable/copy_csv_xls_pdf.swf',
-            aButtons: [
-                'copy',
-                {
-                    sExtends: 'xls',
-                    sTitle: report_title + ' (' + facility + ')',
-                },
-                {
-                    sExtends: 'pdf',
-                    sPdfOrientation: 'landscape',
-                    sPdfSize: 'A3',
-                    sTitle: report_title + ' (' + facility + ')',
-                },
-            ],
-        },
-        bProcessing: true,
-        bServerSide: false,
-        bAutoWidth: true,
-        bDeferRender: true,
-        bInfo: true,
-        iDisplayLength: 10,
-        aLengthMenu: [
-            [10, 25, 50, 100, -1],
-            [10, 25, 50, 100, 'All'],
+        // bJQueryUI: true,
+        // sPaginationType: 'full_numbers',
+        // bStateSave: true,
+        // sDom: '<"H"<"clear">lfrT>t<"F"ip>',
+        // oTableTools: {
+        //     sSwfPath: base_url + 'assets/scripts/datatable/copy_csv_xls_pdf.swf',
+        //     aButtons: [
+        //         'copy',
+        //         {
+        //             sExtends: 'xls',
+        //             sTitle: report_title + ' (' + facility + ')',
+        //         },
+        //         {
+        //             sExtends: 'pdf',
+        //             sPdfOrientation: 'landscape',
+        //             sPdfSize: 'A3',
+        //             sTitle: report_title + ' (' + facility + ')',
+        //         },
+        //     ],
+        // },
+        // bProcessing: true,
+        // bServerSide: false,
+        // bAutoWidth: true,
+        // bDeferRender: true,
+        // bInfo: true,
+        // iDisplayLength: 10,
+        // aLengthMenu: [
+        //     [10, 25, 50, 100, -1],
+        //     [10, 25, 50, 100, 'All'],
+        // ],
+        // bScrollCollapse: true,
+        // bDestroy: true,
+        // fnInitComplete: function () {
+        //     this.css('visibility', 'visible');
+        // },
+        dom: 'Bfrtip',
+        processing: true,
+        serverSide: false,
+        buttons: [
+            'copyHtml5',
+            {
+                extend: 'excelHtml5',
+                title: report_title+" ("+facility+")"
+            },
+            'csvHtml5',
+            {
+                extend: 'pdf',
+                title: report_title+" ("+facility+")",
+                pageSize: 'A3',
+                orientation: 'landscape'
+            }
         ],
-        bScrollCollapse: true,
-        bDestroy: true,
-        fnInitComplete: function () {
-            this.css('visibility', 'visible');
-        },
+        pagingType: "full_numbers"
     });
     $('.dataTables tbody td').live('mouseover', function () {
         //Show full text when one mouseovers
