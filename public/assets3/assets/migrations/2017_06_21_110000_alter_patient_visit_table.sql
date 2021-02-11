@@ -1,1 +1,0 @@
-ALTER TABLE patient_visit ADD INDEX (dispensing_date)//

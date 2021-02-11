@@ -1,1 +1,0 @@
-create table clinic_appointment select * from patient_appointment//

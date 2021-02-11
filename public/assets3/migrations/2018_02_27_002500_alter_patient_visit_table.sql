@@ -1,1 +1,0 @@
-ALTER TABLE patient_visit ADD differentiated_care tinyint(1) NOT NULL AFTER dose//

@@ -1,1 +1,0 @@
-ALTER TABLE adr_form CHANGE reaction_casualty  reaction_casualty varchar(30)//
