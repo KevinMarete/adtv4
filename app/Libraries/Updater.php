@@ -53,21 +53,15 @@ class Updater
         // if new release exists then download release file first then keep checking locally
         // if release already installed delete release file 
 
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, "http://adt.nascop.org/updateinfo.txt");
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 5); //timeout in seconds
-
-        if (curl_exec($ch) === FALSE) {
-            $response = false;
-        } else {
-            $response = curl_exec($ch);
+        $result = null;
+        $host = 'http://adt.nascop.org/updateinfo.txt';
+        try {
+            $result = file_get_contents($host);
+        } catch (\Exception $e) {
+            $result = null;
         }
 
-        curl_close($ch);
-        return $response;
+        return $result;
     }
 
     function download_ADTRelease()
@@ -79,6 +73,7 @@ class Updater
         if (file_put_contents(FCPATH . $this->ADT_file, fopen($rs->releaseURL, 'r'))) {
             $returnable = true;
         }
+
         return $returnable;
     }
 
@@ -99,18 +94,16 @@ class Updater
 
     function update_ADT()
     {
-        $path = pathinfo(realpath($this->ADT_file), PATHINFO_DIRNAME);
-
-
         $zip = new ZipArchive;
         $res = $zip->open($this->ADT_file);
         if ($res === TRUE) {
             // extract it to the path we determined above
-            $zip->extractTo($path);
+            $zip->extractTo(ROOTPATH);
             $zip->close();
-            echo "Success: $this->ADT_file extracted to $path";
+            echo "Success: $this->ADT_file extracted";
+            unlink(FCPATH . $this->ADT_file);
         } else {
-            echo "Error! I couldn't open $this->ADT_file";
+            echo "Error! I couldn't open the file";
         }
     }
 

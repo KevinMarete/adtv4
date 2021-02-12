@@ -311,7 +311,7 @@ if ($user_is_administrator) {
                     </div><!--/.nav-collapse -->
                     <div class="welcome_msg">
                         <?php if ($session->get('update_available')) { ?>
-                            <!-- <a class="badge blinking pull-left" style="background-color: #ff0905b1 !important;" href="#adt_update_modal" data-toggle="modal">New Update available</a> -->
+                            <a class="badge blinking pull-left" style="background-color: #ff0905b1 !important;" href="#adt_update_modal" data-toggle="modal">New Update available</a>
                         <?php } ?>
                         <span><span style="color:#B8B8B8; text-transform: uppercase; font-weight: bold;" >username: </span><b style="font-weight: bold;font-size: 15px;text-transform: uppercase;"><?php echo $session->get('full_name'); ?> | </b><a id="logout_btn" href="<?php echo base_url() . '/logout/2' ?>"><i class="icon-off"></i> Logout</a></span>
                         <br>
@@ -558,7 +558,7 @@ if ($user_is_administrator) {
                             Government of Kenya &copy; <?php echo date('Y'); ?>.
                             All Rights Reserved . <strong>Web-ADT version <?= config('Adt_config')->adt_version ?></strong>
                             <?php if ($session->get('update_available')) { ?>
-                            <!-- <a class="badge badge-warning blinking" href="#adt_update_modal" data-toggle="modal">New Update available</div> -->
+                            <a class="badge badge-warning blinking" href="#adt_update_modal" data-toggle="modal">New Update available</div>
                         <?php } ?>
                     </div>  
                 </div>

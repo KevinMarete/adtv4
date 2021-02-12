@@ -1,1 +1,0 @@
-ALTER TABLE drug_prescription CHANGE notes notes varchar(200) NULL AFTER order_physician//

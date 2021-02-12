@@ -90,9 +90,12 @@ class Home_controller extends \App\Controllers\BaseController {
         $data['download_status'] = $updater->check_ADTRelease_downloaded();
         $session->set(['download_status' => $data['download_status']]);
         $data['update_available'] = json_decode($updater->check_ADTrelease());
-        // if ((int)str_replace('.', '', $data['update_available']->release) > (int)str_replace('.', '', config('Adt_config')->adt_version)) {
+        if ($data['update_available'] && (int)str_replace('.', '', $data['update_available']->release) > (int)str_replace('.', '', config('Adt_config')->adt_version)) {
             $session->set(['update_available' => true]);
-        // }
+        }
+        else {
+            $session->remove('update_available');
+        }
         $data['title'] = "webADT | System Home";
         $data['content_view'] = "\Modules\ADT\Views\\home_v";
         $data['banner_text'] = "Home";

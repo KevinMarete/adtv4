@@ -1,1 +1,0 @@
-ALTER TABLE `clinic_appointment` CHANGE `id` `id` int(20) NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST//
