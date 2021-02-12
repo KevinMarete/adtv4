@@ -922,10 +922,10 @@ class Api extends BaseController {
 
     function writeLog($logtype, $msg) {
 
-        $fp = fopen('IL-api.log', (file_exists('IL-api.log')) ? 'a' : 'w');
+        $path = WRITEPATH.'IL_logs/'.date('Y-m-d').'-IL-api.log';
+        $fp = fopen($path, (file_exists($path)) ? 'a' : 'w');
 
         fwrite($fp, date('Y-m-d H:i:s') . ' ' . $logtype . ' : ' . $msg . "\r\n");
-        // fwrite($fp,'\n');
 
         fclose($fp);
     }
