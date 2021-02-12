@@ -54,7 +54,7 @@ class Updater
         // if release already installed delete release file 
 
         $result = null;
-        $host = 'http://adt.nascop.org/updateinfo.txt';
+        $host = 'http://adt-test.nascop.org/updateinfo.txt';
         try {
             $result = file_get_contents($host);
         } catch (\Exception $e) {
