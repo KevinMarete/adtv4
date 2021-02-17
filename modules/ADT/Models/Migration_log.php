@@ -20,6 +20,7 @@ class Migration_log extends BaseModel {
     }
 
     public static function getLog($source) {
+       
        return BaseModel::resultSet(DB::select("SELECT * FROM migration_log WHERE source='$source'"))[0];
      
     }

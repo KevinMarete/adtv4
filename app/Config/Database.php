@@ -32,10 +32,10 @@ class Database extends \CodeIgniter\Database\Config {
      */
     public $default = [
         'DSN' => '',
-        'hostname' => 'localhost',
-        'username' => 'adt',
-        'password' => 'Adt@2020#',
-        'database' => 'testadt2',
+        'hostname' => 'localhost:3307',
+        'username' => 'root',
+        'password' => 'root',
+        'database' => 'testadt',
         'DBDriver' => 'MySQLi',
         'DBPrefix' => '',
         'pConnect' => false,
@@ -51,7 +51,7 @@ class Database extends \CodeIgniter\Database\Config {
         'compress' => false,
         'strictOn' => false,
         'failover' => [],
-        'port' => 3306,
+        'port' => 3307,
     ];
 
     /**

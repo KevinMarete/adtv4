@@ -67,8 +67,8 @@ class Setup extends \CodeIgniter\Controller {
            // $presence= DB::table('users')->where('Username','user') ->first();
            //corrected for facility initializing
 
-           $user_sql="SELECT Username from users where Username='people'";
-           $presence=$db->query($user_sql);
+           $user_sql="SELECT Username from users where Username='user'";
+           $presence=$db->query($user_sql)->getResult();
            
            //look if the facilty exist and excute the queries
 
@@ -77,31 +77,28 @@ class Setup extends \CodeIgniter\Controller {
             
         if ($presence > 0) {
             //Update all users to mflcode
-            $sql = "REPLACE INTO users (id, Name, Username, Password, Access_Level, Facility_Code, Created_By, Time_Created, Phone_Number, Email_Address, Active, Signature, map, ccc_store_sp) VALUES(2,	'Demo User',	'people',	'1a7a4c2f236042c4f8cfd79ec9ff2094',	'3',	'$mflcode',	'1',	'2014-09-24',	' 736262781',	'kevomarete@gmail.com',	'1',	'1',	0,	2);
+            $db->query("REPLACE INTO users (id, Name, Username, Password, Access_Level, Facility_Code, Created_By, Time_Created, Phone_Number, Email_Address, Active, Signature, map, ccc_store_sp) VALUES(2,	'Demo User',	'user',	'1a7a4c2f236042c4f8cfd79ec9ff2094','3','$mflcode','1',	'2021-17-02',' 070000001','webadt@chai.com','1','1',0,2)");
 
-			UPDATE users SET Facility_Code = $mflcode  WHERE Facility_Code = $old_facility_code;
-			UPDATE drug_stock_movement SET facility = $mflcode  WHERE facility = $old_facility_code;
-			UPDATE drug_stock_movement SET source = $mflcode  WHERE source = $old_facility_code;
-			UPDATE drug_stock_movement SET destination = $mflcode  WHERE destination = $old_facility_code;
-			UPDATE patient SET facility_code = $mflcode  WHERE facility_code = $old_facility_code;
-			UPDATE patient_visit SET facility = $mflcode  WHERE facility = $old_facility_code;
-			UPDATE patient_appointment SET facility = $mflcode  WHERE facility = $old_facility_code;
-			UPDATE clinic_appointment SET facility = $mflcode  WHERE facility = $old_facility_code;
-			UPDATE drug_cons_balance set facility = $mflcode where facility = $old_facility_code ;
-			UPDATE drug_stock_balance set facility_code = $mflcode where facility_code = $old_facility_code; 
-		";
+			$db->query("UPDATE users SET Facility_Code = '$mflcode'  WHERE Facility_Code = '$old_facility_code'");
+			$db->query("UPDATE drug_stock_movement SET facility = '$mflcode'  WHERE facility = '$old_facility_code'");
+			$db->query("UPDATE drug_stock_movement SET source = '$mflcode'  WHERE source = '$old_facility_code'");
+			$db->query("UPDATE drug_stock_movement SET destination = '$mflcode'  WHERE destination = '$old_facility_code'");
+			$db->query("UPDATE patient SET facility_code = '$mflcode'  WHERE facility_code = '$old_facility_code'");
+			$db->query("UPDATE patient_visit SET facility = '$mflcode'  WHERE facility = '$old_facility_code'");
+			$db->query("UPDATE patient_appointment SET facility = '$mflcode'  WHERE facility = '$old_facility_code'");
+			$db->query("UPDATE clinic_appointment SET facility = '$mflcode'  WHERE facility = '$old_facility_code'");
+			$db->query("UPDATE drug_cons_balance set facility = '$mflcode' where facility = '$old_facility_code'");
+			$db->query("UPDATE drug_stock_balance set facility_code = '$mflcode' where facility_code = '$old_facility_code'");
 
-            foreach (explode(';', $sql) as $q) {
-                $db->query($q);
-            }
+           
             //Redirect with message
             $message = '<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong>Success!</strong> Facility initialized to MFLCODE: ' . $mflcode . ' <br /> User Login user:user</div>';
-            $session->setFlashdata('init_msg', $message);
-            return redirect()->to(base_url('/setup'));
+           $session->setFlashdata('init_msg', $message);
+           return redirect()->to(base_url('/setup'));
         } else {
-            $message = '<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong>Facility already Initialized</strong></div>';
-            $session->setFlashdata('init_msg', $message);
-            return redirect()->to(base_url('/setup'));
+           $message = '<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong>Facility already Initialized</strong></div>';
+           $session->setFlashdata('init_msg', $message);
+           return redirect()->to(base_url('/setup'));
         }
     }
 

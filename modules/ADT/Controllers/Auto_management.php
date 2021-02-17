@@ -11,6 +11,7 @@ use Modules\ADT\Models\County;
 use Modules\ADT\Models\District;
 use Modules\ADT\Models\FacilityType;
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use \Modules\Backup\Controllers\Backup;
 
 class Auto_management extends \App\Controllers\BaseController {
 
@@ -34,6 +35,8 @@ class Auto_management extends \App\Controllers\BaseController {
         $today = date('YmdHis');
         //get last update time of log file for auto_update
         $log = Migration_log::getLog('auto_update');
+
+
         //dd($log);
         $last_update = $log['last_index'];
         $status = (int) $log['count'];
@@ -54,10 +57,10 @@ class Auto_management extends \App\Controllers\BaseController {
          */
 
         if ((date('Y-m-d') != date('Y-m-d', $last_update)) || ($retry && $status == 0) || $manual == TRUE) {
+
             // Update today's date before starting process
             $sql = "UPDATE migration_log SET last_index='$today', count = 0 WHERE source='auto_update'";
             $this->db->query($sql);
-
             //function to update destination column to 1 in drug_stock_movement table for issued transactions that have name 'pharm'
             //function to update destination column to 1 in drug_stock_movement table for issued transactions that have name 'pharm'
             $message .= $this->updateIssuedTo();
@@ -606,41 +609,30 @@ class Auto_management extends \App\Controllers\BaseController {
 
     public function auto_backup() {
         $returnable = "AutoBackup: ";
-        $autobackup = $this->session->get("autobackup");
-
+        $autobackup = Facilities::getCurrentFacility($this->session->get("facility"))[0]->autobackup;
+        $backup = new Backup();
         if ($autobackup == 1) {
             // check if auto backup is set
-            $backup_result = base_url() . '/run_backup';
-
-            $postRequest = array(
-                'backup' => 'true'
-            );
-
-            $cURLConnection = curl_init($backup_result);
-            curl_setopt($cURLConnection, CURLOPT_POSTFIELDS, $postRequest);
-            curl_setopt($cURLConnection, CURLOPT_RETURNTRANSFER, true);
-
-            $apiResponse = curl_exec($cURLConnection);
-            curl_close($cURLConnection);
-
-            $file = explode('-', str_replace(' ', '', $apiResponse));
+            $backup_result = $backup->run_backup();
+            $file = explode('-', str_replace(' ', '', $backup_result));
 
             if ($file[0] == 'BackupSuccess') {
-                $backup_result_ = base_url() . '/upload_backup';
-
 
                 $postRequest = array(
                     'file_name' => $file[1]
                 );
 
-                $cURLConnection = curl_init($backup_result_);
+                $cURLConnection = curl_init();
+                curl_setopt($cURLConnection, CURLOPT_URL, base_url() . '/upload_backup');
                 curl_setopt($cURLConnection, CURLOPT_POSTFIELDS, $postRequest);
                 curl_setopt($cURLConnection, CURLOPT_RETURNTRANSFER, true);
                 curl_setopt($cURLConnection, CURLOPT_VERBOSE, true);
 
                 $apiResponse2 = curl_exec($cURLConnection);
+
+
                 if ($apiResponse2 == 'File uploaded succesfully.') {
-                    return $returnable .= 'Backup:Success,<br />Upload Success<br>';
+                    return $returnable .= 'Backup:Success & Upload Success<br>';
                 } else {
                     return $returnable .= 'Error:Backup Could not be processed<br>';
                 }
@@ -648,10 +640,10 @@ class Auto_management extends \App\Controllers\BaseController {
 
                 return $returnable . 'disabled<br/>';
             }
-        } 
-    } 
+        }
+    }
 
-    public function updateSms() { 
+    public function updateSms() {
         echo '';
         $alert = "";
         $facility_name = $this->session->get('facility_name');
@@ -803,9 +795,9 @@ class Auto_management extends \App\Controllers\BaseController {
 
                 if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
                     $mysql_bin = str_replace("\\", "\\\\", $mysql_home);
-                    $mysql_con = $mysql_bin . ' -u ' . $username . '-p ' . $password . ' -P' . $port . ' -h ' . $hostname . ' ' . $database . ' < ' . $file_path . '' . $proc_files[$key];
+                    $mysql_con = $mysql_bin . ' -u' . $username . ' -p' . $password . ' -P' . $port . ' -h ' . $hostname . ' ' . $database . ' < ' . $file_path . '' . $proc_files[$key];
                 } else {
-                    $mysql_con = 'mysql -u ' . $username . '-p ' . $password . '-P' . $port . ' -h ' . $hostname . ' ' . $database . ' < ' . $file_path . '' . $proc_files[$key];
+                    $mysql_con = 'mysql -u' . $username . ' -p' . $password . ' -P' . $port . ' -h ' . $hostname . ' ' . $database . ' < ' . $file_path . '' . $proc_files[$key];
                 }
 
 
