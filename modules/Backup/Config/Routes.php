@@ -14,4 +14,5 @@ $routes->post('upload_backup', '\Modules\Backup\Controllers\Backup::upload_backu
 $routes->post('upload_backup_mg/(:any)', '\Modules\Backup\Controllers\Backup::upload_backup_mg/$1');
 $routes->post('delete_backup', '\Modules\Backup\Controllers\Backup::delete_backup');
 $routes->post('download_remote_file', '\Modules\Backup\Controllers\Backup::download_remote_file');
+$routes->get('auto_backup', '\Modules\ADT\Controllers\Auto_management::auto_backup');
 

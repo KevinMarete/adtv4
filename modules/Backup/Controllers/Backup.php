@@ -268,9 +268,9 @@ class Backup extends \CodeIgniter\Controller {
                     $mysql_home = realpath($_SERVER['MYSQL_HOME']) . "\mysql";
                     $file_path = "\"" . realpath($_SERVER['MYSQL_HOME']) . "\\" . $real_name . "\"";
                     $mysql_bin = str_replace("\\", "\\\\", $mysql_home);
-                    $mysql_con = $mysql_bin . '' . ' -u ' . $username . ' -h ' . $hostname . ' -P ' . $port . ' ' . $current_db . ' > ' . $file_path;
+                    $mysql_con = $mysql_bin . '' . ' -u' . $username . ' -p'.$password. ' -h ' . $hostname . ' -P ' . $port . ' ' . $current_db . ' > ' . $file_path;
                 } else {
-                    $mysql_con = 'mysql' . ' -u ' . $username . ' -h ' . $hostname . ' -P ' . $port . '-p ' . $password . '  ' . $current_db . ' > ' . $file_path;
+                    $mysql_con = 'mysql' . ' -u' . $username . ' -h ' . $hostname . ' -P ' . $port . '-p' . $password . '  ' . $current_db . ' > ' . $file_path;
                 }
 
                 exec($mysql_con);
@@ -280,6 +280,7 @@ class Backup extends \CodeIgniter\Controller {
     }
 
     public function run_backup() {
+        
         $file_path = FCPATH;
 //die;
 
@@ -295,7 +296,7 @@ class Backup extends \CodeIgniter\Controller {
 
 //$CI = &get_instance();
 //$CI->load->database();
-        $hostname = $db->hostname;
+        $hostname = explode(':', $db->hostname)[0];
 //$port = $CI->db->port;
 //$username = $CI->db->username;
 //$password = $CI->db->password;
@@ -323,9 +324,9 @@ class Backup extends \CodeIgniter\Controller {
 
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
             $mysql_bin = str_replace("\\", "\\\\", $mysql_home);
-            $mysql_con = $mysql_bin . '' . ' -u ' . $username . ' -h ' . $hostname . ' -P ' . $port . ' ' . $current_db . ' > ' . $file_path;
+          $mysql_con = $mysql_bin . '' . ' -u' . $username . ' -p'.$password.' -h ' . $hostname . ' -P ' . $port . ' ' . $current_db . ' > ' . $file_path;
         } else {
-            $mysql_con = 'mysqldump -u ' . $username . '-p ' . $password . '-P' . $port . ' -h ' . $hostname . ' ' . $current_db . ' > ' . $file_path;
+            $mysql_con = 'mysqldump -u' . $username . ' -p' . $password . ' -P' . $port . ' -h ' . $hostname . ' ' . $current_db . ' > ' . $file_path;
         }
 
         exec($mysql_con);
@@ -336,9 +337,9 @@ class Backup extends \CodeIgniter\Controller {
 
             $this->delete_file(str_replace('"', "", $file_path));
 
-            echo "Backup Success - " . $outer_file . '.zip';
+            return "Backup Success - " . $outer_file . '.zip';
         } else {
-            echo "Error: Backup Not successful";
+            return "Error: Backup Not successful";
         }
 //}
     }
