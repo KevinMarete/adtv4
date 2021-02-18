@@ -1,5 +1,6 @@
 SET NAMES utf8mb4//
 
+TRUNCATE `visit_purpose`//
 INSERT INTO `visit_purpose` (`name`, `Active`, `ccc_store_sp`) VALUES
 ('Start ART',	'1',	2),
 ('Routine Refill',	'1',	2),
