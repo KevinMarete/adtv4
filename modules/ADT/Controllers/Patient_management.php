@@ -629,7 +629,7 @@ class Patient_management extends BaseController {
         ;
         $new_patient->physical = $this->post('physical');
         $new_patient->alternate = $this->post('alternate');
-        $new_patient->differentiated_care = $this->post('differentiated_care');
+        $new_patient->differentiated_care = $this->post('differentiated_care') ?? null;
 
 
         //Patient History
@@ -729,7 +729,7 @@ class Patient_management extends BaseController {
                 "AND ps.name LIKE '%lost%'";
         $result = DB::select($sql);
         if (count($result) > 0) {
-            $patient = '<b>' . strtoupper($result[0]['first_name'] . ' ' . $result[0]['last_name'] . ' ' . $result[0]['other_name']) . '</b> ( CCC Number:' . $result[0]['patient_number_ccc'] . ')';
+            $patient = '<b>' . strtoupper($result[0]->first_name . ' ' . $result[0]->last_name . ' ' . $result[0]->other_name) . '</b> ( CCC Number:' . $result[0]->patient_number_ccc . ')';
             return $patient;
         } else {
             return '';
