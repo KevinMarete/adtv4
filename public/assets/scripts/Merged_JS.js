@@ -96,6 +96,18 @@ $(document).ready(function () {
         dom: 'Bfrtip',
         processing: true,
         serverSide: false,
+        stateSave: true,
+        lengthMenu: [
+            [10, 25, 50, 100, -1],
+            [10, 25, 50, 100, 'All'],
+        ],
+        info: true,
+        autoWidth: true,
+        lengthMenu: 10,
+        scrollCollapse: true,
+        initComplete: function () {
+            this.css('visibility', 'visible');
+        },
         buttons: [
             'copyHtml5',
             {
@@ -110,7 +122,8 @@ $(document).ready(function () {
                 orientation: 'landscape'
             }
         ],
-        pagingType: "full_numbers"
+        pagingType: "full_numbers",
+        destroy: true
     });
     $('.dataTables tbody td').live('mouseover', function () {
         //Show full text when one mouseovers
