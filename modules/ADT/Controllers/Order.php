@@ -437,8 +437,6 @@ class Order extends BaseController {
     public function create_order($type = null, $order_type = null, $content_array = []) {
         if (empty($type))
             $type = $this->uri->getSegment(3);
-        if (empty($order_type))
-            $order_type = $this->uri->getSegment(4);
         $data['hide_generate'] = 0;
         $data['hide_save'] = 0;
         $data['hide_btn'] = 0;

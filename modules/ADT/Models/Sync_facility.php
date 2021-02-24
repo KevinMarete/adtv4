@@ -29,7 +29,7 @@ class Sync_facility extends BaseModel {
             });            
         }
         $query = $query->first();
-        return @$query->id;
+        return $query->id ?? null;
     }
 
     public static function getCode($facility_id, $parent_sites = 0) {
