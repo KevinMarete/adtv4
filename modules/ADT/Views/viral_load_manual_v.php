@@ -24,17 +24,20 @@
         $("#test_date").datepicker();
         $("#test_date").datepicker("setDate", new Date());
 
-        		var table=$('.vl_results').dataTable( {
-			"bProcessing": true,
-			"bServerSide": true,
-			"sAjaxSource": "<?= base_url();?>/viral_load_manual/get_viral_load",
-	        "bJQueryUI": true,
-	        "sPaginationType": "full_numbers",
-	        "bStateSave" : true,
-	        "bDestroy": true,
-	       "aoColumnDefs": [
-      		{ "bSearchable": false, "aTargets": [ 2 ] }
-    		] 
+        var table=$('.vl_results').dataTable( {
+			processing: true,
+			serverSide: true,
+			ajax: "<?= base_url();?>/viral_load_manual/get_viral_load",
+	        // "jQueryUI": true,
+	        paginationType: "full_numbers",
+	        stateSave : true,
+	        destroy: true,
+	        columnDefs: [
+      		    { searchable: false, targets: [ 2 ] }
+            ],
+            order: [
+                [1, 'desc']
+            ]
 		});
 
     });

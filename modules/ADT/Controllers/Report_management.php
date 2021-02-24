@@ -4088,8 +4088,6 @@ class Report_management extends \App\Controllers\BaseController
     $start_date = date('Y-m-d', strtotime($start_date));
     $end_date = date('Y-m-d', strtotime($end_date));
     $overall_total = 0;
-    // print_r($start_date);die;
-
 
     $sql = "select * from patient_viral_load where test_date >= '$start_date' and  test_date <= '$end_date'";
 

@@ -30,31 +30,31 @@ class Viral_load_manual extends \App\Controllers\BaseController {
 
     public function listing() {
         $access_level = $this->session->get('user_indicator');
-        $data = array();
+        $data = [];
         //get viral load from the database
         $sql = "select * from patient_viral_load limit 10";
         $query = $this->db->query($sql);
         $viral_results = $query->getResultArray();
         $tmpl = array('table_open' => '<table class="vl_results table table-bordered table-striped">');
         $this->table->setTemplate($tmpl);
-        $this->table->setHeading('id', 'Patient CCC Number', 'Date Collected', 'Test Date', 'Result', 'Justification', 'Options');
+        $this->table->setHeading('Patient CCC Number', 'Date Collected', 'Test Date', 'Result', 'Justification', 'Options');
         $data['viral_result'] = $this->table->generate();
         $this->base_params($data);
     }
 
     function get_viral_load() {
 
-        $data = array();
+        $data = [];
         /* Array of database columns which should be read and sent back to DataTables. Use a space where
          * you want to insert a non-database field (for example a counter or static image)
          */
-        $aColumns = array('id', 'patient_ccc_number', 'date_collected', 'test_date', 'result', 'justification', 'id');
-        $iDisplayStart = @$_GET['iDisplayStart'];
-        $iDisplayLength = @$_GET['iDisplayLength'];
-        $iSortCol_0 = @$_GET['iSortCol_0'];
-        $iSortingCols = @$_GET['iSortingCols'];
-        $sSearch = @$_GET['sSearch'];
-        $sEcho = @$_GET['sEcho'];
+        $aColumns = ['patient_ccc_number', 'date_collected', 'test_date', 'result', 'justification', 'id'];
+        $iDisplayStart = @$_GET['start'];
+        $iDisplayLength = @$_GET['length'];
+        $iSortCol_0 = @$_GET['order'][0]['column'];
+        $iSortingCols = @$_GET['order'];
+        $sSearch = @$_GET['search']['value'];
+        $sEcho = @$_GET['draw'];
         /*
          * Paging
          * */
@@ -68,11 +68,15 @@ class Viral_load_manual extends \App\Controllers\BaseController {
          * Ordering
          */
         $sOrder = "";
-        if (isset($_GET['iSortCol_0'])) {
+        if (isset($_GET['order'][0]['column'])) {
             $sOrder = "ORDER BY  ";
-            for ($i = 0; $i < intval($_GET['iSortingCols']); $i++) {
-                if ($_GET['bSortable_' . intval($_GET['iSortCol_' . $i])] == "true") {
-                    $sOrder .= "`" . $aColumns[intval($_GET['iSortCol_' . $i])] . "` " . ($_GET['sSortDir_' . $i] === 'asc' ? 'asc' : 'desc') . ", ";
+            for ($i = 0; $i < intval($iSortingCols); $i++) {
+                $iSortCol = $this->request->getGetPost('order')[$i]['column'];
+                $bSortable = $this->request->getGetPost('columns')[intval($iSortCol)]['orderable'];
+                $sSortDir = $this->request->getGetPost('order')[$i]['dir'];
+
+                if ($bSortable == "true") {
+                    $sOrder .= "`" . $aColumns[intval($iSortCol)] . "` " . ($sSortDir === 'asc' ? 'asc' : 'desc') . ", ";
                 }
             }
 
@@ -93,7 +97,7 @@ class Viral_load_manual extends \App\Controllers\BaseController {
         if (isset($sSearch) && !empty($sSearch)) {
             $sFilter = "AND ( ";
             for ($i = 0; $i < count($aColumns); $i++) {
-                $bSearchable = $_GET['bSearchable_' . $i];
+                $bSearchable = $_GET['columns'][$i]['searchable'];
 
                 // Individual column filtering
                 if (isset($bSearchable) && $bSearchable == 'true') {
@@ -102,7 +106,7 @@ class Viral_load_manual extends \App\Controllers\BaseController {
                             $sFilter .= " OR ";
                         }
                         $c = 1;
-                        $sSearch = mysql_real_escape_string($sSearch);
+                        $sSearch = $this->db->escapeString(($sSearch));
                         $sFilter .= "`" . $aColumns[$i] . "` LIKE '%" . $sSearch . "%'";
                     }
                 }
@@ -120,16 +124,16 @@ class Viral_load_manual extends \App\Controllers\BaseController {
 
         // Data set length after filtering
         //Total number of drugs that are displayed
-        $iFilteredTotal = count($rResult->getResultArray());
+        // $iFilteredTotal = count($rResult->getResultArray());
 
         $query = $this->db->query('SELECT COUNT(patient_ccc_number) AS found_rows  from  patient_viral_load')->getResult();
-        $iTotal = $query[0]->found_rows;
+        $iTotal = (int) $query[0]->found_rows;
 
         // Output
-        $output = array('sEcho' => intval($sEcho), 'iTotalRecords' => $iTotal, 'iTotalDisplayRecords' => $iFilteredTotal, 'aaData' => array());
+        $output = ['draw' => intval($sEcho), 'recordsTotal' => $iTotal, 'recordsFiltered' => $iFilteredTotal, 'data' => []];
 
         foreach ($rResult->getResultArray()as $aRow) {
-            $row = array();
+            $row = [];
             $x = 0;
             foreach ($aColumns as $col) {
                 $x++;
@@ -137,7 +141,7 @@ class Viral_load_manual extends \App\Controllers\BaseController {
                 $row[] = $aRow[$col];
             }
             $id = $aRow['id'];
-            $output['aaData'][] = $row;
+            $output['data'][] = $row;
         }
 
         echo json_encode($output);
