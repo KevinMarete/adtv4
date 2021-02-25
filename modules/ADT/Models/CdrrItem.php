@@ -8,7 +8,7 @@ class CdrrItem extends BaseModel {
     protected $guarded = ['id'];
 
     public function dhis_element(){
-        return $this->belongsTo(SyncRegimen::class, 'drug_id', 'target_id');
+        return $this->belongsTo(DhisElements::class, 'drug_id', 'target_id');
     }
 
     public function cdrr(){

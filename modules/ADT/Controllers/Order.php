@@ -3051,7 +3051,7 @@ class Order extends BaseController {
             // facility_id
             $dataValues = [];
             foreach ($results['item'] as $key => $item) {
-                if ($item['dhis_code'] == NULL) {
+                if (empty($item['dhis_code'])) {
                     continue;
                 }
                 if ($item['balance'] !== null) {
