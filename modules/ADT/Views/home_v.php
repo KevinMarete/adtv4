@@ -87,10 +87,9 @@ if ($session->get("changed_password")) {
         $('#chart_area3').load(visits_link);
         $('#table1').load('<?php echo base_url() . '/getStockSafetyQty' ?>', function () {
             $('#stock_level').dataTable({
-                "bJQueryUI": true,
-                "sPaginationType": "full_numbers",
-                "bFilter": false,
-                "bLengthChange": false
+                "pagingType": "full_numbers",
+                "filter": false,
+                "lengthChange": false
             });
         });
         //Toggle

@@ -28,8 +28,7 @@
 			processing: true,
 			serverSide: true,
 			ajax: "<?= base_url();?>/viral_load_manual/get_viral_load",
-	        // "jQueryUI": true,
-	        paginationType: "full_numbers",
+	        pagingType: "full_numbers",
 	        stateSave : true,
 	        destroy: true,
 	        columnDefs: [

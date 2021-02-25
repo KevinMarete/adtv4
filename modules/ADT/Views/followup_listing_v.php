@@ -22,15 +22,16 @@ td {
 	// defaulter_table
 	$(document).ready(function() {
 		$('.defaulter_table').dataTable({
-			"bJQueryUI": true,
-			"sPaginationType": "full_numbers",
-			"sDom": '<"H"Tfr>t<"F"ip>',
-			"oTableTools": {
-				"sSwfPath": "<?= base_url() ?>assets/scripts/datatable/copy_csv_xls_pdf.swf",
-				"aButtons": [ "copy", "print","xls","pdf" ]
-			},
-			"bProcessing": true,
-			"bServerSide": false,
+			dom: 'lBfrtip',
+			buttons: [
+				'copyHtml5',
+				'excelHtml5',
+				'csvHtml5',
+				'pdfHtml5'
+			],
+			pagingType: "full_numbers",
+			processing: true,
+			serverSide: false
 		});
 	});
 </script>

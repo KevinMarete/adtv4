@@ -138,10 +138,9 @@ if (session()->get('link_id') and session()->get('linkSub')) {
                     ;
                 } else {
                     oTable = $('.setting_table').dataTable({
-                        "bJQueryUI": true,
-                        "sPaginationType": "full_numbers",
-                        "bDestroy": true,
-                        "bStateSave": true,
+                        "pagingType": "full_numbers",
+                        "destroy": true,
+                        "stateSave": true,
                     });
                 }
                 //append actual classs for confirm dialog box to all enable and disable user
@@ -243,10 +242,9 @@ if (session()->get('link_id') and session()->get('linkSub')) {
                         ;
                     } else {
                         oTable = $('.setting_table').dataTable({
-                            "bJQueryUI": true,
-                            "sPaginationType": "full_numbers",
-                            "bDestroy": true,
-                            "bStateSave": true,
+                            "pagingType": "full_numbers",
+                            "destroy": true,
+                            "stateSave": true,
                         });
                     }
                     //append actual classs for confirm dialog box to all enable and disable user

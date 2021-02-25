@@ -833,9 +833,8 @@ if(isset($results)){
 		<script>
 			$(document).ready(function(){
 			    var oTable = $('#history_table').dataTable({
-			    	                              "bJQueryUI" : true,
-			    	                              "sPaginationType" : "full_numbers",
-			    	                              "aaSorting":[]//Disable initial sorting
+			    	                              "pagingType" : "full_numbers",
+			    	                              "sorting":[]//Disable initial sorting
 			    	                               });
                 //oTable.fnSort([[1,'asc']]);
 			});

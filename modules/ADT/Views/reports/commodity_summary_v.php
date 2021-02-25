@@ -4,34 +4,8 @@
 		var report_title = $("#report_title").text();
 		var facility = $("#facility_name").text();
 		$('#drug_table').dataTable({
-			// "oTableTools": {
-			// 	"sSwfPath": "<?php echo base_url('/assets/scripts/datatable/copy_csv_xls_pdf.swf') ?>",
-			// 	"aButtons": ["copy",
-			// 		{
-			// 			"sExtends": "xls",
-			// 			"sTitle": report_title + " (" + facility + ")",
-			// 		},
-			// 		{
-			// 			"sExtends": "pdf",
-			// 			"sPdfOrientation": "landscape",
-			// 			"sPdfSize": "A3",
-			// 			"sTitle": report_title + " (" + facility + ")",
-			// 		}
-			// 	]
-			// },
-			// "sDom": '<"H"T<"clear">lfr>t<"F"ip>',
-			// "bProcessing": true,
-			// "bServerSide": true,
-			// "sAjaxSource": _url,
 			// "iDisplayLength": 10,
-			// "aLengthMenu": [
-			// 	[10, 25, 50, 100, -1],
-			// 	[10, 25, 50, 100, "All"]
-			// ],
-			// "bJQueryUI": true,
-			// "sPaginationType": "full_numbers",
-			// "bDestroy": true
-			dom: 'Bfrtip',
+			dom: 'lBfrtip',
 			ajax: _url,
 			processing: true,
 			serverSide: true,
@@ -50,7 +24,8 @@
 					orientation: 'landscape'
 				}
 			],
-			pagingType: "full_numbers"
+			pagingType: "full_numbers",
+			"lengthMenu": [ [10, 25, 50, 100, -1], [10, 25, 50, 100, "All"] ]
 
 
 		});

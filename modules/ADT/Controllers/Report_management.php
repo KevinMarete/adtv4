@@ -6063,7 +6063,7 @@ class Report_management extends \App\Controllers\BaseController
       $prev_end = date("Y-m-d", strtotime("-1 month", strtotime($end_date)));
 
       // Output
-      $output = array('sEcho' => intval($sEcho), 'iTotalRecords' => $iTotal, 'iTotalDisplayRecords' => $iFilteredTotal, 'aaData' => array());
+      $output = array('draw' => intval($sEcho), 'recordsTotal' => $iTotal, 'recordsFiltered' => $iFilteredTotal, 'data' => array());
       foreach ($rResult->getResultArray() as $aRow) {
         $row = array();
         $drug_id = $aRow['id'];
@@ -6148,7 +6148,7 @@ class Report_management extends \App\Controllers\BaseController
           }
         }
         //End of Other Transactions
-        $output['aaData'][] = $row;
+        $output['data'][] = $row;
       }
       echo json_encode($output);
     } //Check if user is logged in end
@@ -6228,7 +6228,7 @@ class Report_management extends \App\Controllers\BaseController
     $iTotal = count($tot_drugs->getResultArray());
 
     // Output
-    $output = array('sEcho' => intval($sEcho), 'iTotalRecords' => $iTotal, 'iTotalDisplayRecords' => $iFilteredTotal, 'aaData' => array());
+    $output = array('draw' => intval($sEcho), 'recordsTotal' => $iTotal, 'recordsFiltered' => $iFilteredTotal, 'data' => array());
     foreach ($rResult->getResultArray() as $aRow) {
       /* json is sensitive on ' so we need to replace the drugs with ' to have /
             Victoria Wasonga
@@ -6275,7 +6275,7 @@ class Report_management extends \App\Controllers\BaseController
           $row[] = '-';
         }
       }
-      $output['aaData'][] = $row;
+      $output['data'][] = $row;
     }
     echo json_encode($output);
   }

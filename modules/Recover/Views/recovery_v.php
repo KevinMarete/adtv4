@@ -234,10 +234,9 @@
 
                 $("#backup_files").load("recover/showdir", function () {
                     $('.dataTables').dataTable({
-                        "bJQueryUI": false,
-                        "sPaginationType": "full_numbers",
-                        "bProcessing": true,
-                        "bServerSide": false,
+                        "pagingType": "full_numbers",
+                        "processing": true,
+                        "serverSide": false,
                     });
                     //Reset progressbar
                     $('#progress .progress-bar').css('width', '0%');

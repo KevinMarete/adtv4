@@ -302,7 +302,7 @@ $ccc_stores = session()->get("ccc_store");
                 <tr>
                     <td><label>Select Year : </label></td>
                     <td>
-                        <input type="text" name="filter_year" id="single_year_filter" class="input-medium input_year" />
+                        <input type="text" name="filter_year" id="single_year_filter" class="input-medium input_year" autocomplete="off"/>
                     </td>
                     <td>
                         <select name="pack_unit" id="pack_unit">

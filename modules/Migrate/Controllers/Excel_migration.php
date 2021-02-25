@@ -109,6 +109,7 @@ class Excel_migration extends BaseController {
                 'start_regimen' => $this->getRegimen(trim($row[12])),
                 'start_regimen_date' => empty($row[13]) ? '' : $row[13],
                 'current_status' => $this->getStatus(trim($row[14])),
+                'status_change_date' => empty($row[13]) ? '' : $row[13],
                 'current_regimen' => $this->getRegimen(trim($row[15])),
                 'nextappointment' => empty($row[16]) ? '' : $row[16],
                 'start_height' => empty($row[19]) ? '' : trim($row[19]),

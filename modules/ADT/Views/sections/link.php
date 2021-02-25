@@ -52,8 +52,7 @@ $scripts = [
   'toastr.js',
   'select2-3.4.8/select2.min.js',
   'bootbox.min.js',
-  'Merged_JS.js',
-  'autoprefixer.js'
+  'Merged_JS.js'
 ];
 
 foreach ($scripts as $script) {
