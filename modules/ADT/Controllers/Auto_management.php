@@ -38,12 +38,14 @@ class Auto_management extends \App\Controllers\BaseController {
 
 
         //dd($log);
-        $last_update = $log['last_index'];
-        $status = (int) $log['count'];
-
-        $last_update = strtotime($last_update);
-        $time_diff = time() - $last_update;
-        $retry = ($time_diff > $retry_seconds) ? TRUE : FALSE;
+        if(!empty($log)) {
+            $last_update = $log['last_index'];
+            $status = (int) $log['count'];
+    
+            $last_update = strtotime($last_update);
+            $time_diff = time() - $last_update;
+            $retry = ($time_diff > $retry_seconds) ? TRUE : FALSE;
+        }
 
         /*
          * Conditions:
@@ -56,10 +58,19 @@ class Auto_management extends \App\Controllers\BaseController {
           echo 'TodayDate:='.date('Y-m-d').',LastUpdateDate:='.date('Y-m-d', $last_update).',Retry:='.$retry.',Status:='.$status.',TimeDiff:='.$time_diff.',RetrySeconds:='.$retry_seconds;die();
          */
 
-        if ((date('Y-m-d') != date('Y-m-d', $last_update)) || ($retry && $status == 0) || $manual == TRUE) {
+        if (empty($log) || (date('Y-m-d') != date('Y-m-d', $last_update)) || ($retry && $status == 0) || $manual == TRUE) {
 
-            // Update today's date before starting process
-            $sql = "UPDATE migration_log SET last_index='$today', count = 0 WHERE source='auto_update'";
+            // Update today's date (or insert entry) before starting process
+            if(empty($log)) {
+                Migration_log::create([
+                    'source' => 'auto_update',
+                    'last_index' => $today,
+                    'count' => 0
+                ]);
+            }
+            else {
+                $sql = "UPDATE migration_log SET last_index='$today', count = 0 WHERE source='auto_update'";
+            }
             $this->db->query($sql);
             //function to update destination column to 1 in drug_stock_movement table for issued transactions that have name 'pharm'
             //function to update destination column to 1 in drug_stock_movement table for issued transactions that have name 'pharm'
