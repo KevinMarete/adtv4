@@ -31,7 +31,7 @@ class Auto_management extends \App\Controllers\BaseController {
     public function index($manual = FALSE) {
 
         $message = "";
-        $retry_seconds = 3600; //1 hour (60*60)
+        $retry_seconds = 86400; //1 day (60*60 * 24)
         $today = date('YmdHis');
         //get last update time of log file for auto_update
         $log = Migration_log::getLog('auto_update');
@@ -620,9 +620,9 @@ class Auto_management extends \App\Controllers\BaseController {
 
     public function auto_backup() {
         $returnable = "AutoBackup: ";
-        $autobackup = Facilities::getCurrentFacility($this->session->get("facility"))[0]->autobackup;
+        $facility = Facilities::where('facilitycode', $this->session->get("facility"))->first();
         $backup = new Backup();
-        if ($autobackup == 1) {
+        if (!empty($facility) && $facility->autobackup == 1) {
             // check if auto backup is set
             $backup_result = $backup->run_backup();
             $file = explode('-', str_replace(' ', '', $backup_result));
@@ -645,7 +645,7 @@ class Auto_management extends \App\Controllers\BaseController {
                 if ($apiResponse2 == 'File uploaded succesfully.') {
                     return $returnable .= 'Backup:Success & Upload Success<br>';
                 } else {
-                    return $returnable .= 'Error:Backup Could not be processed<br>';
+                    return $returnable .= 'Error:Backup Could not be uploaded<br>';
                 }
             } else {
 

@@ -282,8 +282,6 @@ class Backup extends \CodeIgniter\Controller {
     public function run_backup() {
         
         $file_path = FCPATH;
-//die;
-
         $file_path = addslashes($file_path);
 
         $db = \Config\Database::connect();
@@ -294,23 +292,13 @@ class Backup extends \CodeIgniter\Controller {
         $password = $db->password;
         $current_db = $db->database;
 
-//$CI = &get_instance();
-//$CI->load->database();
         $hostname = explode(':', $db->hostname)[0];
-//$port = $CI->db->port;
-//$username = $CI->db->username;
-//$password = $CI->db->password;
-//$current_db = $CI->db->database;
-//Fix for including port(it was combining both hostname and port)
-//$hostname_port_tmp = explode(':', $hostname_port);
-//$hostname = $hostname_port_tmp[0];
-//$port = (isset($hostname_port_tmp[1])) ? $hostname_port_tmp[1] : 3306;
 
         $forge = \Config\Database::forge();
 
 
-//if ($this->dbutil->database_exists($current_db)) {
-// $link = mysql_connect($hostname, $username, $password);
+        //if ($this->dbutil->database_exists($current_db)) {
+        // $link = mysql_connect($hostname, $username, $password);
         $sql = "SELECT Facility_Code from users limit 1";
         $result = $db->query($sql);
         $facility_code = $result->getResultArray()[0]['Facility_Code'];
@@ -324,9 +312,9 @@ class Backup extends \CodeIgniter\Controller {
 
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
             $mysql_bin = str_replace("\\", "\\\\", $mysql_home);
-          $mysql_con = $mysql_bin . '' . ' -u' . $username . ' -p'.$password.' -h ' . $hostname . ' -P ' . $port . ' ' . $current_db . ' > ' . $file_path;
+            $mysql_con = $mysql_bin . '' . ' -u ' . $username . ' -p'.$password.' -h ' . $hostname . ' -P ' . $port . ' ' . $current_db . ' > ' . $file_path;
         } else {
-            $mysql_con = 'mysqldump -u' . $username . ' -p' . $password . ' -P' . $port . ' -h ' . $hostname . ' ' . $current_db . ' > ' . $file_path;
+            $mysql_con = 'mysqldump -u ' . $username . ' -p' . $password . ' -P ' . $port . ' -h ' . $hostname . ' ' . $current_db . ' > ' . $file_path;
         }
 
         exec($mysql_con);
@@ -341,7 +329,7 @@ class Backup extends \CodeIgniter\Controller {
         } else {
             return "Error: Backup Not successful";
         }
-//}
+        //}
     }
 
     public function list_remote_files() {
