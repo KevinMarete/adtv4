@@ -867,12 +867,15 @@ class Dispensement_management extends BaseController {
                 //Check Regimen Drug Table to figure out which drug is ART/OI
                 $chk_reg_drug_sql = "SELECT 1 FROM regimen_drug WHERE regimen = '$current_regimen' AND drugcode = '$drugs[$i]'";
                 $chk_result = DB::select($chk_reg_drug_sql);
-                if ($chk_result) {
+                $presc = $this->getPrescription($prescription);
+                if ($chk_result && isset($presc['arv_prescription'])) {
                     //Is an ARV
-                    $this->db->table('drug_prescription_details_visit')->insert(['drug_prescription_details_id' => $this->getPrescription($prescription)['arv_prescription'], 'visit_id' => $visit_id]);
+                    $this->db->table('drug_prescription_details_visit')->insert(['drug_prescription_details_id' => $presc['arv_prescription'], 'visit_id' => $visit_id]);
                 } else {
-                    //Is an OI
-                    $this->db->table('drug_prescription_details_visit')->insert(['drug_prescription_details_id' => $this->getPrescription($prescription)['oi_prescription'], 'visit_id' => $visit_id]);
+                    if(isset($presc['oi_prescription'])) { // Checking whether index has been set
+                        //Is an OI
+                        $this->db->table('drug_prescription_details_visit')->insert(['drug_prescription_details_id' => $presc['oi_prescription'], 'visit_id' => $visit_id]);
+                    }
                 }
             }
 
@@ -1210,7 +1213,7 @@ class Dispensement_management extends BaseController {
             if ($rs) {
                 $data[$key]->prescription_regimen_id = $rs->id;
                 $arv_prescription = $p->id;
-                $data['arv_prescription'] = $arv_prescription ?? null;
+                $data['arv_prescription'] = $arv_prescription ?? '';
                 //Get oi_prescription(s)
                 // $sql = "SELECT dpd.id from drug_prescription dp,drug_prescription_details dpd where ".
                 // "dp.id = dpd.drug_prescriptionid and dp.id = ".$pid." and dpd.id != '".$arv_prescription."'";
@@ -1218,7 +1221,7 @@ class Dispensement_management extends BaseController {
                     $query->where('id', $pid);
                 })->where('id', '!=', $arv_prescription)->first();
                 // $query = DB::select($sql);
-                $data['oi_prescription'] = $query->id ?? null;
+                $data['oi_prescription'] = $query->id ?? '';
             }
         }
         return $data;
