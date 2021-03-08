@@ -776,7 +776,7 @@
                         <div class="row-fluid">\
                         <div class="span6">\
                         <label class="inline">\
-                        Facility Name:<input type="text" name="print_facility_name" class="span8 label_facility" value="<?php echo $session->get("facility_name"); ?>" readonly/>\
+                        Facility Name:<input type="text" name="print_facility_name" class="span8 label_facility" value="<?php echo addcslashes($session->get("facility_name"), "'"); ?>" readonly/>\
                         </label>\
                         </div>\
                         <div class="span6">\

@@ -308,6 +308,7 @@
             //Get user ordering sites
             $.get(userSitesURL, function(data) {
                 //Parse json to array
+                console.log(data);
                 data = $.parseJSON(data);
 
                 //Select user sites

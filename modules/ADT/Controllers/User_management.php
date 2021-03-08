@@ -45,10 +45,12 @@ class User_management extends \App\Controllers\BaseController {
     }
 
     public function get_sites($user_id = '') {
+        $data = json_encode([]);
         $row = User_facility::where('user_id',$user_id)->first();
         if ($row) {
-            echo $row->facility;
+            $data =  $row->facility;
         }
+        return $data;
     }
 
     public function index() {
