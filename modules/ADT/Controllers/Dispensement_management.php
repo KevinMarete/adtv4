@@ -848,14 +848,19 @@ class Dispensement_management extends BaseController {
                 'differentiated_care' => $differentiated_care
             ]);
 
-            $regimen_change_query = " insert into change_log (old_value,new_value,facility,patient,change_purpose,change_type)
-            select '" . $last_regimen . "' 
-            ,'" . $current_regimen . "'
-            ,'" . $facility . "'
-            ,'" . $patient . "'
-            ,'" . $regimen_change_reason . "','regimen' where '" . $current_regimen . "' != '" . $last_regimen . "'";
-
-            DB::statement($regimen_change_query);
+            if($current_regimen != $last_regimen) {
+                $regimen_change_query = "insert into change_log (old_value,new_value,facility,patient,change_purpose,change_type)
+                VALUES (
+                '" . $last_regimen . "' 
+                ,'" . $current_regimen . "'
+                ,'" . $facility . "'
+                ,'" . $patient . "'
+                ,'" . $regimen_change_reason . "',
+                'regimen'
+                )";
+    
+                DB::statement($regimen_change_query);
+            }
 
 
             if ($prescription > 0) {
@@ -864,10 +869,10 @@ class Dispensement_management extends BaseController {
                 $chk_result = DB::select($chk_reg_drug_sql);
                 if ($chk_result) {
                     //Is an ARV
-                    $this->db->table('drug_prescription_details_visit')->insert(array('drug_prescription_details_id' => $this->getPrescription($prescription)['arv_prescription'], 'visit_id' => $visit_id));
+                    $this->db->table('drug_prescription_details_visit')->insert(['drug_prescription_details_id' => $this->getPrescription($prescription)['arv_prescription'], 'visit_id' => $visit_id]);
                 } else {
                     //Is an OI
-                    $this->db->table('drug_prescription_details_visit')->insert(array('drug_prescription_details_id' => $this->getPrescription($prescription)['oi_prescription'], 'visit_id' => $visit_id));
+                    $this->db->table('drug_prescription_details_visit')->insert(['drug_prescription_details_id' => $this->getPrescription($prescription)['oi_prescription'], 'visit_id' => $visit_id]);
                 }
             }
 
@@ -1205,7 +1210,7 @@ class Dispensement_management extends BaseController {
             if ($rs) {
                 $data[$key]->prescription_regimen_id = $rs->id;
                 $arv_prescription = $p->id;
-                    $data['arv_prescription'] = $arv_prescription;
+                $data['arv_prescription'] = $arv_prescription ?? null;
                 //Get oi_prescription(s)
                 // $sql = "SELECT dpd.id from drug_prescription dp,drug_prescription_details dpd where ".
                 // "dp.id = dpd.drug_prescriptionid and dp.id = ".$pid." and dpd.id != '".$arv_prescription."'";
