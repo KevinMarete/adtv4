@@ -456,7 +456,7 @@ class Inventory_management extends \App\Controllers\BaseController {
 
         $data['supplier_name'] = $facility_detail->supplier_name;
         $data['picking_lists'] = "";
-        $data['get_list'] = json_decode($get_list, TRUE);
+        $data['get_list'] = $get_list;
         $data['user_id'] = $user_id;
         $data['ccc_stores'] = json_decode(session()->get("ccc_store"), TRUE);
         $data['facility'] = $facility_code;
