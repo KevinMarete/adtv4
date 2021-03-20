@@ -100,13 +100,13 @@
                     <div class="span6 dispensing-field">
                         <div class="control-group">
                             <label>Current Height(cm)</label>
-                            <input  type="text"name="height" id="height" class="validate[required]">
+                            <input type="text"name="height" id="height" required>
                         </div>
                     </div>
                     <div class="span6 dispensing-field">
                         <div class="control-group">
                             <label><span class='astericks'>*</span>Current Weight(kg)</label>
-                            <input  type="text"name="weight" id="weight" class="validate[required]" >
+                            <input  type="text"name="weight" id="weight" required>
                         </div>
                     </div>
                 </div>
@@ -114,13 +114,13 @@
                     <div class="span6 dispensing-field">
                         <div class="control-group">
                             <label><span class='astericks'>*</span>Days to Next Appointment</label>
-                            <input  type="text" name="days_to_next" id="days_to_next" class="validate[required]">
+                            <input  type="text" name="days_to_next" id="days_to_next" required>
                         </div>
                     </div>
                     <div class="span6 dispensing-field">
                         <div class="control-group">
                             <label><span class='astericks'>*</span>Date of Next Appointment</label>
-                            <input  type="text" name="next_appointment_date" id="next_appointment_date" class="validate[required]" >
+                            <input  type="text" name="next_appointment_date" id="next_appointment_date" required>
                         </div>
                     </div>
                 </div>
@@ -175,16 +175,18 @@
                             foreach ($patient_appointment as $appointment):
                                 $last_regimen_disp = $appointment->regimen_code . ' | ' . $appointment->regimen_desc;
                                 $last_regimen = $appointment->regimen_id;
+                                $last_regimen_code = $appointment->regimen_code;
                             endforeach;
                             echo $last_regimen_disp;
                             ?>" id="last_regimen_disp" readonly="">
                             <input type="hidden" name="last_regimen" value="<?php echo $last_regimen; ?>" id="last_regimen" value="0">
+                            <input type="hidden" name="last_regimen_code" value="<?php echo $last_regimen_code; ?>" id="last_regimen_code" value="0">
                         </div>
                     </div>
                     <div class="span6 dispensing-field">
                         <div class="control-group">
                             <label><span class='astericks'>*</span>Current Regimen</label>
-                            <select type="text"name="current_regimen" id="current_regimen"  class="validate[required]" style='width:100%;' >
+                            <select type="text" name="current_regimen" id="current_regimen" style='width:100%;' required>
                                 <option value="">-Select One--</option>
                             </select>
                         </div>
@@ -427,9 +429,12 @@
             } else {
             }
         });
-<?php if (count($prescription) > 0 && $api) { ?>
-            $('#current_regimen').val($("#current_regimen option:contains(<?= $prescription[0]->drug_name; ?>)").val());
-<?php } ?>
+
+        <?php if (count($prescription) > 0 && $api) { ?>
+        $('#height').val('<?= $prescription[0]->height ?? ''; ?>').change();
+        $('#weight').val('<?= $prescription[0]->weight ?? ''; ?>').change();
+        <?php } ?>
+        
         $('#ccc_store_id').val(<?= $session->get('ccc_store_id'); ?>);
         $('#ccc_store_id').attr('readonly', 'true');
         var loopcounter = 0;
@@ -922,7 +927,9 @@
         purpose_visit = $("#purpose :selected").text().toLowerCase();
         //Check if visit != switch_regimen then current_regimen = last_regimen
         if (purpose_visit === 'switch regimen' || purpose_visit === '--select one--') {
-            $("#current_regimen").val("0");
+            <?php if (count($prescription) <= 0 && !$api) { ?>
+                $("#current_regimen").val("0");
+            <?php } ?>
         } else {
             //Assign current_regimen = last_regimen
             $("#current_regimen").val(last_regimen);
@@ -998,7 +1005,7 @@
         var request = $.ajax({
             url: _url,
             type: 'post',
-            data: {"selected_regimen": selected_regimen, "stock_type": stock_type},
+            data: {"selected_regimen": selected_regimen, "stock_type": (this.stock_type ? this.stock_type: null)},
             dataType: "json",
             async: false
         });
@@ -1027,7 +1034,7 @@
             if ($("#last_regimen_disp").val().toLowerCase().indexOf("oi") == -1) {
                 //contains oi
 
-                if (purpose_visit == 'routine refill') {
+                if (this.purpose_visit == 'routine refill') {
                     routine_check = 1;
                     //append visits
                     if (typeof previous_dispensed_data !== "undefined") {
@@ -1648,13 +1655,38 @@
         });
         request.done(function (data) {
             //Remove appended options to reinitialize dropdown
-            $('#current_regimen option')
-                    .filter(function () {
-                        return this.value || $.trim(this.value).length != 0;
-                    }).remove();
+            $('#current_regimen option').filter(function () {
+                return this.value || $.trim(this.value).length != 0;
+            }).remove();
             $(data).each(function (i, v) {
                 $("#current_regimen").append("<option value='" + v.id + "'>" + v.regimen_code + " | " + v.regimen_desc + "</option>");
             });
+            
+
+            <?php if (count($prescription) > 0 && $api) { ?>
+
+            var count_prescription = <?php echo count($prescription) ?>;
+            var current_regimen = '<?= $prescription[0]->current_regimen ?? ''; ?>';
+            let previous_regimen = $("#last_regimen_code").attr("value");
+            if(current_regimen && previous_regimen && current_regimen == previous_regimen) {
+                $("#purpose option").each(function() {
+                    if($(this).text().toLocaleLowerCase() == 'routine refill') {
+                        $(this).attr('selected', 'selected');            
+                    }                        
+                });
+            }
+            else if(current_regimen && previous_regimen && current_regimen != previous_regimen) {
+                $("#purpose option").each(function() {
+                    if($(this).text().toLocaleLowerCase() == 'switch regimen') {
+                        $(this).attr('selected', 'selected');            
+                    }                        
+                });
+            }            
+
+            $("#current_regimen option:contains(" + current_regimen + ")").attr('selected', 'selected').change();
+            <?php } ?>
+
+
         });
         request.fail(function (jqXHR, textStatus) {
             bootbox.alert("<h4>Regimens Details Alert</h4>\n\<hr/>\n\<center>Could not retrieve regimens details : </center>" + textStatus);

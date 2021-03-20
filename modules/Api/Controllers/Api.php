@@ -14,6 +14,7 @@ use \Modules\Api\Models\Api_model;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Client;
 use Illuminate\Database\Capsule\Manager as DB;
+use Modules\ADT\Models\Patient;
 
 class Api extends BaseController {
 
@@ -176,8 +177,8 @@ class Api extends BaseController {
         $IS_PREGNANT = (isset($observations['IS_PREGNANT'])) ? (empty($observations['IS_PREGNANT']) ? '' : $observations['IS_PREGNANT']) : false;
         $PREGNANT_EDD = (isset($observations['PREGNANT_EDD'])) ? (empty($observations['PREGNANT_EDD']) ? '' : $observations['PRENGANT_EDD']) : false;
         $CURRENT_REGIMEN = (isset($observations['CURRENT_REGIMEN'])) ? (empty($observations['CURRENT_REGIMEN']) ? '' : $observations['CURRENT_REGIMEN']) : false;
-        $IS_SMOKER = (isset($observations['IS_SMOKER'])) ? (empty($observations['IS_SMOKER']) ? '' : $observations['CURRENT_REGIMEN']) : false;
-        $IS_ALCOHOLIC = (isset($observations['IS_ALCOHOLIC'])) ? (empty($observations['IS_ALCOHOLIC']) ? '' : $observations['CURRENT_REGIMEN']) : false;
+        $IS_SMOKER = (isset($observations['IS_SMOKER'])) ? (empty($observations['IS_SMOKER']) ? '' : $observations['IS_SMOKER']) : false;
+        $IS_ALCOHOLIC = (isset($observations['IS_ALCOHOLIC'])) ? (empty($observations['IS_ALCOHOLIC']) ? '' : $observations['IS_ALCOHOLIC']) : false;
         $REGIMEN_CHANGE_REASON = (isset($observations['REGIMEN_CHANGE_REASON'])) ? (empty($observations['REGIMEN_CHANGE_REASON']) ? '' : $observations['REGIMEN_CHANGE_REASON']) : false;
         $WHO_STAGE = (isset($observations['WHO_STAGE'])) ? (empty($observations['WHO_STAGE']) ? '' : $observations['WHO_STAGE']) : false;
         $ART_START = (isset($observations['ART_START'])) ? (empty($observations['ART_START']) ? '' : $observations['ART_START']) : false;
@@ -434,12 +435,20 @@ class Api extends BaseController {
         $OP_PREFIX = $order->COMMON_ORDER_DETAILS->ORDERING_PHYSICIAN->PREFIX;
         $TRANSACTION_DATETIME = $order->COMMON_ORDER_DETAILS->TRANSACTION_DATETIME;
         $NOTES = $order->COMMON_ORDER_DETAILS->NOTES;
-        $pe = array();
+        $pe = [];
+
+        $observations = [];
+        foreach ($order->OBSERVATION_RESULT as $ob) {
+            $observations[$ob->OBSERVATION_IDENTIFIER] = $ob->OBSERVATION_VALUE;
+        }
+        $HEIGHT = (isset($observations['HEIGHT'])) ? (empty($observations['HEIGHT']) ? '' : $observations['HEIGHT']) : null;
+        $WEIGHT = (isset($observations['WEIGHT'])) ? (empty($observations['WEIGHT']) ? '' : $observations['WEIGHT']) : null;
+        $CURRENT_REGIMEN = (isset($observations['CURRENT_REGIMEN'])) ? (empty($observations['CURRENT_REGIMEN']) ? '' : $observations['CURRENT_REGIMEN']) : false;
 
 
         // PHARMACY_ENCODED_ORDER
 
-        $pe_order = array();
+        $pe_order = [];
         foreach ($order->PHARMACY_ENCODED_ORDER as $eo) {
             array_push($pe_order, $eo);
         }
@@ -450,7 +459,10 @@ class Api extends BaseController {
             'order_status' => $ORDER_STATUS,
             'patient' => $ccc_no,
             'order_physician' => $OP_FIRST_NAME . ' ' . $OP_MIDDLE_NAME . ' ' . $OP_LAST_NAME,
-            'notes' => $NOTES
+            'notes' => $NOTES,
+            'height' => $HEIGHT,
+            'weight' => $WEIGHT,
+            'current_regimen' => $CURRENT_REGIMEN
         );
 
         $this->writeLog('prescription ', json_encode($pe));
@@ -1006,17 +1018,16 @@ class Api extends BaseController {
        // 'jjjgg'=>'yfgdhh'
        //  ];
 
-    $sql = "SELECT `id`, `medical_record_number`, `patient_number_ccc`, `first_name`, `last_name`, `other_name`, `dob`, `pob`, `gender`,`pregnant` FROM patient";
+        $sql = "SELECT `id`, `medical_record_number`, `patient_number_ccc`, `first_name`, `last_name`, `other_name`, `dob`, `pob`, `gender`,`pregnant` FROM patient";
         $query = $this->db->query($sql);
         $api_config = $query->getResultArray();
 
-$data=$api_config;
+        $data=$api_config;
 
         return json_encode($data);
-        //return (json_encode($data, JSON_PRETTY_PRINT));
     }
-//searchPatient
-     public function searchPatient($ccc)
+    
+    public function searchPatient($ccc)
     {
         # code...
        //  $data=[
@@ -1025,16 +1036,16 @@ $data=$api_config;
        // 'jjjgg'=>'yfgdhh',
        // 'ccc'=>$ccc
        //  ]
-    $sql = "SELECT `id`, `medical_record_number`, `patient_number_ccc`, `first_name`, `last_name`, `other_name`, `dob`, `pob`, `gender`,`pregnant` FROM patient where patient_number_ccc= '$ccc' ";
+        $sql = "SELECT `id`, `medical_record_number`, `patient_number_ccc`, `first_name`, `last_name`, `other_name`, `dob`, `pob`, `gender`,`pregnant` FROM patient where patient_number_ccc= '$ccc' ";
         $query = $this->db->query($sql);
         $api_config = $query->getResultArray();
 
-$data=$api_config;
+        $data=$api_config;
 
         //return json_encode($data);
         return (json_encode($data, JSON_PRETTY_PRINT));
     }
-//edit search by gender
+
     public function searchGender($pgender)
     {
         # code...
@@ -1044,11 +1055,11 @@ $data=$api_config;
        // 'jjjgg'=>'yfgdhh',
        // 'ccc'=>$ccc
        //  ]
-    $sql = "SELECT `id`, `medical_record_number`, `patient_number_ccc`, `first_name`, `last_name`, `other_name`, `dob`, `pob`, `gender`,`pregnant` FROM patient where gender= '$pgender' ";
+        $sql = "SELECT `id`, `medical_record_number`, `patient_number_ccc`, `first_name`, `last_name`, `other_name`, `dob`, `pob`, `gender`,`pregnant` FROM patient where gender= '$pgender' ";
         $query = $this->db->query($sql);
         $api_config = $query->getResultArray();
 
-$data=$api_config;
+        $data=$api_config;
 
         //return json_encode($data);
         return (json_encode($data, JSON_PRETTY_PRINT));
