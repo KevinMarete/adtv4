@@ -15,6 +15,7 @@ use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Client;
 use Illuminate\Database\Capsule\Manager as DB;
 use Modules\ADT\Models\Patient;
+use Modules\ADT\Models\PatientSource;
 use Modules\ADT\Models\Regimen;
 
 class Api extends BaseController {
@@ -151,7 +152,6 @@ class Api extends BaseController {
         $DATE_OF_BIRTH = empty($patient->PATIENT_IDENTIFICATION->DATE_OF_BIRTH) ? $this->writeLog('PATIENT', 'DOB Missing') : $patient->PATIENT_IDENTIFICATION->DATE_OF_BIRTH;
         $SEX = empty($patient->PATIENT_IDENTIFICATION->SEX) ? $this->writeLog('PATIENT', 'SEX Missing') : (($patient->PATIENT_IDENTIFICATION->SEX) == 'M' ? 1 : 2);
         $VILLAGE = empty($patient->PATIENT_IDENTIFICATION->PATIENT_ADDRESS->PHYSICAL_ADDRESS->VILLAGE) ? '' : $patient->PATIENT_IDENTIFICATION->PATIENT_ADDRESS->PHYSICAL_ADDRESS->VILLAGE;
-        // var_dump($patient);die;
         $WARD = empty($patient->PATIENT_IDENTIFICATION->PATIENT_ADDRESS->PHYSICAL_ADDRESS->WARD) ? '' : $patient->PATIENT_IDENTIFICATION->PATIENT_ADDRESS->PHYSICAL_ADDRESS->WARD;
         $SUB_COUNTY = empty($patient->PATIENT_IDENTIFICATION->PATIENT_ADDRESS->PHYSICAL_ADDRESS->SUB_COUNTY) ? '' : empty($patient->PATIENT_IDENTIFICATION->PATIENT_ADDRESS->PHYSICAL_ADDRESS->SUB_COUNTY);
         $COUNTY = empty($patient->PATIENT_IDENTIFICATION->PATIENT_ADDRESS->PHYSICAL_ADDRESS->COUNTY) ? '' : $patient->PATIENT_IDENTIFICATION->PATIENT_ADDRESS->PHYSICAL_ADDRESS->COUNTY;
@@ -211,7 +211,8 @@ class Api extends BaseController {
             'current_status' => $this->api_model->getActivePatientStatus()->id,
             'weight' => $START_WEIGHT,
             'who_stage' => $WHO_STAGE,
-            'start_regimen_date' => substr($ART_START, 0, 4) . '-' . substr($ART_START, 4, 2) . '-' . substr($ART_START, -2)
+            'start_regimen_date' => substr($ART_START, 0, 4) . '-' . substr($ART_START, 4, 2) . '-' . substr($ART_START, -2),
+            'source' => $this->getSource($patient->PATIENT_VISIT->PATIENT_SOURCE)
         ];
         $this->writeLog('msg', json_encode($new_patient));
         $internal_patient_id = $this->api_model->savePatient($new_patient, $INTERNAL_PATIENT_ID);
@@ -1073,6 +1074,21 @@ class Api extends BaseController {
             $result = $regimen->id;
         }
 
+        return $result;
+    }
+
+    public function getSource($source) {
+        $result = null;
+        $patient_source = PatientSource::where('name', $source)->first();
+        if(!empty($patient_source)) {
+            $result = $patient_source->id;
+        }
+        else {
+            if(PatientSource::where('name', 'CCC')->exists()) {
+                $patient_source = PatientSource::where('name', 'CCC')->first();
+                $result = $patient_source->id;
+            }
+        }
         return $result;
     }
 
