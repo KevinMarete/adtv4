@@ -626,7 +626,6 @@ class Patient_management extends BaseController {
         $new_patient->bmi = $this->post('start_bmi');
         $new_patient->phone = $this->post('phone');
         $new_patient->sms_consent = empty($this->post('sms_consent')) ? "0" : $this->post('sms_consent');
-        ;
         $new_patient->physical = $this->post('physical');
         $new_patient->alternate = $this->post('alternate');
         $new_patient->differentiated_care = $this->post('differentiated_care') ?? null;

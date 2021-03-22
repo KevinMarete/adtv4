@@ -15,6 +15,7 @@ use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Client;
 use Illuminate\Database\Capsule\Manager as DB;
 use Modules\ADT\Models\Patient;
+use Modules\ADT\Models\Regimen;
 
 class Api extends BaseController {
 
@@ -198,12 +199,12 @@ class Api extends BaseController {
             'pob' => $SUB_COUNTY,
             'pob' => $COUNTY,
             'alcohol' => $IS_ALCOHOLIC,
-            'current_regimen' => ' ',
+            'current_regimen' => $this->getRegimenId($CURRENT_REGIMEN),
             'height' => $START_HEIGHT,
             'pregnant' => $IS_PREGNANT,
             'smoke' => $IS_SMOKER,
             'start_height' => $START_HEIGHT,
-            'start_regimen' => $CURRENT_REGIMEN,
+            'start_regimen' => $this->getRegimenId($CURRENT_REGIMEN),
             'start_weight' => $START_WEIGHT,
             'active' => 1,
             'date_enrolled' => substr($ENROLLMENT_DATE, 0, 4) . '-' . substr($ENROLLMENT_DATE, 4, 2) . '-' . substr($ENROLLMENT_DATE, -2),
@@ -1063,6 +1064,16 @@ class Api extends BaseController {
 
         //return json_encode($data);
         return (json_encode($data, JSON_PRETTY_PRINT));
+    }
+
+    public function getRegimenId($code) {
+        $result = null;
+        $regimen = Regimen::where('regimen_code', $code)->first();
+        if(!empty($regimen)) {
+            $result = $regimen->id;
+        }
+
+        return $result;
     }
 
 
