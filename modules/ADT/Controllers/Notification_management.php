@@ -4,6 +4,8 @@ namespace Modules\ADT\Controllers;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Capsule\Manager as DB;
+use Modules\ADT\Models\Patient;
+use Modules\ADT\Models\PatientVisit;
 use \Modules\ADT\Models\Sync_facility;
 
 class Notification_management extends \App\Controllers\BaseController {
@@ -410,23 +412,24 @@ class Notification_management extends \App\Controllers\BaseController {
 			AND p.active='1'
 			GROUP BY p.patient_number_ccc;");
 
-        if ($sql->num_rows() > 0) {
-            foreach ($sql->getResult() as $rows) {
-                $patient_ccc = $rows->patient_number_ccc;
-                $sql_get_first_regimen = "SELECT pv.last_regimen " . " FROM patient_visit pv WHERE pv.patient_id='$patient_ccc' AND pv.last_regimen!='' " . "  ORDER BY pv.dispensing_date ASC LIMIT 1";
+        foreach ($sql->getResult() as $rows) {
+            $patient_ccc = $rows->patient_number_ccc;
+            $sql_get_first_regimen = PatientVisit::where('patient_id', $patient_ccc)->where('last_regimen', '!=', '')->orderBy('dispensing_date', 'asc')->first();
 
-                $result = $this->db->query($sql_get_first_regimen);
-                $res = $result->getResultArray();
-                $first_regimen = $res[0]['last_regimen'];
-                //echo $sql_get_first_regimen.'<br>';
-
-                $sql = "UPDATE patient p " . "SET p.start_regimen='$first_regimen'" . " WHERE p.patient_number_ccc='" . $patient_ccc . "'";
-                $result = $this->db->query($sql);
-                //$res = $result->result_array();
-                $this->session->set('msg_save_transaction', 'success');
-
-                echo $this->db->affectedRows();
+            if(!empty($sql_get_first_regimen)) {
+                Patient::where('patient_number_ccc', $patient_ccc)->update(['start_regimen' => $sql_get_first_regimen->last_regimen]);
             }
+            else {
+                // Get current regimen
+                $current = Patient::where('patient_number_ccc', $patient_ccc)->first();
+                if(!empty($current->current_regimen)) {
+                    Patient::where('patient_number_ccc', $patient_ccc)->update(['start_regimen' => $current->current_regimen]);
+                }
+            }
+
+            $this->session->set('msg_save_transaction', 'success');
+
+            echo $this->db->affectedRows();
         }
     }
 
@@ -439,23 +442,20 @@ class Notification_management extends \App\Controllers\BaseController {
 				     AND rst.name NOT LIKE '%oi%'
 				     GROUP BY p.patient_number_ccc;");
 
-        if ($sql->num_rows() > 0) {
-            foreach ($sql->getResult() as $rows) {
-                $patient_ccc = $rows->patient_number_ccc;
-                $sql_get_date_enrolled = "SELECT date_enrolled FROM patient WHERE patient_number_ccc='$patient_ccc' AND date_enrolled!='' ";
+        foreach ($sql->getResult() as $rows) {
+            $patient_ccc = $rows->patient_number_ccc;
+            $sql_get_date_enrolled = "SELECT date_enrolled FROM patient WHERE patient_number_ccc='$patient_ccc' AND date_enrolled!='' ";
 
-                $result = $this->db->query($sql_get_date_enrolled);
-                $res = $result->getResultArray();
-                $first_regimen_date = $res[0]['date_enrolled'];
+            $result = $this->db->query($sql_get_date_enrolled);
+            $res = $result->getResultArray();
+            $first_regimen_date = $res[0]['date_enrolled'];
 
 
-                $sql = "UPDATE patient p " . "SET p.start_regimen_date='$first_regimen_date'" . " WHERE p.patient_number_ccc='" . $patient_ccc . "'";
-                $result = $this->db->query($sql);
-                //$res = $result->result_array();
-                $this->session->set('msg_save_transaction', 'success');
+            $sql = "UPDATE patient p " . "SET p.start_regimen_date='$first_regimen_date'" . " WHERE p.patient_number_ccc='" . $patient_ccc . "'";
+            $result = $this->db->query($sql);
+            $this->session->set('msg_save_transaction', 'success');
 
-                echo $this->db->affectedRows();
-            }
+            echo $this->db->affectedRows();
         }
     }
 
@@ -479,21 +479,19 @@ class Notification_management extends \App\Controllers\BaseController {
 									AND ps.Name  LIKE '%follow-up%' 
 									GROUP BY p.patient_number_ccc;");
 
-        if ($sql->numRows() > 0) {
-            foreach ($sql->getResult() as $rows) {
-                $patient_CCC = $rows->patient_number_ccc;
-                $sql_get_latest_regimen = "SELECT pv.last_regimen " . " FROM patient_visit pv WHERE pv.patient_id='$patient_CCC' AND pv.last_regimen!='' " . " ORDER BY pv.dispensing_date DESC LIMIT 1";
+        foreach ($sql->getResult() as $rows) {
+            $patient_CCC = $rows->patient_number_ccc;
+            $sql_get_latest_regimen = "SELECT pv.last_regimen " . " FROM patient_visit pv WHERE pv.patient_id='$patient_CCC' AND pv.last_regimen!='' " . " ORDER BY pv.dispensing_date DESC LIMIT 1";
 
-                $result = $db->query($sql_get_latest_regimen);
-                $res = $result->getResultArray();
-                $latest_regimen = $res[0]['last_regimen'];
+            $result = $db->query($sql_get_latest_regimen);
+            $res = $result->getResultArray();
+            $latest_regimen = $res[0]['last_regimen'];
 
-                $sql = "UPDATE patient p " . "SET p.current_regimen='$latest_regimen'" . " WHERE p.patient_number_ccc='" . $patient_CCC . "'";
-                $result = $db->query($sql);
-                session()->set('msg_save_transaction', 'success');
+            $sql = "UPDATE patient p " . "SET p.current_regimen='$latest_regimen'" . " WHERE p.patient_number_ccc='" . $patient_CCC . "'";
+            $result = $db->query($sql);
+            session()->set('msg_save_transaction', 'success');
 
-                echo $db->affectedRows();
-            }
+            echo $db->affectedRows();
         }
     }
 
