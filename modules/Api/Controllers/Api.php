@@ -440,8 +440,10 @@ class Api extends BaseController {
         $pe = [];
 
         $observations = [];
-        foreach ($order->OBSERVATION_RESULT as $ob) {
-            $observations[$ob->OBSERVATION_IDENTIFIER] = $ob->OBSERVATION_VALUE;
+        if(!empty($order->OBSERVATION_RESULT)) {
+            foreach ($order->OBSERVATION_RESULT as $ob) {
+                $observations[$ob->OBSERVATION_IDENTIFIER] = $ob->OBSERVATION_VALUE;
+            }
         }
         $HEIGHT = (isset($observations['HEIGHT'])) ? (empty($observations['HEIGHT']) ? '' : $observations['HEIGHT']) : null;
         $WEIGHT = (isset($observations['WEIGHT'])) ? (empty($observations['WEIGHT']) ? '' : $observations['WEIGHT']) : null;
@@ -835,7 +837,6 @@ class Api extends BaseController {
 				INNER JOIN drugcode d ON d.id = pv.drug_id
 				WHERE dp.id = '$order_id' group by pv.drug_id ";
         $res = DB::select($sql);
-       // $this->writeLog('LOGGER 12: ', count($res)); 
         
         foreach ($res as $pat) {
 
@@ -853,11 +854,8 @@ class Api extends BaseController {
             ];
         }
 
-        echo "<pre>";
-        echo(json_encode($dispense, JSON_PRETTY_PRINT));
-        echo "</pre>";
         $this->writeLog('PHARMACY DISPENSE RDS^O13 ', json_encode($dispense));
-         $this->tcpILRequest(null, json_encode($dispense));
+        $this->tcpILRequest(null, json_encode($dispense));
     }
 
     function postILRequest($request) {

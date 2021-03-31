@@ -180,7 +180,7 @@
                             echo $last_regimen_disp;
                             ?>" id="last_regimen_disp" readonly="">
                             <input type="hidden" name="last_regimen" value="<?php echo $last_regimen; ?>" id="last_regimen" value="0">
-                            <input type="hidden" name="last_regimen_code" value="<?php echo $last_regimen_code; ?>" id="last_regimen_code" value="0">
+                            <input type="hidden" name="last_regimen_code" value="<?php echo $last_regimen_code ?? ''; ?>" id="last_regimen_code" value="0">
                         </div>
                     </div>
                     <div class="span6 dispensing-field">
