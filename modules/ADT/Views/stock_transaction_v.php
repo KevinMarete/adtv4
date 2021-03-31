@@ -1470,7 +1470,7 @@
                                             echo '<optgroup label="' . $list_facility . '" class="' . $list_facility . '">';
                                             $init++;
                                         }
-                                        echo '<option value=' . $value['id'] . '>' . $value['name'] . '</option>';
+                                        echo '<option value=' . $value->id . '>' . $value->name . '</option>';
                                     }
                                     echo '</optgroup>';
                                 }
@@ -1541,7 +1541,7 @@
                                             echo '<optgroup label="' . $list_facility . '" class="' . $list_facility . '">';
                                             $init++;
                                         }
-                                        echo '<option value=' . $value['id'] . '>' . $value['name'] . '</option>';
+                                        echo '<option value=' . $value->id . '>' . $value->name . '</option>';
                                     }
                                     echo '</optgroup>';
                                 }
