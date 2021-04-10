@@ -1051,7 +1051,8 @@
         }
 
     });
-    if(<?=$differentiated_care;?> == 1){
+
+    if((<?php echo empty($differentiated_care) ? 0 : $differentiated_care;?>){
     $('#differentiated_care').attr("checked", "checked");
     }
 
@@ -1065,7 +1066,7 @@
         {
             $(".clinical_appointment_input").hide();
             // show diff care exit reason
-            if(<?=$differentiated_care;?> == 1){
+            if((<?php echo empty($differentiated_care) ? 0 : $differentiated_care;?>){
                 $("#dcm_exit_reason_container").show();
             }
 
@@ -1650,7 +1651,7 @@
         var request = $.ajax({
             url: link,
             type: 'post',
-            data: {"age": <?= $age; ?> ,"service":service},
+            data: {"age": <?= $age ?? ''; ?> ,"service":service},
             dataType: "json"
         });
         request.done(function (data) {
