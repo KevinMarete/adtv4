@@ -3013,13 +3013,11 @@ class Order extends BaseController {
                 'completeDate' => date('Y-m-d', strtotime($results['updated'])),
                 'period' => date('Ym', strtotime($results['period_begin'])),
                 'orgUnit' => $dhis_org,
-                // 'attributeOptionCombo'=> "NhSoXUMPK2K",
                 'dataValues' => $dataValues
             ];
             $dhis_auth = $this->session->get('dhis_user') . ':' . $this->session->get('dhis_pass');
             $resource = 'api/27/dataValueSets?dataElementIdScheme=UID&orgUnitIdScheme=UID&importStrategy=CREATE_AND_UPDATE&dryRun=false&datasetAllowsPeriods=true&strictOrganisationUnits=true&strictPeriods=true&skipExistingCheck=false';
             $reports = $this->sendRequest($resource, 'POST', $dhismessage, $dhis_auth);
-            // echo json_encode($dhismessage, JSON_PRETTY_PRINT).'<br />';echo $resource.'<br/>';var_dump($reports);die;
         } else if ($order_type == 'cdrr' || $order_type == 'fcdrr' || $order_type == 'dcdrr') {
             $results = Cdrr::find($order_id);
             $code = '';
@@ -3038,7 +3036,7 @@ class Order extends BaseController {
                     break;
             }
 
-            $results['item'] = CdrrItem::whereHas('dhis_element', function ($query) use ($code) {
+            $results['item'] = CdrrItem::with('dhis_element')->whereHas('dhis_element', function ($query) use ($code) {
                         $query->where('target_category', 'drug')
                                 ->where('dhis_report', $code)
                                 ->where('target_report', '!=', 'unknown');
@@ -3051,44 +3049,44 @@ class Order extends BaseController {
             // facility_id
             $dataValues = [];
             foreach ($results['item'] as $key => $item) {
-                if (empty($item['dhis_code'])) {
+                if (empty($item['dhis_element']['dhis_code'])) {
                     continue;
                 }
                 if ($item['balance'] !== null) {
-                    $dataValues[] = ['dataElement' => $item['dhis_code'], 'categoryOptionCombo' => config('Adt_config')->dhiscode['balance'], 'value' => $item['balance']];
+                    $dataValues[] = ['dataElement' => $item['dhis_element']['dhis_code'], 'categoryOptionCombo' => config('Adt_config')->dhiscode['balance'], 'value' => $item['balance']];
                 }
                 if ($item['received'] !== null) {
-                    $dataValues[] = ['dataElement' => $item['dhis_code'], 'categoryOptionCombo' => config('Adt_config')->dhiscode['received'], 'value' => $item['received']];
+                    $dataValues[] = ['dataElement' => $item['dhis_element']['dhis_code'], 'categoryOptionCombo' => config('Adt_config')->dhiscode['received'], 'value' => $item['received']];
                 }
                 if ($item['dispensed_packs'] !== null) {
-                    $dataValues[] = ['dataElement' => $item['dhis_code'], 'categoryOptionCombo' => config('Adt_config')->dhiscode['dispensed_packs'], 'value' => $item['dispensed_packs']];
+                    $dataValues[] = ['dataElement' => $item['dhis_element']['dhis_code'], 'categoryOptionCombo' => config('Adt_config')->dhiscode['dispensed_packs'], 'value' => $item['dispensed_packs']];
                 }
                 if ($item['losses'] !== null) {
-                    $dataValues[] = ['dataElement' => $item['dhis_code'], 'categoryOptionCombo' => config('Adt_config')->dhiscode['losses'], 'value' => $item['losses']];
+                    $dataValues[] = ['dataElement' => $item['dhis_element']['dhis_code'], 'categoryOptionCombo' => config('Adt_config')->dhiscode['losses'], 'value' => $item['losses']];
                 }
                 if ($item['adjustments'] !== null) {
-                    $dataValues[] = ['dataElement' => $item['dhis_code'], 'categoryOptionCombo' => config('Adt_config')->dhiscode['adjustments'], 'value' => $item['adjustments']];
+                    $dataValues[] = ['dataElement' => $item['dhis_element']['dhis_code'], 'categoryOptionCombo' => config('Adt_config')->dhiscode['adjustments'], 'value' => $item['adjustments']];
                 }
                 if ($item['adjustments_neg'] !== null) {
-                    $dataValues[] = ['dataElement' => $item['dhis_code'], 'categoryOptionCombo' => config('Adt_config')->dhiscode['adjustments_neg'], 'value' => $item['adjustments_neg']];
+                    $dataValues[] = ['dataElement' => $item['dhis_element']['dhis_code'], 'categoryOptionCombo' => config('Adt_config')->dhiscode['adjustments_neg'], 'value' => $item['adjustments_neg']];
                 }
                 if ($item['count'] !== null) {
-                    $dataValues[] = ['dataElement' => $item['dhis_code'], 'categoryOptionCombo' => config('Adt_config')->dhiscode['count'], 'value' => $item['count']];
+                    $dataValues[] = ['dataElement' => $item['dhis_element']['dhis_code'], 'categoryOptionCombo' => config('Adt_config')->dhiscode['count'], 'value' => $item['count']];
                 }
                 if ($item['expiry_quant'] !== null) {
-                    $dataValues[] = ['dataElement' => $item['dhis_code'], 'categoryOptionCombo' => config('Adt_config')->dhiscode['expiry_quant'], 'value' => $item['expiry_quant']];
+                    $dataValues[] = ['dataElement' => $item['dhis_element']['dhis_code'], 'categoryOptionCombo' => config('Adt_config')->dhiscode['expiry_quant'], 'value' => $item['expiry_quant']];
                 }
                 if ($item['expiry_date'] !== null) {
-                    $dataValues[] = ['dataElement' => $item['dhis_code'], 'categoryOptionCombo' => config('Adt_config')->dhiscode['expiry_date'], 'value' => $item['expiry_date']];
+                    $dataValues[] = ['dataElement' => $item['dhis_element']['dhis_code'], 'categoryOptionCombo' => config('Adt_config')->dhiscode['expiry_date'], 'value' => $item['expiry_date']];
                 }
                 if ($item['out_of_stock'] !== null) {
-                    $dataValues[] = ['dataElement' => $item['dhis_code'], 'categoryOptionCombo' => config('Adt_config')->dhiscode['out_of_stock'], 'value' => $item['out_of_stock']];
+                    $dataValues[] = ['dataElement' => $item['dhis_element']['dhis_code'], 'categoryOptionCombo' => config('Adt_config')->dhiscode['out_of_stock'], 'value' => $item['out_of_stock']];
                 }
                 if ($item['resupply'] !== null) {
-                    $dataValues[] = ['dataElement' => $item['dhis_code'], 'categoryOptionCombo' => config('Adt_config')->dhiscode['resupply'], 'value' => $item['resupply']];
+                    $dataValues[] = ['dataElement' => $item['dhis_element']['dhis_code'], 'categoryOptionCombo' => config('Adt_config')->dhiscode['resupply'], 'value' => $item['resupply']];
                 }
                 if ($item['count'] !== null) {
-                    $dataValues[] = ['dataElement' => $item['dhis_code'], 'categoryOptionCombo' => config('Adt_config')->dhiscode['total'], 'value' => $item['count']];
+                    $dataValues[] = ['dataElement' => $item['dhis_element']['dhis_code'], 'categoryOptionCombo' => config('Adt_config')->dhiscode['total'], 'value' => $item['count']];
                 }
             }
             $dhismessage = [
@@ -3102,7 +3100,6 @@ class Order extends BaseController {
             $dhis_auth = $this->session->get('dhis_user') . ':' . $this->session->get('dhis_pass');
             $resource = 'api/27/dataValueSets?dataElementIdScheme=UID&orgUnitIdScheme=UID&importStrategy=CREATE_AND_UPDATE&dryRun=false&datasetAllowsPeriods=true&strictOrganisationUnits=true&strictPeriods=true&skipExistingCheck=false';
             $result = $this->sendRequest($resource, 'POST', $dhismessage, $dhis_auth);
-            // echo json_encode($dhismessage, JSON_PRETTY_PRINT).'<br />';echo $resource.'<br/>';var_dump($result);die;
         }
     }
 
