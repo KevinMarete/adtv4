@@ -471,12 +471,12 @@ class User_management extends \App\Controllers\BaseController {
 
         //Check if username does not already exist
         //If username was changed by the user, check if it exists in the db
-        if (session()->set('username') != $user_name) {
+        if (session()->get('username') != $user_name) {
             $username_exist_sql = $this->db->query("SELECT * FROM users WHERE username='$user_name'");
             $c_user = count($username_exist_sql->getResultArray());
         }
         //If email was changed by the user, check if it exists in the db
-        if ($this->session->set('Email_Address') != $email) {
+        if ($this->session->get('Email_Address') != $email) {
             $email_exist_sql = $this->db->query("SELECT * FROM users WHERE Email_Address='$email'");
             $e_user = count($email_exist_sql->getResultArray());
         }
@@ -492,19 +492,26 @@ class User_management extends \App\Controllers\BaseController {
         //Neither email nor username is in use
         else if ($e_user == 0 and $c_user == 0) {
             //Update user details
-            $update_user_sql = $this->db->query("UPDAT users SET Name='$full_name',username='$user_name',Email_Address='$email',Phone_Number='$phone',ccc_store_sp='$store' WHERE id='$user_id'");
-            if ($update_user_sql == 1) {
-                $message_success = "<span class='message info'>Your details were successfully updated!<span>";
+            $m_user = User::find($user_id);
+            if($m_user) {
+                $m_user->Name = $full_name;
+                $m_user->Username = $user_name;
+                $m_user->Email_Address = $email;
+                $m_user->Phone_Number = $phone;
+                $m_user->ccc_store_sp = $store;
+                if ($m_user->save()) {
+                    $message_success = "<span class='message info'>Your details were successfully updated!<span>";
+                }
+                //Add/update user ordering sites
+                $this->save_user_facilities($user_id, $this->request->getPost('profile_user_facilities_holder'));
+                
+                //Update session details!
+                $session_data = ['username' => $user_name, 'full_name' => $full_name, 'Email_Address' => $email, 'Phone_Number' => $phone, 'ccc_store_id' => $store];
+                $this->session->set($session_data);
+                $this->session->set("message_user_update_success", $message_success);
             }
-            //Update session details!
-            $session_data = array('username' => $user_name, 'full_name' => $full_name, 'Email_Address' => $email, 'Phone_Number' => $phone, 'ccc_store_id' => $store);
-            $this->session->set($session_data);
-            $this->session->set("message_user_update_success", $message_success);
+            
         }
-
-        //Add/update user ordering sites
-        $this->save_user_facilities(session()->set('user_id'), $this->request->getPost('profile_user_facilities_holder', TRUE));
-
 
         $previous_url = $this->request->getCookie('actual_page', true);
         //redirect($previous_url);
@@ -601,18 +608,15 @@ class User_management extends \App\Controllers\BaseController {
     }
 
     public function save_user_facilities($user_id = '', $user_facilites = '') {
-        $save_data = array('user_id' => $user_id, 'facility' => json_encode(explode(',', $user_facilites)));
+        $save_data = ['user_id' => $user_id, 'facility' => json_encode(explode(',', $user_facilites))];
+
         $table = 'user_facilities';
         if ($user_facilites) {
             $user = User::find($user_id)->first();
-            //$user = $this->db->where($table, array('user_id' => $user_id))->get();
             if ($user) {
-                $build = $this->db->table($table);
-                $build->where('id', $user->id);
-                $build->update($save_data);
+                $this->db->table($table)->where('id', $user->id)->update($save_data);
             } else {
-                $build = $this->db->table($table);
-                $build->insert($save_data);
+                $this->db->table($table)->insert($save_data);
             }
         }
         return $save_data;

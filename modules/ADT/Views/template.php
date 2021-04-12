@@ -403,7 +403,7 @@ if ($user_is_administrator) {
         
             <div id="msg_user_update"><?php echo $session->get("message_user_update_success"); ?></div>
             <?php
-            session()->desroy('message_user_update_success');
+            session()->remove('message_user_update_success');
         }
         if (!isset($hide_side_menu)) {
             ?>
