@@ -71,7 +71,7 @@ class Data_Api extends BaseController {
         $MIDDLE_NAME = (empty($data->other_name) ? '' : $data->other_name);
         $LAST_NAME = (empty($data->last_name) ? '' : $data->last_name);
         $PLACE_OF_BIRTH = (empty($data->place_of_birth) ? '' : $data->place_of_birth);
-        $SENDING_FACILITY = (empty($data->sending_facility) ? '' : $data->sending_facility);
+        $SENDING_FACILITY = (empty($data->mfl_code) ?  $this->getApiResponse($this->error, 'Please set facility code') : $data->mfl_code);
 
 
         //$MOTHER_NAME = empty($data->last_name')) ? '' : $data->last_name');
