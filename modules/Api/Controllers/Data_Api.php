@@ -988,21 +988,31 @@ class Data_Api extends BaseController {
     }
 
     public function searchPatient($ccc) {
-        # code...
-        //  $data=[
-        // 'name'=>'ephantus',
-        // 'age'=>'64',
-        // 'jjjgg'=>'yfgdhh',
-        // 'ccc'=>$ccc
-        //  ]
-        $sql = "SELECT `id`, `medical_record_number`, `patient_number_ccc`, `first_name`, `last_name`, `other_name`, `dob`, `pob`, `gender`,`pregnant` FROM patient where patient_number_ccc= '$ccc' ";
-        $query = $this->db->query($sql);
+
+        $query_str = "SELECT p.*,ps.name as patient_status,pso.name as patient_source ,g.name as patient_gender "
+                . "FROM patient p " .
+                "left join patient_status ps on p.current_status = ps.id " .
+                "left join patient_source pso on p.source = pso.id " .
+                "left join gender g on g.id = p.gender " .
+                "WHERE p.patient_number_ccc = '" . $ccc . "' ";
+        $query = $this->db->query($query_str);
         $api_config = $query->getResultArray();
+        if (!empty($api_config)) {
+            return (json_encode($api_config, JSON_PRETTY_PRINT));
+        } else {
+            return (json_encode(['code' => $this->error, 'message' => 'Patient not Found'], JSON_PRETTY_PRINT));
+        }
+    }
 
-        $data = $api_config;
+    public function deletePatient($ccc) {
 
-        //return json_encode($data);
-        return (json_encode($data, JSON_PRETTY_PRINT));
+        $query_str = "DELETE  FROM patient WHERE patient_number_ccc = '$ccc'";
+        $query = $this->db->query($query_str);
+        if ($query) {
+            return (json_encode(['code' => $this->success, 'message' => 'Patient deleted successfully'], JSON_PRETTY_PRINT));
+        } else {
+            return (json_encode(['code' => $this->error, 'message' => 'Error occurred while deleting patient'], JSON_PRETTY_PRINT));
+        }
     }
 
     public function searchGender($pgender) {
