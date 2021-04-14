@@ -45,12 +45,22 @@ class Data_Api extends BaseController {
         $json = file_get_contents('php://input');
         $data = json_decode($json);
 
-
+        $PEP_REASON = '';
         $internal_patient = $this->getPatientDA($data->patient_number);
         // getPatientInternalID($external_id,$ASSIGNING_AUTHORITY)
         if ($internal_patient) {
-            $this->getApiResponse($this->exists, 'Patient already exists');           
+            $this->getApiResponse($this->exists, 'Patient already exists');
         }
+
+
+
+        if (!empty($data->pep)) {
+            foreach ($data->prep as $p) {
+                $PEP_REASON = $p->pep_reason;
+            }
+        };
+
+
 
 
         $ccc_no = (empty($data->patient_number) ? $this->writeLog('PATIENT', 'CCC Missing') : $data->patient_number);
@@ -94,7 +104,7 @@ class Data_Api extends BaseController {
         $new_patient = [
             'facility_code' => $SENDING_FACILITY,
             'medical_record_number' => $medical_record_no,
-            'dob' =>$DATE_OF_BIRTH,// substr($DATE_OF_BIRTH, 0, 4) . '-' . substr($DATE_OF_BIRTH, 4, 2) . '-' . substr($DATE_OF_BIRTH, -2),
+            'dob' => $DATE_OF_BIRTH, // substr($DATE_OF_BIRTH, 0, 4) . '-' . substr($DATE_OF_BIRTH, 4, 2) . '-' . substr($DATE_OF_BIRTH, -2),
             'first_name' => $FIRST_NAME,
             'gender' => ($data->gender) == 'M' ? 1 : 2,
             'last_name' => $LAST_NAME,
@@ -115,15 +125,32 @@ class Data_Api extends BaseController {
             'start_regimen' => $this->getRegimenId($CURRENT_REGIMEN),
             'start_weight' => $START_WEIGHT,
             'active' => 1,
-            'service'=>1,
-            'date_enrolled' => $ENROLLMENT_DATE,//substr($ENROLLMENT_DATE, 0, 4) . '-' . substr($ENROLLMENT_DATE, 4, 2) . '-' . substr($ENROLLMENT_DATE, -2),
+            'service' => 1,
+            'date_enrolled' => $ENROLLMENT_DATE, //substr($ENROLLMENT_DATE, 0, 4) . '-' . substr($ENROLLMENT_DATE, 4, 2) . '-' . substr($ENROLLMENT_DATE, -2),
             'current_status' => $data->current_status,
             'weight' => $START_WEIGHT,
             'who_stage' => $WHO_STAGE,
-            'start_regimen_date' => $ART_START,// substr($ART_START, 0, 4) . '-' . substr($ART_START, 4, 2) . '-' . substr($ART_START, -2),
+            'start_regimen_date' => $ART_START, // substr($ART_START, 0, 4) . '-' . substr($ART_START, 4, 2) . '-' . substr($ART_START, -2),
             'source' => $this->getSource($data->source),
-            'partner_status' => $PARTNER_STATUS
+            'partner_status' => $this->partnerStatus($PARTNER_STATUS),
+            'fplan' => $data->family_planning,
+            'pep_reason' => $PEP_REASON,
         ];
+
+        /* if (!empty($data->prep)) {
+          foreach ($data->prep as $p) {
+          $PREP_REASON = $p->prep_reason;
+          $PREP_TEST_ANSWER = $p->prep_test_answer;
+          $PREP_TEST_DATE = $p->prep_test_date;
+          $PREP_TEST_RESULT = $p->prep_test_result;
+          }
+
+
+          $insert_id = DB::table('patient')->insert($data);
+          } */
+
+
+
         $this->writeLog('msg', json_encode($new_patient));
         $internal_patient_id = $this->savePatient($new_patient);
         $this->writeLog('internal_patient_id ', json_encode($internal_patient_id));
@@ -131,7 +158,7 @@ class Data_Api extends BaseController {
     }
 
     function getApiResponse($code, $message) {
-        echo  json_encode(['code'=>$code,'message'=>$message]);
+        echo json_encode(['code' => $code, 'message' => $message]);
         die;
     }
 
@@ -156,9 +183,8 @@ class Data_Api extends BaseController {
         }
         return $returnable;
     }
-    
-    
-     function savePatient($patient) {
+
+    function savePatient($patient) {
         $insert_id = DB::table('patient')->insertGetId($patient);
         return $insert_id;
     }
@@ -1019,6 +1045,16 @@ class Data_Api extends BaseController {
             }
         }
         return $result;
+    }
+
+    public function partnerStatus($source) {
+        $partnerstatus = [
+            'No Partner' => 0,
+            'HIV Positive' => 1,
+            'Unknown' => 3,
+            'HIV Negative' => 4
+        ];
+        return $partnerstatus[$source];
     }
 
     public function template($data) {
