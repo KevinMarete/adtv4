@@ -10,3 +10,4 @@ $routes->get('api/searchPatient/(:any)', '\Modules\Api\Controllers\Api::searchPa
 $routes->get('api/searchGender/(:any)', '\Modules\Api\Controllers\Api::searchGender/$1');
 
 //$routes->post('initialize', '\Modules\Setup\Controllers\Setup::initialize');
+$routes->post('api/patient', '\Modules\Api\Controllers\Data_Api::createPatient');
