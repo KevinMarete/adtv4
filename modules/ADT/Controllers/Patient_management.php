@@ -910,8 +910,18 @@ class Patient_management extends BaseController {
         DB::statement($service_change_query);
         DB::statement($status_change_query);
 
+        $current_record = Patient::find($record_id);
         Patient::where('id', $record_id)->update($data);
 
+        // Send ORU to IL if current status has changed
+        if ($this->api && $this->patient_module) {
+            if($this->post('current_status') != 1) {    // Only discontinuations are what we want
+                if(!empty($current_record) && $this->post('current_status') != $current_record->current_status) {
+                    $api = new Api();
+                    $api->getObservation($data['patient_number_ccc'], 'STATUS');
+                }
+            }
+        }
 
         $spouse_no = $this->post('match_spouse');
         $patient_no = $this->post('patient_number');

@@ -4,6 +4,9 @@ namespace Modules\Api\Models;
 
 use App\Models\BaseModel;
 use Illuminate\Database\Capsule\Manager as DB;
+use Modules\ADT\Models\Il_error;
+use Modules\ADT\Models\Patient;
+use Modules\ADT\Models\PatientStatus;
 
 class Api_model extends BaseModel {
 
@@ -44,6 +47,35 @@ class Api_model extends BaseModel {
         } else {
             $resultable = false;
         }
+
+        return true;
+    }
+
+    function updatePatientORU($patient, $internal_patient_id) {
+        $update = Patient::find($internal_patient_id);
+        if($patient['facility_code'] != $update->facility_code) {
+            $this->save_error('Trying to update patient with wrong mflcode ('.$patient['facility_code'].')', $patient['sender']);
+            return false;
+        }
+        if($patient['patient_number_ccc']) {
+            $update->patient_number_ccc = $patient['patient_number_ccc'];
+        }
+        if($patient['pregnant']) {
+            $update->pregnant = $patient['pregnant'];
+        }
+        if($patient['smoke']) {
+            $update->smoke = $patient['smoke'];
+        }
+        if($patient['start_height']) {
+            $update->start_height = $patient['start_height'];
+        }
+        if($patient['start_weight']) {
+            $update->start_weight = $patient['start_weight'];
+        }
+        if($patient['current_status']) {
+            $update->current_status = $this->getCurrentStatus($patient['current_status']);
+        }
+        $update->save();
 
         return true;
     }
@@ -222,6 +254,53 @@ class Api_model extends BaseModel {
             $returnable = false;
         }
         return $returnable;
+    }
+
+    function getCurrentStatus($status) {
+        $ps = PatientStatus::query();
+        if($status == 'TRANSFER_OUT') {
+            $ps = $ps->where('Name', 'Transfer out');
+        }
+        elseif($status == 'DIED') {
+            $ps = $ps->where('Name', 'Deceased');
+        }
+        elseif($status == 'LOST_TO_FOLLOWUP') {
+            $ps = $ps->where('Name', 'Lost to follow-up');
+        }
+        elseif($status == 'OTHER_REASONS' || $status == 'CANNOT_AFFORD_DRUGS') {
+            $ps = $ps->where('Name', 'Other reasons');
+        }
+        else {
+            $ps = $ps->where('Name', 'Unknown');
+        }
+        $ps = $ps->first();
+        return $ps->id ?? null;
+    }
+
+    function save_error($error, $sender) {
+        Il_error::create([
+            'error' => $error,
+            'status' => 'unresolved',
+            'sending_system' => $sender,
+            'created_at' => date('Y-m-d H:i:s')
+        ]);
+    }
+
+    function getIlDiscontinuationReason($status) {
+        $reason = 'UNKNOWN';
+        if($status == 2) {
+            $reason = 'DIED';
+        }
+        elseif($status == 5) {
+            $reason = 'LOST_TO_FOLLOWUP';
+        }
+        elseif($status == 6) {
+            $reason = 'TRANSFER_OUT';
+        }
+        elseif($status == 3 || $status == 4 || $status == 7 || $status == 8 || $status == 9 || $status == 10) {
+            $reason = 'OTHER_REASONS';
+        }
+        return $reason;
     }
 
 }
