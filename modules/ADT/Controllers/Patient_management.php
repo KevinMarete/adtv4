@@ -178,6 +178,11 @@ class Patient_management extends BaseController {
          */
         $aColumns = ['patient_number_ccc', 'first_name', 'last_name', 'other_name', 'nextappointment', 'phone', 'regimen_desc', 'patient_status'];
 
+        $facility_settings = Facilities::where('facilitycode', $this->session->get('facility'))->first();
+        if(!empty($facility_settings) && $facility_settings->medical_number == '1'){
+            $aColumns = ['medical_record_number', 'patient_number_ccc', 'first_name', 'last_name', 'other_name', 'nextappointment', 'phone', 'regimen_desc', 'patient_status'];
+        }
+
         $iDisplayStart = $this->post('iDisplayStart', true);
         $iDisplayLength = $this->post('iDisplayLength', true);
         $iSortCol_0 = $this->post('iSortCol_0', true);
@@ -685,13 +690,10 @@ class Patient_management extends BaseController {
             $this->merge_parent($patient_no, $child_no);
         }
 
-        $max = Patient::max('id');
-        $auto_id = $max;
-
         //Add Prep Data
         $is_tested = $this->post('prep_test_answer');
         $prep_test_data = [
-            'patient_id' => $auto_id,
+            'patient_id' => $new_patient->id,
             'prep_reason_id' => $this->post('prep_reason'),
             'is_tested' => $is_tested,
             'test_date' => $this->post('prep_test_date'),
@@ -702,7 +704,6 @@ class Patient_management extends BaseController {
             PatientPrepTest::create($prep_test_data);
         }
 
-        $patient = $this->post('patient_number');
         $direction = $this->post('direction');
 
         if ($this->api && $this->patient_module) {
@@ -717,7 +718,7 @@ class Patient_management extends BaseController {
             $this->session->setFlashdata('dispense_updated', 'Patient: ' . $this->post('first_name', TRUE) . " " . $this->post('last_name', TRUE) . ' was Saved');
             return redirect()->to(base_url() . "/patients");
         } else if ($direction == 1) {
-            return redirect()->to(base_url() . "/dispensement_management/dispense/$auto_id");
+            return redirect()->to(base_url() . "/dispensement_management/dispense/$new_patient->id");
         }
     }
 
