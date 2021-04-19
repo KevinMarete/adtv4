@@ -1052,7 +1052,7 @@
 
     });
 
-    if((<?php echo empty($differentiated_care) ? 0 : $differentiated_care;?>){
+    if(<?php echo empty($differentiated_care) ? 0 : $differentiated_care;?>){
     $('#differentiated_care').attr("checked", "checked");
     }
 
@@ -1066,7 +1066,7 @@
         {
             $(".clinical_appointment_input").hide();
             // show diff care exit reason
-            if((<?php echo empty($differentiated_care) ? 0 : $differentiated_care;?>){
+            if(<?php echo empty($differentiated_care) ? 0 : $differentiated_care;?>){
                 $("#dcm_exit_reason_container").show();
             }
 
