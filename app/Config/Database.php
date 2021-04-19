@@ -35,7 +35,7 @@ class Database extends \CodeIgniter\Database\Config {
         'hostname' => 'localhost:3307',
         'username' => 'root',
         'password' => 'root',
-        'database' => 'testadt',
+        'database' => 'testadt3',
         'DBDriver' => 'MySQLi',
         'DBPrefix' => '',
         'pConnect' => false,
