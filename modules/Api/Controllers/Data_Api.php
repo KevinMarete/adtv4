@@ -46,7 +46,7 @@ class Data_Api extends BaseController {
         $data = json_decode($json);
 
         $PEP_REASON = '';
-        $internal_patient = $this->getPatientDA($data->patient_number);
+        $internal_patient = $this->getPatientDA($data->patient_number_ccc);
         // getPatientInternalID($external_id,$ASSIGNING_AUTHORITY)
         if ($internal_patient) {
             $this->getApiResponse($this->exists, 'Patient already exists');
@@ -63,7 +63,7 @@ class Data_Api extends BaseController {
 
 
 
-        $ccc_no = (empty($data->patient_number) ? $this->writeLog('PATIENT', 'CCC Missing') : $data->patient_number);
+        $ccc_no = (empty($data->patient_number_ccc) ? $this->writeLog('PATIENT', 'CCC Missing') : $data->patient_number_ccc);
         $medical_record_no = $data->medical_record_no;
 
 
