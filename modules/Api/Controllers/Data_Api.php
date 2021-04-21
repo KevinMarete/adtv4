@@ -99,7 +99,7 @@ class Data_Api extends BaseController {
         $IS_SMOKER = (empty($data->smoke) ? '' : $data->smoke);
         $IS_ALCOHOLIC = (empty($data->alcohol) ? '' : $data->alcohol);
         $WHO_STAGE = (empty($data->who_stage) ? '' : $data->who_stage);
-        $ART_START = (empty($data->start_regimen_date) ? '' : $data->start_regimen_date);
+        $ART_START = (empty($data->start_regimen_date) ?  $this->getApiResponse($this->error, 'Please enter start regimen') : $data->start_regimen_date);
 
         $new_patient = [
             'facility_code' => $SENDING_FACILITY,
