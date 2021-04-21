@@ -81,7 +81,7 @@ class Api extends BaseController {
 
                 case 'ORU^R01':
                     $this->processObservation($message);
-
+                    break;
                 case 'SIU^S12':
                     $this->processAppointment($message);
                     break;
@@ -120,6 +120,7 @@ class Api extends BaseController {
             $identification[$id->IDENTIFIER_TYPE] = $id->ID;
         }
         $INTERNAL_PATIENT_ID = ($identification['CCC_NUMBER']);
+        $PATIENT_CLINIC_NUMBER = ($identification['PATIENT_CLINIC_NUMBER'] ?? '');
         $ASSIGNING_AUTHORITY = $patient->PATIENT_IDENTIFICATION->EXTERNAL_PATIENT_ID->ASSIGNING_AUTHORITY;
         $internal_patient = $this->api_model->getPatient($INTERNAL_PATIENT_ID);
         // getPatientInternalID($external_id,$ASSIGNING_AUTHORITY)
@@ -185,6 +186,7 @@ class Api extends BaseController {
         $ART_START = (isset($observations['ART_START'])) ? (empty($observations['ART_START']) ? '' : $observations['ART_START']) : false;
 
         $new_patient = [
+            'medical_record_number' => $PATIENT_CLINIC_NUMBER,
             'facility_code' => $SENDING_FACILITY,
             'dob' => substr($DATE_OF_BIRTH, 0, 4) . '-' . substr($DATE_OF_BIRTH, 4, 2) . '-' . substr($DATE_OF_BIRTH, -2),
             'first_name' => $FIRST_NAME,
@@ -306,11 +308,13 @@ class Api extends BaseController {
 
         if (!$internal_patient) {
             $this->writeLog('ORU Error ', "patient does not exist. Can't process observation");
+            $this->api_model->save_error('Failed to process observation. Patient '.$ccc_no.'does not exist', $obx->MESSAGE_HEADER->SENDING_APPLICATION);
             die;
         }
 
         $internal_patient_id = $internal_patient->id;
         $SENDING_FACILITY = $obx->MESSAGE_HEADER->SENDING_FACILITY;
+        $SENDING_APPLICATION = $obx->MESSAGE_HEADER->SENDING_APPLICATION;
 
         // Observation Result(s) - Array of Objects
         $observations = [];
@@ -326,12 +330,15 @@ class Api extends BaseController {
         $IS_SMOKER = (isset($observations['IS_SMOKER'])) ? $observations['IS_SMOKER'] : false;
         $IS_ALCOHOLIC = (isset($observations['IS_ALCOHOLIC'])) ? $observations['IS_ALCOHOLIC'] : false;
         $REGIMEN_CHANGE_REASON = (isset($observations['REGIMEN_CHANGE_REASON'])) ? $observations['REGIMEN_CHANGE_REASON'] : false;
+        $HIV_DISCONTINUATION_REASON = (isset($observations['HIV_DISCONTINUATION_REASON'])) ? $observations['HIV_DISCONTINUATION_REASON'] : false;
         if ($REGIMEN_CHANGE_REASON) {
             // do regimen change/ drug stop
             // var_dump($REGIMEN_CHANGE_REASON);die;
         }
 
-        $observation = array('facility_code' => $SENDING_FACILITY,
+        $observation = [
+            'sender' => $SENDING_APPLICATION,
+            'facility_code' => $SENDING_FACILITY,
             'patient_number_ccc' => $ccc_no,
             'pregnant' => $IS_PREGNANT,
             'smoke' => $IS_SMOKER,
@@ -339,8 +346,10 @@ class Api extends BaseController {
             'start_height' => $START_HEIGHT,
             'start_regimen' => $CURRENT_REGIMEN,
             'start_weight' => $START_WEIGHT,
-            'weight' => $START_HEIGHT);
-        $result = $this->api_model->updatePatient($observation, $internal_patient_id);
+            'weight' => $START_HEIGHT,
+            'current_status' => $HIV_DISCONTINUATION_REASON
+        ];
+        $this->api_model->updatePatientORU($observation, $internal_patient_id);
     }
 
     function processAppointment($appointment) {
@@ -502,8 +511,8 @@ class Api extends BaseController {
             ],
             'PATIENT_NAME' => array('FIRST_NAME' => $pat->first_name, 'MIDDLE_NAME' => $pat->last_name, 'LAST_NAME' => $pat->other_name)
         );
-        $appoint['APPOINTMENT_INFORMATION'] = [array(
-        'PLACER_APPOINTMENT_NUMBER' => array('NUMBER' => $appointment_id, 'ENTITY' => "ADT"),
+        $appoint['APPOINTMENT_INFORMATION'] = [[
+        'PLACER_APPOINTMENT_NUMBER' => ['NUMBER' => $appointment_id, 'ENTITY' => "ADT"],
         'APPOINTMENT_REASON' => "REGIMEN REFILL",
         'APPOINTMENT_TYPE' => "PHARMACY APPOINTMENT",
         'APPOINTMENT_DATE' => $pat->appointment,
@@ -512,7 +521,7 @@ class Api extends BaseController {
         'ACTION_CODE' => "A",
         'APPOINTMENT_NOTE' => "TO COME BACK FOR A REFILL",
         'APPOINTMENT_STATUS' => "PENDING"
-        )];
+        ]];
 
 
         $this->writeLog('APPOINTMENT SCHEDULE SIU^S12 ', json_encode($appoint));
@@ -540,7 +549,8 @@ class Api extends BaseController {
             // fetch external identifications
             'INTERNAL_PATIENT_ID' => [
                 ['ID' => $pat->id, 'IDENTIFIER_TYPE' => "SOURCE_SYSTEM_ID", 'ASSIGNING_AUTHORITY' => "ADT"],
-                ['ID' => $this->constructCCC($pat->patient_number_ccc, $pat->facility_code, true), 'IDENTIFIER_TYPE' => "CCC_NUMBER", 'ASSIGNING_AUTHORITY' => "CCC"]
+                ['ID' => $this->constructCCC($pat->patient_number_ccc, $pat->facility_code, true), 'IDENTIFIER_TYPE' => "CCC_NUMBER", 'ASSIGNING_AUTHORITY' => "CCC"],
+                ['ID' => $pat->medical_record_number, 'IDENTIFIER_TYPE' => "PATIENT_CLINIC_NUMBER", 'ASSIGNING_AUTHORITY' => "CCC"]
             ],
             'PATIENT_NAME' => ['FIRST_NAME' => $pat->first_name, 'MIDDLE_NAME' => $pat->other_name, 'LAST_NAME' => $pat->last_name],
             'DATE_OF_BIRTH' => date('Ymd', strtotime($pat->dob)),
@@ -670,8 +680,7 @@ class Api extends BaseController {
         // $this->getObservation($pat->patient_number_ccc);
     }
 
-    public function getObservation($patient_id) {
-        echo "sending observations";
+    public function getObservation($patient_id, $msg_type = null) {
         $pat = $this->api_model->getPatient($patient_id);
 
         $message_type = 'ORU^R01';
@@ -764,7 +773,7 @@ class Api extends BaseController {
                 'ABNORMAL_FLAGS' => "N"
             ),
             array(
-                'SET_ID' => "6",
+                'SET_ID' => "7",
                 'OBSERVATION_IDENTIFIER' => "IS_ALCOHOLIC",
                 'CODING_SYSTEM' => "",
                 'VALUE_TYPE' => "CE",
@@ -775,6 +784,22 @@ class Api extends BaseController {
                 'ABNORMAL_FLAGS' => "N"
             )
         );
+
+        if($msg_type === 'STATUS') {
+            $status = [
+                'SET_ID' => "",
+                'OBSERVATION_IDENTIFIER' => "HIV_DISCONTINUATION_REASON",
+                'CODING_SYSTEM' => "",
+                'VALUE_TYPE' => "CE",
+                'OBSERVATION_VALUE' => $this->api_model->getIlDiscontinuationReason($pat->current_status),
+                'UNITS' => "",
+                'OBSERVATION_RESULT_STATUS' => "F",
+                'OBSERVATION_DATETIME' => date('Ymdhis'),
+                'ABNORMAL_FLAGS' => "N"
+            ];
+            
+            $observations['OBSERVATION_RESULT'][] = $status;
+        }
 
         //echo "<pre>";
         //echo(json_encode($observations, JSON_PRETTY_PRINT));
@@ -1066,7 +1091,7 @@ class Api extends BaseController {
     }
 
     public function getRegimenId($code) {
-        $result = null;
+        $result = ' ';
         $regimen = Regimen::where('regimen_code', $code)->first();
         if(!empty($regimen)) {
             $result = $regimen->id;
