@@ -125,6 +125,7 @@ class Api extends BaseController {
         $internal_patient = $this->api_model->getPatient($INTERNAL_PATIENT_ID);
         // getPatientInternalID($external_id,$ASSIGNING_AUTHORITY)
         if ($internal_patient) {
+            $this->api_model->save_error('Failed to process patient registration. Patient '.$INTERNAL_PATIENT_ID.' already exists', $patient->MESSAGE_HEADER->SENDING_APPLICATION);
             return $this->response->setStatusCode(409, 'Patient already exists');
             die;
         }
@@ -140,7 +141,34 @@ class Api extends BaseController {
             $identification[$id->IDENTIFIER_TYPE] = $id->ID;
         }
 
-        $ccc_no = empty($identification['CCC_NUMBER']) ? $this->writeLog('PATIENT', 'CCC Missing') : $identification['CCC_NUMBER'];
+        
+        if(empty($identification['CCC_NUMBER'])) {
+            $this->writeLog('PATIENT', 'CCC Missing');
+            $this->api_model->save_error('Failed to process patient registration. CCC number missing in message.', $patient->MESSAGE_HEADER->SENDING_APPLICATION);
+            return $this->response->setStatusCode(409, 'CCC missing');
+            die;
+        }
+        if(empty($patient->MESSAGE_HEADER->SENDING_FACILITY)) {
+            $this->writeLog('PATIENT', 'FACILITY Missing');
+            $this->api_model->save_error('Failed to process patient registration. Facility code missing in message.', $patient->MESSAGE_HEADER->SENDING_APPLICATION);
+            return $this->response->setStatusCode(409, 'FACILITY missing');
+            die;
+        }
+        if(empty($patient->PATIENT_IDENTIFICATION->DATE_OF_BIRTH)) {
+            $this->writeLog('PATIENT', 'DOB Missing');
+            $this->api_model->save_error('Failed to process patient registration. Date of Birth missing in message.', $patient->MESSAGE_HEADER->SENDING_APPLICATION);
+            return $this->response->setStatusCode(409, 'DOB missing');
+            die;
+        }
+        if(empty($patient->PATIENT_IDENTIFICATION->SEX)) {
+            $this->writeLog('PATIENT', 'SEX Missing');
+            $this->api_model->save_error('Failed to process patient registration. Sex missing in message.', $patient->MESSAGE_HEADER->SENDING_APPLICATION);
+            return $this->response->setStatusCode(409, 'Sex missing');
+            die;
+        }
+        
+        $ccc_no =  $identification['CCC_NUMBER'];
+        
         $SENDING_FACILITY = empty($patient->MESSAGE_HEADER->SENDING_FACILITY) ? $this->writeLog('PATIENT', 'FACILITY Missing') : $patient->MESSAGE_HEADER->SENDING_FACILITY;
         // $ccc_no = $this->parseCCC($ccc_no,$SENDING_FACILITY);
 
@@ -231,7 +259,7 @@ class Api extends BaseController {
 
     function processPatientUpdate($patient) {
 
-        $identification = array();
+        $identification = [];
         foreach ($patient->PATIENT_IDENTIFICATION->INTERNAL_PATIENT_ID as $id) {
             $identification[$id->IDENTIFIER_TYPE] = $id->ID;
         }
@@ -239,7 +267,9 @@ class Api extends BaseController {
 
         $internal_patient = $this->api_model->getPatient($ccc_no);
         if (!$internal_patient) {
-            $this->processPatientRegistration($patient);
+            // $this->processPatientRegistration($patient);
+            $this->writeLog('Patient Update Error ', "patient does not exist. Can't process update");
+            $this->api_model->save_error('Failed to process patient update. Patient '.$ccc_no.' does not exist', $patient->MESSAGE_HEADER->SENDING_APPLICATION);
             die;
             // registration successful exit(0)
         }
@@ -298,7 +328,7 @@ class Api extends BaseController {
     }
 
     function processObservation($obx) {
-        $identification = array();
+        $identification = [];
 
         foreach ($obx->PATIENT_IDENTIFICATION->INTERNAL_PATIENT_ID as $id) {
             $identification[$id->IDENTIFIER_TYPE] = $id->ID;
@@ -309,6 +339,7 @@ class Api extends BaseController {
         if (!$internal_patient) {
             $this->writeLog('ORU Error ', "patient does not exist. Can't process observation");
             $this->api_model->save_error('Failed to process observation. Patient '.$ccc_no.'does not exist', $obx->MESSAGE_HEADER->SENDING_APPLICATION);
+            return $this->response->setStatusCode(409, 'Patient does not exist');
             die;
         }
 
@@ -361,7 +392,9 @@ class Api extends BaseController {
         $internal_patient_ccc = $this->api_model->getPatient($ccc_no);
 
         if (!$internal_patient_ccc) {
-            $this->writeLog('Patient not found ', $internal_patient_ccc);
+            $this->writeLog('Appointment Error ', "Patient does not exist. Can't process appointment");
+            $this->api_model->save_error('Failed to process appointment. Patient '.$ccc_no.'does not exist', $appointment->MESSAGE_HEADER->SENDING_APPLICATION);
+            return $this->response->setStatusCode(409, 'Patient does not exist');
             die;
         }
 
@@ -418,8 +451,10 @@ class Api extends BaseController {
         // $internal_patient_ccc = $this->parseCCC($internal_patient_ccc,$SENDING_FACILITY);
 
         if (!$internal_patient_ccc) {
-            $this->writeLog('Patient not found ', $ccc_no);
-            //$this->processPatientRegistration($order);
+            $this->writeLog('Drug Order Error ', "Patient does not exist. Can't process drug order");
+            $this->api_model->save_error('Failed to process observation. Patient '.$ccc_no.'does not exist', $order->MESSAGE_HEADER->SENDING_APPLICATION);
+            return $this->response->setStatusCode(409, 'Patient does not exist');
+            die;
         }
 
 
