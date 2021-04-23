@@ -46,7 +46,7 @@ class Data_Api extends BaseController {
         $data = json_decode($json);
 
         $PEP_REASON = '';
-        $internal_patient = $this->getPatientDA($data->patient_number);
+        $internal_patient = $this->getPatientDA($data->patient_number_ccc);
         // getPatientInternalID($external_id,$ASSIGNING_AUTHORITY)
         if ($internal_patient) {
             $this->getApiResponse($this->exists, 'Patient already exists');
@@ -63,7 +63,7 @@ class Data_Api extends BaseController {
 
 
 
-        $ccc_no = (empty($data->patient_number) ? $this->writeLog('PATIENT', 'CCC Missing') : $data->patient_number);
+        $ccc_no = (empty($data->patient_number_ccc) ? $this->writeLog('PATIENT', 'CCC Missing') : $data->patient_number_ccc);
         $medical_record_no = $data->medical_record_no;
 
 
@@ -99,7 +99,7 @@ class Data_Api extends BaseController {
         $IS_SMOKER = (empty($data->smoke) ? '' : $data->smoke);
         $IS_ALCOHOLIC = (empty($data->alcohol) ? '' : $data->alcohol);
         $WHO_STAGE = (empty($data->who_stage) ? '' : $data->who_stage);
-        $ART_START = (empty($data->start_regimen_date) ? '' : $data->start_regimen_date);
+        $ART_START = (empty($data->start_regimen_date) ?  $this->getApiResponse($this->error, 'Please enter start regimen') : $data->start_regimen_date);
 
         $new_patient = [
             'facility_code' => $SENDING_FACILITY,
