@@ -154,6 +154,7 @@ if ($user_is_pharmacist || $user_is_facility_administrator) {
                     $('#span6').load('<?php echo base_url() . '/followup_notification'; ?>');
                     $('#span7').load('<?php echo base_url() . '/prescriptions_notification_view'; ?>');
                     $('#span8').load('<?php echo base_url() . '/update_notification'; ?>');
+                    $('#span9').load('<?php echo base_url() . '/notifications/il_errors/notification'; ?>');
 
     <?php
 }
@@ -519,6 +520,7 @@ if ($user_is_administrator) {
                                     <li id="span6"></li>
                                     <li id="span7"></li>
                                     <li id="span8"></li>
+                                    <li id="span9"></li>
 
                                     <?php
                                 }

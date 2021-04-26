@@ -4,6 +4,7 @@ namespace Modules\ADT\Controllers;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Capsule\Manager as DB;
+use Modules\ADT\Models\Il_error;
 use Modules\ADT\Models\Patient;
 use Modules\ADT\Models\PatientVisit;
 use \Modules\ADT\Models\Sync_facility;
@@ -808,6 +809,20 @@ class Notification_management extends \App\Controllers\BaseController {
         $data['followup_patients'] = $table->generate();
         $data['content_view'] = "\Modules\ADT\Views\\followup_listing_v";
         $this->base_params($data);
+    }
+
+    public function load_il_errors_view($display_array = false) {
+        $errors = Il_error::where('status', 'unresolved');
+
+        if ($display_array != 'true') {
+            $total = $errors->count();
+            echo "<li><a href='" . base_url() . "/notifications/il_errors/true'><i class='icon-th'></i>Interoperability errors<div class='badge badge-important'>" . $total . "</div></a></li>";
+        } else {
+            $data['il_errors'] = $errors->orderBy('id', 'desc')->get();
+            $data['report_title'] = 'il_errors';
+            $data['content_view'] = "\Modules\ADT\Views\\il_errors_v";
+            $this->base_params($data);
+        }
     }
 
     public function base_params($data) {

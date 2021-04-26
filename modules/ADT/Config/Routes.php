@@ -22,7 +22,7 @@ $routes->get('prescriptions_notification_view', '\Modules\ADT\Controllers\Notifi
 $routes->get('update_notification', '\Modules\ADT\Controllers\Notification_management::update_notification');
 $routes->get('ontime_notification', '\Modules\ADT\Controllers\Notification_management::ontime_notification');
 $routes->get('missed_appointments_notification', '\Modules\ADT\Controllers\Notification_management::missed_appointments_notification');
-$routes->get('followup_notification', '\Modules\ADT\Controllers\Notification_management::followup_notification');
+$routes->get('notifications/il_errors/(:any)', '\Modules\ADT\Controllers\Notification_management::load_il_errors_view/$1');
 $routes->get('prescriptions_notification_view', '\Modules\ADT\Controllers\Notification_management::prescriptions_notification_view');
 $routes->get('update_notification', '\Modules\ADT\Controllers\Notification_management::update_notification');
 
